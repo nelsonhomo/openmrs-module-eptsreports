@@ -168,8 +168,8 @@ public class TxNewCohortQueries {
                 Arrays.asList(commonMetadata.getYesConcept())),
             "onOrAfter=${onOrAfter},onOrBefore=${onOrBefore},locationList=${location}"));
 
-    String compositionString =
-        "(DATAPARTO OR INICIOLACTANTE OR LACTANTEPROGRAMA OR LACTANTE) ";
+
+    String compositionString = "(DATAPARTO OR INICIOLACTANTE OR LACTANTEPROGRAMA OR LACTANTE)";
 
     cd.setCompositionString(compositionString);
     return cd;
