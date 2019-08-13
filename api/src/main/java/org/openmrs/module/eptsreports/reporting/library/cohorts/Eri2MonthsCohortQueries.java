@@ -212,7 +212,31 @@ public class Eri2MonthsCohortQueries {
     cd.setCompositionString("initiatedArtAndNotTransferIns AND suspendedTreatment");
     return cd;
   }
-
+/**
+   * Get patients states based on program, state and end of reporting period
+   *
+   * @param program
+   * @param state
+   * @return
+   */
+  public CohortDefinition getPatientsBasedOnPatientStates(int program, int state) {
+    SqlCohortDefinition cd = new SqlCohortDefinition();
+    cd.setName("Patient states based on end of reporting period");
+    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+    cd.addParameter(new Parameter("location", "Location", Location.class));
+    String query =
+        "SELECT p.patient_id FROM patient p "
+            + "INNER JOIN patient_program pg ON p.patient_id=pg.patient_id "
+            + "INNER JOIN patient_state ps ON pg.patient_program_id=ps.patient_program_id "
+            + "WHERE pg.voided=0 AND ps.voided=0 AND p.voided=0 AND pg.program_id=%s"
+            + " AND ps.state=%s"
+            + " AND ps.start_date=pg.date_enrolled"
+            + " AND ps.start_date BETWEEN :onOrAfter AND :onOrBefore AND location_id=:location "
+            + "GROUP BY p.patient_id";
+    cd.setQuery(String.format(query, program, state));
+    return cd;
+  }
   /**
    * Get all patients who initiated ART(A), less transfer ins(B) intersected with those who picked
    * up drugs in 33 days AND those who suspended treatment within the reporting period
@@ -234,7 +258,7 @@ public class Eri2MonthsCohortQueries {
     cd.addSearch(
         "transferredOut",
         EptsReportUtils.map(
-            genericCohortQueries.getPatientsBasedOnPatientStates(
+            getPatientsBasedOnPatientStates(
                 hivMetadata.getARTProgram().getProgramId(),
                 hivMetadata
                     .getTransferredOutToAnotherHealthFacilityWorkflowState()

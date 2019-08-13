@@ -445,8 +445,11 @@ public class HivMetadata extends ProgramsMetadata {
     return getConcept(uuid);
   }
 
-  // Encounter types
-  // encounterType_id = 6
+  /**
+   * encounterType_id = 6
+   *
+   * @return encounter type
+   */
   public EncounterType getAdultoSeguimentoEncounterType() {
     String uuid =
         Context.getAdministrationService()
@@ -454,7 +457,11 @@ public class HivMetadata extends ProgramsMetadata {
     return getEncounterType(uuid);
   }
 
-  // encounterType_id = 9
+  /**
+   * encounterType_id = 9
+   *
+   * @return encounter type
+   */
   public EncounterType getARVPediatriaSeguimentoEncounterType() {
     String uuid =
         Context.getAdministrationService()
@@ -462,7 +469,11 @@ public class HivMetadata extends ProgramsMetadata {
     return getEncounterType(uuid);
   }
 
-  // encounterType_id = 5
+  /**
+   * encounterType_id = 5
+   *
+   * @return encounter type
+   */
   public EncounterType getARVAdultInitialEncounterType() {
     String uuid =
         Context.getAdministrationService()
@@ -470,7 +481,12 @@ public class HivMetadata extends ProgramsMetadata {
     return getEncounterType(uuid);
   }
 
-  // encounterType_id = 7
+  
+  /**
+   * encounterType_id = 7
+   *
+   * @return encounter type
+   */
   public EncounterType getARVPediatriaInitialEncounterType() {
     String uuid =
         Context.getAdministrationService()
@@ -478,21 +494,36 @@ public class HivMetadata extends ProgramsMetadata {
     return getEncounterType(uuid);
   }
 
-  // encounterType_id = 18
+
+  /**
+   * encounterType_id = 18
+   *
+   * @return encounter type
+   */
   public EncounterType getARVPharmaciaEncounterType() {
     String uuid =
         Context.getAdministrationService().getGlobalProperty(gpSTarvFarmaciaEncounterTypeUuid);
     return getEncounterType(uuid);
   }
 
-  // encounter_type_id = 29
+  
+  /**
+   * encounterType_id = 29
+   *
+   * @return encounter type
+   */
   public EncounterType getEvaluationAndPrepForARTEncounterType() {
     String uuid =
         Context.getAdministrationService()
             .getGlobalProperty("eptsreports.evaluationAndPrepForARTEncounterTypeUuid");
     return getEncounterType(uuid);
   }
-  // encounter_type 13
+  
+  /**
+   * encounterType_id = 13
+   *
+   * @return encounter type
+   */
   public EncounterType getMisauLaboratorioEncounterType() {
     String uuid =
         Context.getAdministrationService()
@@ -500,7 +531,12 @@ public class HivMetadata extends ProgramsMetadata {
     return getEncounterType(uuid);
   }
 
-  // encounter type 34
+  
+  /**
+   * encounterType_id = 34
+   *
+   * @return encounter type
+   */
   public EncounterType getPrevencaoPositivaInicialEncounterType() {
     String uuid =
         Context.getAdministrationService()
@@ -508,7 +544,12 @@ public class HivMetadata extends ProgramsMetadata {
     return getEncounterType(uuid);
   }
 
-  // encounter type 35
+  
+  /**
+   * encounterType_id = 35
+   *
+   * @return encounter type
+   */
   public EncounterType getPrevencaoPositivaSeguimentoEncounterType() {
     String uuid =
         Context.getAdministrationService()
@@ -516,7 +557,12 @@ public class HivMetadata extends ProgramsMetadata {
     return getEncounterType(uuid);
   }
 
-  // encounter_type_id = 1
+  
+  /**
+   * encounterType_id = 1
+   *
+   * @return encounter type
+   */
   public EncounterType getARVAdultInitialBEncounterType() {
     String uuid =
         Context.getAdministrationService()
@@ -524,7 +570,12 @@ public class HivMetadata extends ProgramsMetadata {
     return getEncounterType(uuid);
   }
 
-  // encounter_type_id = 3
+  
+  /**
+   * encounterType_id = 3
+   *
+   * @return encounter type
+   */
   public EncounterType getARVPediatriaInitialBEncounterType() {
     String uuid =
         Context.getAdministrationService()
@@ -532,7 +583,12 @@ public class HivMetadata extends ProgramsMetadata {
     return getEncounterType(uuid);
   }
 
-  // encounter_type_id = 19
+  
+  /**
+   * encounterType_id = 19
+   *
+   * @return encounter type
+   */
   public EncounterType getArtAconselhamentoEncounterType() {
     String uuid =
         Context.getAdministrationService()
@@ -540,7 +596,12 @@ public class HivMetadata extends ProgramsMetadata {
     return getEncounterType(uuid);
   }
 
-  // encounter_type_id = 24
+  
+  /**
+   * encounterType_id = 24
+   *
+   * @return encounter type
+   */
   public EncounterType getArtAconselhamentoSeguimentoEncounterType() {
     String uuid =
         Context.getAdministrationService()
@@ -549,7 +610,12 @@ public class HivMetadata extends ProgramsMetadata {
   }
   // Programs
 
-  // program_id=2
+  
+  /**
+   * encounterType_id = 2
+   *
+   * @return program
+   */
   public Program getARTProgram() {
     String uuid = Context.getAdministrationService().getGlobalProperty(gpArtProgramUuid);
     return getProgram(uuid);
@@ -560,7 +626,12 @@ public class HivMetadata extends ProgramsMetadata {
     return getProgram(uuid);
   }
 
-  // program_id=1
+  
+  /**
+   * encounterType_id = 1
+   *
+   * @return program
+   */
   public Program getHIVCareProgram() {
     String uuid =
         Context.getAdministrationService().getGlobalProperty("eptsreports.hivCareProgramUuid");
