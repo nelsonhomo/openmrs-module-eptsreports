@@ -80,54 +80,6 @@ public class TXTBCohortQueries {
     return definition;
   }
 
-  private CohortDefinition getSputumForAcidFastBacilliWithinReportingDate() {
-    final CohortDefinition definition =
-        this.genericCohortQueries.generalSql(
-            "SputumForAcidFastBacilli",
-            TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
-                this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
-                Arrays.asList(tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
-                Arrays.asList(
-                    this.tbMetadata.getPositiveConcept().getConceptId(),
-                    // A ser alterado para o conceito ID do NAO ENCONTRADO a ser criado no metadata
-                    24058)));
-    this.addGeneralParameters(definition);
-    return definition;
-  }
-
-  private CohortDefinition getGeneExpertTbLamCultureWithinReportingDate() {
-    final CohortDefinition definition =
-        this.genericCohortQueries.generalSql(
-            "SputumForAcidFastBacilli",
-            TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
-                this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
-                Arrays.asList(
-                    tbMetadata.getTbGenexpertTest().getConceptId(),
-                    tbMetadata.getCultureTest().getConceptId(),
-                    tbMetadata.getTbLam().getConceptId()),
-                Arrays.asList(
-                    this.tbMetadata.getPositiveConcept().getConceptId(),
-                    this.tbMetadata.getNegativeConcept().getConceptId())));
-    this.addGeneralParameters(definition);
-    return definition;
-  }
-
-  private CohortDefinition getXPertMTBWithinReportingDate() {
-    final CohortDefinition definition =
-        this.genericCohortQueries.generalSql(
-            "SputumForAcidFastBacilli",
-            TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
-                this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
-                // A ser substituido pelo conceito ID do XPertMTB(PRESENCA DE MTB DETECTADA) a ser
-                // criado no metadata
-                Arrays.asList(24063),
-                Arrays.asList(
-                    this.tbMetadata.getYesConcept().getConceptId(),
-                    this.tbMetadata.getNoConcept().getConceptId())));
-    this.addGeneralParameters(definition);
-    return definition;
-  }
-
   private CohortDefinition getTuberculosisSymptoms(Integer... answerIds) {
 
     CohortDefinition definition =
@@ -504,19 +456,8 @@ public class TXTBCohortQueries {
         "H",
         this.map(
             this.getAllTBSymptomsForDisaggregationComposition(), this.generalParameterMapping));
-    cd.addSearch(
-        "I",
-        EptsReportUtils.map(
-            this.getSputumForAcidFastBacilliWithinReportingDate(), this.generalParameterMapping));
-    cd.addSearch(
-        "J",
-        EptsReportUtils.map(
-            this.getGeneExpertTbLamCultureWithinReportingDate(), this.generalParameterMapping));
-    cd.addSearch(
-        "L",
-        EptsReportUtils.map(this.getXPertMTBWithinReportingDate(), this.generalParameterMapping));
 
-    cd.setCompositionString("A OR B OR C OR D OR E OR F OR G OR H OR I OR J OR L");
+    cd.setCompositionString("A OR B OR C OR D OR E OR F OR G OR H");
     this.addGeneralParameters(cd);
     return cd;
   }
