@@ -206,4 +206,11 @@ public class TbMetadata extends ProgramsMetadata {
             .getGlobalProperty("eptsreports.sputumForAcidFastBacilli");
     return getConcept(uuid);
   }
+
+  // concept_id = 1065
+  public Concept getYesConcept() {
+    final String uuid =
+        Context.getAdministrationService().getGlobalProperty("eptsreports.yesConceptUuid");
+    return getConcept(uuid);
+  }
 }
