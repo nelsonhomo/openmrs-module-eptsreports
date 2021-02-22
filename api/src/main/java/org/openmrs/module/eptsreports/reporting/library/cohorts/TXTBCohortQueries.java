@@ -138,7 +138,6 @@ public class TXTBCohortQueries {
                     this.tbMetadata.getCultureTest().getConceptId(),
                     this.tbMetadata.getTbLam().getConceptId(),
                     this.tbMetadata.getSputumForAcidFastBacilli().getConceptId(),
-                    // ID of X-Ray Concept
                     12)));
     this.addGeneralParameters(definition);
     return definition;
@@ -172,12 +171,10 @@ public class TXTBCohortQueries {
                     this.tbMetadata.getCultureTest().getConceptId(),
                     this.tbMetadata.getTbLam().getConceptId(),
                     this.tbMetadata.getSputumForAcidFastBacilli().getConceptId(),
-                    // X-Ray concept id
                     12),
                 Arrays.asList(
                     this.tbMetadata.getPositiveConcept().getConceptId(),
                     this.tbMetadata.getNegativeConcept().getConceptId(),
-                    // Indeterminate result
                     1138)));
     this.addGeneralParameters(definition);
     return definition;
@@ -212,15 +209,11 @@ public class TXTBCohortQueries {
                     this.tbMetadata.getCultureTest().getConceptId(),
                     this.tbMetadata.getTbLam().getConceptId(),
                     this.tbMetadata.getSputumForAcidFastBacilli().getConceptId(),
-                    // A substituir pelo ID do xPERTMTB(presenca de MTB detectada) a ser criado no
-                    // metadata
-                    24063),
+                    165191),
                 Arrays.asList(
                     this.tbMetadata.getPositiveConcept().getConceptId(),
                     this.tbMetadata.getNegativeConcept().getConceptId(),
-                    // A substituir pelo conceptID do conceito NAO ENCONTRADO a ser criado no
-                    // metadata
-                    24058)));
+                    165184)));
     this.addGeneralParameters(definition);
     return definition;
   }
@@ -795,9 +788,7 @@ public class TXTBCohortQueries {
             "xPertMTBResult",
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
                 this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
-                // Este conceito deve ser substituido pelo conceito da presenca de MTB detectada
-                // a ser criado no metadata
-                Arrays.asList(24063),
+                Arrays.asList(165191),
                 Arrays.asList(
                     this.tbMetadata.getYesConcept().getConceptId(),
                     this.tbMetadata.getNoConcept().getConceptId())));
@@ -838,8 +829,7 @@ public class TXTBCohortQueries {
                 Arrays.asList(this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
                 Arrays.asList(
                     this.tbMetadata.getPositiveConcept().getConceptId(),
-                    // Substituir pelo ID do conceito NAO ENCONTRADO a ser criado no metadata
-                    24058)));
+                    165184)));
 
     final CohortDefinition applicationForLabResearchForBK =
         this.genericCohortQueries.generalSql(
@@ -858,8 +848,7 @@ public class TXTBCohortQueries {
                 Arrays.asList(this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
                 Arrays.asList(
                     this.tbMetadata.getPositiveConcept().getConceptId(),
-                    // A substituir pelo conceptID do NAO ENCONTRADO a ser criado no metadata
-                    24058)));
+                    165184)));
 
     final CohortDefinition geneExpertResultLaboratoryForm =
         this.genericCohortQueries.generalSql(
@@ -876,9 +865,7 @@ public class TXTBCohortQueries {
             "xpertMTBResultLaboratoryForm",
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
                 this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
-                // A substituir pelo conceptid do XpertMTB(presenca de MTB detectada) a ser criado
-                // no metadata
-                Arrays.asList(24063),
+                Arrays.asList(165191),
                 Arrays.asList(
                     this.tbMetadata.getYesConcept().getConceptId(),
                     this.tbMetadata.getNoConcept().getConceptId())));
@@ -979,9 +966,7 @@ public class TXTBCohortQueries {
             "xpertMTBResultLaboratoryForm",
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
                 this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
-                // A substituir pelo conceptid do XpertMTB(presenca de MTB detectada) a ser criado
-                // no metadata
-                Arrays.asList(24063),
+                Arrays.asList(165191),
                 Arrays.asList(
                     this.tbMetadata.getYesConcept().getConceptId(),
                     this.tbMetadata.getNoConcept().getConceptId())));
@@ -994,8 +979,7 @@ public class TXTBCohortQueries {
                 Arrays.asList(this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
                 Arrays.asList(
                     this.tbMetadata.getPositiveConcept().getConceptId(),
-                    // Substituir pelo ID do conceito NAO ENCONTRADO a ser criado no metadata
-                    24058)));
+                    165184)));
 
     final CohortDefinition applicationForLabResearchForBK =
         this.genericCohortQueries.generalSql(
@@ -1026,8 +1010,7 @@ public class TXTBCohortQueries {
                 Arrays.asList(this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
                 Arrays.asList(
                     this.tbMetadata.getPositiveConcept().getConceptId(),
-                    // A substituir pelo conceptID do NAO ENCONTRADO a ser criado no metadata
-                    24058)));
+                    165184)));
 
     this.addGeneralParameters(applicationForLabResearch);
     this.addGeneralParameters(cultureOrLamTest);
@@ -1107,9 +1090,7 @@ public class TXTBCohortQueries {
             "xPertMTBResult",
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
                 this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
-                // Este conceito deve ser substituido pelo conceito da presenca de MTB detectada a
-                // ser criado no metadata
-                Arrays.asList(24063),
+                Arrays.asList(165191),
                 Arrays.asList(this.tbMetadata.getYesConcept().getConceptId())));
 
     this.addGeneralParameters(tbPositiveResultReturned);
