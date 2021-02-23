@@ -827,9 +827,7 @@ public class TXTBCohortQueries {
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
                 this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
                 Arrays.asList(this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
-                Arrays.asList(
-                    this.tbMetadata.getPositiveConcept().getConceptId(),
-                    165184)));
+                Arrays.asList(this.tbMetadata.getPositiveConcept().getConceptId(), 165184)));
 
     final CohortDefinition applicationForLabResearchForBK =
         this.genericCohortQueries.generalSql(
@@ -846,9 +844,7 @@ public class TXTBCohortQueries {
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
                 this.hivMetadata.getAdultoSeguimentoEncounterType().getEncounterTypeId(),
                 Arrays.asList(this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
-                Arrays.asList(
-                    this.tbMetadata.getPositiveConcept().getConceptId(),
-                    165184)));
+                Arrays.asList(this.tbMetadata.getPositiveConcept().getConceptId(), 165184)));
 
     final CohortDefinition geneExpertResultLaboratoryForm =
         this.genericCohortQueries.generalSql(
@@ -977,9 +973,7 @@ public class TXTBCohortQueries {
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
                 this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
                 Arrays.asList(this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
-                Arrays.asList(
-                    this.tbMetadata.getPositiveConcept().getConceptId(),
-                    165184)));
+                Arrays.asList(this.tbMetadata.getPositiveConcept().getConceptId(), 165184)));
 
     final CohortDefinition applicationForLabResearchForBK =
         this.genericCohortQueries.generalSql(
@@ -1008,9 +1002,7 @@ public class TXTBCohortQueries {
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
                 this.hivMetadata.getAdultoSeguimentoEncounterType().getEncounterTypeId(),
                 Arrays.asList(this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
-                Arrays.asList(
-                    this.tbMetadata.getPositiveConcept().getConceptId(),
-                    165184)));
+                Arrays.asList(this.tbMetadata.getPositiveConcept().getConceptId(), 165184)));
 
     this.addGeneralParameters(applicationForLabResearch);
     this.addGeneralParameters(cultureOrLamTest);
@@ -1033,7 +1025,7 @@ public class TXTBCohortQueries {
         "geneexpert-result-lab-form",
         this.map(geneExpertResultLaboratoryForm, this.generalParameterMapping));
     cd.addSearch(
-        "xpertMTB-result_labform",
+        "xpertMTB-result-labform",
         this.map(xpertMTBResultLaboratoryForm, this.generalParameterMapping));
 
     cd.addSearch("exame-baciloscopia", this.map(exameBasilosCopia, this.generalParameterMapping));
@@ -1048,9 +1040,9 @@ public class TXTBCohortQueries {
         this.map(baciloscopiaResulFichaClinica, this.generalParameterMapping));
 
     cd.setCompositionString(
-        "(applicationForLabResearch OR culture-or-lam-test OR culture-lam-result-labform) "
-            + "NOT (geneexpert-result-lab-form OR xpertMTB-result_labform OR exame-baciloscopia OR application-for-labresearchforBK OR geneexpert-result-fichaclinica"
-            + "baciloscopia-result-ficha-clinica )");
+        "(application-for-lab-research OR culture-or-lam-test OR culture-lam-result-labform) "
+            + " NOT (geneexpert-result-lab-form OR xpertMTB-result-labform OR exame-baciloscopia OR application-for-labresearchforBK OR geneexpert-result-fichaclinica "
+            + " OR baciloscopia-result-ficha-clinica )");
 
     return cd;
   }
