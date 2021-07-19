@@ -5,10 +5,13 @@ import static org.junit.Assert.assertFalse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.eptsreports.reporting.intergrated.utils.DefinitionsFGHLiveTest;
+import org.openmrs.module.eptsreports.reporting.intergrated.utils.DefinitionsTest;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.IMR1BCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.IMR1CohortQueries;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
@@ -18,11 +21,16 @@ import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class IMR1CohortTest extends DefinitionsFGHLiveTest {
+public class IMR1CohortTest extends DefinitionsTest {
 
   @Autowired private IMR1CohortQueries imr1CohortQueries;
 
   @Autowired private IMR1BCohortQueries imr1BCohortQueries;
+  
+	@Before
+	public void initialise() throws Exception {
+		executeDataSet("imr.xml");
+	}
 
   @Test
   public void shouldFindPatientsNewlyEnrolledInART() throws EvaluationException {
@@ -59,13 +67,4 @@ public class IMR1CohortTest extends DefinitionsFGHLiveTest {
     }
   }
 
-  @Override
-  protected String username() {
-    return "admin";
-  }
-
-  @Override
-  protected String password() {
-    return "H!$fGH0Mr$";
-  }
 }

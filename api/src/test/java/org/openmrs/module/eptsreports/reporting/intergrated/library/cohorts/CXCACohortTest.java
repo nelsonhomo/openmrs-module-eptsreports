@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -39,12 +38,8 @@ public class CXCACohortTest extends DefinitionsTest {
 		executeDataSet("cxca.xml");
 		executeDataSet("cxca1.xml");
 		executeDataSet("cxca2.xml");
-	}
-
-	@Override
-	public Properties getRuntimeProperties() {
-
-		return super.getRuntimeProperties();
+		executeDataSet("cxca3.xml");
+		executeDataSet("cxca4.xml");
 	}
 
 	@Test
@@ -61,7 +56,7 @@ public class CXCACohortTest extends DefinitionsTest {
 
 		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(4, evaluateCohortDefinition.getMemberIds().size());
+		assertEquals(2, evaluateCohortDefinition.getMemberIds().size());
 
 	}
 
@@ -124,7 +119,7 @@ public class CXCACohortTest extends DefinitionsTest {
 
 		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(4, evaluateCohortDefinition.getMemberIds().size());
+		assertEquals(7, evaluateCohortDefinition.getMemberIds().size());
 
 		assertNotEquals(0, evaluateCohortDefinition.getMemberIds().size());
 	}
@@ -147,7 +142,7 @@ public class CXCACohortTest extends DefinitionsTest {
 
 		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(4, evaluateCohortDefinition.getMemberIds().size());
+		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
 
 		assertNotEquals(evaluateCohortDefinition.getMemberIds().size(), 0);
 	}
@@ -192,7 +187,7 @@ public class CXCACohortTest extends DefinitionsTest {
 
 		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
 
-		assertEquals(0, evaluateCohortDefinition.getMemberIds().size());
+		assertEquals(2, evaluateCohortDefinition.getMemberIds().size());
 
 	}
 
@@ -215,7 +210,7 @@ public class CXCACohortTest extends DefinitionsTest {
 
 		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
+		assertEquals(1, evaluateCohortDefinition.getMemberIds().size());
 
 		assertNotEquals(0, evaluateCohortDefinition.getMemberIds().size());
 	}
