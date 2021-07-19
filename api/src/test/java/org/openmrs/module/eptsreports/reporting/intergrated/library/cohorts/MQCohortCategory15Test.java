@@ -56,11 +56,11 @@ public class MQCohortCategory15Test extends DefinitionsFGHLiveTest {
 
   @Override
   protected String username() {
-    return "admin";
+    return "domingos.bernardo";
   }
 
   @Override
   protected String password() {
-    return "H!$fGH0Mr$";
+    return "dBernardo1";
   }
 }

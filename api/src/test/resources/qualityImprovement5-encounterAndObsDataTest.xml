@@ -240,23 +240,6 @@
 		uuid="5b9ac7b5-2bef-4780-a41b-e662894d072d" location_id="1"
 		value_datetime="2019-02-17 00:00:00" />
 
-	<obs obs_id="113" person_id="1010" concept_id="6122"
-		encounter_id="9014" obs_datetime="2019-02-17 00:00:00" creator="1"
-		date_created="2019-02-17 12:55:48" voided="0"
-		uuid="d62efcd5-77d7-4849-b936-2da7d92e6a08" location_id="1"
-		value_datetime="2019-02-17 00:00:00" />
-
-	<obs obs_id="114" person_id="1010" concept_id="6122"
-		encounter_id="9014" obs_datetime="2019-02-17 00:00:00" creator="1"
-		date_created="2019-02-17 12:55:48" voided="0"
-		uuid="4368b584-b412-43e5-acae-dacb55370996" location_id="1"
-		value_datetime="2019-02-17 00:00:00" />
-
-	<obs obs_id="115" person_id="1003" concept_id="6332"
-		encounter_id="9018" obs_datetime="2019-02-17 00:00:00" creator="1"
-		date_created="2019-02-17 12:55:48" voided="0"
-		uuid="ebf50564-fa33-4a78-83a8-9b41e28b8839" location_id="1"
-		value_datetime="2019-02-17 00:00:00" />
-
+ 
 
 </dataset>
