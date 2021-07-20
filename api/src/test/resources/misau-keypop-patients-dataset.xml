@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+	<location location_id="1" name="Alto Ligonha" description="NA"
+		address2="NA" state_province="NA" country="MA"
+		date_created="2008-10-13 11:32:52" county_district="NA" address6="NA"
+		retired="0" uuid="e2b32fc2-1d5f-11e0-b929-000c29ad1d07" />
+
+	<!-- PERSONS -->
+
+	<person person_id="1" gender="F" creator="1"
+		birthdate="1948-01-01 00:00:00.0" birthdate_estimated="0" dead="false"
+		date_created="2005-01-01 00:00:00.0" voided="false"
+		uuid="421875e2-6f22-1000-9281-8f1ee524029e" />
+
+	<person person_id="2" gender="M" creator="1"
+		birthdate="1986-03-17 00:00:00.0" birthdate_estimated="0" dead="false"
+		date_created="2005-01-01 00:00:00.0" voided="false"
+		uuid="421875e6-6f22-1000-9281-8f1ee524029e" />
+
+	<person person_id="3" gender="F" creator="1"
+		birthdate="1948-01-01 00:00:00.0" birthdate_estimated="0" dead="false"
+		date_created="2005-01-01 00:00:00.0" voided="false"
+		uuid="86386772-e544-11eb-ba80-0242ac130004" />
+
+	<person person_id="4" gender="M" creator="1"
+		birthdate="1986-03-17 00:00:00.0" birthdate_estimated="0" dead="false"
+		date_created="2005-01-01 00:00:00.0" voided="false"
+		uuid="989d86f4-e544-11eb-ba80-0242ac130004" />
+
+	<person person_id="5" gender="F" creator="1"
+		birthdate="1948-01-01 00:00:00.0" birthdate_estimated="0" dead="false"
+		date_created="2005-01-01 00:00:00.0" voided="false"
+		uuid="9d8146ec-e544-11eb-ba80-0242ac130004" />
+
+	<person person_id="6" gender="M" creator="1"
+		birthdate="1986-03-17 00:00:00.0" birthdate_estimated="0" dead="false"
+		date_created="2005-01-01 00:00:00.0" voided="false"
+		uuid="a2c0f526-e544-11eb-ba80-0242ac130004" />
+
+	<!-- patient -->
+	<patient patient_id="1" creator="1"
+		date_created="2005-09-22 00:00:00.0"
+		date_changed="2008-08-18 12:29:59.0" voided="false" void_reason="" />
+
+	<patient patient_id="2" creator="1"
+		date_created="2005-09-22 00:00:00.0"
+		date_changed="2008-08-18 12:29:59.0" voided="false" void_reason="" />
+
+	<patient patient_id="3" creator="1"
+		date_created="2005-09-22 00:00:00.0"
+		date_changed="2008-08-18 12:29:59.0" voided="false" void_reason="" />
+
+	<patient patient_id="4" creator="1"
+		date_created="2005-09-22 00:00:00.0"
+		date_changed="2008-08-18 12:29:59.0" voided="false" void_reason="" />
+
+	<patient patient_id="5" creator="1"
+		date_created="2005-09-22 00:00:00.0"
+		date_changed="2008-08-18 12:29:59.0" voided="false" void_reason="" />
+
+	<patient patient_id="6" creator="1"
+		date_created="2005-09-22 00:00:00.0"
+		date_changed="2008-08-18 12:29:59.0" voided="false" void_reason="" />
+
+</dataset>

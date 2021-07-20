@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+	<encounter_type encounter_type_id="6"
+		name="Master Card - Ficha Resumo"
+		description="Ficha resumo no master card" creator="1"
+		date_created="2008-10-13 11:35:34" retired="0"
+		uuid="d3b37477-34a7-48c8-84f8-8bc48d92f820" />
+
+	<encounter encounter_id="39894" encounter_type="6"
+		patient_id="1" encounter_datetime="2016-09-15 00:00:00"
+		creator="1" date_created="2017-01-21 21:44:19" voided="0"
+		uuid="1459ce3d-02c4-4c78-a8dd-801e7cceb1fc" location_id="1" />
+
+	<encounter encounter_id="39896" encounter_type="6"
+		patient_id="2" encounter_datetime="2015-07-06 00:00:00"
+		creator="1" date_created="2017-01-21 21:44:19" voided="0"
+		uuid="af4c3bcb-468b-4757-99d3-6f7ce8ed9176" location_id="1" />
+
+	<encounter encounter_id="39918" encounter_type="6"
+		patient_id="3" encounter_datetime="2016-06-20 00:00:00" creator="1"
+		date_created="2017-01-21 21:44:20" voided="0"
+		uuid="d3b37477-34a7-48c8-84f8-8bc48d92f820" location_id="1" />
+
+</dataset>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+	<!-- CONCEPTS -->
+	<concept concept_id="1255" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="7ce9f23e-e95f-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1256" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="753815de-e95f-11eb-9a03-0242ac130003" />
+
+	<!-- OBS -->
+	<obs obs_id="674310" person_id="1" concept_id="1255"
+		encounter_id="39918" obs_datetime="2016-06-20 00:00:00" creator="1"
+		date_created="2017-01-21 21:44:20" voided="0"
+		uuid="d4b750e0-ed76-4f3e-9fd9-55736d1e3db2" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="2165545" person_id="2" concept_id="1255"
+		encounter_id="39894" obs_datetime="2016-09-15 00:00:00" creator="1"
+		date_created="2017-03-15 09:40:06" voided="0"
+		uuid="0b52bdf2-0dff-4b50-a3f2-4644c00d1ad7" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="2165577" person_id="3" concept_id="1255"
+		encounter_id="39896" obs_datetime="2015-07-06 00:00:00" creator="1"
+		date_created="2017-03-15 09:44:21" voided="0"
+		uuid="2d117ff2-d279-4b42-8139-2d3b614f7d24" location_id="1"
+		value_coded="1256" />
+
+</dataset>
