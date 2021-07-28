@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+	<location location_id="1" name="Alto Ligonha" description="NA"
+		address2="NA" state_province="NA" country="MA"
+		date_created="2008-10-13 11:32:52" county_district="NA" address6="NA"
+		retired="0" uuid="e2b32fc2-1d5f-11e0-b929-000c29ad1d07" creator="1" />
+
+	<encounter_type encounter_type_id="53"
+		name="Master Card - Ficha Resumo"
+		description="Ficha resumo no master card" creator="1"
+		date_created="2008-10-13 11:35:34" retired="0"
+		uuid="47302458-ee12-11eb-9a03-0242ac130003" />
+
+	<encounter_type encounter_type_id="6"
+		name="S.TARV: ADULTO SEGUIMENTO"
+		description="seguimento visita do paciente adulto" creator="1"
+		date_created="2008-10-13 11:35:34" retired="0"
+		uuid="4d64a36c-ee12-11eb-9a03-0242ac130003" />
+
+	<encounter_type encounter_type_id="13"
+		name="MISAU: LABORATORIO" description="Laboratorio" creator="1"
+		date_created="2008-10-13 11:40:16" retired="0"
+		uuid="e2790f68-1d5f-11e0-b929-000c29ad1d07" />
+
+	<encounter_type encounter_type_id="18"
+		name="S.TARV: FARMACIA" description="Farmacia" creator="1"
+		date_created="2008-10-25 15:07:04.0" retired="0"
+		uuid="e279133c-1d5f-11e0-b929-000c29ad1d07" />
+
+	<encounter encounter_id="1" encounter_type="53"
+		patient_id="1" encounter_datetime="2020-12-31 14:44:21" creator="1"
+		date_created="2020-12-31 14:44:21" voided="0"
+		uuid="b54cefb8-d25e-459c-9cd1-13291a88fd6d" location_id="1" />
+
+	<encounter encounter_id="2" encounter_type="6" patient_id="2"
+		encounter_datetime="2020-12-31 14:44:21" creator="1"
+		date_created="2019-12-04 08:57:29" voided="0"
+		uuid="93fe66e9-f791-482b-a66c-17797661905a" location_id="1" />
+
+	<encounter encounter_id="3" encounter_type="6" patient_id="3"
+		encounter_datetime="2020-12-31 14:44:21" creator="1"
+		date_created="2020-06-29 11:05:04" voided="0"
+		uuid="8221a94b-4b4e-4a9a-b32a-cbebee061bd3" location_id="1" />
+
+	<encounter encounter_id="4" encounter_type="6" patient_id="1"
+		encounter_datetime="2019-12-31 14:44:21" creator="1"
+		date_created="2020-05-13 11:21:28" voided="0"
+		uuid="aed7d681-9e9a-4ac7-9ab0-f36c6d7c937a" location_id="1" />
+
+	<encounter encounter_id="5" encounter_type="6" patient_id="2"
+		encounter_datetime="2019-12-31 14:44:21" creator="1"
+		date_created="2020-09-21 19:08:55" voided="0"
+		uuid="131dcfa3-7dde-40e6-8fb0-63f930bcaee3" location_id="1" />
+
+	<encounter encounter_id="6" encounter_type="6" patient_id="3"
+		encounter_datetime="2019-12-31 14:44:21" creator="1"
+		date_created="2020-09-29 18:48:11" voided="0"
+		uuid="7c11378d-d4f5-4131-b80e-0ae0c8d2164f" location_id="1" />
+
+	<encounter encounter_id="7" encounter_type="6" patient_id="1"
+		encounter_datetime="2019-11-18 00:00:00" creator="1"
+		date_created="2019-11-28 11:09:50" voided="0"
+		uuid="e692d1cb-a704-45fb-8d28-6ecf5c6dee60" location_id="1" />
+
+	<encounter encounter_id="8" encounter_type="6" patient_id="2"
+		encounter_datetime="2020-01-02 00:00:00" creator="1"
+		date_created="2020-01-22 08:42:03" voided="0"
+		uuid="b23cbd5e-318b-4b82-86cc-e87722a79ee5" location_id="1" />
+
+	<encounter encounter_id="9" encounter_type="6" patient_id="1"
+		encounter_datetime="2020-11-18 00:00:00" creator="1"
+		date_created="2019-11-28 11:09:50" voided="0"
+		uuid="3514baae-eedf-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="10" encounter_type="6"
+		patient_id="2" encounter_datetime="2020-11-18 00:00:00" creator="1"
+		date_created="2020-01-22 08:42:03" voided="0"
+		uuid="46a1fbb0-eedf-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="11" encounter_type="6"
+		patient_id="1" encounter_datetime="2019-12-10 00:00:00" creator="1"
+		date_created="2020-02-11 12:23:56" voided="0"
+		uuid="b3f0ef1a-eee3-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="12" encounter_type="13"
+		patient_id="1" encounter_datetime="2020-12-31 00:00:00" creator="1"
+		date_created="2020-01-22 08:42:03" voided="0"
+		uuid="ad827400-eee3-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="13" encounter_type="6"
+		patient_id="5" encounter_datetime="2016-09-15 00:00:00" creator="1"
+		date_created="2017-01-21 21:44:19" voided="0"
+		uuid="551bbdf8-ef8d-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="14" encounter_type="18"
+		patient_id="5" encounter_datetime="2020-09-28 00:00:00" creator="1"
+		date_created="2020-10-07 09:12:41" voided="0"
+		uuid="4f598120-ef8d-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="15" encounter_type="6"
+		patient_id="5" encounter_datetime="2020-01-02 00:00:00" creator="1"
+		date_created="2020-01-22 08:42:03" voided="0"
+		uuid="43d8e16a-ef8d-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="16" encounter_type="6"
+		patient_id="5" encounter_datetime="2020-12-31 00:00:00" creator="1"
+		date_created="2020-12-31 08:42:03" voided="0"
+		uuid="4a5da49e-ef8d-11eb-9a03-0242ac130003" location_id="1" />
+
+	<!-- getDenominatorCategory15_Indicator_2_and_3_And_4 -->
+
+	<encounter encounter_id="17" encounter_type="6"
+		patient_id="6" encounter_datetime="2016-09-15 00:00:00" creator="1"
+		date_created="2017-01-21 21:44:19" voided="0"
+		uuid="05865658-ef9d-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="18" encounter_type="18"
+		patient_id="6" encounter_datetime="2020-09-28 00:00:00" creator="1"
+		date_created="2020-10-07 09:12:41" voided="0"
+		uuid="0e5429cc-ef9d-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="19" encounter_type="6"
+		patient_id="6" encounter_datetime="2020-01-02 00:00:00" creator="1"
+		date_created="2020-01-22 08:42:03" voided="0"
+		uuid="1276ea12-ef9d-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="20" encounter_type="6"
+		patient_id="6" encounter_datetime="2020-12-31 00:00:00" creator="1"
+		date_created="2020-12-31 08:42:03" voided="0"
+		uuid="1648d7e0-ef9d-11eb-9a03-0242ac130003" location_id="1" />
+
+
+	<!-- findPatientsWithDTandGaacWithCV1000Category15I -->
+
+	<encounter encounter_id="21" encounter_type="6"
+		patient_id="6" encounter_datetime="2020-01-10 00:00:00" creator="1"
+		date_created="2020-02-18 11:14:01" voided="0"
+		uuid="faf76a60-6833-47cb-9d38-fa127d1fea9c" location_id="1" />
+
+	<encounter encounter_id="22" encounter_type="6"
+		patient_id="6" encounter_datetime="2020-07-08 00:00:00" creator="1"
+		date_created="2020-07-09 12:26:02" voided="0"
+		uuid="66369e45-1978-4aab-987d-5c846af6fb83" location_id="1" />
+
+	<encounter encounter_id="23" encounter_type="13"
+		patient_id="6" encounter_datetime="2020-10-12 00:00:00" creator="1"
+		date_created="2020-10-13 09:53:03" voided="0"
+		uuid="f9f36af6-7c73-46af-b968-aabaf15d8f46" location_id="1" />
+
+	<!-- findPatientsWithDTandGaacWithCV1000Category15I -->
+
+	<encounter encounter_id="17" encounter_type="6"
+		patient_id="4" encounter_datetime="2016-09-15 00:00:00" creator="1"
+		date_created="2017-01-21 21:44:19" voided="0"
+		uuid="05865658-ef9d-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="18" encounter_type="18"
+		patient_id="4" encounter_datetime="2020-09-28 00:00:00" creator="1"
+		date_created="2020-10-07 09:12:41" voided="0"
+		uuid="0e5429cc-ef9d-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="19" encounter_type="6"
+		patient_id="4" encounter_datetime="2020-01-02 00:00:00" creator="1"
+		date_created="2020-01-22 08:42:03" voided="0"
+		uuid="1276ea12-ef9d-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="20" encounter_type="6"
+		patient_id="4" encounter_datetime="2020-12-31 00:00:00" creator="1"
+		date_created="2020-12-31 08:42:03" voided="0"
+		uuid="1648d7e0-ef9d-11eb-9a03-0242ac130003" location_id="1" />
+
+	<encounter encounter_id="21" encounter_type="6"
+		patient_id="7" encounter_datetime="2020-02-05 00:00:00" creator="1"
+		date_created="2020-02-13 13:07:33" voided="0"
+		uuid="489474fc-efd4-11eb-9a03-0242ac130003" location_id="1" />
+
+</dataset>

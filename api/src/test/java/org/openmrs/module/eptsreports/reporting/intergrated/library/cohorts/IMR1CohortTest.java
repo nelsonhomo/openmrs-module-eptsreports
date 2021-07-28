@@ -6,7 +6,6 @@ import static org.junit.Assert.assertFalse;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,238 +20,227 @@ import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-/**
- * Nesta classe todos testes não executam, excepto o último 
- *
- */
+/** Nesta classe todos testes não executam, excepto o último */
 public class IMR1CohortTest extends DefinitionsTest {
 
-	@Autowired
-	private IMR1CohortQueries imr1CohortQueries;
+  @Autowired private IMR1CohortQueries imr1CohortQueries;
 
-	@Autowired
-	private IMR1BCohortQueries imr1BCohortQueries;
+  @Autowired private IMR1BCohortQueries imr1BCohortQueries;
 
-	@Before
-	public void initialise() throws Exception {
-		executeDataSet("imr-patient-dataset.xml");
-		executeDataSet("imr-encounter-dataset.xml");
-		executeDataSet("imr-concepts-dataset.xml");
-	}
+  @Before
+  public void initialise() throws Exception {
+    executeDataSet("imr-patient-dataset.xml");
+    executeDataSet("imr-encounter-dataset.xml");
+    executeDataSet("imr-concepts-dataset.xml");
+  }
 
-	// TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
-	@Test
-	public void shouldFindPatientsNewlyEnrolledInART() throws EvaluationException {
+  // TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
+  @Test
+  public void shouldFindPatientsNewlyEnrolledInART() throws EvaluationException {
 
-		final Date startDate = DateUtil.getDateTime(2020, 11, 21);
-		final Date endDate = DateUtil.getDateTime(2020, 12, 20);
+    final Date startDate = DateUtil.getDateTime(2020, 11, 21);
+    final Date endDate = DateUtil.getDateTime(2020, 12, 20);
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		CohortDefinition i1B = imr1BCohortQueries.getPatientsNewlyEnrolledOnArtCare();
+    CohortDefinition i1B = imr1BCohortQueries.getPatientsNewlyEnrolledOnArtCare();
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
+    final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+  }
 
-	}
+  // TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
+  @Test
+  public void shouldGetPatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreastfeedingDenominator()
+      throws EvaluationException {
 
-	// TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
-	@Test
-	public void shouldGetPatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreastfeedingDenominator()
-			throws EvaluationException {
+    final Date startDate = DateUtil.getDateTime(2020, 11, 21);
+    final Date endDate = DateUtil.getDateTime(2020, 12, 20);
 
-		final Date startDate = DateUtil.getDateTime(2020, 11, 21);
-		final Date endDate = DateUtil.getDateTime(2020, 12, 20);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    CohortDefinition i1B =
+        imr1BCohortQueries
+            .getPatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreastfeedingDenominator();
 
-		CohortDefinition i1B = imr1BCohortQueries
-				.getPatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreastfeedingDenominator();
+    final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+  }
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+  // TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
+  @Test
+  public void shouldGetPatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreasFeedingNumerator()
+      throws EvaluationException {
 
-	}
+    final Date startDate = DateUtil.getDateTime(2020, 11, 21);
+    final Date endDate = DateUtil.getDateTime(2020, 12, 20);
 
-	// TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
-	@Test
-	public void shouldGetPatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreasFeedingNumerator()
-			throws EvaluationException {
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2020, 11, 21);
-		final Date endDate = DateUtil.getDateTime(2020, 12, 20);
+    CohortDefinition i1B =
+        imr1BCohortQueries
+            .getPatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreasFeedingNumerator();
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
 
-		CohortDefinition i1B = imr1BCohortQueries
-				.getPatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreasFeedingNumerator();
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+  }
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
+  // TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
+  @Ignore
+  @Test
+  public void shouldGetPatientsNewlyEnrolledOnArtWhoInitiatedArtTreatment()
+      throws EvaluationException {
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    final Date startDate = DateUtil.getDateTime(2020, 11, 21);
+    final Date endDate = DateUtil.getDateTime(2020, 12, 20);
 
-	}
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-	// TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
-	@Ignore
-	@Test
-	public void shouldGetPatientsNewlyEnrolledOnArtWhoInitiatedArtTreatment() throws EvaluationException {
+    CohortDefinition i1B =
+        imr1BCohortQueries.getPatientsNewlyEnrolledOnArtWhoInitiatedArtTreatment();
 
-		final Date startDate = DateUtil.getDateTime(2020, 11, 21);
-		final Date endDate = DateUtil.getDateTime(2020, 12, 20);
+    final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+  }
 
-		CohortDefinition i1B = imr1BCohortQueries.getPatientsNewlyEnrolledOnArtWhoInitiatedArtTreatment();
+  // TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
+  @Ignore
+  @Test
+  public void shouldGetAllPatientsEnrolledInArtCareDuringReportingPeriod()
+      throws EvaluationException {
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
+    final Date startDate = DateUtil.getDateTime(2019, 01, 01);
+    final Date endDate = DateUtil.getDateTime(2020, 01, 01);
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), getLocation());
 
-	}
+    CohortDefinition cohortDefinition =
+        this.imr1CohortQueries.getAllPatientsEnrolledInArtCareDuringReportingPeriod();
 
-	// TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
-	@Ignore
-	@Test
-	public void shouldGetAllPatientsEnrolledInArtCareDuringReportingPeriod() throws EvaluationException {
+    final EvaluatedCohort evaluateCohortDefinition =
+        evaluateCohortDefinition(cohortDefinition, parameters);
 
-		final Date startDate = DateUtil.getDateTime(2019, 01, 01);
-		final Date endDate = DateUtil.getDateTime(2020, 01, 01);
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), getLocation());
+    assertEquals(2, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-		CohortDefinition cohortDefinition = this.imr1CohortQueries
-				.getAllPatientsEnrolledInArtCareDuringReportingPeriod();
+  // TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
+  @Ignore
+  @Test
+  public void shouldGetPatientsNewlyEnrolledOnArtCare() throws EvaluationException {
 
-		final EvaluatedCohort evaluateCohortDefinition = evaluateCohortDefinition(cohortDefinition, parameters);
+    final Date startDate = DateUtil.getDateTime(2020, 11, 21);
+    final Date endDate = DateUtil.getDateTime(2020, 12, 20);
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		assertEquals(2, evaluateCohortDefinition.getMemberIds().size());
+    CohortDefinition i1B = imr1CohortQueries.getPatientsNewlyEnrolledOnArtCare();
 
-	}
-	
-	// TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
-	@Ignore
-	@Test
-	public void shouldGetPatientsNewlyEnrolledOnArtCare() throws EvaluationException {
+    final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
 
-		final Date startDate = DateUtil.getDateTime(2020, 11, 21);
-		final Date endDate = DateUtil.getDateTime(2020, 12, 20);
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+  }
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+  // TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
+  @Ignore
+  @Test
+  public void shouldGetPatientsNewlyEnrolledOnArtCareNumerator() throws EvaluationException {
 
-		CohortDefinition i1B = imr1CohortQueries.getPatientsNewlyEnrolledOnArtCare();
+    final Date startDate = DateUtil.getDateTime(2020, 11, 21);
+    final Date endDate = DateUtil.getDateTime(2020, 12, 20);
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    CohortDefinition i1B = imr1CohortQueries.getPatientsNewlyEnrolledOnArtCareNumerator();
 
-	}
-	
-	// TODO O teste não corre porque não reconhece o uso do INTERVAL no MYSQL
-	@Ignore
-	@Test
-	public void shouldGetPatientsNewlyEnrolledOnArtCareNumerator() throws EvaluationException {
+    final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
 
-		final Date startDate = DateUtil.getDateTime(2020, 11, 21);
-		final Date endDate = DateUtil.getDateTime(2020, 12, 20);
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+  }
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+  // TODO O teste não corre porque FUNCTION IF do MYSQL não é reconhecida pelo H2
+  @Ignore
+  @Test
+  public void shouldGetAllPatientsWhoAreBreastfeeding() throws EvaluationException {
 
-		CohortDefinition i1B = imr1CohortQueries.getPatientsNewlyEnrolledOnArtCareNumerator();
+    final Date startDate = DateUtil.getDateTime(2020, 11, 21);
+    final Date endDate = DateUtil.getDateTime(2020, 12, 20);
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    CohortDefinition i1B = imr1CohortQueries.getAllPatientsWhoAreBreastfeeding();
 
-	}
+    final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
 
-	// TODO O teste não corre porque FUNCTION IF do MYSQL não é reconhecida pelo H2
-	@Ignore
-	@Test
-	public void shouldGetAllPatientsWhoAreBreastfeeding() throws EvaluationException {
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+  }
 
-		final Date startDate = DateUtil.getDateTime(2020, 11, 21);
-		final Date endDate = DateUtil.getDateTime(2020, 12, 20);
+  // TODO O teste não corre porque FUNCTION IF do MYSQL não é reconhecida pelo H2
+  @Ignore
+  @Test
+  public void shouldGetAllPatientsWhoArePregnantInAPeriod() throws EvaluationException {
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    final Date startDate = DateUtil.getDateTime(2020, 11, 21);
+    final Date endDate = DateUtil.getDateTime(2020, 12, 20);
 
-		CohortDefinition i1B = imr1CohortQueries.getAllPatientsWhoAreBreastfeeding();
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
+    CohortDefinition i1B = imr1CohortQueries.getAllPatientsWhoArePregnantInAPeriod();
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
 
-	}
-	
-	// TODO O teste não corre porque FUNCTION IF do MYSQL não é reconhecida pelo H2
-	@Ignore
-	@Test
-	public void shouldGetAllPatientsWhoArePregnantInAPeriod() throws EvaluationException {
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+  }
 
-		final Date startDate = DateUtil.getDateTime(2020, 11, 21);
-		final Date endDate = DateUtil.getDateTime(2020, 12, 20);
+  @Test
+  public void shouldGetAllPatientsTransferredInByEndReportingDate() throws EvaluationException {
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    final Date startDate = DateUtil.getDateTime(2020, 11, 21);
+    final Date endDate = DateUtil.getDateTime(2021, 01, 01);
 
-		CohortDefinition i1B = imr1CohortQueries.getAllPatientsWhoArePregnantInAPeriod();
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
+    CohortDefinition i1B = imr1CohortQueries.getAllPatientsTransferredInByEndReportingDate();
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
 
-	}
-	
-	@Test
-	public void shouldGetAllPatientsTransferredInByEndReportingDate() throws EvaluationException {
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		final Date startDate = DateUtil.getDateTime(2020, 11, 21);
-		final Date endDate = DateUtil.getDateTime(2021, 01, 01);
-
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
-
-		CohortDefinition i1B = imr1CohortQueries.getAllPatientsTransferredInByEndReportingDate();
-
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(i1B, parameters);
-
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
-		
-		assertEquals(1, evaluateCohortDefinition.getMemberIds().size());
-
-	}
-
+    assertEquals(1, evaluateCohortDefinition.getMemberIds().size());
+  }
 }

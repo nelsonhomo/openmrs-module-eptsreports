@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+	<concept_class concept_class_id="7" name="Question"
+		description="Question (eg, patient history, SF36 items)" retired="0"
+		date_created="2004-03-02 00:00:00.0" creator="1"
+		uuid="150837b8-ee12-11eb-9a03-0242ac130003" />
+
+	<concept_datatype concept_datatype_id="2" name="Coded"
+		hl7_abbreviation="CWE"
+		description="Value determined by term dictionary lookup (i.e., term identifier)"
+		retired="0" date_created="2004-03-02 00:00:00.0" creator="1"
+		uuid="1999687e-ee12-11eb-9a03-0242ac130003" />
+
+	<!-- conceptS -->
+	<concept concept_id="6272" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="f87adbbe-ee11-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="6273" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="00afac1a-ee12-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="23730" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="04865dca-ee12-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1706" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="08ac8f8c-ee12-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1256" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="0d3bc162-ee12-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1366" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="fbc37c80-ee12-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="23722" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="acbf2148-eedf-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="856" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="bd10baf2-eedf-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="23739" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="1c01c8d6-eee4-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="23720" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="368e7218-eee3-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1706" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="34ff368a-eeed-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1190" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="36662374-ef80-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1255" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="ee5a33c0-ef81-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1256" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="f558e694-ef81-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="5096" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="80863b12-ef88-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1305" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="dbb3ad6e-ef90-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="23724" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="35729aac-ef98-11eb-9a03-0242ac130003" />
+		
+			<concept concept_id="1267" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="9f1914ea-efd4-11eb-9a03-0242ac130003" />
+
+	<!-- OBS -->
+	<obs obs_id="1" person_id="1" concept_id="6272" encounter_id="1"
+		obs_datetime="2020-12-31 14:44:21" creator="1"
+		date_created="2019-11-15 14:44:21" voided="0"
+		uuid="aeb3f53a-b00b-457a-8635-84ab22d3f6a5" location_id="1"
+		value_coded="1366" />
+
+	<obs obs_id="2" person_id="2" concept_id="6273" encounter_id="2"
+		obs_datetime="2020-12-31 14:44:21" creator="1"
+		date_created="2019-12-04 08:57:29" voided="0"
+		uuid="ed61ff3b-dfb8-4f21-b206-76490ac12b10" location_id="1"
+		value_coded="1706" />
+
+	<obs obs_id="3" person_id="3" concept_id="6273" encounter_id="3"
+		obs_datetime="2020-12-31 14:44:21" creator="1"
+		date_created="2020-06-29 11:06:18" voided="0"
+		uuid="155109d3-29a0-4656-81df-c26b2c5c7296" location_id="1"
+		value_coded="1706" />
+
+	<!-- OBS -->
+	<obs obs_id="4" person_id="1" concept_id="23730" encounter_id="4"
+		obs_datetime="2019-12-31 14:44:21" creator="1"
+		date_created="2020-07-22 09:24:29" voided="0"
+		uuid="37ca854b-e7a8-4355-9444-fecd73298374" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="5" person_id="2" concept_id="23730" encounter_id="5"
+		obs_datetime="2019-12-31 14:44:21" creator="1"
+		date_created="2020-09-21 19:08:55" voided="0"
+		uuid="51ce0046-f988-4f02-82cc-fa666ec34d82" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="6" person_id="3" concept_id="23730" encounter_id="6"
+		obs_datetime="2019-12-31 14:44:21" creator="1"
+		date_created="2020-09-29 18:48:11" voided="0"
+		uuid="6d43234a-5c73-4922-9bac-ab52e7aa701e" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="7" person_id="1" concept_id="23730" encounter_id="7"
+		obs_datetime="2020-01-02 00:00:00" creator="1"
+		date_created="2020-01-22 08:42:03" voided="0"
+		uuid="61e198a2-70b9-408e-8c0b-e80c29c7552c" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="8" person_id="2" concept_id="23730" encounter_id="8"
+		obs_datetime="2019-11-18 00:00:00" creator="1"
+		date_created="2020-03-19 11:56:55" voided="0"
+		uuid="e6baf7ba-3175-495d-8cd7-1b3add3a0185" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="9" person_id="1" concept_id="23722" encounter_id="7"
+		obs_datetime="2020-11-18 00:00:00" creator="1"
+		date_created="2020-01-22 08:42:03" voided="0"
+		uuid="799e1b5c-eedf-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="856" />
+
+	<obs obs_id="10" person_id="2" concept_id="23722" encounter_id="8"
+		obs_datetime="2020-11-18 00:00:00" creator="1"
+		date_created="2020-03-19 11:56:55" voided="0"
+		uuid="7e8913e2-eedf-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="856" />
+
+	<obs obs_id="11" person_id="1" concept_id="23739" encounter_id="11"
+		obs_datetime="2019-12-10 00:00:00" creator="1"
+		date_created="2020-02-11 12:23:56" voided="0"
+		uuid="bcbf0f82-eee3-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="23720" />
+
+	<obs obs_id="12" person_id="1" concept_id="856" encounter_id="12"
+		obs_datetime="2020-12-31 00:00:00" creator="1"
+		date_created="2020-03-19 11:56:55" voided="0"
+		uuid="038b3f62-eee4-11eb-9a03-0242ac130003" location_id="1"
+		value_numeric="800" />
+
+	<obs obs_id="13" person_id="5" concept_id="1255" encounter_id="13"
+		obs_datetime="2016-09-15 00:00:00" creator="1"
+		date_created="2017-03-15 09:40:06" voided="0"
+		uuid="0b52bdf2-0dff-4b50-a3f2-4644c00d1ad7" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="14" person_id="5" concept_id="5096" encounter_id="14"
+		obs_datetime="2020-09-28 00:00:00" creator="1"
+		date_created="2020-10-07 09:12:41" voided="0"
+		uuid="c1d7042a-4272-409d-9d1a-8377e97a9267" location_id="1"
+		value_datetime="2020-12-28 00:00:00" />
+
+	<obs obs_id="15" person_id="5" concept_id="23730" encounter_id="15"
+		obs_datetime="2020-01-02 00:00:00" creator="1"
+		date_created="2020-01-22 08:42:03" voided="0"
+		uuid="66879094-ef8d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="16" person_id="5" concept_id="23722" encounter_id="16"
+		obs_datetime="2020-12-31 00:00:00" creator="1"
+		date_created="2020-12-31 08:42:03" voided="0"
+		uuid="60968a5a-ef8d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="856" />
+
+	<!-- getDenominatorCategory15_Indicator_2_and_3_And_4 -->
+
+	<obs obs_id="17" person_id="6" concept_id="1255" encounter_id="17"
+		obs_datetime="2016-09-15 00:00:00" creator="1"
+		date_created="2017-03-15 09:40:06" voided="0"
+		uuid="31b18df6-ef9d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="18" person_id="6" concept_id="5096" encounter_id="18"
+		obs_datetime="2020-09-28 00:00:00" creator="1"
+		date_created="2020-10-07 09:12:41" voided="0"
+		uuid="36d9b6b4-ef9d-11eb-9a03-0242ac130003" location_id="1"
+		value_datetime="2020-12-28 00:00:00" />
+
+	<obs obs_id="19" person_id="6" concept_id="23730" encounter_id="19"
+		obs_datetime="2020-01-02 00:00:00" creator="1"
+		date_created="2020-01-22 08:42:03" voided="0"
+		uuid="3bd00326-ef9d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="20" person_id="6" concept_id="23722" encounter_id="20"
+		obs_datetime="2020-12-31 00:00:00" creator="1"
+		date_created="2020-12-31 08:42:03" voided="0"
+		uuid="41c318d6-ef9d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="856" />
+
+	<!-- findPatientsWithDTandGaacWithCV1000Category15I -->
+
+	<obs obs_id="21" person_id="6" concept_id="23724" encounter_id="21"
+		obs_datetime="2020-01-10 00:00:00" creator="1"
+		date_created="2020-02-18 11:14:02" voided="0"
+		uuid="40a89465-4fef-40b1-81c4-d3b52559f1da" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="22" person_id="6" concept_id="23722" encounter_id="22"
+		obs_datetime="2020-07-08 00:00:00" creator="1"
+		date_created="2020-07-09 12:26:02" voided="0"
+		uuid="f8f636ee-5282-4e9f-a397-fa016aa18a1f" location_id="1"
+		value_coded="856" />
+
+	<obs obs_id="23" person_id="6" concept_id="856" encounter_id="23"
+		obs_datetime="2020-10-12 00:00:00" creator="1"
+		date_created="2020-10-13 09:53:03" voided="0"
+		uuid="0c126643-537a-47d3-aa95-4aeb3d702325" location_id="1"
+		value_numeric="77" />
+	<!-- findPatientsWithDTandGaacWithCV1000Category15I -->
+
+	<obs obs_id="17" person_id="4" concept_id="1255" encounter_id="17"
+		obs_datetime="2016-09-15 00:00:00" creator="1"
+		date_created="2017-03-15 09:40:06" voided="0"
+		uuid="31b18df6-ef9d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="18" person_id="4" concept_id="5096" encounter_id="18"
+		obs_datetime="2020-09-28 00:00:00" creator="1"
+		date_created="2020-10-07 09:12:41" voided="0"
+		uuid="36d9b6b4-ef9d-11eb-9a03-0242ac130003" location_id="1"
+		value_datetime="2020-12-28 00:00:00" />
+
+	<obs obs_id="19" person_id="4" concept_id="23730" encounter_id="19"
+		obs_datetime="2020-01-02 00:00:00" creator="1"
+		date_created="2020-01-22 08:42:03" voided="0"
+		uuid="3bd00326-ef9d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="1256" />
+
+	<obs obs_id="20" person_id="4" concept_id="23722" encounter_id="20"
+		obs_datetime="2020-12-31 00:00:00" creator="1"
+		date_created="2020-12-31 08:42:03" voided="0"
+		uuid="41c318d6-ef9d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="856" />
+		
+			<obs obs_id="21" person_id="7" concept_id="23724" encounter_id="21"
+		obs_datetime="2020-02-05 00:00:00" creator="1"
+		date_created="2020-02-13 13:07:33" voided="0"
+		uuid="69a90f4a-efd4-11eb-9a03-0242ac130003" location_id="1" value_coded="1267"/>
+		
+
+
+
+</dataset>

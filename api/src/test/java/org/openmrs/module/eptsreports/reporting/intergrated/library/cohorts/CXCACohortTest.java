@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,400 +25,412 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class CXCACohortTest extends DefinitionsTest {
 
-	@Autowired
-	private CxCaSCRNCohortQueries cxCaSCRNCohortQueries;
-	@Autowired
-	private CxCxSRNPositiveCohortQueries cxCxSRNPositiveCohortQueries;
-	@Autowired
-	private CxCaTXCohortQueries CxxCaTXCohortQueries;
+  @Autowired private CxCaSCRNCohortQueries cxCaSCRNCohortQueries;
+  @Autowired private CxCxSRNPositiveCohortQueries cxCxSRNPositiveCohortQueries;
+  @Autowired private CxCaTXCohortQueries CxxCaTXCohortQueries;
 
-	@Before
-	public void initialise() throws Exception {
-		executeDataSet("cxca.xml");
-		executeDataSet("cxca1.xml");
-		executeDataSet("cxca2.xml");
-		executeDataSet("cxca3.xml");
-		executeDataSet("cxca4.xml");
-	}
+  @Before
+  public void initialise() throws Exception {
+    executeDataSet("cxca.xml");
+    executeDataSet("cxca1.xml");
+    executeDataSet("cxca2.xml");
+    executeDataSet("cxca3.xml");
+    executeDataSet("cxca4.xml");
+  }
 
-	@Test
-	public void shouldFindPatientsNewlyEnrolledInART() throws EvaluationException {
+  @Test
+  public void shouldFindPatientsNewlyEnrolledInART() throws EvaluationException {
 
-		Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), this.getStartDate());
-		parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
-		parameters.put(new Parameter("location", "Location", Location.class), getLocation());
+    Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), this.getStartDate());
+    parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
+    parameters.put(new Parameter("location", "Location", Location.class), getLocation());
 
-		CohortDefinition cohortDefinition = this.cxCxSRNPositiveCohortQueries.findpatientwithCxCaPositive();
+    CohortDefinition cohortDefinition =
+        this.cxCxSRNPositiveCohortQueries.findpatientwithCxCaPositive();
 
-		final EvaluatedCohort evaluateCohortDefinition = evaluateCohortDefinition(cohortDefinition, parameters);
+    final EvaluatedCohort evaluateCohortDefinition =
+        evaluateCohortDefinition(cohortDefinition, parameters);
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(2, evaluateCohortDefinition.getMemberIds().size());
+    assertEquals(2, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-	}
+  @Test
+  public void shouldFindPatientsWithScreeningTestForCervicalCancerDuringReportingPeriod()
+      throws EvaluationException {
 
-	@Test
-	public void shouldFindPatientsWithScreeningTestForCervicalCancerDuringReportingPeriod() throws EvaluationException {
+    Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), this.getStartDate());
+    parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
+    parameters.put(new Parameter("location", "Location", Location.class), getLocation());
 
-		Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), this.getStartDate());
-		parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
-		parameters.put(new Parameter("location", "Location", Location.class), getLocation());
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries
+            .findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriod();
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriod();
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(cohortDefinition, parameters);
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
-		
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(9, evaluateCohortDefinition.getMemberIds().size());
+    assertEquals(9, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-	}
+  @Test
+  public void shouldFindPatientsWithScreeningTestForCervicalCancerPreviousReportingPeriod()
+      throws EvaluationException {
 
-	@Test
-	public void shouldFindPatientsWithScreeningTestForCervicalCancerPreviousReportingPeriod()
-			throws EvaluationException {
+    final Date startDate = DateUtil.getDateTime(2019, 01, 01);
 
-		final Date startDate = DateUtil.getDateTime(2019, 01, 01);
+    Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
+    parameters.put(new Parameter("location", "Location", Location.class), getLocation());
 
-		Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
-		parameters.put(new Parameter("location", "Location", Location.class), getLocation());
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries
+            .findPatientsWithScreeningTestForCervicalCancerPreviousReportingPeriod();
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.findPatientsWithScreeningTestForCervicalCancerPreviousReportingPeriod();
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(cohortDefinition, parameters);
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
+    assertEquals(1, evaluateCohortDefinition.getMemberIds().size());
 
-		assertEquals(1, evaluateCohortDefinition.getMemberIds().size());
+    assertNotEquals(0, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-		assertNotEquals(0, evaluateCohortDefinition.getMemberIds().size());
+  @Test
+  public void shouldFindPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative()
+      throws EvaluationException {
 
-	}
+    final Date startDate = DateUtil.getDateTime(2019, 01, 01);
 
-	@Test
-	public void shouldFindPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative()
-			throws EvaluationException {
+    Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
+    parameters.put(new Parameter("location", "Location", Location.class), getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2019, 01, 01);
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries
+            .findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative();
 
-		Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
-		parameters.put(new Parameter("location", "Location", Location.class), getLocation());
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(cohortDefinition, parameters);
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative();
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
+    assertEquals(7, evaluateCohortDefinition.getMemberIds().size());
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    assertNotEquals(0, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-		assertEquals(7, evaluateCohortDefinition.getMemberIds().size());
+  @Test
+  public void shouldFindPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodPositive()
+      throws EvaluationException {
 
-		assertNotEquals(0, evaluateCohortDefinition.getMemberIds().size());
-	}
+    final Date startDate = DateUtil.getDateTime(2019, 01, 01);
 
-	@Test
-	public void shouldFindPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodPositive()
-			throws EvaluationException {
+    Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
+    parameters.put(new Parameter("location", "Location", Location.class), getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2019, 01, 01);
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries
+            .findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodPositive();
 
-		Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
-		parameters.put(new Parameter("location", "Location", Location.class), getLocation());
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(cohortDefinition, parameters);
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodPositive();
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
+    assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    assertNotEquals(evaluateCohortDefinition.getMemberIds().size(), 0);
+  }
 
-		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
+  @Test
+  public void
+      shouldFindPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodSuspectCancer()
+          throws EvaluationException {
 
-		assertNotEquals(evaluateCohortDefinition.getMemberIds().size(), 0);
-	}
+    final Date startDate = DateUtil.getDateTime(2019, 01, 01);
 
-	@Test
-	public void shouldFindPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodSuspectCancer()
-			throws EvaluationException {
+    Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
+    parameters.put(new Parameter("location", "Location", Location.class), getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2019, 01, 01);
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries
+            .findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodSuspectCancer();
 
-		Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), this.getEndDate());
-		parameters.put(new Parameter("location", "Location", Location.class), getLocation());
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(cohortDefinition, parameters);
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodSuspectCancer();
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
+    assertEquals(1, evaluateCohortDefinition.getMemberIds().size());
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    assertNotEquals(0, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-		assertEquals(1, evaluateCohortDefinition.getMemberIds().size());
+  @Test
+  public void shouldFindPatientWithScreeningTypeVisitAsRescreenedAfterPreviousNegative()
+      throws EvaluationException {
 
-		assertNotEquals(0, evaluateCohortDefinition.getMemberIds().size());
-	}
+    final Date startDate = DateUtil.getDateTime(2020, 01, 01);
 
-	@Test
-	public void shouldFindPatientWithScreeningTypeVisitAsRescreenedAfterPreviousNegative() throws EvaluationException {
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
 
-		final Date startDate = DateUtil.getDateTime(2020, 01, 01);
+    Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), getLocation());
 
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries
+            .findPatientWithScreeningTypeVisitAsRescreenedAfterPreviousNegative();
 
-		Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), getLocation());
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(cohortDefinition, parameters);
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.findPatientWithScreeningTypeVisitAsRescreenedAfterPreviousNegative();
+    assertEquals(2, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
+  @Test
+  public void shouldFindPatientWithScreeningTypeVisitAsRescreenedAfterPreviousPositive()
+      throws EvaluationException {
 
-		assertEquals(2, evaluateCohortDefinition.getMemberIds().size());
+    final Date startDate = DateUtil.getDateTime(2020, 01, 01);
 
-	}
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
 
-	@Test
-	public void shouldFindPatientWithScreeningTypeVisitAsRescreenedAfterPreviousPositive() throws EvaluationException {
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2020, 01, 01);
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries
+            .findPatientWithScreeningTypeVisitAsRescreenedAfterPreviousPositive();
 
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(cohortDefinition, parameters);
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.findPatientWithScreeningTypeVisitAsRescreenedAfterPreviousPositive();
+    assertEquals(1, evaluateCohortDefinition.getMemberIds().size());
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
+    assertNotEquals(0, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+  @Test
+  public void shouldFindpatientwithScreeningTypeVisitAsPostTreatmentFollowUp()
+      throws EvaluationException {
 
-		assertEquals(1, evaluateCohortDefinition.getMemberIds().size());
+    final Date startDate = DateUtil.getDateTime(2018, 01, 01);
 
-		assertNotEquals(0, evaluateCohortDefinition.getMemberIds().size());
-	}
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
 
-	@Test
-	public void shouldFindpatientwithScreeningTypeVisitAsPostTreatmentFollowUp() throws EvaluationException {
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2018, 01, 01);
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries.findpatientwithScreeningTypeVisitAsPostTreatmentFollowUp();
 
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(cohortDefinition, parameters);
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    assertTrue(evaluateCohortDefinition.getMemberIds().isEmpty());
+  }
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.findpatientwithScreeningTypeVisitAsPostTreatmentFollowUp();
+  // TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
+  @Ignore
+  @Test
+  public void shouldFindPatientsWhoerceivedTreatmentTypeDuringReportingPeriod()
+      throws EvaluationException {
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
+    final Date startDate = DateUtil.getDateTime(2020, 01, 01);
 
-		assertTrue(evaluateCohortDefinition.getMemberIds().isEmpty());
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-	}
+    CohortDefinition cohortDefinition =
+        this.CxxCaTXCohortQueries.findPatientsWhoerceivedTreatmentTypeDuringReportingPeriod();
 
-	// TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
-	@Ignore
-	@Test
-	public void shouldFindPatientsWhoerceivedTreatmentTypeDuringReportingPeriod() throws EvaluationException {
+    System.out.println(this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
 
-		final Date startDate = DateUtil.getDateTime(2020, 01, 01);
+    assertEquals(3, this.evaluateCohortDefinition(cohortDefinition, parameters));
+  }
 
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+  // TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
+  @Ignore
+  @Test
+  public void getTotalNumerator() throws EvaluationException {
 
-		CohortDefinition cohortDefinition = this.CxxCaTXCohortQueries
-				.findPatientsWhoerceivedTreatmentTypeDuringReportingPeriod();
+    CohortDefinition cohort = cxCaSCRNCohortQueries.getTotalNumerator();
 
-		System.out.println(this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+    final Date startDate = DateUtil.getDateTime(2020, 01, 01);
 
-		assertEquals(3, this.evaluateCohortDefinition(cohortDefinition, parameters));
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-	}
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(cohort, parameters);
 
-	// TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
-	@Ignore
-	@Test
-	public void getTotalNumerator() throws EvaluationException {
+    System.out.println(evaluateCohortDefinition.getMemberIds().size());
 
-		CohortDefinition cohort = cxCaSCRNCohortQueries.getTotalNumerator();
+    assertEquals(5, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-		final Date startDate = DateUtil.getDateTime(2020, 01, 01);
+  @Test
+  public void
+      shouldGetTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpNegative()
+          throws EvaluationException {
 
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    final Date startDate = DateUtil.getDateTime(2019, 01, 01);
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohort, parameters);
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		System.out.println(evaluateCohortDefinition.getMemberIds().size());
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries
+            .getTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpNegative();
 
-		assertEquals(5, evaluateCohortDefinition.getMemberIds().size());
+    assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+  }
 
-	}
+  @Test
+  public void
+      shouldGetTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpPositive()
+          throws EvaluationException {
 
-	@Test
-	public void shouldGetTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpNegative()
-			throws EvaluationException {
+    final Date startDate = DateUtil.getDateTime(2018, 01, 01);
 
-		final Date startDate = DateUtil.getDateTime(2019, 01, 01);
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries
+            .getTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpPositive();
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.getTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpNegative();
+    assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+  }
 
-		assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+  @Test
+  public void
+      shouldGetTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpSuspectCancer()
+          throws EvaluationException {
 
-	}
+    final Date startDate = DateUtil.getDateTime(2018, 01, 01);
 
-	@Test
-	public void shouldGetTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpPositive()
-			throws EvaluationException {
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2018, 01, 01);
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries
+            .getTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpSuspectCancer();
 
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+  }
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.getTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpPositive();
+  // TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
+  @Ignore
+  @Test
+  public void shouldGetTotalNumeratorRescreenedAfterPreviousPositiveTotal()
+      throws EvaluationException {
 
-		assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+    final Date startDate = DateUtil.getDateTime(2018, 01, 01);
 
-	}
-	
-	@Test
-	public void shouldGetTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpSuspectCancer()
-			throws EvaluationException {
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2018, 01, 01);
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries.getTotalNumeratorRescreenedAfterPreviousPositiveTotal();
 
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+  }
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.getTotalNumeratorfindpatientwithScreeningTypeVisitAsPostTreatmentFollowUpSuspectCancer();
+  // TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
+  @Ignore
+  @Test
+  public void shouldGetTotalNumeratorRescreenedAfterPreviousPositiveNegative()
+      throws EvaluationException {
 
-		assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+    final Date startDate = DateUtil.getDateTime(2018, 01, 01);
 
-	}
-	
-	//TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
-	@Ignore
-	@Test
-	public void shouldGetTotalNumeratorRescreenedAfterPreviousPositiveTotal()
-			throws EvaluationException {
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2018, 01, 01);
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries.getTotalNumeratorRescreenedAfterPreviousPositiveNegative();
 
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+  }
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.getTotalNumeratorRescreenedAfterPreviousPositiveTotal();
+  // TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
+  @Ignore
+  @Test
+  public void shouldGetTotalNumeratorRescreenedAfterPreviousPositivePositive()
+      throws EvaluationException {
 
-		assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+    final Date startDate = DateUtil.getDateTime(2018, 01, 01);
 
-	}
-	
-	//TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
-	@Ignore
-	@Test
-	public void shouldGetTotalNumeratorRescreenedAfterPreviousPositiveNegative()
-			throws EvaluationException {
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2018, 01, 01);
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries.getTotalNumeratorRescreenedAfterPreviousPositivePositive();
 
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+  }
 
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.getTotalNumeratorRescreenedAfterPreviousPositiveNegative();
+  // TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
+  @Ignore
+  @Test
+  public void shouldGetTotalNumeratorRescreenedAfterPreviousPositiveSuspectCancer()
+      throws EvaluationException {
 
-		assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+    final Date startDate = DateUtil.getDateTime(2018, 01, 01);
 
-	}
-	
-	//TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
-	@Ignore
-	@Test
-	public void shouldGetTotalNumeratorRescreenedAfterPreviousPositivePositive()
-			throws EvaluationException {
+    final Date endDate = DateUtil.getDateTime(2021, 06, 01);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2018, 01, 01);
+    CohortDefinition cohortDefinition =
+        this.cxCaSCRNCohortQueries.getTotalNumeratorRescreenedAfterPreviousPositiveSuspectCancer();
 
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
-
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.getTotalNumeratorRescreenedAfterPreviousPositivePositive();
-
-		assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
-
-	}
-	
-	//TODO O teste não passa devido a incompatibilidade das funcões mysql com o H2
-	@Ignore
-	@Test
-	public void shouldGetTotalNumeratorRescreenedAfterPreviousPositiveSuspectCancer()
-			throws EvaluationException {
-
-		final Date startDate = DateUtil.getDateTime(2018, 01, 01);
-
-		final Date endDate = DateUtil.getDateTime(2021, 06, 01);
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
-
-		CohortDefinition cohortDefinition = this.cxCaSCRNCohortQueries
-				.getTotalNumeratorRescreenedAfterPreviousPositiveSuspectCancer();
-
-		assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
-
-	}
-
+    assertEquals(0, this.evaluateCohortDefinition(cohortDefinition, parameters).getSize());
+  }
 }

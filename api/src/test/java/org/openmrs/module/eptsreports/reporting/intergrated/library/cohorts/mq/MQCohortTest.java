@@ -1,4 +1,4 @@
-package org.openmrs.module.eptsreports.reporting.intergrated.library.cohorts;
+package org.openmrs.module.eptsreports.reporting.intergrated.library.cohorts.mq;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -7,7 +7,13 @@ import org.junit.Test;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.eptsreports.reporting.intergrated.utils.DefinitionsFGHLiveTest;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCategory15CohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mi.GenericMICohortQueryCategory12;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mi.MICategory11CohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mi.MICategory11P2CohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mi.MICategory12P1CohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mi.MICategory15CohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mi.MICategory7CohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQGenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportConstants;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -16,18 +22,24 @@ import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class MQCohortCategory15Test extends DefinitionsFGHLiveTest {
+public class MQCohortTest extends DefinitionsFGHLiveTest {
 
-  @Autowired private MQCategory15CohortQueries mQCohortQueriesCategory15;
+  @Autowired private MICategory11CohortQueries miCategory11CohortQueries;
+  @Autowired private MICategory7CohortQueries miCategory7CohortQueries;
+  @Autowired private MQGenericCohortQueries mQGenericCohortQueries;
+  @Autowired private MICategory11P2CohortQueries mICategory11P2CohortQueries;
+  @Autowired private MICategory12P1CohortQueries mICategory12P1CohortQueries;
+  @Autowired private GenericMICohortQueryCategory12 genericMICohortQueryCategory12;
+  @Autowired private MICategory15CohortQueries category15;
 
   @Test
   public void shouldFindPatientsNewlyEnrolledInART() throws EvaluationException {
 
-    final Location location = Context.getLocationService().getLocation(400);
-    final Date startInclusionDate = DateUtil.getDateTime(2019, 10, 21);
-    final Date endInclusionDate = DateUtil.getDateTime(2020, 1, 20);
+    final Location location = Context.getLocationService().getLocation(398);
+    final Date startInclusionDate = DateUtil.getDateTime(2020, 1, 21);
+    final Date endInclusionDate = DateUtil.getDateTime(2020, 4, 20);
 
-    final Date revisionDate = DateUtil.getDateTime(2020, 10, 20);
+    final Date revisionDate = DateUtil.getDateTime(2021, 1, 20);
 
     final Map<Parameter, Object> parameters = new HashMap<>();
 
@@ -42,7 +54,8 @@ public class MQCohortCategory15Test extends DefinitionsFGHLiveTest {
         new Parameter(EptsReportConstants.END_REVISION_DATE, "End Date", Date.class), revisionDate);
 
     CohortDefinition cohortDefinition =
-        mQCohortQueriesCategory15.getDenominatorCategory15_Indicator_2_and_3_And_4();
+        category15
+            .findPatientsElegibleForMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriod_Denominator_15_1();
 
     final EvaluatedCohort evaluateCohortDefinition =
         this.evaluateCohortDefinition(cohortDefinition, parameters);
@@ -56,11 +69,11 @@ public class MQCohortCategory15Test extends DefinitionsFGHLiveTest {
 
   @Override
   protected String username() {
-    return "domingos.bernardo";
+    return "admin";
   }
 
   @Override
   protected String password() {
-    return "dBernardo1";
+    return "H!$fGH0Mr$";
   }
 }

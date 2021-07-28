@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,166 +21,160 @@ import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Nesta classe apenas dois testes executam com sucesso, o restante não passam
- * devido ao erro deste
- * MisauKeyPopReportQueries.findPatientsCurrentlyOnTarvTarvMisauDefinition(DATE_ADD)
- * que usa a function DATE_ADD
+ * Nesta classe apenas dois testes executam com sucesso, o restante não passam devido ao erro deste
+ * MisauKeyPopReportQueries.findPatientsCurrentlyOnTarvTarvMisauDefinition(DATE_ADD) que usa a
+ * function DATE_ADD
  */
 public class MisauKeyPopCalculationTest extends DefinitionsTest {
 
-	@Autowired
-	private MisauKeyPopReportCohortQueries misauKeyPopReportCohortQueries;
+  @Autowired private MisauKeyPopReportCohortQueries misauKeyPopReportCohortQueries;
 
-	@Before
-	public void initialise() throws Exception {
-		executeDataSet("misau-keypop-patients-dataset.xml");
-		executeDataSet("misau-keypop-encounter-dataset.xml");
-		executeDataSet("misau-keypop-obs-dataset.xml");
-	}
+  @Before
+  public void initialise() throws Exception {
+    executeDataSet("misau-keypop-patients-dataset.xml");
+    executeDataSet("misau-keypop-encounter-dataset.xml");
+    executeDataSet("misau-keypop-obs-dataset.xml");
+  }
 
-	@Test
-	public void shouldFindPatientsNewlyEnrolledInART() throws EvaluationException {
+  @Test
+  public void shouldFindPatientsNewlyEnrolledInART() throws EvaluationException {
 
-		final Date startDate = DateUtil.getDateTime(2013, 01, 01);
-		final Date endDate = DateUtil.getDateTime(2021, 01, 01);
+    final Date startDate = DateUtil.getDateTime(2013, 01, 01);
+    final Date endDate = DateUtil.getDateTime(2021, 01, 01);
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		CohortDefinition patientsCoort12Start = this.misauKeyPopReportCohortQueries.getPatientsCoort12StartArt();
+    CohortDefinition patientsCoort12Start =
+        this.misauKeyPopReportCohortQueries.getPatientsCoort12StartArt();
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(patientsCoort12Start,
-				parameters);
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(patientsCoort12Start, parameters);
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
+    assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-	}
+  // TODO Este teste não corre porque o H2 não é compativel com a função DATE_ADD
+  // usado na query
+  @Ignore
+  @Test
+  public void shouldGetPatientsCurrentOnTarvMisauDefinition() throws EvaluationException {
 
-	// TODO Este teste não corre porque o H2 não é compativel com a função DATE_ADD
-	// usado na query
-	@Ignore
-	@Test
-	public void shouldGetPatientsCurrentOnTarvMisauDefinition() throws EvaluationException {
+    final Date startDate = DateUtil.getDateTime(2013, 01, 01);
+    final Date endDate = DateUtil.getDateTime(2021, 01, 01);
 
-		final Date startDate = DateUtil.getDateTime(2013, 01, 01);
-		final Date endDate = DateUtil.getDateTime(2021, 01, 01);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    CohortDefinition patientsCoort12Start =
+        this.misauKeyPopReportCohortQueries.getPatientsCurrentOnTarvMisauDefinition();
 
-		CohortDefinition patientsCoort12Start = this.misauKeyPopReportCohortQueries
-				.getPatientsCurrentOnTarvMisauDefinition();
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(patientsCoort12Start, parameters);
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(patientsCoort12Start,
-				parameters);
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+    assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
+  // TODO Este teste não corre porque o H2 não é compativel com a função DATE_ADD
+  // usado na query
+  @Ignore
+  @Test
+  public void shouldGetPatientsCurrentlyOnTarvWhoReceicevedVLResults() throws EvaluationException {
 
-	}
+    final Date startDate = DateUtil.getDateTime(2013, 01, 01);
+    final Date endDate = DateUtil.getDateTime(2021, 01, 01);
 
-	// TODO Este teste não corre porque o H2 não é compativel com a função DATE_ADD
-	// usado na query
-	@Ignore
-	@Test
-	public void shouldGetPatientsCurrentlyOnTarvWhoReceicevedVLResults() throws EvaluationException {
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		final Date startDate = DateUtil.getDateTime(2013, 01, 01);
-		final Date endDate = DateUtil.getDateTime(2021, 01, 01);
+    CohortDefinition patientsCoort12Start =
+        this.misauKeyPopReportCohortQueries.getPatientsCurrentlyOnTarvWhoReceicevedVLResults();
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(patientsCoort12Start, parameters);
 
-		CohortDefinition patientsCoort12Start = this.misauKeyPopReportCohortQueries
-				.getPatientsCurrentlyOnTarvWhoReceicevedVLResults();
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(patientsCoort12Start,
-				parameters);
+    assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
+  }
 
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+  // TODO Este teste não corre porque o H2 não é compativel com a função DATE_ADD
+  // usado na query
+  // MisauKeyPopReportQueries.findPatientsCurrentlyOnTarvTarvMisauDefinition(DATE_ADD)
+  @Ignore
+  @Test
+  public void shouldGetPatientsCurrentlyOnTarvWhitSuppressedVLResults() throws EvaluationException {
 
-		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
+    final Date startDate = DateUtil.getDateTime(2013, 01, 01);
+    final Date endDate = DateUtil.getDateTime(2021, 01, 01);
 
-	}
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-	// TODO Este teste não corre porque o H2 não é compativel com a função DATE_ADD
-	// usado na query
-	// MisauKeyPopReportQueries.findPatientsCurrentlyOnTarvTarvMisauDefinition(DATE_ADD)
-	@Ignore
-	@Test
-	public void shouldGetPatientsCurrentlyOnTarvWhitSuppressedVLResults() throws EvaluationException {
+    CohortDefinition patientsCoort12Start =
+        this.misauKeyPopReportCohortQueries.getPatientsCurrentlyOnTarvWhitSuppressedVLResults();
 
-		final Date startDate = DateUtil.getDateTime(2013, 01, 01);
-		final Date endDate = DateUtil.getDateTime(2021, 01, 01);
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(patientsCoort12Start, parameters);
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+    assertTrue(evaluateCohortDefinition.getMemberIds().isEmpty());
+  }
 
-		CohortDefinition patientsCoort12Start = this.misauKeyPopReportCohortQueries
-				.getPatientsCurrentlyOnTarvWhitSuppressedVLResults();
+  // TODO Este teste não corre porque o H2 não é compativel com a função DATE_ADD
+  // usado na query
+  // MisauKeyPopReportQueries.findPatientsCurrentlyOnTarvTarvMisauDefinition(DATE_ADD)
+  @Ignore
+  @Test
+  public void shouldGetPatientsCoort12CurrentOnArt() throws EvaluationException {
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(patientsCoort12Start,
-				parameters);
+    final Date startDate = DateUtil.getDateTime(2013, 01, 01);
+    final Date endDate = DateUtil.getDateTime(2021, 01, 01);
 
-		assertTrue(evaluateCohortDefinition.getMemberIds().isEmpty());
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-	}
+    CohortDefinition patientsCoort12Start =
+        this.misauKeyPopReportCohortQueries.getPatientsCurrentlyOnTarvWhitSuppressedVLResults();
 
-	// TODO Este teste não corre porque o H2 não é compativel com a função DATE_ADD
-	// usado na query
-	// MisauKeyPopReportQueries.findPatientsCurrentlyOnTarvTarvMisauDefinition(DATE_ADD)
-	@Ignore
-	@Test
-	public void shouldGetPatientsCoort12CurrentOnArt() throws EvaluationException {
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(patientsCoort12Start, parameters);
 
-		final Date startDate = DateUtil.getDateTime(2013, 01, 01);
-		final Date endDate = DateUtil.getDateTime(2021, 01, 01);
+    assertTrue(evaluateCohortDefinition.getMemberIds().isEmpty());
+  }
 
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+  @Test
+  public void shouldGetPatientsCoort12StartArt() throws EvaluationException {
 
-		CohortDefinition patientsCoort12Start = this.misauKeyPopReportCohortQueries
-				.getPatientsCurrentlyOnTarvWhitSuppressedVLResults();
+    final Date startDate = DateUtil.getDateTime(2013, 01, 01);
+    final Date endDate = DateUtil.getDateTime(2021, 01, 01);
 
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(patientsCoort12Start,
-				parameters);
+    final Map<Parameter, Object> parameters = new HashMap<>();
+    parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
+    parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
+    parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
 
-		assertTrue(evaluateCohortDefinition.getMemberIds().isEmpty());
+    CohortDefinition patientsCoort12Start =
+        this.misauKeyPopReportCohortQueries.getPatientsCoort12StartArt();
 
-	}
+    final EvaluatedCohort evaluateCohortDefinition =
+        this.evaluateCohortDefinition(patientsCoort12Start, parameters);
 
-	@Test
-	public void shouldGetPatientsCoort12StartArt() throws EvaluationException {
+    assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		final Date startDate = DateUtil.getDateTime(2013, 01, 01);
-		final Date endDate = DateUtil.getDateTime(2021, 01, 01);
-
-		final Map<Parameter, Object> parameters = new HashMap<>();
-		parameters.put(new Parameter("startDate", "Start Date", Date.class), startDate);
-		parameters.put(new Parameter("endDate", "End Date", Date.class), endDate);
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
-
-		CohortDefinition patientsCoort12Start = this.misauKeyPopReportCohortQueries.getPatientsCoort12StartArt();
-
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(patientsCoort12Start,
-				parameters);
-
-		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
-
-		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
-
-	}
+    assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
+  }
 }
