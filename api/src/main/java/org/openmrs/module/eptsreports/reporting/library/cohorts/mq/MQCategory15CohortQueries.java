@@ -659,7 +659,7 @@ public class MQCategory15CohortQueries {
   }
 
   @DocumentedDefinition(value = "PatientsFromFichaClinicaForGivenConceptsDenominadorCategoria15A")
-  private CohortDefinition findPatientsFromFichaClinicaForGivenConceptsDenominadorCategoria15A() {
+  public CohortDefinition findPatientsFromFichaClinicaForGivenConceptsDenominadorCategoria15A() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
@@ -676,7 +676,7 @@ public class MQCategory15CohortQueries {
   @DocumentedDefinition(
       value =
           "PatientsWithLastGaacOrDispensaTrimestralInClinicaForGivenConceptsDenominadorCategoria15B1")
-  private CohortDefinition
+  public CohortDefinition
       findPatientsWithLastGaacOrDispensaTrimestralInClinicaForGivenConceptsDenominadorCategoria15B1() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
@@ -728,7 +728,7 @@ public class MQCategory15CohortQueries {
 
   @DocumentedDefinition(
       value = "PatientsWithDispensaTrimestralInicarInFichaClinicaDuringTheRevisionPeriodA2")
-  private CohortDefinition
+  public CohortDefinition
       findPatientsWithDispensaTrimestralInicarInFichaClinicaDuringTheRevisionPeriodA2() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
@@ -746,7 +746,7 @@ public class MQCategory15CohortQueries {
 
   @DocumentedDefinition(
       value = "PatientsWithLastTipoDeDispensaTrimestralInFichaClinicaWithinRevisionPeriodA3")
-  private CohortDefinition
+  public CohortDefinition
       findPatientsWithLastTipoDeDispensaTrimestralInFichaClinicaWithinRevisionPeriodA3() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
