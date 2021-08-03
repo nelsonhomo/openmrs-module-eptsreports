@@ -77,7 +77,7 @@ public class MQCohortCategory5Test extends DefinitionsFGHLiveTest {
 
 		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
+		assertEquals(1, evaluateCohortDefinition.getMemberIds().size());
 
 	}
 
