@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+	<concept_class concept_class_id="7" name="Question"
+		description="Question (eg, patient history, SF36 items)" retired="0"
+		date_created="2004-03-02 00:00:00.0" creator="1"
+		uuid="150837b8-ee12-11eb-9a03-0242ac130003" />
+
+	<concept_datatype concept_datatype_id="2" name="Coded"
+		hl7_abbreviation="CWE"
+		description="Value determined by term dictionary lookup (i.e., term identifier)"
+		retired="0" date_created="2004-03-02 00:00:00.0" creator="1"
+		uuid="1999687e-ee12-11eb-9a03-0242ac130003" />
+
+	<!-- conceptS -->
+	<concept concept_id="1190" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="f87adbbe-ee11-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="6300" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="cea943ee-f11c-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1065" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="db992fd8-f11c-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1369" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="e00a9c28-f11c-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="6276" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="e521fd46-f11c-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="22772" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="1250bbb8-f122-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1040" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="17e9a332-f122-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1115" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="f5af770d-d131-4a4f-99a1-58de50c08efb" />
+
+	<concept concept_id="68" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="8c2aeb2f-43ec-4efd-b246-e96174c072e3" />
+
+	<concept concept_id="6336" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="88dcbc8b-4807-47f7-aee7-25534ddd282c" />
+
+	<concept concept_id="1982" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="e2e9adaa-f37c-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="2151" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="89b75952-f43b-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="1844" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="97884136-f43b-11eb-9a03-0242ac130003" />
+
+	<concept concept_id="2152" retired="0" class_id="7"
+		datatype_id="2" is_set="0" date_created="2012-02-27 11:30:21"
+		creator="1" uuid="e70116b6-f43b-11eb-9a03-0242ac130003" />
+
+	<!-- OBS -->
+	<obs obs_id="1" person_id="1" concept_id="1190" encounter_id="1"
+		obs_datetime="2020-01-22 00:00:00" creator="1"
+		date_created="2020-01-22 08:53:22" voided="0"
+		uuid="05bc64fc-b97f-4a10-8d6f-59594d9c2576" location_id="1"
+		value_datetime="2019-03-12 00:00:00" />
+
+	<obs obs_id="2" person_id="2" concept_id="1190" encounter_id="2"
+		obs_datetime="2020-01-28 00:00:00" creator="1"
+		date_created="2020-01-28 12:02:08" voided="0"
+		uuid="630734d3-ef06-4677-a5db-7d62d66ed48a" location_id="1"
+		value_datetime="2019-01-29 00:00:00" />
+
+	<obs obs_id="3" person_id="3" concept_id="1190" encounter_id="3"
+		obs_datetime="2020-02-10 00:00:00" creator="1"
+		date_created="2020-02-10 08:47:35" voided="0"
+		uuid="94efb83f-4f3f-4204-9353-2cdff4d54561" location_id="1"
+		value_datetime="2019-01-16 00:00:00" />
+
+	<!-- findPatientsWhoAreNewlyEnrolledOnARTRF05 -->
+
+	<!-- findPatientsWhoAreNewEnrolledOnArtByAgeUsingYearChildAndHaveFirstConsultMarkedDAMDAGInclusionPeriod -->
+
+	<obs obs_id="4" person_id="1" concept_id="6336" encounter_id="4"
+		obs_datetime="2019-01-02 00:00:00" creator="1"
+		date_created="2019-01-04 08:41:01" voided="0"
+		uuid="8c2aeb2f-43ec-4efd-b246-e96174c072e3" location_id="1"
+		value_coded="68" />
+
+	<obs obs_id="5" person_id="2" concept_id="6336" encounter_id="5"
+		obs_datetime="2019-01-02 00:00:00" creator="1"
+		date_created="2019-01-04 11:32:08" voided="0"
+		uuid="369bfdc3-3bdd-4e81-b7c2-bfa7f6133694" location_id="1"
+		value_coded="68" />
+
+	<obs obs_id="6" person_id="3" concept_id="6336" encounter_id="6"
+		obs_datetime="2019-01-03 00:00:00" creator="1"
+		date_created="2019-01-04 12:44:46" voided="0"
+		uuid="3190a94f-83cf-4554-9bc2-ff77e7252b97" location_id="1"
+		value_coded="68" />
+
+	<!-- findPatientsWhoAreNewEnrolledOnArtByAgeUsingYearChildAndHaveFirstConsultMarkedDAMDAGInclusionPeriod -->
+
+	<obs obs_id="7" person_id="1" concept_id="6336" encounter_id="7"
+		obs_datetime="2019-11-25 00:00:00" creator="1"
+		date_created="2019-11-27 09:08:28" voided="0"
+		uuid="ec92e3dd-d0ab-4b42-a709-1a86c87ae0cb" location_id="1"
+		value_coded="1844" />
+
+	<obs obs_id="8" person_id="2" concept_id="6336" encounter_id="8"
+		obs_datetime="2020-10-21 00:00:00" creator="1"
+		date_created="2020-10-22 09:23:28" voided="0"
+		uuid="a22793b8-8461-4d64-9910-290144650990" location_id="1"
+		value_coded="1844" />
+
+	<obs obs_id="9" person_id="3" concept_id="6336" encounter_id="9"
+		obs_datetime="2020-11-30 00:00:00" creator="1"
+		date_created="2020-12-01 18:58:55" voided="0"
+		uuid="aad46346-930d-4051-9cc4-d7dcfca65d4d" location_id="1"
+		value_coded="68" />
+
+	<obs obs_id="10" person_id="1" concept_id="2152" encounter_id="7"
+		obs_datetime="2019-11-25 00:00:00" creator="1"
+		date_created="2019-11-27 09:08:28" voided="0"
+		uuid="a1e88009-e20d-4df6-896d-79559d8196e5" location_id="1"
+		value_coded="2151" />
+
+	<obs obs_id="11" person_id="2" concept_id="2152" encounter_id="8"
+		obs_datetime="2020-10-21 00:00:00" creator="1"
+		date_created="2020-10-22 09:23:28" voided="0"
+		uuid="04e55c82-0798-4170-8c28-2ce1b05dacbc" location_id="1"
+		value_coded="2151" />
+
+	<obs obs_id="12" person_id="3" concept_id="2152" encounter_id="9"
+		obs_datetime="2020-11-30 00:00:00" creator="1"
+		date_created="2020-12-01 18:58:55" voided="0"
+		uuid="902b0b3f-8828-47c6-8bc5-fb28c80c7e54" location_id="1"
+		value_coded="2151" />
+
+	<obs obs_id="13" person_id="1" concept_id="1982" encounter_id="1"
+		obs_datetime="2020-01-22 00:00:00" creator="1"
+		date_created="2020-01-22 08:53:22" voided="0"
+		uuid="7f07f330-fd63-4cc2-9975-a3a8b2ec2f18" location_id="1"
+		value_coded="1065" />
+
+	<obs obs_id="14" person_id="2" concept_id="1982" encounter_id="2"
+		obs_datetime="2020-01-28 00:00:00" creator="1"
+		date_created="2020-01-28 12:02:08" voided="0"
+		uuid="9509f076-e126-4294-84f7-13147edfdf9d" location_id="1"
+		value_coded="1065" />
+
+	<obs obs_id="15" person_id="3" concept_id="1982" encounter_id="3"
+		obs_datetime="2020-02-10 00:00:00" creator="1"
+		date_created="2020-02-10 08:47:35" voided="0"
+		uuid="bd5bb118-9487-4c79-812c-6fe4417009ef" location_id="1"
+		value_coded="1065" />
+
+	<obs obs_id="16" person_id="2" concept_id="6336" encounter_id="10"
+		obs_datetime="2019-11-25 00:00:00" creator="1"
+		date_created="2019-11-27 09:08:28" voided="0"
+		uuid="c8d40d9e-f44d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="1844" />
+
+	<obs obs_id="17" person_id="3" concept_id="6336" encounter_id="11"
+		obs_datetime="2020-10-21 00:00:00" creator="1"
+		date_created="2020-10-22 09:23:28" voided="0"
+		uuid="c1e42b18-f44d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="1844" />
+
+	<obs obs_id="18" person_id="2" concept_id="2152" encounter_id="10"
+		obs_datetime="2019-11-25 00:00:00" creator="1"
+		date_created="2019-11-27 09:08:28" voided="0"
+		uuid="aaf3eb0a-f44d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="2151" />
+
+	<obs obs_id="19" person_id="3" concept_id="2152" encounter_id="11"
+		obs_datetime="2020-10-21 00:00:00" creator="1"
+		date_created="2020-10-22 09:23:28" voided="0"
+		uuid="b004fd28-f44d-11eb-9a03-0242ac130003" location_id="1"
+		value_coded="2151" />
+
+</dataset>
