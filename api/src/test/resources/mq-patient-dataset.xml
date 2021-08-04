@@ -26,8 +26,8 @@
 		birthdate="1986-03-17 00:00:00.0" birthdate_estimated="0" dead="false"
 		date_created="2005-01-01 00:00:00.0" voided="false"
 		uuid="a2c0f526-e544-11eb-ba80-0242ac130004" />
-		
-			<person person_id="7" gender="M" creator="1"
+
+	<person person_id="7" gender="M" creator="1"
 		birthdate="1986-03-17 00:00:00.0" birthdate_estimated="0" dead="false"
 		date_created="2005-01-01 00:00:00.0" voided="false"
 		uuid="0758ce96-efb8-11eb-9a03-0242ac130003" />
@@ -56,8 +56,8 @@
 	<patient patient_id="6" creator="1"
 		date_created="2005-09-22 00:00:00.0"
 		date_changed="2008-08-18 12:29:59.0" voided="false" void_reason="" />
-		
-			<patient patient_id="7" creator="1"
+
+	<patient patient_id="7" creator="1"
 		date_created="2005-09-22 00:00:00.0"
 		date_changed="2008-08-18 12:29:59.0" voided="false" void_reason="" />
 
