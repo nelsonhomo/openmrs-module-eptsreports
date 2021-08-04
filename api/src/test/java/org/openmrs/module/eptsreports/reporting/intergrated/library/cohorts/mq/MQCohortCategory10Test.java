@@ -14,7 +14,9 @@ import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.eptsreports.reporting.intergrated.utils.DefinitionsFGHLiveTest;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCategory5CohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCategory10CohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQGenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportConstants;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -23,17 +25,23 @@ import org.openmrs.module.reporting.evaluation.EvaluationException;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class MQCohortCategory5Test extends DefinitionsFGHLiveTest {
+public class MQCohortCategory10Test extends DefinitionsFGHLiveTest {
 
 	@Autowired
-	MQCategory5CohortQueries mQCohortQueriesCategory5;
+	MQCategory10CohortQueries mQCohortQueriesCategory10;
+
+	@Autowired
+	MQCohortQueries mQCohortQueries;
+
+	@Autowired
+	MQGenericCohortQueries mQGenericCohortQueries;
 
 	@Before
 	public void setup() throws Exception {
 		initialize();
-		executeDataSet("mq-cat5-patient-dataset.xml");
-		executeDataSet("mq-cat5-encounter-dataset.xml");
-		executeDataSet("mq-cat5-concepts-dataset.xml");
+		executeDataSet("mq-cat10-patient-dataset.xml");
+		executeDataSet("mq-cat10-encounter-dataset.xml");
+		executeDataSet("mq-cat10-concepts-dataset.xml");
 	}
 
 	@Override
@@ -50,8 +58,7 @@ public class MQCohortCategory5Test extends DefinitionsFGHLiveTest {
 	}
 
 	@Test
-	public void shouldFindPatientsWhoAreNewEnrolledOnArtAndHaveFirstConsultMarkedDAMDAGInclusionPeriodCategory5RF19Denominator()
-			throws EvaluationException {
+	public void shouldFindAllPatientsDiagnosedWithThePCRTestCategory10_B() throws EvaluationException {
 
 		final Date startInclusionDate = DateUtil.getDateTime(2019, 01, 01);
 		final Date endInclusionDate = DateUtil.getDateTime(2019, 04, 01);
@@ -66,47 +73,18 @@ public class MQCohortCategory5Test extends DefinitionsFGHLiveTest {
 		parameters.put(new Parameter(EptsReportConstants.END_INCLUSION_DATE, "End Date", Date.class), endInclusionDate);
 		parameters.put(new Parameter(EptsReportConstants.END_REVISION_DATE, "End Date", Date.class), revisionDate);
 
-		CohortDefinition cohortDefinition = mQCohortQueriesCategory5
-				.findPatientsWhoAreNewEnrolledOnArtAndHaveFirstConsultMarkedDAMDAGInclusionPeriodCategory5RF19Denominator();
+		CohortDefinition cohortDefinition = mQCohortQueriesCategory10
+				.findAllPatientsDiagnosedWithThePCRTestCategory10_B();
 
 		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
 
 		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(1, evaluateCohortDefinition.getMemberIds().size());
-
+		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
 	}
 
 	@Test
-	public void shouldFindPatientsWhoAreNewEnrolledOnArtAndHaveFirstConsultMarkedDAMDAGANDATPUSOJAInclusionPeriodCategory5FR20Numerator()
-			throws EvaluationException {
-
-		final Date startInclusionDate = DateUtil.getDateTime(2019, 01, 01);
-		final Date endInclusionDate = DateUtil.getDateTime(2019, 04, 01);
-
-		final Date revisionDate = DateUtil.getDateTime(2021, 04, 01);
-
-		final Map<Parameter, Object> parameters = new HashMap<>();
-
-		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
-		parameters.put(new Parameter(EptsReportConstants.START_INCULSION_DATE, "Start Date", Date.class),
-				startInclusionDate);
-		parameters.put(new Parameter(EptsReportConstants.END_INCLUSION_DATE, "End Date", Date.class), endInclusionDate);
-		parameters.put(new Parameter(EptsReportConstants.END_REVISION_DATE, "End Date", Date.class), revisionDate);
-
-		CohortDefinition cohortDefinition = mQCohortQueriesCategory5
-				.findPatientsWhoAreNewEnrolledOnArtAndHaveFirstConsultMarkedDAMDAGANDATPUSOJAInclusionPeriodCategory5FR20Numerator();
-
-		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
-
-		assertTrue(evaluateCohortDefinition.getMemberIds().isEmpty());
-
-		assertEquals(0, evaluateCohortDefinition.getMemberIds().size());
-
-	}
-
-	@Test
-	public void shouldFindPregnantsNewlyEnrolledOnARTInInclusionPeriodAndHasNutritionalAssessmentDAMandDAGCategory5RF21Denominator()
+	public void shouldFindAllPatientsDiagnosedWithThePCRTestAndStartARTWithInMaximumOf15DaysCategory10_D()
 			throws EvaluationException {
 
 		final Date startInclusionDate = DateUtil.getDateTime(2019, 01, 01);
@@ -122,19 +100,18 @@ public class MQCohortCategory5Test extends DefinitionsFGHLiveTest {
 		parameters.put(new Parameter(EptsReportConstants.END_INCLUSION_DATE, "End Date", Date.class), endInclusionDate);
 		parameters.put(new Parameter(EptsReportConstants.END_REVISION_DATE, "End Date", Date.class), revisionDate);
 
-		CohortDefinition cohortDefinition = mQCohortQueriesCategory5
-				.findPregnantsNewlyEnrolledOnARTInInclusionPeriodAndHasNutritionalAssessmentDAMandDAGCategory5RF21Denominator();
+		CohortDefinition cohortDefinition = mQCohortQueriesCategory10
+				.findAllPatientsDiagnosedWithThePCRTestAndStartARTWithInMaximumOf15DaysCategory10_D();
 
 		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
 
 		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(2, evaluateCohortDefinition.getMemberIds().size());
-
+		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
 	}
 
 	@Test
-	public void shouldFindPregnantsNewlyEnrolledOnARTInInclusionPeriodAndHasNutritionalAssessmentDAMandDAGAndATPUCategory5RF22Denominator()
+	public void shouldFindPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06()
 			throws EvaluationException {
 
 		final Date startInclusionDate = DateUtil.getDateTime(2019, 01, 01);
@@ -150,15 +127,68 @@ public class MQCohortCategory5Test extends DefinitionsFGHLiveTest {
 		parameters.put(new Parameter(EptsReportConstants.END_INCLUSION_DATE, "End Date", Date.class), endInclusionDate);
 		parameters.put(new Parameter(EptsReportConstants.END_REVISION_DATE, "End Date", Date.class), revisionDate);
 
-		CohortDefinition cohortDefinition = mQCohortQueriesCategory5
-				.findPregnantsNewlyEnrolledOnARTInInclusionPeriodAndHasNutritionalAssessmentDAMandDAGAndATPUCategory5RF22Denominator();
+		CohortDefinition cohortDefinition = mQCohortQueriesCategory10
+				.findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06();
 
 		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
 
 		assertTrue(evaluateCohortDefinition.getMemberIds().isEmpty());
 
 		assertEquals(0, evaluateCohortDefinition.getMemberIds().size());
+	}
 
+	@Test
+	public void shouldFindPatientsWithPCRTestPositiveForHIVAndStartARTWithinTwoWeeksCategory10_Denominador_10_3()
+			throws EvaluationException {
+
+		final Date startInclusionDate = DateUtil.getDateTime(2019, 01, 01);
+		final Date endInclusionDate = DateUtil.getDateTime(2021, 01, 01);
+
+		final Date revisionDate = DateUtil.getDateTime(2021, 04, 01);
+
+		final Map<Parameter, Object> parameters = new HashMap<>();
+
+		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+		parameters.put(new Parameter(EptsReportConstants.START_INCULSION_DATE, "Start Date", Date.class),
+				startInclusionDate);
+		parameters.put(new Parameter(EptsReportConstants.END_INCLUSION_DATE, "End Date", Date.class), endInclusionDate);
+		parameters.put(new Parameter(EptsReportConstants.END_REVISION_DATE, "End Date", Date.class), revisionDate);
+
+		CohortDefinition cohortDefinition = mQCohortQueriesCategory10
+				.findPatientsWithPCRTestPositiveForHIVAndStartARTWithinTwoWeeksCategory10_Denominador_10_3();
+
+		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
+
+		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+
+		assertEquals(6, evaluateCohortDefinition.getMemberIds().size());
+	}
+
+	@Test
+	public void shouldFindPatientsWithPCRTestPositiveForHIVAndStartARTWithinTwoWeeksCategory10_Numerador_10_3()
+			throws EvaluationException {
+
+		final Date startInclusionDate = DateUtil.getDateTime(2019, 01, 01);
+		final Date endInclusionDate = DateUtil.getDateTime(2021, 01, 01);
+
+		final Date revisionDate = DateUtil.getDateTime(2021, 04, 01);
+
+		final Map<Parameter, Object> parameters = new HashMap<>();
+
+		parameters.put(new Parameter("location", "Location", Location.class), this.getLocation());
+		parameters.put(new Parameter(EptsReportConstants.START_INCULSION_DATE, "Start Date", Date.class),
+				startInclusionDate);
+		parameters.put(new Parameter(EptsReportConstants.END_INCLUSION_DATE, "End Date", Date.class), endInclusionDate);
+		parameters.put(new Parameter(EptsReportConstants.END_REVISION_DATE, "End Date", Date.class), revisionDate);
+
+		CohortDefinition cohortDefinition = mQCohortQueriesCategory10
+				.findPatientsWithPCRTestPositiveForHIVAndStartARTWithinTwoWeeksCategory10_Numerador_10_3();
+
+		final EvaluatedCohort evaluateCohortDefinition = this.evaluateCohortDefinition(cohortDefinition, parameters);
+
+		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
+
+		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
 	}
 
 	@Override

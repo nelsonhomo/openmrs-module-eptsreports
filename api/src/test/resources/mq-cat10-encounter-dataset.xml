@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+
+	<location location_id="1" name="Alto Ligonha" description="NA"
+		address2="NA" state_province="NA" country="MA"
+		date_created="2008-10-13 11:32:52" county_district="NA" address6="NA"
+		retired="0" uuid="e2b32fc2-1d5f-11e0-b929-000c29ad1d07" creator="1" />
+
+	<encounter_type encounter_type_id="53"
+		name="Master Card - Ficha Resumo"
+		description="Ficha resumo no master card" creator="1"
+		date_created="2008-10-13 11:35:34" retired="0"
+		uuid="47302458-ee12-11eb-9a03-0242ac130003" />
+
+	<encounter_type encounter_type_id="6"
+		name="S.TARV: ADULTO SEGUIMENTO"
+		description="seguimento visita do paciente adulto" creator="1"
+		date_created="2008-10-13 11:35:34" retired="0"
+		uuid="d066b48c-f121-11eb-9a03-0242ac130003" />
+
+	<!-- findPatientsWhoAreNewlyEnrolledOnARTRF05 -->
+
+	<encounter encounter_id="1" encounter_type="53"
+		patient_id="2" encounter_datetime="2020-01-22 00:00:00" creator="1"
+		date_created="2020-01-22 08:53:22" voided="0"
+		uuid="27ff07ef-de56-4ea8-8b0c-886612fa7a48" location_id="1" />
+
+	<encounter encounter_id="2" encounter_type="53"
+		patient_id="3" encounter_datetime="2020-01-28 00:00:00" creator="1"
+		date_created="2020-01-28 12:02:07" voided="0"
+		uuid="c252391f-8cb6-44b4-9913-3b9bb815571a" location_id="1" />
+
+	<encounter encounter_id="3" encounter_type="53"
+		patient_id="4" encounter_datetime="2020-02-10 00:00:00" creator="1"
+		date_created="2020-02-10 08:47:33" voided="0"
+		uuid="6b452d92-3e9a-4f7a-9229-d8546ff00160" location_id="1" />
+
+	<!-- findPatientsWhoAreNewlyEnrolledOnARTRF05 -->
+	
+		<encounter encounter_id="4" encounter_type="53"
+		patient_id="2" encounter_datetime="2019-10-10 00:00:00" creator="1"
+		date_created="2020-01-22 08:53:22" voided="0"
+		uuid="d7a21a42-9c34-43bb-99b6-ec3678729b9e" location_id="1" />
+
+	<encounter encounter_id="5" encounter_type="53"
+		patient_id="3" encounter_datetime="2019-11-07 00:00:00" creator="1"
+		date_created="2020-01-28 12:02:07" voided="0"
+		uuid="8ba9c8fa-0c34-45d8-9329-5d301d8dbe44" location_id="1" />
+
+	<encounter encounter_id="6" encounter_type="53"
+		patient_id="4" encounter_datetime="2019-11-07 00:00:00" creator="1"
+		date_created="2020-02-10 08:47:33" voided="0"
+		uuid="ecbb0e5b-9704-48c8-9490-1d8348bbde8e" location_id="1" />
+		
+			<!-- findPatientsWhoAreNewlyEnrolledOnARTRF05 -->
+<!-- findAllPatientsDiagnosedWithThePCRTestAndStartARTWithInMaximumOf15DaysCategory10_D -->
+	<encounter encounter_id="7" encounter_type="53"
+		patient_id="5" encounter_datetime="2019-11-04 00:00:00" creator="1"
+		date_created="2020-01-22 08:53:22" voided="0"
+		uuid="f1aa3409-c132-4daf-9392-4c76840bbb78" location_id="1" />
+
+	<encounter encounter_id="8" encounter_type="53"
+		patient_id="6" encounter_datetime="2020-01-31 00:00:00" creator="1"
+		date_created="2020-01-28 12:02:07" voided="0"
+		uuid="16dc23d8-741c-43ca-bf9f-30f3d206a4a5" location_id="1" />
+
+	<encounter encounter_id="9" encounter_type="53"
+		patient_id="7" encounter_datetime="2020-02-13 00:00:00" creator="1"
+		date_created="2020-02-10 08:47:33" voided="0"
+		uuid="6052b4bc-5a3b-48aa-a5ff-731a1464e7c9" location_id="1" />
+<!-- findAllPatientsDiagnosedWithThePCRTestAndStartARTWithInMaximumOf15DaysCategory10_D -->
+	<!-- findPatientsWhoAreNewlyEnrolledOnARTRF05 -->
+	
+		<encounter encounter_id="10" encounter_type="53"
+		patient_id="5" encounter_datetime="2019-10-01 00:00:00" creator="1"
+		date_created="2020-01-22 08:53:22" voided="0"
+		uuid="c678bef2-c986-4982-9e1d-9797d74875ad" location_id="1" />
+
+	<encounter encounter_id="11" encounter_type="53"
+		patient_id="6" encounter_datetime="2019-10-02 00:00:00" creator="1"
+		date_created="2020-01-28 12:02:07" voided="0"
+		uuid="d211b4d1-f0f4-40b9-8bfd-48390bfcb980" location_id="1" />
+
+	<encounter encounter_id="12" encounter_type="53"
+		patient_id="7" encounter_datetime="2019-10-03 00:00:00" creator="1"
+		date_created="2020-02-10 08:47:33" voided="0"
+		uuid="bb37341b-5aed-4a48-8459-84c7cb66c74c" location_id="1" />
+
+
+</dataset>

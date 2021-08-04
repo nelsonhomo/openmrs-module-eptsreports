@@ -14,7 +14,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.eptsreports.reporting.intergrated.utils.DefinitionsFGHLiveTest;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCategory9CohortQueries;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQGenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportConstants;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
@@ -28,9 +27,6 @@ public class MQCohortCategory9Test extends DefinitionsFGHLiveTest {
 
 	@Autowired
 	MQCategory9CohortQueries mQCohortQueriesCategory9;
-
-	@Autowired
-	MQCohortQueries mQCohortQueries;
 
 	@Autowired
 	MQGenericCohortQueries mQGenericCohortQueries;
@@ -80,7 +76,7 @@ public class MQCohortCategory9Test extends DefinitionsFGHLiveTest {
 
 		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(2, evaluateCohortDefinition.getMemberIds().size());
+		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
 	}
 
 	@Override

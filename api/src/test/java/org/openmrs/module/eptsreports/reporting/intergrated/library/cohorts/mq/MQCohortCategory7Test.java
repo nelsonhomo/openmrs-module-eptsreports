@@ -14,7 +14,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ContextAuthenticationException;
 import org.openmrs.module.eptsreports.reporting.intergrated.utils.DefinitionsFGHLiveTest;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCategory7CohortQueries;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCohortQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportConstants;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -27,9 +26,6 @@ public class MQCohortCategory7Test extends DefinitionsFGHLiveTest {
 
 	@Autowired
 	MQCategory7CohortQueries mQCohortQueriesCategory7;
-
-	@Autowired
-	MQCohortQueries mQCohortQueries;
 
 	@Before
 	public void setup() throws Exception {
