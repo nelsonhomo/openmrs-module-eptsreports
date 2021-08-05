@@ -30,9 +30,9 @@ public class MQCohortCategory6Test extends DefinitionsFGHLiveTest {
 	@Before
 	public void setup() throws Exception {
 		initialize();
-		executeDataSet("mq-cat6-patient-dataset.xml");
-		executeDataSet("mq-cat6-encounter-dataset.xml");
-		executeDataSet("mq-cat6-concepts-dataset.xml");
+		executeDataSet("mq/mq-cat6-patient-dataset.xml");
+		executeDataSet("mq/mq-cat6-encounter-dataset.xml");
+		executeDataSet("mq/mq-cat6-concepts-dataset.xml");
 	}
 
 	@Override

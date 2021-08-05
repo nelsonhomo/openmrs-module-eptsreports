@@ -34,9 +34,9 @@ public class MQCohortCategory9Test extends DefinitionsFGHLiveTest {
 	@Before
 	public void setup() throws Exception {
 		initialize();
-		executeDataSet("mq-cat9-patient-dataset.xml");
-		executeDataSet("mq-cat9-encounter-dataset.xml");
-		executeDataSet("mq-cat9-concepts-dataset.xml");
+		executeDataSet("mq/mq-cat9-patient-dataset.xml");
+		executeDataSet("mq/mq-cat9-encounter-dataset.xml");
+		executeDataSet("mq/mq-cat9-concepts-dataset.xml");
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class MQCohortCategory9Test extends DefinitionsFGHLiveTest {
 
 		assertFalse(evaluateCohortDefinition.getMemberIds().isEmpty());
 
-		assertEquals(3, evaluateCohortDefinition.getMemberIds().size());
+		assertEquals(2, evaluateCohortDefinition.getMemberIds().size());
 	}
 
 	@Override
