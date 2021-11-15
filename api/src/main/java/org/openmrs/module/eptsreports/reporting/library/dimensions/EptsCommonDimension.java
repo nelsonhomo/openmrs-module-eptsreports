@@ -26,6 +26,7 @@ import org.openmrs.module.eptsreports.reporting.library.queries.BreastfeedingQue
 import org.openmrs.module.eptsreports.reporting.library.queries.DsdQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.Eri2MonthsQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.ErimType;
+import org.openmrs.module.eptsreports.reporting.library.queries.PrepCtQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TxCurrQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TxNewQueries;
 import org.openmrs.module.eptsreports.reporting.utils.AgeRange;
@@ -144,6 +145,21 @@ public class EptsCommonDimension {
 
     dim.addCohortDefinition(
         "50+", ageDimensionCohort.createXtoYAgeCohort("patients with age over 50", 50, null));
+
+    dim.addCohortDefinition(
+        "50-54",
+        ageDimensionCohort.createXtoYAgeCohort("patients with age between 50 and 54", 50, 54));
+
+    dim.addCohortDefinition(
+        "55-59",
+        ageDimensionCohort.createXtoYAgeCohort("patients with age between 55 and 59", 55, 59));
+
+    dim.addCohortDefinition(
+        "60-64",
+        ageDimensionCohort.createXtoYAgeCohort("patients with age between 60 and 64", 60, 64));
+
+    dim.addCohortDefinition(
+        "65+", ageDimensionCohort.createXtoYAgeCohort("patients with age over 65", 65, null));
 
     return dim;
   }
@@ -540,6 +556,12 @@ public class EptsCommonDimension {
         query =
             query.replace("BETWEEN " + ageRange.getMin() + " AND " + ageRange.getMax(), " >= 50");
 
+        break;
+
+      case ABOVE_SIXTY_FIVE:
+        query =
+            query.replace("BETWEEN " + ageRange.getMin() + " AND " + ageRange.getMax(), " >= 65");
+
       default:
         break;
     }
@@ -590,6 +612,10 @@ public class EptsCommonDimension {
 
       case ABOVE_FIFTY:
         query = query.replace("BETWEEN " + range.getMin() + " AND " + range.getMax(), " >= 50");
+        break;
+
+      case ABOVE_SIXTY_FIVE:
+        query = query.replace("BETWEEN " + range.getMin() + " AND " + range.getMax(), " >= 65");
 
       default:
         break;
@@ -634,6 +660,54 @@ public class EptsCommonDimension {
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql("findPatientsByRange", query),
             "endDate=${endDate}"));
+
+    return dimension;
+  }
+
+  public CohortDefinitionDimension findClientsWhoAreNewlyEnrolledInPrepByGenderAndAgeRange(
+      final String name, final String gender, final AgeRange ageRange) {
+
+    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
+
+    dimension.setName(name);
+    dimension.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    dimension.addParameter(new Parameter("endDate", "End Date", Date.class));
+    dimension.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    String query = PrepCtQueries.QUERY.findClientsNewlyEnrolledInPrepByGenderAndAgeRange;
+    query = String.format(query, gender, ageRange.getMin(), ageRange.getMax());
+
+    int lastIndexOfBetween = query.lastIndexOf("between");
+    StringBuilder builder = new StringBuilder();
+    builder.append(query.subSequence(0, lastIndexOfBetween));
+
+    switch (ageRange) {
+      case UNDER_ONE:
+        builder.append(" < 1");
+        query = builder.toString();
+        break;
+
+      case ABOVE_FIFTY:
+        builder.append(" >= 50");
+        query = builder.toString();
+        break;
+
+      case ABOVE_SIXTY_FIVE:
+        builder.append(" >= 65");
+        query = builder.toString();
+
+      default:
+        break;
+    }
+
+    dimension.addCohortDefinition(
+        name,
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "findClientsNewlyEnrolledInPrepByGenderAndAgeRange", query),
+            mappings));
 
     return dimension;
   }

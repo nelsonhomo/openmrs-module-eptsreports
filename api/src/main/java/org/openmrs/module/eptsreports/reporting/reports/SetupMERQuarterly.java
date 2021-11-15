@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
-import org.openmrs.module.eptsreports.reporting.library.datasets.PrEPCtDataset;
+import org.openmrs.module.eptsreports.reporting.library.datasets.PrepCtDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TRFINDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TxCurrDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TxMlDataset;
@@ -50,7 +50,7 @@ public class SetupMERQuarterly extends EptsDataExportManager {
 
   @Autowired private TRFINDataset txTfrInDataset;
 
-  @Autowired private PrEPCtDataset prEPCtDataset;
+  @Autowired private PrepCtDataset prEPCtDataset;
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
 
@@ -88,26 +88,28 @@ public class SetupMERQuarterly extends EptsDataExportManager {
     reportDefinition.setDescription(this.getDescription());
     reportDefinition.setParameters(this.txRttDataset.getParameters());
 
-    reportDefinition.addDataSetDefinition(
-        "N", Mapped.mapStraightThrough(this.txNewDataset.constructTxNewDataset()));
+    /*
+     * reportDefinition.addDataSetDefinition( "N",
+     * Mapped.mapStraightThrough(this.txNewDataset.constructTxNewDataset()));
+     *
+     * reportDefinition.addDataSetDefinition( "C",
+     * Mapped.mapStraightThrough(this.txCurrDataset.constructTxCurrDataset(true)));
+     *
+     * reportDefinition.addDataSetDefinition( "P",
+     * Mapped.mapStraightThrough(this.txPvlsDataset.constructTxPvlsDatset()));
+     *
+     * reportDefinition.addDataSetDefinition( "ML",
+     * Mapped.mapStraightThrough(this.txMlDataset.constructtxMlDataset()));
+     *
+     * reportDefinition.addDataSetDefinition( "R",
+     * Mapped.mapStraightThrough(this.txRttDataset.constructTxRttDataset()));
+     *
+     * reportDefinition.addDataSetDefinition( "TR",
+     * Mapped.mapStraightThrough(this.txTfrInDataset.constructTxTRFIN()));
+     */
 
     reportDefinition.addDataSetDefinition(
-        "C", Mapped.mapStraightThrough(this.txCurrDataset.constructTxCurrDataset(true)));
-
-    reportDefinition.addDataSetDefinition(
-        "P", Mapped.mapStraightThrough(this.txPvlsDataset.constructTxPvlsDatset()));
-
-    reportDefinition.addDataSetDefinition(
-        "ML", Mapped.mapStraightThrough(this.txMlDataset.constructtxMlDataset()));
-
-    reportDefinition.addDataSetDefinition(
-        "R", Mapped.mapStraightThrough(this.txRttDataset.constructTxRttDataset()));
-
-    reportDefinition.addDataSetDefinition(
-        "TR", Mapped.mapStraightThrough(this.txTfrInDataset.constructTxTRFIN()));
-
-    reportDefinition.addDataSetDefinition(
-        "CT", Mapped.mapStraightThrough(this.prEPCtDataset.constructPrepCTDataset()));
+        "PREPCT", Mapped.mapStraightThrough(this.prEPCtDataset.constructPrepCtDataset()));
     reportDefinition.setBaseCohortDefinition(
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
