@@ -36,16 +36,16 @@ public class PrepCtCohortQueries {
    * @return CompositionQuery
    */
   public CohortDefinition getClientsNewlyEnrolledInPrep() {
-    final CompositionCohortDefinition txNewCompositionCohort = new CompositionCohortDefinition();
+    final CompositionCohortDefinition prepCtCompositionCohort = new CompositionCohortDefinition();
 
-    txNewCompositionCohort.setName("PREP CT");
-    txNewCompositionCohort.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    txNewCompositionCohort.addParameter(new Parameter("endDate", "End Date", Date.class));
-    txNewCompositionCohort.addParameter(new Parameter("location", "location", Location.class));
+    prepCtCompositionCohort.setName("PREP CT");
+    prepCtCompositionCohort.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    prepCtCompositionCohort.addParameter(new Parameter("endDate", "End Date", Date.class));
+    prepCtCompositionCohort.addParameter(new Parameter("location", "location", Location.class));
 
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    txNewCompositionCohort.addSearch(
+    prepCtCompositionCohort.addSearch(
         "START-PREP",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
@@ -53,7 +53,15 @@ public class PrepCtCohortQueries {
                 PrepCtQueries.QUERY.findClientsNewlyEnrolledInPrep),
             mappings));
 
-    txNewCompositionCohort.addSearch(
+    prepCtCompositionCohort.addSearch(
+        "ATLEAST-ONE-FOLLOWUP",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findClientsWithAtLeastOneFollowUpVisitInFichaSeguimento",
+                PrepCtQueries.QUERY.findClientsWithAtLeastOneFollowUpVisitInFichaSeguimento),
+            mappings));
+
+    prepCtCompositionCohort.addSearch(
         "TRANSFERED-IN-BEFORE",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
@@ -61,7 +69,7 @@ public class PrepCtCohortQueries {
                 PrepCtQueries.QUERY.findClientsWhoWhereTransferredInBeforeReportingPeriod),
             mappings));
 
-    txNewCompositionCohort.addSearch(
+    prepCtCompositionCohort.addSearch(
         "TRANSFERED-IN-DURING",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
@@ -69,23 +77,107 @@ public class PrepCtCohortQueries {
                 PrepCtQueries.QUERY.findClientsWhoWhereTransferredInDuringReportingPeriod),
             mappings));
 
-    txNewCompositionCohort.addSearch(
+    prepCtCompositionCohort.addSearch(
         "REINITIATED-PREP",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "findClientsWhoReinitiatedPrep", PrepCtQueries.QUERY.findClientsWhoReinitiatedPrep),
             mappings));
 
-    txNewCompositionCohort.addSearch(
+    prepCtCompositionCohort.addSearch(
         "CONTINUE-PREP",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "findClientsWhoReinitiatedPrep", PrepCtQueries.QUERY.findClientsWhoContinuePrep),
             mappings));
 
-    txNewCompositionCohort.setCompositionString(
-        "(START-PREP OR TRANSFERED-IN-BEFORE) OR (TRANSFERED-IN-DURING OR REINITIATED-PREP OR CONTINUE-PREP)");
+    prepCtCompositionCohort.setCompositionString(
+        "((START-PREP OR TRANSFERED-IN-BEFORE) AND ATLEAST-ONE-FOLLOWUP) OR TRANSFERED-IN-DURING OR REINITIATED-PREP OR CONTINUE-PREP");
 
-    return txNewCompositionCohort;
+    return prepCtCompositionCohort;
+  }
+
+  public CohortDefinition getClientsWithPositiveTestResult() {
+    final CompositionCohortDefinition prepCtCompositionCohort = new CompositionCohortDefinition();
+
+    prepCtCompositionCohort.setName("POSITIVE TEST RESULT");
+    prepCtCompositionCohort.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    prepCtCompositionCohort.addParameter(new Parameter("endDate", "End Date", Date.class));
+    prepCtCompositionCohort.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    prepCtCompositionCohort.addSearch(
+        "START-PREP",
+        EptsReportUtils.map(
+            this.getClientsNewlyEnrolledInPrep(), "endDate=${endDate},location=${location}"));
+
+    prepCtCompositionCohort.addSearch(
+        "POSITIVE-TEST",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findClientsWithPositiveTestResult",
+                PrepCtQueries.QUERY.findClientsWithPositiveTestResult),
+            mappings));
+
+    prepCtCompositionCohort.setCompositionString("(START-PREP AND POSITIVE-TEST)");
+
+    return prepCtCompositionCohort;
+  }
+
+  public CohortDefinition getClientsWithNegativeTestResult() {
+    final CompositionCohortDefinition prepCtCompositionCohort = new CompositionCohortDefinition();
+
+    prepCtCompositionCohort.setName("POSITIVE TEST RESULT");
+    prepCtCompositionCohort.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    prepCtCompositionCohort.addParameter(new Parameter("endDate", "End Date", Date.class));
+    prepCtCompositionCohort.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    prepCtCompositionCohort.addSearch(
+        "START-PREP",
+        EptsReportUtils.map(
+            this.getClientsNewlyEnrolledInPrep(), "endDate=${endDate},location=${location}"));
+
+    prepCtCompositionCohort.addSearch(
+        "NEGATIVE-TEST",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findClientsWithPositiveTestResult",
+                PrepCtQueries.QUERY.findClientsWithNegativeTestResult),
+            mappings));
+
+    prepCtCompositionCohort.setCompositionString("(START-PREP AND NEGATIVE-TEST)");
+
+    return prepCtCompositionCohort;
+  }
+
+  public CohortDefinition getClientsWithIndeterminateTestResult() {
+    final CompositionCohortDefinition prepCtCompositionCohort = new CompositionCohortDefinition();
+
+    prepCtCompositionCohort.setName("INDETERMINATE TEST RESULT");
+    prepCtCompositionCohort.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    prepCtCompositionCohort.addParameter(new Parameter("endDate", "End Date", Date.class));
+    prepCtCompositionCohort.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    prepCtCompositionCohort.addSearch(
+        "START-PREP",
+        EptsReportUtils.map(
+            this.getClientsNewlyEnrolledInPrep(), "endDate=${endDate},location=${location}"));
+
+    prepCtCompositionCohort.addSearch(
+        "INDETERMINATE-TEST",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findClientsWithIndeterminateTestResult",
+                PrepCtQueries.QUERY.findClientsWithIndeterminateTestResult),
+            mappings));
+
+    prepCtCompositionCohort.setCompositionString("(START-PREP AND INDETERMINATE-TEST)");
+
+    return prepCtCompositionCohort;
   }
 }

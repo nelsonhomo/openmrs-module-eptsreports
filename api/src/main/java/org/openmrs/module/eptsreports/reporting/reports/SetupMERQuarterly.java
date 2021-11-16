@@ -126,7 +126,7 @@ public class SetupMERQuarterly extends EptsDataExportManager {
       reportDesign =
           this.createXlsReportDesign(
               reportDefinition,
-              "PEPFAR_MER_2.6_Quarterly.xls",
+              "PEPFAR_MER_2.6_QUARTERLY.xls",
               "PEPFAR MER 2.6 Quarterly Report",
               this.getExcelDesignUuid(),
               null);

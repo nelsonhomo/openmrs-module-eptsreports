@@ -14,23 +14,14 @@
 
 package org.openmrs.module.eptsreports.reporting.library.datasets;
 
-import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.ABOVE_FIFTY;
-import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.FIFTEEN_TO_NINETEEN;
-import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.FORTY_FIVE_TO_FORTY_NINE;
-import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.FORTY_TO_FORTY_FOUR;
-import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.THIRTY_FIVE_TO_THIRTY_NINE;
-import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.THIRTY_TO_THRITY_FOUR;
-import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.TWENTY_FIVE_TO_TWENTY_NINE;
-import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.TWENTY_TO_TWENTY_FOUR;
-
+import java.util.Arrays;
+import java.util.List;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.PrepCtCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.AgeDimensionCohortInterface;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.EptsCommonDimension;
-import org.openmrs.module.eptsreports.reporting.library.dimensions.KeyPopulationDimension;
+import org.openmrs.module.eptsreports.reporting.library.dimensions.PrepCtKeyPopulationDimension;
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
-import org.openmrs.module.eptsreports.reporting.utils.AgeRange;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
-import org.openmrs.module.eptsreports.reporting.utils.Gender;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
@@ -52,7 +43,7 @@ public class PrepCtDataset extends BaseDataSet {
   @Qualifier("commonAgeDimensionCohort")
   private AgeDimensionCohortInterface ageDimensionCohort;
 
-  @Autowired private KeyPopulationDimension keyPopulationDimension;
+  @Autowired private PrepCtKeyPopulationDimension keyPopulationDimension;
 
   public DataSetDefinition constructPrepCtDataset() {
 
@@ -67,38 +58,63 @@ public class PrepCtDataset extends BaseDataSet {
     final CohortDefinition clientsNewlyEnrolledInPrep =
         this.prepCtCohortQueries.getClientsNewlyEnrolledInPrep();
 
+    final CohortDefinition clientsWithPositiveTestResult =
+        this.prepCtCohortQueries.getClientsWithPositiveTestResult();
+
+    final CohortDefinition clientsWithNegativeTestResult =
+        this.prepCtCohortQueries.getClientsWithNegativeTestResult();
+
+    final CohortDefinition clientsWithIndeterminateTestResult =
+        this.prepCtCohortQueries.getClientsWithIndeterminateTestResult();
+
     final CohortIndicator clientsNewlyEnrolledInPrepIndicator =
         this.eptsGeneralIndicator.getIndicator(
             "clientsNewlyEnrolledInPrepIndicator",
             EptsReportUtils.map(clientsNewlyEnrolledInPrep, mappings));
 
-    this.addDimensions(
-        dataSetDefinition,
-        mappings,
-        FIFTEEN_TO_NINETEEN,
-        TWENTY_TO_TWENTY_FOUR,
-        TWENTY_FIVE_TO_TWENTY_NINE,
-        THIRTY_TO_THRITY_FOUR,
-        THIRTY_FIVE_TO_THIRTY_NINE,
-        FORTY_TO_FORTY_FOUR,
-        FORTY_FIVE_TO_FORTY_NINE,
-        ABOVE_FIFTY);
+    final CohortIndicator clientsWithPositiveTestResultIndicator =
+        this.eptsGeneralIndicator.getIndicator(
+            "clientsNewlyEnrolledInPrepIndicator",
+            EptsReportUtils.map(clientsWithPositiveTestResult, mappings));
+
+    final CohortIndicator clientsWithNegativeTestResultIndicator =
+        this.eptsGeneralIndicator.getIndicator(
+            "clientsNewlyEnrolledInPrepIndicator",
+            EptsReportUtils.map(clientsWithNegativeTestResult, mappings));
+
+    final CohortIndicator clientsWithIndeterminateTestResultIndicator =
+        this.eptsGeneralIndicator.getIndicator(
+            "clientsNewlyEnrolledInPrepIndicator",
+            EptsReportUtils.map(clientsWithIndeterminateTestResult, mappings));
 
     dataSetDefinition.addDimension("gender", EptsReportUtils.map(eptsCommonDimension.gender(), ""));
-
     dataSetDefinition.addDimension(
-        this.getColumnName(AgeRange.UNKNOWN, Gender.MALE),
+        "age",
         EptsReportUtils.map(
-            this.eptsCommonDimension.findPatientsWithUnknownAgeByGender(
-                this.getColumnName(AgeRange.UNKNOWN, Gender.MALE), Gender.MALE),
-            ""));
+            eptsCommonDimension.age(ageDimensionCohort), "effectiveDate=${endDate}"));
 
-    dataSetDefinition.addDimension(
-        this.getColumnName(AgeRange.UNKNOWN, Gender.FEMALE),
-        EptsReportUtils.map(
-            this.eptsCommonDimension.findPatientsWithUnknownAgeByGender(
-                this.getColumnName(AgeRange.UNKNOWN, Gender.FEMALE), Gender.FEMALE),
-            ""));
+    dataSetDefinition.addColumn(
+        "P1",
+        "Total Patients Initiated PREP",
+        EptsReportUtils.map(clientsNewlyEnrolledInPrepIndicator, mappings),
+        "");
+    super.addRow(
+        dataSetDefinition,
+        "P2",
+        "Age and Gender",
+        EptsReportUtils.map(clientsNewlyEnrolledInPrepIndicator, mappings),
+        getColumnsForAgeAndGender());
+
+    dataSetDefinition.addColumn(
+        "P2-TotalMale",
+        " Age and Gender (Totals male) ",
+        EptsReportUtils.map(clientsNewlyEnrolledInPrepIndicator, mappings),
+        "gender=M");
+    dataSetDefinition.addColumn(
+        "P2-TotalFemale",
+        "Age and Gender (Totals female) ",
+        EptsReportUtils.map(clientsNewlyEnrolledInPrepIndicator, mappings),
+        "gender=F");
 
     dataSetDefinition.addDimension(
         "homosexual",
@@ -116,43 +132,36 @@ public class PrepCtDataset extends BaseDataSet {
         "sex-worker",
         EptsReportUtils.map(this.keyPopulationDimension.findPatientsWhoAreSexWorker(), mappings));
 
+    dataSetDefinition.addDimension(
+        "transgender",
+        EptsReportUtils.map(this.keyPopulationDimension.findPatientsWhoAreTransGender(), mappings));
+
     dataSetDefinition.addColumn(
         "PREP-C-All",
         "PREP_CT: PREP CT",
         EptsReportUtils.map(clientsNewlyEnrolledInPrepIndicator, mappings),
         "");
 
-    this.addColums(
-        dataSetDefinition,
-        mappings,
-        clientsNewlyEnrolledInPrepIndicator,
-        FIFTEEN_TO_NINETEEN,
-        TWENTY_TO_TWENTY_FOUR,
-        TWENTY_FIVE_TO_TWENTY_NINE,
-        THIRTY_TO_THRITY_FOUR,
-        THIRTY_FIVE_TO_THIRTY_NINE,
-        FORTY_TO_FORTY_FOUR,
-        FORTY_FIVE_TO_FORTY_NINE,
-        ABOVE_FIFTY);
+    dataSetDefinition.addColumn(
+        "PREP-C-POSITIVE",
+        "PREP_CT: POSITIVE RESULT",
+        EptsReportUtils.map(clientsWithPositiveTestResultIndicator, mappings),
+        "");
 
     dataSetDefinition.addColumn(
-        "PREP-C-males-unknownM",
-        "unknownM",
-        EptsReportUtils.map(clientsNewlyEnrolledInPrepIndicator, mappings),
-        this.getColumnName(AgeRange.UNKNOWN, Gender.MALE)
-            + "="
-            + this.getColumnName(AgeRange.UNKNOWN, Gender.MALE));
+        "PREP-C-NEGATIVE",
+        "PREP_CT: NEGATIVE RESULT",
+        EptsReportUtils.map(clientsWithNegativeTestResultIndicator, mappings),
+        "");
 
     dataSetDefinition.addColumn(
-        "PREP-C-females-unknownF",
-        "unknownF",
-        EptsReportUtils.map(clientsNewlyEnrolledInPrepIndicator, mappings),
-        this.getColumnName(AgeRange.UNKNOWN, Gender.FEMALE)
-            + "="
-            + this.getColumnName(AgeRange.UNKNOWN, Gender.FEMALE));
+        "PREP-C-INDETERMINATE",
+        "PREP_CT: INDETERMINATE RESULT",
+        EptsReportUtils.map(clientsWithIndeterminateTestResultIndicator, mappings),
+        "");
 
     dataSetDefinition.addColumn(
-        "PREP-C-MSM",
+        "PREP-C-HSH",
         "Homosexual",
         EptsReportUtils.map(clientsNewlyEnrolledInPrepIndicator, mappings),
         "gender=M|homosexual=homosexual");
@@ -175,58 +184,75 @@ public class PrepCtDataset extends BaseDataSet {
         EptsReportUtils.map(clientsNewlyEnrolledInPrepIndicator, mappings),
         "gender=F|sex-worker=sex-worker");
 
+    dataSetDefinition.addColumn(
+        "PREP-C-TG",
+        "Transgender",
+        EptsReportUtils.map(clientsNewlyEnrolledInPrepIndicator, mappings),
+        "transgender=transgender");
+
     return dataSetDefinition;
   }
 
-  private void addColums(
-      final CohortIndicatorDataSetDefinition dataSetDefinition,
-      final String mappings,
-      final CohortIndicator cohortIndicator,
-      final AgeRange... rannges) {
+  private List<ColumnParameters> getColumnsForAgeAndGender() {
 
-    for (final AgeRange range : rannges) {
+    ColumnParameters fifteenTo19M =
+        new ColumnParameters("fifteenTo19M", "15 - 19 male", "gender=M|age=15-19", "01");
+    ColumnParameters twentyTo24M =
+        new ColumnParameters("twentyTo24M", "20 - 24 male", "gender=M|age=20-24", "02");
+    ColumnParameters twenty5To29M =
+        new ColumnParameters("twenty4To29M", "25 - 29 male", "gender=M|age=25-29", "03");
+    ColumnParameters thirtyTo34M =
+        new ColumnParameters("thirtyTo34M", "30 - 34 male", "gender=M|age=30-34", "04");
+    ColumnParameters thirty5To39M =
+        new ColumnParameters("thirty5To39M", "35 - 39 male", "gender=M|age=35-39", "05");
+    ColumnParameters foutyTo44M =
+        new ColumnParameters("foutyTo44M", "40 - 44 male", "gender=M|age=40-44", "06");
+    ColumnParameters fouty5To49M =
+        new ColumnParameters("fouty5To49M", "45 - 49 male", "gender=M|age=45-49", "07");
+    ColumnParameters above50M =
+        new ColumnParameters("above50M", "50+ male", "gender=M|age=50+", "08");
+    ColumnParameters unknownM =
+        new ColumnParameters("unknownM", "Unknown age male", "gender=M|age=UK", "09");
 
-      final String maleName = this.getColumnName(range, Gender.MALE);
-      final String femaleName = this.getColumnName(range, Gender.FEMALE);
+    ColumnParameters fifteenTo19F =
+        new ColumnParameters("fifteenTo19F", "15 - 19 female", "gender=F|age=15-19", "10");
+    ColumnParameters twentyTo24F =
+        new ColumnParameters("twentyTo24F", "20 - 24 female", "gender=F|age=20-24", "11");
+    ColumnParameters twenty5To29F =
+        new ColumnParameters("twenty4To29F", "25 - 29 female", "gender=F|age=25-29", "12");
+    ColumnParameters thirtyTo34F =
+        new ColumnParameters("thirtyTo34F", "30 - 34 female", "gender=F|age=30-34", "13");
+    ColumnParameters thirty5To39F =
+        new ColumnParameters("thirty5To39F", "35 - 39 female", "gender=F|age=35-39", "14");
+    ColumnParameters foutyTo44F =
+        new ColumnParameters("foutyTo44F", "40 - 44 female", "gender=F|age=40-44", "15");
+    ColumnParameters fouty5To49F =
+        new ColumnParameters("fouty5To49F", "45 - 49 female", "gender=F|age=45-49", "16");
+    ColumnParameters above50F =
+        new ColumnParameters("above50F", "50+ female", "gender=F|age=50+", "17");
+    ColumnParameters unknownF =
+        new ColumnParameters("unknownF", "Unknown age female", "gender=F|age=UK", "18");
+    ColumnParameters total = new ColumnParameters("totals", "Totals", "", "19");
 
-      dataSetDefinition.addColumn(
-          maleName,
-          maleName.replace("-", " "),
-          EptsReportUtils.map(cohortIndicator, mappings),
-          maleName + "=" + maleName);
-
-      dataSetDefinition.addColumn(
-          femaleName,
-          femaleName.replace("-", " "),
-          EptsReportUtils.map(cohortIndicator, mappings),
-          femaleName + "=" + femaleName);
-    }
-  }
-
-  private void addDimensions(
-      final CohortIndicatorDataSetDefinition cohortIndicatorDataSetDefinition,
-      final String mappings,
-      final AgeRange... ranges) {
-
-    for (final AgeRange range : ranges) {
-
-      cohortIndicatorDataSetDefinition.addDimension(
-          this.getColumnName(range, Gender.MALE),
-          EptsReportUtils.map(
-              this.eptsCommonDimension.findClientsWhoAreNewlyEnrolledInPrepByGenderAndAgeRange(
-                  this.getColumnName(range, Gender.MALE), Gender.MALE.getName(), range),
-              mappings));
-
-      cohortIndicatorDataSetDefinition.addDimension(
-          this.getColumnName(range, Gender.FEMALE),
-          EptsReportUtils.map(
-              this.eptsCommonDimension.findClientsWhoAreNewlyEnrolledInPrepByGenderAndAgeRange(
-                  this.getColumnName(range, Gender.FEMALE), Gender.FEMALE.getName(), range),
-              mappings));
-    }
-  }
-
-  private String getColumnName(AgeRange range, Gender gender) {
-    return range.getDesagregationColumnName("PREP-C", gender);
+    return Arrays.asList(
+        fifteenTo19M,
+        twentyTo24M,
+        twenty5To29M,
+        thirtyTo34M,
+        thirty5To39M,
+        foutyTo44M,
+        fouty5To49M,
+        above50M,
+        unknownM,
+        fifteenTo19F,
+        twentyTo24F,
+        twenty5To29F,
+        thirtyTo34F,
+        thirty5To39F,
+        foutyTo44F,
+        fouty5To49F,
+        above50F,
+        unknownF,
+        total);
   }
 }
