@@ -23,7 +23,7 @@ public class DatinCodeDataSet extends BaseDataSet {
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join location l on l.location_id=e.location_id "
             + "inner join location_attribute la on la.location_id and l.location_id "
-            + "where la.attribute_type_id =2 and la.location_id=:location and la.voided=0 "
+            + "where la.attribute_type_id =2 and la.location_id=:location and e.location_id = :location  and la.voided=0 "
             + "limit 1 ");
 
     return dsd;
