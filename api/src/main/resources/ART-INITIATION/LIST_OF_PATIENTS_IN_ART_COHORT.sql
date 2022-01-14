@@ -18,7 +18,7 @@
                       inicio.state_fc as STATE_FC,
                       inicio.SATE_FC_DATE as SATE_FC_DATE,
                       inicio.state_fr as STATE_FR,
-                      inicio.STATE_FR_DATE as STATE_FR_DATE,
+                      if(inicio.state_fr is null, null, inicio.STATE_FR_DATE) as STATE_FR_DATE,
                       inicio.state_home_card as STATE_HOME_CARD,
                       inicio.home_card_date as HOME_CARD_DATE
 
@@ -234,7 +234,7 @@
 
                            union
 
-                           SELECT p.patient_id,pg.date_enrolled data_consulta,2 orderF FROM patient p
+                           SELECT p.patient_id,ps.start_date data_consulta,2 orderF FROM patient p
                            INNER JOIN patient_program pg ON p.patient_id=pg.patient_id 
                            INNER JOIN patient_state ps ON pg.patient_program_id=ps.patient_program_id  
                            WHERE  pg.program_id=8  and ps.voided = 0 AND ps.state=27
@@ -389,8 +389,9 @@
                         left join
 
                         (
-                           select 
-                             p.patient_id,max(o.obs_datetime) as encounter_datetime,   
+                       SELECT f.patient_id, encounter_datetime, state_fr FROM (
+                             select 
+                             p.patient_id,o.obs_datetime as encounter_datetime,   
                              case o.value_coded
                              when 1366  then  'OBITO '
                              when 1706  then  'TRANSFERIDO PARA'
@@ -400,9 +401,10 @@
                          from  patient p 
                              inner join encounter e on e.patient_id=p.patient_id
                              inner join obs o on o.encounter_id=e.encounter_id
-                         where o.voided=0 and o.concept_id in(6272) and e.encounter_type in (53) and e.voided=0 and e.location_id=:location and e.encounter_datetime<=:evaluationDate
-                         GROUP BY p.patient_id 
-
+                         where o.voided=0 and o.concept_id in(6272) and e.encounter_type in (53) and e.voided=0 and e.location_id=:location and o.obs_datetime<=:evaluationDate
+                         order by p.patient_id, encounter_datetime desc
+                         ) f
+                         GROUP BY f.patient_id 
                         )FR on FR.patient_id=inicio_real.patient_id
 
                         left join
