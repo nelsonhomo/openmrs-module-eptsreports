@@ -16,7 +16,7 @@
                       inicio.state as STATE,
                       inicio.start_date DATA_ESTADO,
                       inicio.state_fc as STATE_FC,
-                      inicio.SATE_FC_DATE as SATE_FC_DATE,
+                      if(inicio.state_fc is null, null, inicio.SATE_FC_DATE) as SATE_FC_DATE,
                       inicio.state_fr as STATE_FR,
                       if(inicio.state_fr is null, null, inicio.STATE_FR_DATE) as STATE_FR_DATE,
                       inicio.state_home_card as STATE_HOME_CARD,
@@ -264,7 +264,7 @@
                            group by p.patient_id
                               )final
                              order by patient_id,data_consulta desc,orderF
-                         )preg_or_lac
+                         )preg_or_lac inner join person pe on pe.person_id = preg_or_lac.patient_id where pe.gender = 'F'
                           group by preg_or_lac.patient_id
                         ) preg_or_lac on preg_or_lac.patient_id=inicio_real.patient_id
 
@@ -409,8 +409,9 @@
 
                         left join
                         (
+                        SELECT * FROM (
                            select 
-                             p.patient_id,max(encounter_datetime) as encounter_datetime,   
+                             p.patient_id,encounter_datetime as encounter_datetime,   
                              case o.value_coded
                              when 1366  then  'OBITO '
                              when 1706  then  'TRANSFERIDO PARA'
@@ -421,7 +422,9 @@
                              inner join encounter e on e.patient_id=p.patient_id
                              inner join obs o on o.encounter_id=e.encounter_id
                          where   o.voided=0 and o.concept_id in(6273) and e.encounter_type in (6) and e.voided=0 and e.location_id=:location and e.encounter_datetime<=:evaluationDate
-                         GROUP BY p.patient_id 
+                         order by p.patient_id, encounter_datetime desc
+                         ) fcc
+                         GROUP BY fcc.patient_id 
  
                         )FC on FC.patient_id=inicio_real.patient_id
 
