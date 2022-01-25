@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.CxCaSCRNDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.CxCaTXDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TbPrevDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TxMlDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TxTBDataset;
@@ -33,9 +34,9 @@ public class SetupMERSemiAnnualReport extends EptsDataExportManager {
 
   @Autowired private CxCaSCRNDataSet cxCaSCRNDataSet;
 
-  @Autowired private CxCaTXDataSet CxCaTXDataSet;
+  @Autowired private CxCaTXDataSet cxCaTXDataSet;
 
-  @Autowired private DatinCodeDataSet DatinCodeDataSet;
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
 
   @Override
   public String getExcelDesignUuid() {
@@ -72,10 +73,10 @@ public class SetupMERSemiAnnualReport extends EptsDataExportManager {
     rd.addDataSetDefinition("T", Mapped.mapStraightThrough(txTBDataset.constructTxTBDataset()));
     rd.addDataSetDefinition("TBPREV", Mapped.mapStraightThrough(tbPrevDataset.constructDatset()));
     rd.addDataSetDefinition("CX", Mapped.mapStraightThrough(cxCaSCRNDataSet.constructDatset()));
-    rd.addDataSetDefinition("CXT", Mapped.mapStraightThrough(CxCaTXDataSet.constructDatset()));
+    rd.addDataSetDefinition("CXT", Mapped.mapStraightThrough(cxCaTXDataSet.constructDatset()));
     rd.addDataSetDefinition(
         "D",
-        Mapped.mapStraightThrough(this.DatinCodeDataSet.constructDataset(this.getParameters())));
+        Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(

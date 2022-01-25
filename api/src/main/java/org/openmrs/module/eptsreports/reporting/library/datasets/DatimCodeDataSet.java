@@ -1,15 +1,14 @@
-package org.openmrs.module.eptsreports.reporting.reports;
+package org.openmrs.module.eptsreports.reporting.library.datasets;
 
 import java.util.List;
 import org.openmrs.Location;
-import org.openmrs.module.eptsreports.reporting.library.datasets.BaseDataSet;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.SqlDataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DatinCodeDataSet extends BaseDataSet {
+public class DatimCodeDataSet extends BaseDataSet {
 
   public DataSetDefinition constructDataset(List<Parameter> list) {
 

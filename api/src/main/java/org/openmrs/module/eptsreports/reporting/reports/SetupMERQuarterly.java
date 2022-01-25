@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.PrepCtDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.PrepNewDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TRFINDataset;
@@ -56,7 +57,7 @@ public class SetupMERQuarterly extends EptsDataExportManager {
   @Autowired private PrepCtDataset prepCtDataset;
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
-  @Autowired private DatinCodeDataSet DatinCodeDataSet;
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
 
   @Override
   public String getVersion() {
@@ -117,7 +118,7 @@ public class SetupMERQuarterly extends EptsDataExportManager {
         "PrEP_CT", Mapped.mapStraightThrough(this.prepCtDataset.constructPrepCtDataset()));
     reportDefinition.addDataSetDefinition(
         "D",
-        Mapped.mapStraightThrough(this.DatinCodeDataSet.constructDataset(this.getParameters())));
+        Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
 
     reportDefinition.setBaseCohortDefinition(
         EptsReportUtils.map(
