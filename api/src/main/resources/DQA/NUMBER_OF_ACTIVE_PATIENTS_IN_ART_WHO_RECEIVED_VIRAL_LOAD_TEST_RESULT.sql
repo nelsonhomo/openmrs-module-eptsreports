@@ -115,7 +115,7 @@
       cv_quantitativa.patient_id,
       cv_quantitativa.encounter_datetime,
       cv_quantitativa.concept_id as concept_quantitativa,
-            if(cv_quantitativa.concept_id = 856 ,cv_quantitativa.value_numeric, null) as valor_quantitativo,
+            if(cv_quantitativa.concept_id = 856 ,cv_quantitativa.value_numeric, 'N/A') as valor_quantitativo,
             cv_qualitativo.valor_qualitativo,
             cv_qualitativo.concept_id concept_qualitativa
             
@@ -210,7 +210,7 @@
             when 23907 then 'MENOR QUE 40 COPIAS/ML'
             when 23908 then 'MENOR QUE 400 COPIAS/ML'
             when 23904 then 'MENOR QUE 839 COPIAS/ML'
-            else null end, null) valor_qualitativo
+            else null end, 'N/A') valor_qualitativo
             from (
              SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob.value_coded,ob.value_numeric 
          FROM   patient pat JOIN encounter enc ON pat.patient_id=enc.patient_id 
