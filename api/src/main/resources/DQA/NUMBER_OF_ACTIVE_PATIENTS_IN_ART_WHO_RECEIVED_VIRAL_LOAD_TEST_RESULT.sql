@@ -7,8 +7,8 @@
         round(datediff(:endDate,pe.birthdate)/365) as AGE ,
         DATE_FORMAT(coorte12meses_final.data_inicio, '%d-%m-%Y') DATA_INICIO_TARV,
         L.encounter_datetime DATA_CV,
-        MAX(if(L.concept_qualitativa=1305,L.valor_qualitativo,null)) AS CV_Qualitativa,
-        MAX(if(L.concept_quantitativa=856,L.valor_quantitativo,null) ) AS CV_Quantitativa
+        if(max(if(L.concept_qualitativa=1305,L.valor_qualitativo,null)) is null, 'N/A', max(if(L.concept_qualitativa=1305,L.valor_qualitativo,null))) as CV_Qualitativa,
+        if(max(if(L.concept_quantitativa=856,L.valor_quantitativo,null)) is null, 'N/A', max(if(L.concept_quantitativa=856,L.valor_quantitativo,null))) as CV_Quantitativa
         from (
           select  inicio_fila_seg_prox.*,GREATEST(COALESCE(data_fila,data_seguimento,data_recepcao_levantou),COALESCE(data_seguimento,data_fila,data_recepcao_levantou),COALESCE(data_recepcao_levantou,data_seguimento,data_fila))  data_usar_c, 
             GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30),COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_usar from (select inicio_fila_seg.*, 
@@ -143,7 +143,7 @@
                     AND enc.encounter_datetime BETWEEN :startDate AND :startDate + interval 1 month - interval 1 day AND ob.concept_id in (856,1305) AND enc.encounter_type=6 
               ) ed ON p.patient_id=ed.patient_id 
               WHERE   p.voided=0 AND e.voided=0 AND o.voided=0 AND e.location_id=:location 
-                  AND e.encounter_datetime BETWEEN IF(MONTH(:startDate) = 12  && DAY(:startDate) = 21, :startDate, CONCAT(YEAR(:startDate)-1, '-12','-21')) AND (:startDate -interval 1 day) 
+                  AND e.encounter_datetime BETWEEN if(MONTH(:startDate) = 12  && DAY(:startDate) = 21, :startDate, CONCAT(YEAR(:startDate)-1, '-12','-21')) AND (:startDate -interval 1 day) 
            AND o.concept_id in (856,1305)
            AND e.encounter_type=6
                )
@@ -166,7 +166,7 @@
                ) ed 
                ON p.patient_id=ed.patient_id 
                WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.location_id=:location 
-               AND e.encounter_datetime BETWEEN IF(MONTH(:startDate + interval 1 month) = 12  && DAY(:startDate + interval 1 month) = 21, :startDate + interval 1 month, CONCAT(YEAR(:startDate + interval 1 month)-1, '-12','-21')) AND ((:startDate + interval 1 month) -interval 1 day) 
+               AND e.encounter_datetime BETWEEN if(MONTH(:startDate + interval 1 month) = 12  && DAY(:startDate + interval 1 month) = 21, :startDate + interval 1 month, CONCAT(YEAR(:startDate + interval 1 month)-1, '-12','-21')) AND ((:startDate + interval 1 month) -interval 1 day) 
                AND o.concept_id in (856,1305)
                AND e.encounter_type=6
                )
@@ -189,7 +189,7 @@
                ) ed 
                ON p.patient_id=ed.patient_id 
                WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.location_id=:location 
-               AND e.encounter_datetime BETWEEN IF(MONTH(:startDate + interval 2 month) = 12  && DAY(:startDate + interval 2 month) = 21, :startDate + interval 2 month, CONCAT(YEAR(:startDate + interval 2 month)-1, '-12','-21')) AND ((:startDate + interval 2 month) -interval 1 day) 
+               AND e.encounter_datetime BETWEEN if(MONTH(:startDate + interval 2 month) = 12  && DAY(:startDate + interval 2 month) = 21, :startDate + interval 2 month, CONCAT(YEAR(:startDate + interval 2 month)-1, '-12','-21')) AND ((:startDate + interval 2 month) -interval 1 day) 
                AND o.concept_id in (856,1305)
                AND e.encounter_type=6
                )
@@ -234,7 +234,7 @@
                     AND enc.encounter_datetime BETWEEN :startDate AND :startDate + interval 1 month - interval 1 day AND ob.concept_id AND enc.encounter_type=6 
               ) ed ON p.patient_id=ed.patient_id 
               WHERE   p.voided=0 AND e.voided=0 AND o.voided=0 AND e.location_id=:location 
-                  AND e.encounter_datetime BETWEEN IF(MONTH(:startDate) = 12  && DAY(:startDate) = 21, :startDate, CONCAT(YEAR(:startDate)-1, '-12','-21')) AND (:startDate -interval 1 day) 
+                  AND e.encounter_datetime BETWEEN if(MONTH(:startDate) = 12  && DAY(:startDate) = 21, :startDate, CONCAT(YEAR(:startDate)-1, '-12','-21')) AND (:startDate -interval 1 day) 
            AND o.concept_id in (856,1305)
            AND e.encounter_type=6
                
@@ -258,7 +258,7 @@
                ) ed 
                ON p.patient_id=ed.patient_id 
                WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.location_id=:location 
-               AND e.encounter_datetime BETWEEN IF(MONTH(:startDate + interval 1 month) = 12  && DAY(:startDate + interval 1 month) = 21, :startDate + interval 1 month, CONCAT(YEAR(:startDate + interval 1 month)-1, '-12','-21')) AND ((:startDate + interval 1 month) -interval 1 day) 
+               AND e.encounter_datetime BETWEEN if(MONTH(:startDate + interval 1 month) = 12  && DAY(:startDate + interval 1 month) = 21, :startDate + interval 1 month, CONCAT(YEAR(:startDate + interval 1 month)-1, '-12','-21')) AND ((:startDate + interval 1 month) -interval 1 day) 
                AND o.concept_id in (856,1305)
                AND e.encounter_type=6
                )
@@ -281,7 +281,7 @@
                ) ed 
                ON p.patient_id=ed.patient_id 
                WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.location_id=:location 
-               AND e.encounter_datetime BETWEEN IF(MONTH(:startDate + interval 2 month) = 12  && DAY(:startDate + interval 2 month) = 21, :startDate + interval 2 month, CONCAT(YEAR(:startDate + interval 2 month)-1, '-12','-21')) AND ((:startDate + interval 2 month) -interval 1 day) 
+               AND e.encounter_datetime BETWEEN if(MONTH(:startDate + interval 2 month) = 12  && DAY(:startDate + interval 2 month) = 21, :startDate + interval 2 month, CONCAT(YEAR(:startDate + interval 2 month)-1, '-12','-21')) AND ((:startDate + interval 2 month) -interval 1 day) 
                AND o.concept_id in (856,1305)
                AND e.encounter_type=6
                )
