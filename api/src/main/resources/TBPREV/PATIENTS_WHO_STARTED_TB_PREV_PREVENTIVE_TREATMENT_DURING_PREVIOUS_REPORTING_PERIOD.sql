@@ -73,7 +73,8 @@
          				and o.voided=0 and o.concept_id=1719 and o.value_coded=165307 and e.encounter_type in (6) and  e.location_id=:location
 
          			union
-         			
+         			--				   Adicionando inicio 3hp usando novas fontes ficha resumo e ficha clinica
+
          		    select p.patient_id,e.encounter_datetime data_inicio_tpi from patient p																 
          				inner join encounter e on p.patient_id=e.patient_id																				 
          				inner join obs o on o.encounter_id=e.encounter_id
@@ -86,7 +87,6 @@
 
 				   union
 
---				   Adicionando inicio 3hp usando novas fontes ficha resumo e ficha clinica
 
 				   select p.patient_id,obsInicio3HP.value_datetime data_inicio_tpi from patient p																 
          				inner join encounter e on p.patient_id=e.patient_id																				 
@@ -346,4 +346,4 @@
 			      group by p.patient_id 	    
 
          	) inicio_INH group by inicio_INH.patient_id																									 
-        ) inicio_TPT
+        ) inicio_TPT where inicio_TPT.patient_id is not null
