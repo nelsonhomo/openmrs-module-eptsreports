@@ -194,7 +194,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime between (:endDate - INTERVAL 210 DAY) and :endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime between (:endDate - INTERVAL 210 DAY) and :endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location 
             		group by p.patient_id 
             		union
@@ -280,25 +280,17 @@ select coorte12meses_final.patient_id as patient_id
 	            				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
 	            		where 	e.voided=0 and p.voided=0 and e.encounter_datetime between (:endDate - INTERVAL 15 MONTH) and :endDate and 
 	            		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
-	            				and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type in (6) and  e.location_id=:location 
+	            				and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 6 and  e.location_id=:location 
 	            		group by p.patient_id
-	            		union 
-	            		select 	p.patient_id,min(o.value_datetime) data_inicio_tpi 
-            		from	patient p 
-            				inner join encounter e on p.patient_id=e.patient_id 
-            				inner join obs o on o.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and o.value_datetime between (:endDate - INTERVAL 15 MONTH) and :endDate and 
-            				o.voided=0 and o.concept_id=6128 and e.encounter_type in (6,9) and e.location_id=:location 
-            		group by p.patient_id 
-            		union 
-            		select 	p.patient_id,min(oDateInicioTPT.value_datetime) data_inicio_tpi 
-            		from	patient p 
-            				inner join encounter e on p.patient_id=e.patient_id 
-            				inner join obs o on o.encounter_id=e.encounter_id 
-            				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime between (:endDate - INTERVAL 15 MONTH) and :endDate 
-            		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type in (53) and  e.location_id=:location 
-            		group by p.patient_id
+		        		union 
+		        		select 	p.patient_id,min(oDateInicioTPT.value_datetime) data_inicio_tpi 
+		        		from	patient p 
+		        				inner join encounter e on p.patient_id=e.patient_id 
+		        				inner join obs o on o.encounter_id=e.encounter_id 
+		        				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
+		        		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime between (:endDate - INTERVAL 15 MONTH) and :endDate 
+		        		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location 
+		        		group by p.patient_id
 	            	)
             		inicioAnterior on inicioAnterior.patient_id=inicio.patient_id and  
             							inicioAnterior.data_inicio_tpi between (inicio.data_inicio_tpi - INTERVAL 210 day) and (inicio.data_inicio_tpi - INTERVAL 1 day) 
@@ -309,8 +301,8 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime between (:endDate - INTERVAL 120 DAY) and :endDate 
-            		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type in (53) and  e.location_id=:location 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime between (:endDate - INTERVAL 120 DAY) and :endDate 
+            		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
             		group by p.patient_id 
             		union
             		select 	p.patient_id,min(e.encounter_datetime) data_inicio_tpi 
@@ -320,7 +312,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
             		where 	e.voided=0 and p.voided=0 and e.encounter_datetime between (:endDate - INTERVAL 120 DAY) and :endDate and 
             		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
-            				and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type in (6) and  e.location_id=:location 
+            				and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 6 and  e.location_id=:location 
             		group by p.patient_id 
             		union
             		select inicio.patient_id,inicio.data_inicio_tpi 
@@ -353,7 +345,7 @@ select coorte12meses_final.patient_id as patient_id
             					inner join encounter e on p.patient_id=e.patient_id 
             					inner join obs o on o.encounter_id=e.encounter_id 
             			where 	e.voided=0 and p.voided=0 and e.encounter_datetime between (:endDate - INTERVAL 9 MONTH) and :endDate and 
-            					o.voided=0 and o.concept_id=1719 and o.value_coded=165307 and e.encounter_type in (6) and  e.location_id=:location 
+            					o.voided=0 and o.concept_id=1719 and o.value_coded=165307 and e.encounter_type = 6 and  e.location_id=:location 
             		) inicioAnterior on inicio.patient_id=inicioAnterior.patient_id and  
             							inicioAnterior.data_inicio_tpi between (inicio.data_inicio_tpi - INTERVAL 120 day) and (inicio.data_inicio_tpi - INTERVAL 1 day) 
             		where inicioAnterior.patient_id is null 
@@ -409,30 +401,22 @@ select coorte12meses_final.patient_id as patient_id
             		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
             				and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type in (6) and  e.location_id=:location 
             		group by p.patient_id 
-            		union             		
-            		select 	p.patient_id,min(e.encounter_datetime) data_inicio_tpi 
-            			from	patient p 
-            					inner join encounter e on p.patient_id=e.patient_id 
-            					inner join obs o on o.encounter_id=e.encounter_id 
-            			where 	e.voided=0 and p.voided=0 and e.encounter_datetime between (:endDate - INTERVAL 9 MONTH) and :endDate and 
-            					o.voided=0 and o.concept_id=1719 and o.value_coded IN (165307,23954)  and e.encounter_type in (6) and  e.location_id=:location 
-            			group by p.patient_id 
             			union 
             		select 	p.patient_id,min(oDateInicioTPT.value_datetime) data_inicio_tpi 
             		from	patient p 
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime between (:endDate - INTERVAL 9 MONTH) and :endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime between (:endDate - INTERVAL 9 MONTH) and :endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
             		group by p.patient_id 
             		     union
-            		     select 	p.patient_id, e.encounter_datetime data_inicio_tpi 
-            			from	patient p 
-            					inner join encounter e on p.patient_id=e.patient_id 
-            					inner join obs o on o.encounter_id=e.encounter_id 
-            			where 	e.voided=0 and p.voided=0 and e.encounter_datetime between (:endDate - INTERVAL 9 MONTH) and :endDate and 
-            					o.voided=0 and o.concept_id=1719 and o.value_coded=23954 and e.encounter_type in (6,9) and  e.location_id=:location 
+        		     select 	p.patient_id, e.encounter_datetime data_inicio_tpi 
+        			from	patient p 
+        					inner join encounter e on p.patient_id=e.patient_id 
+        					inner join obs o on o.encounter_id=e.encounter_id 
+        			where 	e.voided=0 and p.voided=0 and e.encounter_datetime between (:endDate - INTERVAL 9 MONTH) and :endDate and 
+        					o.voided=0 and o.concept_id=1719 and o.value_coded IN (165307,23954)  and e.encounter_type in (6,9) and  e.location_id=:location 
             		) inicioAnterior on inicioAnterior.patient_id=inicio.patient_id and  
             							inicioAnterior.data_inicio_tpi between (inicio.data_inicio_tpi - INTERVAL 120 day) and (inicio.data_inicio_tpi - INTERVAL 1 day) 
             		where inicioAnterior.patient_id is null 
@@ -452,7 +436,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location
             		union 					 
             		select 	p.patient_id, e.encounter_datetime data_inicio_inh 					 
@@ -531,7 +515,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
             		where 	e.voided=0 and p.voided=0 and e.encounter_datetime <=:endDate and 
             		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
-            		and e.encounter_type in (6) and  e.location_id=:location 
+            		and o.voided = 0 and o.concept_id  = 23985 and o.value_coded = 656 and e.encounter_type = 6 and  e.location_id=:location 
             		union 
             		select 	p.patient_id,o.value_datetime data_inicio_tpi 
             		from	patient p 
@@ -552,7 +536,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location
 	            	)
             		inicioAnterior on inicioAnterior.patient_id=inicio.patient_id and  
@@ -574,7 +558,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateFimTPT on oDateFimTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateFimTPT.concept_id  = 6129 and oDateFimTPT.voided  = 0 and oDateFimTPT.value_datetime <=:endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateFimTPT.concept_id  = 165327 and oDateFimTPT.voided  = 0 and oDateFimTPT.value_datetime <=:endDate 
 		    		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location 
 		    		union 
 		    		select 	p.patient_id,e.encounter_datetime data_fim_tpi 
@@ -584,7 +568,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
             		where 	e.voided=0 and p.voided=0 and e.encounter_datetime <= :endDate and 
             		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1267
-            				and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type in (6) and  e.location_id=:location 
+            				and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 6 and  e.location_id=:location 
             			union 
             			select 	p.patient_id, e.encounter_datetime data_final_inh 				 
             			from 	patient p 		 
@@ -610,7 +594,24 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 				 
             				inner join obs o on o.encounter_id=e.encounter_id 					 
             		where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  and o.concept_id=6122 and o.value_coded=1256   
-            				and e.encounter_datetime <=:endDate and e.location_id=:location 
+            				and e.encounter_datetime <=:endDate and e.location_id=:location
+            	    union 
+            	    select 	p.patient_id, oDateInicioTPT.value_datetime data_inicio_tpi 
+            		from	patient p 
+            				inner join encounter e on p.patient_id=e.patient_id 
+            				inner join obs o on o.encounter_id=e.encounter_id 
+            				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location
+            		union 
+            		select 	p.patient_id,e.encounter_datetime data_inicio_tpi 
+            		from	patient p 
+            				inner join encounter e on p.patient_id=e.patient_id 
+            				inner join obs o on o.encounter_id=e.encounter_id 
+            				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
+            		where 	e.voided=0 and p.voided=0 and e.encounter_datetime <=:endDate and 
+            		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
+            		and o.voided = 0 and o.concept_id  = 23985 and o.value_coded = 656 and e.encounter_type = 6 and  e.location_id=:location 
             	) inicio_inh 				 
             	inner join encounter e on e.patient_id=inicio_inh.patient_id 					 
             	inner join obs obsLevTPI on e.encounter_id=obsLevTPI.encounter_id 				 			 
@@ -635,13 +636,30 @@ select coorte12meses_final.patient_id as patient_id
             				inner join obs o on o.encounter_id=e.encounter_id 					 
             		where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  and o.concept_id=6122 and o.value_coded=1256   
             				and e.encounter_datetime <=:endDate and e.location_id=:location 
+            		union 
+            		 select 	p.patient_id, oDateInicioTPT.value_datetime data_inicio_tpi 
+            		from	patient p 
+            				inner join encounter e on p.patient_id=e.patient_id 
+            				inner join obs o on o.encounter_id=e.encounter_id 
+            				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location
+            		union 
+            		select 	p.patient_id,e.encounter_datetime data_inicio_tpi 
+            		from	patient p 
+            				inner join encounter e on p.patient_id=e.patient_id 
+            				inner join obs o on o.encounter_id=e.encounter_id 
+            				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
+            		where 	e.voided=0 and p.voided=0 and e.encounter_datetime <=:endDate and 
+            		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
+            		and o.voided = 0 and o.concept_id  = 23985 and o.value_coded = 656 and e.encounter_type = 6 and  e.location_id=:location 
             	) inicio_inh 	
             	inner join encounter e on e.patient_id=inicio_inh.patient_id
             	inner join obs o on o.encounter_id=e.encounter_id 
             	inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
             	where e.voided=0 and e.encounter_datetime <=:endDate and 
             	oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded in (1256, 1257)
-            	and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type in (6,9)
+            	and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 6
             	and e.encounter_datetime between (inicio_inh.data_inicio_inh + INTERVAL 1 day) and (inicio_inh.data_inicio_inh + INTERVAL 210 DAY) 				 
             	and e.location_id=:location 				 
             	group by inicio_inh.patient_id,inicio_inh.data_inicio_inh  
@@ -661,7 +679,24 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 				 
             				inner join obs o on o.encounter_id=e.encounter_id 					 
             		where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  and o.concept_id=6122 and o.value_coded=1256   
-            				and e.encounter_datetime <=:endDate and e.location_id=:location			 
+            				and e.encounter_datetime <=:endDate and e.location_id=:location
+            		            	    union 
+            	    select 	p.patient_id, oDateInicioTPT.value_datetime data_inicio_tpi 
+            		from	patient p 
+            				inner join encounter e on p.patient_id=e.patient_id 
+            				inner join obs o on o.encounter_id=e.encounter_id 
+            				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location
+            		union 
+            		select 	p.patient_id,e.encounter_datetime data_inicio_tpi 
+            		from	patient p 
+            				inner join encounter e on p.patient_id=e.patient_id 
+            				inner join obs o on o.encounter_id=e.encounter_id 
+            				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
+            		where 	e.voided=0 and p.voided=0 and e.encounter_datetime <=:endDate and 
+            		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
+            		and o.voided = 0 and o.concept_id  = 23985 and o.value_coded = 656 and e.encounter_type = 6 and  e.location_id=:location 
             	) inicio_inh 				 
             	inner join encounter e on e.patient_id=inicio_inh.patient_id 					 
             	inner join obs obsLevTPI on e.encounter_id=obsLevTPI.encounter_id 				 
@@ -686,7 +721,24 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 				 
             				inner join obs o on o.encounter_id=e.encounter_id 					 
             		where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  and o.concept_id=6122 and o.value_coded=1256   
-            				and e.encounter_datetime <=:endDate and e.location_id=:location			 
+            				and e.encounter_datetime <=:endDate and e.location_id=:location
+            		union 
+            	    select 	p.patient_id, oDateInicioTPT.value_datetime data_inicio_tpi 
+            		from	patient p 
+            				inner join encounter e on p.patient_id=e.patient_id 
+            				inner join obs o on o.encounter_id=e.encounter_id 
+            				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location
+            		union 
+            		select 	p.patient_id,e.encounter_datetime data_inicio_tpi 
+            		from	patient p 
+            				inner join encounter e on p.patient_id=e.patient_id 
+            				inner join obs o on o.encounter_id=e.encounter_id 
+            				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
+            		where 	e.voided=0 and p.voided=0 and e.encounter_datetime <=:endDate and 
+            		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
+            		and o.voided = 0 and o.concept_id  = 23985 and o.value_coded = 656 and e.encounter_type = 6 and  e.location_id=:location 
             	) inicio_inh 				 
             	inner join encounter e on e.patient_id=inicio_inh.patient_id 					 
                 inner join obs o on o.encounter_id=e.encounter_id 
@@ -717,7 +769,24 @@ select coorte12meses_final.patient_id as patient_id
             					inner join encounter e on p.patient_id=e.patient_id 				 
             					inner join obs o on o.encounter_id=e.encounter_id 					 
             			where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  and o.concept_id=6122 and o.value_coded=1256   
-            					and e.encounter_datetime <=:endDate and e.location_id=:location	 
+            					and e.encounter_datetime <=:endDate and e.location_id=:location
+            			union 
+		        		select 	p.patient_id, oDateInicioTPT.value_datetime data_inicio_tpi 
+		        		from	patient p 
+		        				inner join encounter e on p.patient_id=e.patient_id 
+		        				inner join obs o on o.encounter_id=e.encounter_id 
+		        				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
+		        		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+		        		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location
+		        		union 
+		        		select 	p.patient_id,e.encounter_datetime data_inicio_tpi 
+		        		from	patient p 
+		        				inner join encounter e on p.patient_id=e.patient_id 
+		        				inner join obs o on o.encounter_id=e.encounter_id 
+		        				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
+		        		where 	e.voided=0 and p.voided=0 and e.encounter_datetime <=:endDate and 
+		        		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
+		        		and o.voided = 0 and o.concept_id  = 23985 and o.value_coded = 656 and e.encounter_type = 6 and  e.location_id=:location 
             		) inicio_inh 			 
             		inner join encounter e on e.patient_id=inicio_inh.patient_id 				 
             		inner join obs obsLevTPI on e.encounter_id=obsLevTPI.encounter_id 			 
@@ -730,7 +799,7 @@ select coorte12meses_final.patient_id as patient_id
             		select inicio_inh.patient_id  
             		from 				
             		(						 
-            			select 	p.patient_id, o.value_datetime data_inicio_inh 						 
+                        select 	p.patient_id, o.value_datetime data_inicio_inh 						 
             			from	patient p 					   	 
             					inner join encounter e on p.patient_id=e.patient_id 				 
             					inner join obs o on o.encounter_id=e.encounter_id 					 
@@ -742,7 +811,24 @@ select coorte12meses_final.patient_id as patient_id
             					inner join encounter e on p.patient_id=e.patient_id 				 
             					inner join obs o on o.encounter_id=e.encounter_id 					 
             			where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  and o.concept_id=6122 and o.value_coded=1256   
-            					and e.encounter_datetime <=:endDate and e.location_id=:location	 
+            					and e.encounter_datetime <=:endDate and e.location_id=:location
+            			union 
+		        		select 	p.patient_id, oDateInicioTPT.value_datetime data_inicio_tpi 
+		        		from	patient p 
+		        				inner join encounter e on p.patient_id=e.patient_id 
+		        				inner join obs o on o.encounter_id=e.encounter_id 
+		        				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
+		        		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+		        		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location
+		        		union 
+		        		select 	p.patient_id,e.encounter_datetime data_inicio_tpi 
+		        		from	patient p 
+		        				inner join encounter e on p.patient_id=e.patient_id 
+		        				inner join obs o on o.encounter_id=e.encounter_id 
+		        				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
+		        		where 	e.voided=0 and p.voided=0 and e.encounter_datetime <=:endDate and 
+		        		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
+		        		and o.voided = 0 and o.concept_id  = 23985 and o.value_coded = 656 and e.encounter_type = 6 and  e.location_id=:location 	 
             		) inicio_inh 			 
             		inner join encounter e on e.patient_id=inicio_inh.patient_id 	
             		inner join obs o on o.encounter_id=e.encounter_id 
@@ -770,7 +856,24 @@ select coorte12meses_final.patient_id as patient_id
             					inner join encounter e on p.patient_id=e.patient_id 				 
             					inner join obs o on o.encounter_id=e.encounter_id 					 
             			where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  and o.concept_id=6122 and o.value_coded=1256   
-            					and e.encounter_datetime <=:endDate and e.location_id=:location	 
+            					and e.encounter_datetime <=:endDate and e.location_id=:location
+            			union 
+		        		select 	p.patient_id, oDateInicioTPT.value_datetime data_inicio_tpi 
+		        		from	patient p 
+		        				inner join encounter e on p.patient_id=e.patient_id 
+		        				inner join obs o on o.encounter_id=e.encounter_id 
+		        				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
+		        		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+		        		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location
+		        		union 
+		        		select 	p.patient_id,e.encounter_datetime data_inicio_tpi 
+		        		from	patient p 
+		        				inner join encounter e on p.patient_id=e.patient_id 
+		        				inner join obs o on o.encounter_id=e.encounter_id 
+		        				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
+		        		where 	e.voided=0 and p.voided=0 and e.encounter_datetime <=:endDate and 
+		        		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
+		        		and o.voided = 0 and o.concept_id  = 23985 and o.value_coded = 656 and e.encounter_type = 6 and  e.location_id=:location  
             		) inicio_inh 			 
             		inner join encounter e on e.patient_id=inicio_inh.patient_id 				 
             		inner join obs obsLevTPI on e.encounter_id=obsLevTPI.encounter_id 			 
@@ -780,10 +883,10 @@ select coorte12meses_final.patient_id as patient_id
             			and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.location_id=:location  
             		group by inicio_inh.patient_id,inicio_inh.data_inicio_inh  
             		having count(*)>=1
-            		UNION 
+            		union  
             		select inicio_inh.patient_id  
             		from 				
-            		( 	select 	p.patient_id, o.value_datetime data_inicio_inh 						 
+            		(select 	p.patient_id, o.value_datetime data_inicio_inh 						 
             			from	patient p 					   	 
             					inner join encounter e on p.patient_id=e.patient_id 				 
             					inner join obs o on o.encounter_id=e.encounter_id 					 
@@ -795,7 +898,24 @@ select coorte12meses_final.patient_id as patient_id
             					inner join encounter e on p.patient_id=e.patient_id 				 
             					inner join obs o on o.encounter_id=e.encounter_id 					 
             			where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  and o.concept_id=6122 and o.value_coded=1256   
-            					and e.encounter_datetime <=:endDate and e.location_id=:location	 
+            					and e.encounter_datetime <=:endDate and e.location_id=:location
+            			union 
+		        		select 	p.patient_id, oDateInicioTPT.value_datetime data_inicio_tpi 
+		        		from	patient p 
+		        				inner join encounter e on p.patient_id=e.patient_id 
+		        				inner join obs o on o.encounter_id=e.encounter_id 
+		        				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
+		        		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+		        		and o.voided=0 and o.concept_id=23985 and o.value_coded=656 and e.encounter_type = 53 and  e.location_id=:location
+		        		union 
+		        		select 	p.patient_id,e.encounter_datetime data_inicio_tpi 
+		        		from	patient p 
+		        				inner join encounter e on p.patient_id=e.patient_id 
+		        				inner join obs o on o.encounter_id=e.encounter_id 
+		        				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
+		        		where 	e.voided=0 and p.voided=0 and e.encounter_datetime <=:endDate and 
+		        		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
+		        		and o.voided = 0 and o.concept_id  = 23985 and o.value_coded = 656 and e.encounter_type = 6 and  e.location_id=:location  
             		) inicio_inh 			 
             		inner join encounter e on e.patient_id=inicio_inh.patient_id
             		inner join obs o on o.encounter_id=e.encounter_id 
@@ -904,7 +1024,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
             		union 
             		 select 	p.patient_id, e.encounter_datetime data_inicio_3HP 
@@ -915,14 +1035,14 @@ select coorte12meses_final.patient_id as patient_id
             		where 	e.voided=0 and p.voided=0 and e.encounter_datetime <= :endDate and 
             		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1256
             				and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 6 and  e.location_id=:location
-            				union
-            				select p.patient_id, e.encounter_datetime data_inicio_3HP                                                                                         
-			            		from patient p                                                                                                                             
-			            			inner join encounter e on p.patient_id=e.patient_id                                                                                         
-			            			inner join obs o on o.encounter_id=e.encounter_id                                                                                         
-			            		where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  
-			            				and o.concept_id=1719 and o.value_coded=23954                      
-			            				and e.encounter_datetime <=:endDate and e.location_id=:location  
+    				union
+    				select p.patient_id, e.encounter_datetime data_inicio_3HP                                                                                         
+	            		from patient p                                                                                                                             
+	            			inner join encounter e on p.patient_id=e.patient_id                                                                                         
+	            			inner join obs o on o.encounter_id=e.encounter_id                                                                                         
+	            		where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  
+	            				and o.concept_id=1719 and o.value_coded=23954                      
+	            				and e.encounter_datetime <=:endDate and e.location_id=:location  
             				) inicio
             				left join
             				(	select p.patient_id, e.encounter_datetime data_inicio_3HP                                                                                         
@@ -930,7 +1050,7 @@ select coorte12meses_final.patient_id as patient_id
 			            			inner join encounter e on p.patient_id=e.patient_id                                                                                         
 			            			inner join obs o on o.encounter_id=e.encounter_id                                                                                         
 			            		where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  
-			            				and o.concept_id=1719 and o.value_coded=23954                      
+			            				and o.concept_id=1719 and o.value_coded in (23954, 23984)                     
 			            				and e.encounter_datetime <=:endDate and e.location_id=:location       
             				) inicioAnterior on inicioAnterior.patient_id  = inicio.patient_id 
             					and inicioAnterior.data_inicio_3HP between (inicio.data_inicio_3HP - INTERVAL 4 MONTH) and (inicio.data_inicio_3HP - INTERVAL 1 day) 
@@ -947,7 +1067,7 @@ select coorte12meses_final.patient_id as patient_id
 		        inner join encounter e on inicio_3HP.patient_id=e.patient_id 
             	inner join obs o on o.encounter_id=e.encounter_id 
             	inner join obs oDateFimTPT on oDateFimTPT.encounter_id=e.encounter_id 
-            	where 	e.voided=0 and oDateFimTPT.concept_id  = 6129 and oDateFimTPT.voided  = 0 and oDateFimTPT.value_datetime <= :endDate 
+            	where 	e.voided=0 and oDateFimTPT.concept_id  = 165327 and oDateFimTPT.voided  = 0 and oDateFimTPT.value_datetime <= :endDate 
             	and oDateFimTPT.value_datetime between (inicio_3HP.data_inicio_3HP + INTERVAL 86 DAY) and (inicio_3HP.data_inicio_3HP + INTERVAL 365 DAY)
             	and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
             	group by inicio_3HP.patient_id,inicio_3HP.data_inicio_3HP  
@@ -959,12 +1079,12 @@ select coorte12meses_final.patient_id as patient_id
             			select inicio.patient_id,  inicio.data_inicio_3HP
             			from
             				(
-            				 select 	p.patient_id,oDateInicioTPT.value_datetime data_inicio_3HP
+                       				 select 	p.patient_id,oDateInicioTPT.value_datetime data_inicio_3HP
             		from	patient p 
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
             		union 
             		 select 	p.patient_id, e.encounter_datetime data_inicio_3HP 
@@ -990,7 +1110,7 @@ select coorte12meses_final.patient_id as patient_id
 			            			inner join encounter e on p.patient_id=e.patient_id                                                                                         
 			            			inner join obs o on o.encounter_id=e.encounter_id                                                                                         
 			            		where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  
-			            				and o.concept_id=1719 and o.value_coded=23954                      
+			            				and o.concept_id=1719 and o.value_coded in (23954, 23984)                      
 			            				and e.encounter_datetime <=:endDate and e.location_id=:location       
             				) inicioAnterior on inicioAnterior.patient_id  = inicio.patient_id 
             					and inicioAnterior.data_inicio_3HP between (inicio.data_inicio_3HP - INTERVAL 4 MONTH) and (inicio.data_inicio_3HP - INTERVAL 1 day) 
@@ -1009,7 +1129,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
             		where e.voided=0 and e.encounter_datetime <= :endDate and 
             		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1267
-            		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type in (6) and  e.location_id=:location 
+            		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 6 and  e.location_id=:location 
             	    and e.encounter_datetime between (inicio_3HP.data_inicio_3HP + INTERVAL 86 DAY) and (inicio_3HP.data_inicio_3HP + INTERVAL 365 DAY)
             	    group by inicio_3HP.patient_id,inicio_3HP.data_inicio_3HP 
             	    ) inicio_3HP_MASTERCARD 
@@ -1034,7 +1154,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
             		union 
             		 select 	p.patient_id, e.encounter_datetime data_inicio_3HP 
@@ -1060,7 +1180,7 @@ select coorte12meses_final.patient_id as patient_id
 			            			inner join encounter e on p.patient_id=e.patient_id                                                                                         
 			            			inner join obs o on o.encounter_id=e.encounter_id                                                                                         
 			            		where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  
-			            				and o.concept_id=1719 and o.value_coded=23954                      
+			            				and o.concept_id=1719 and o.value_coded in (23954, 23984)                       
 			            				and e.encounter_datetime <=:endDate and e.location_id=:location       
             				) inicioAnterior on inicioAnterior.patient_id  = inicio.patient_id 
             					and inicioAnterior.data_inicio_3HP between (inicio.data_inicio_3HP - INTERVAL 4 MONTH) and (inicio.data_inicio_3HP - INTERVAL 1 day) 
@@ -1077,7 +1197,7 @@ select coorte12meses_final.patient_id as patient_id
 		        inner join encounter e on inicio_3HP.patient_id=e.patient_id 
             	inner join obs o on o.encounter_id=e.encounter_id 
             	inner join obs oDateFimTPT on oDateFimTPT.encounter_id=e.encounter_id 
-            	where 	e.voided=0 and oDateFimTPT.concept_id  = 6129 and oDateFimTPT.voided  = 0 and oDateFimTPT.value_datetime <= :endDate 
+            	where 	e.voided=0 and oDateFimTPT.concept_id  = 165327 and oDateFimTPT.voided  = 0 and oDateFimTPT.value_datetime <= :endDate 
             	and oDateFimTPT.value_datetime between (inicio_3HP.data_inicio_3HP + INTERVAL 86 DAY) and (inicio_3HP.data_inicio_3HP + INTERVAL 365 DAY)
             	and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
             	group by inicio_3HP.patient_id,inicio_3HP.data_inicio_3HP  
@@ -1094,7 +1214,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
             		union 
             		 select 	p.patient_id, e.encounter_datetime data_inicio_3HP 
@@ -1120,7 +1240,7 @@ select coorte12meses_final.patient_id as patient_id
 			            			inner join encounter e on p.patient_id=e.patient_id                                                                                         
 			            			inner join obs o on o.encounter_id=e.encounter_id                                                                                         
 			            		where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  
-			            				and o.concept_id=1719 and o.value_coded=23954                      
+			            				and o.concept_id=1719 and o.value_coded in (23954, 23984)                     
 			            				and e.encounter_datetime <=:endDate and e.location_id=:location       
             				) inicioAnterior on inicioAnterior.patient_id  = inicio.patient_id 
             					and inicioAnterior.data_inicio_3HP between (inicio.data_inicio_3HP - INTERVAL 4 MONTH) and (inicio.data_inicio_3HP - INTERVAL 1 day) 
@@ -1167,7 +1287,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
             		union 
             		 select 	p.patient_id, e.encounter_datetime data_inicio_3HP 
@@ -1193,7 +1313,7 @@ select coorte12meses_final.patient_id as patient_id
 			            			inner join encounter e on p.patient_id=e.patient_id                                                                                         
 			            			inner join obs o on o.encounter_id=e.encounter_id                                                                                         
 			            		where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  
-			            				and o.concept_id=1719 and o.value_coded=23954                      
+			            				and o.concept_id=1719 and o.value_coded in (23954, 23984)                       
 			            				and e.encounter_datetime <=:endDate and e.location_id=:location       
             				) inicioAnterior on inicioAnterior.patient_id  = inicio.patient_id 
             					and inicioAnterior.data_inicio_3HP between (inicio.data_inicio_3HP - INTERVAL 4 MONTH) and (inicio.data_inicio_3HP - INTERVAL 1 day) 
@@ -1210,7 +1330,7 @@ select coorte12meses_final.patient_id as patient_id
 		        inner join encounter e on inicio_3HP.patient_id=e.patient_id 
             	inner join obs o on o.encounter_id=e.encounter_id 
             	inner join obs oDateFimTPT on oDateFimTPT.encounter_id=e.encounter_id 
-            	where 	e.voided=0 and oDateFimTPT.concept_id  = 6129 and oDateFimTPT.voided  = 0 and oDateFimTPT.value_datetime <= :endDate 
+            	where 	e.voided=0 and oDateFimTPT.concept_id  = 165327 and oDateFimTPT.voided  = 0 and oDateFimTPT.value_datetime <= :endDate 
             	and oDateFimTPT.value_datetime between (inicio_3HP.data_inicio_3HP + INTERVAL 86 DAY) and (inicio_3HP.data_inicio_3HP + INTERVAL 365 DAY)
             	and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
             	group by inicio_3HP.patient_id,inicio_3HP.data_inicio_3HP  
@@ -1227,7 +1347,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <=:endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
             		union 
             		 select 	p.patient_id, e.encounter_datetime data_inicio_3HP 
@@ -1253,7 +1373,7 @@ select coorte12meses_final.patient_id as patient_id
 			            			inner join encounter e on p.patient_id=e.patient_id                                                                                         
 			            			inner join obs o on o.encounter_id=e.encounter_id                                                                                         
 			            		where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,9)  
-			            				and o.concept_id=1719 and o.value_coded=23954                      
+			            				and o.concept_id=1719 and o.value_coded in (23954, 23984)                       
 			            				and e.encounter_datetime <=:endDate and e.location_id=:location       
             				) inicioAnterior on inicioAnterior.patient_id  = inicio.patient_id 
             					and inicioAnterior.data_inicio_3HP between (inicio.data_inicio_3HP - INTERVAL 4 MONTH) and (inicio.data_inicio_3HP - INTERVAL 1 day) 
@@ -1272,7 +1392,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join obs oEstadoProflaxia on oEstadoProflaxia.encounter_id=e.encounter_id 
             		where e.voided=0 and e.encounter_datetime <= :endDate and 
             		oEstadoProflaxia.voided=0 and oEstadoProflaxia.concept_id = 165308 and oEstadoProflaxia.value_coded = 1267
-            		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type in (6) and  e.location_id=:location 
+            		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 6 and  e.location_id=:location 
             	    and e.encounter_datetime between (inicio_3HP.data_inicio_3HP + INTERVAL 86 DAY) and (inicio_3HP.data_inicio_3HP + INTERVAL 365 DAY)
             	    group by inicio_3HP.patient_id,inicio_3HP.data_inicio_3HP 
             	    ) inicio_3HP_MASTERCARD 
@@ -1340,7 +1460,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <= :endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <= :endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
                	)
             		inicioAnterior on inicioAnterior.patient_id=inicio.patient_id and  
@@ -1420,7 +1540,7 @@ select coorte12meses_final.patient_id as patient_id
             				inner join encounter e on p.patient_id=e.patient_id 
             				inner join obs o on o.encounter_id=e.encounter_id 
             				inner join obs oDateInicioTPT on oDateInicioTPT.encounter_id=e.encounter_id 
-            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 6128 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <= :endDate 
+            		where 	e.voided=0 and p.voided=0 and oDateInicioTPT.concept_id  = 165326 and oDateInicioTPT.voided  = 0 and oDateInicioTPT.value_datetime <= :endDate 
             		and o.voided=0 and o.concept_id=23985 and o.value_coded=23954 and e.encounter_type = 53 and  e.location_id=:location 
 	            	)
             		inicioAnterior on inicioAnterior.patient_id=inicio.patient_id and  
