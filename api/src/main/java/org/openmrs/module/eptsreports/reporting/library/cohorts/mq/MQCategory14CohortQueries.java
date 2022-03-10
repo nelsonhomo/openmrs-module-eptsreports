@@ -1,6 +1,7 @@
 package org.openmrs.module.eptsreports.reporting.library.cohorts.mq;
 
 import java.util.Date;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.DSDCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.PvlsCohortQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -14,8 +15,9 @@ import org.springframework.stereotype.Component;
 public class MQCategory14CohortQueries {
 
   @Autowired private PvlsCohortQueries pvlsCohortQueries;
+  @Autowired private DSDCohortQueries dSDCohortQueries;
 
-  @DocumentedDefinition(value = "Denominator Category 14")
+  @DocumentedDefinition(value = "getDenominatorCategory14Indicator")
   public CohortDefinition getDenominatorCategory14Indicator() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -53,12 +55,12 @@ public class MQCategory14CohortQueries {
     return definition;
   }
 
-  @DocumentedDefinition(value = "Denominator Category 14")
+  @DocumentedDefinition(value = "getPregnantDenominatorCategory14Indicator")
   public CohortDefinition getPregnantDenominatorCategory14Indicator() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("MQ -  Denominator Category14_Indicator");
+    definition.setName("pregnantDenominatorCategory14Indicator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -84,12 +86,12 @@ public class MQCategory14CohortQueries {
     return definition;
   }
 
-  @DocumentedDefinition(value = "Denominator Category 14")
+  @DocumentedDefinition(value = "getBreastfeedingDenominatorCategory14Indicator")
   public CohortDefinition getBreastfeedingDenominatorCategory14Indicator() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("MQ - Denominator Category14_Indicator");
+    definition.setName("breastfeedingDenominatorCategory14Indicator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -115,7 +117,38 @@ public class MQCategory14CohortQueries {
     return definition;
   }
 
-  @DocumentedDefinition(value = "Numerator Category 14")
+  @DocumentedDefinition(value = "getPatientsInDSDWithViralSupressionDenominatorCategory14Indicator")
+  public CohortDefinition getPatientsInDSDWithViralSupressionDenominatorCategory14Indicator() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("patientsInDSDWithViralSupressionDenominatorCategory14Indicator");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    definition.addSearch(
+        "DENOMINATOR-TXPVLS",
+        EptsReportUtils.map(
+            pvlsCohortQueries
+                .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            "endDate=${endRevisionDate},location=${location}"));
+
+    definition.addSearch(
+        "DSD",
+        EptsReportUtils.map(
+            this.dSDCohortQueries
+                .findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression(),
+            "endRevisionDate=${endRevisionDate},location=${location}"));
+
+    definition.setCompositionString("DENOMINATOR-TXPVLS AND DSD");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "getNumeratorCategory14Indicator")
   public CohortDefinition getNumeratorCategory14Indicator() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -153,12 +186,12 @@ public class MQCategory14CohortQueries {
     return definition;
   }
 
-  @DocumentedDefinition(value = "Denominator Category 14")
+  @DocumentedDefinition(value = "getPregnantNumeratorCategory14Indicator")
   public CohortDefinition getPregnantNumeratorCategory14Indicator() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("MQ - NumeratorCategory14_Indicator");
+    definition.setName("pregnantNumeratorCategory14Indicator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -191,12 +224,12 @@ public class MQCategory14CohortQueries {
     return definition;
   }
 
-  @DocumentedDefinition(value = "Denominator Category 14")
+  @DocumentedDefinition(value = "getBreastfeedingNumeratorCategory14Indicator")
   public CohortDefinition getBreastfeedingNumeratorCategory14Indicator() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("MQ - NumeratorCategory14_Indicator");
+    definition.setName("breastfeedingNumeratorCategory14Indicator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -225,6 +258,37 @@ public class MQCategory14CohortQueries {
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.setCompositionString("(NUMERATOR-TXPVLS AND B2-BREASTFEEDING) NOT B1-PREGNANT");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "getPatientsInDSDWithViralSupressionNumeratorCategory14Indicator")
+  public CohortDefinition getPatientsInDSDWithViralSupressionNumeratorCategory14Indicator() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("patientsInDSDWithViralSupressionNumeratorCategory14Indicator");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    definition.addSearch(
+        "NUMERATOR-TXPVLS",
+        EptsReportUtils.map(
+            pvlsCohortQueries
+                .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(),
+            "endDate=${endRevisionDate},location=${location}"));
+
+    definition.addSearch(
+        "DSD",
+        EptsReportUtils.map(
+            this.dSDCohortQueries
+                .findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression(),
+            "endRevisionDate=${endRevisionDate},location=${location}"));
+
+    definition.setCompositionString("NUMERATOR-TXPVLS AND DSD");
 
     return definition;
   }

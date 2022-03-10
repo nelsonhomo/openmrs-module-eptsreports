@@ -3,6 +3,7 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts;
 import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.queries.BreastfeedingQueries;
+import org.openmrs.module.eptsreports.reporting.library.queries.DSDQueriesInterfaceMQCategory14;
 import org.openmrs.module.eptsreports.reporting.library.queries.DsdQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.PregnantQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TbQueries;
@@ -856,5 +857,64 @@ public class DSDCohortQueries {
     dsd.setCompositionString("NOT-ELEGIBLE AND DC");
 
     return dsd;
+  }
+
+  @DocumentedDefinition(
+      value = "findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression")
+  public CohortDefinition findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("patientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "GAAC",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreCommunityAdherenceGroups",
+                DSDQueriesInterfaceMQCategory14.QUERY.findPatientsWhoAreCommunityAdherenceGroups),
+            mappings));
+
+    definition.addSearch(
+        "DT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreThreeMonthsDrugDistribution",
+                DSDQueriesInterfaceMQCategory14.QUERY
+                    .findPatientsWhoAreThreeMonthsDrugDistribution),
+            mappings));
+
+    definition.addSearch(
+        "FR",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreFastTrack",
+                DSDQueriesInterfaceMQCategory14.QUERY.findPatientsWhoAreFastTrack),
+            mappings));
+
+    definition.addSearch(
+        "DC",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreInCommunityDrugsDistribution",
+                DSDQueriesInterfaceMQCategory14.QUERY
+                    .findPatientsWhoAreInCommunitaryDispenseViaAPE),
+            mappings));
+
+    definition.addSearch(
+        "DS",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreSixMonthsDrugsDistribution",
+                DSDQueriesInterfaceMQCategory14.QUERY.findPatientsWhoAreSixMonthsDrugsDistribution),
+            mappings));
+
+    definition.setCompositionString("GAAC OR DT OR FR OR DC OR DS");
+
+    return definition;
   }
 }
