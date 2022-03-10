@@ -879,7 +879,7 @@ public class MQCategory15CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endRevisionDate},,endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "A",
