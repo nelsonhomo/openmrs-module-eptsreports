@@ -49,7 +49,7 @@ from
 							inner join obs obs3hpStart on obs3hpStart.encounter_id=e.encounter_id 
 					where 	e.voided=0 and p.voided=0 and obs3hpStart.value_datetime between :startDate and :endDate and  										
 							obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=23954 and e.encounter_type=53 and  
-							e.location_id=:location and obs3hpStart.concept_id=165326 and obs3hpStart.voided=0			
+							e.location_id=:location and obs3hpStart.concept_id=6128 and obs3hpStart.voided=0			
 					group by p.patient_id 
 
 					union 
@@ -221,7 +221,7 @@ from
 								inner join obs obs3hpStart on obs3hpStart.encounter_id=e.encounter_id 
 						where 	e.voided=0 and p.voided=0 and obs3hpStart.value_datetime between (:startDate - INTERVAL 4 MONTH) and :endDate and  										
 								obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=23954 and e.encounter_type=53 and  
-								e.location_id=:location and obs3hpStart.concept_id=165326 and obs3hpStart.voided=0			 
+								e.location_id=:location and obs3hpStart.concept_id=6128 and obs3hpStart.voided=0			 
 					)  																																			
 					inicioAnterior on inicioAnterior.patient_id=inicio.patient_id 																				
 						and	inicioAnterior.data_inicio_3HP between (inicio.data_inicio_3HP - INTERVAL 4 MONTH) and (inicio.data_inicio_3HP - INTERVAL 1 day)  	
@@ -257,7 +257,7 @@ from
 							inner join obs obsInhStart on obsInhStart.encounter_id=e.encounter_id 
 					where 	e.voided=0 and p.voided=0 and obsInhStart.value_datetime between :startDate and :endDate and  										
 							obsInh.voided=0 and obsInh.concept_id=23985 and obsInh.value_coded=656 and e.encounter_type=53 and  
-							e.location_id=:location and obsInhStart.concept_id=165326 and obsInhStart.voided=0			
+							e.location_id=:location and obsInhStart.concept_id=6128 and obsInhStart.voided=0			
 					group by p.patient_id 
 					
 					union
@@ -382,7 +382,7 @@ from
 									inner join obs obsInhStart on obsInhStart.encounter_id=e.encounter_id 
 							where 	e.voided=0 and p.voided=0 and obsInhStart.value_datetime between (:startDate - INTERVAL 14 MONTH) and :endDate and  										
 									obsInh.voided=0 and obsInh.concept_id=23985 and obsInh.value_coded=656 and e.encounter_type=53 and  
-									e.location_id=:location and obsInhStart.concept_id=165326 and obsInhStart.voided=0
+									e.location_id=:location and obsInhStart.concept_id=6128 and obsInhStart.voided=0
 							
 							union 
 							
@@ -422,7 +422,7 @@ from
 							inner join obs obs3hpStart on obs3hpStart.encounter_id=e.encounter_id 
 					where 	e.voided=0 and p.voided=0 and obs3hpStart.value_datetime between :startDate and :endDate and  										
 							obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=23954 and e.encounter_type=53 and  
-							e.location_id=:location and obs3hpStart.concept_id=165326 and obs3hpStart.voided=0			
+							e.location_id=:location and obs3hpStart.concept_id=6128 and obs3hpStart.voided=0			
 					group by p.patient_id 
 
 					union 
@@ -594,7 +594,7 @@ from
 								inner join obs obs3hpStart on obs3hpStart.encounter_id=e.encounter_id 
 						where 	e.voided=0 and p.voided=0 and obs3hpStart.value_datetime between (:startDate - INTERVAL 4 MONTH) and :endDate and  										
 								obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=23954 and e.encounter_type=53 and  
-								e.location_id=:location and obs3hpStart.concept_id=165326 and obs3hpStart.voided=0			 
+								e.location_id=:location and obs3hpStart.concept_id=6128 and obs3hpStart.voided=0			 
 					)  																																			
 					inicioAnterior on inicioAnterior.patient_id=inicio.patient_id 																				
 						and	inicioAnterior.data_inicio_3HP between (inicio.data_inicio_3HP - INTERVAL 4 MONTH) and (inicio.data_inicio_3HP - INTERVAL 1 day)  	
@@ -638,7 +638,7 @@ from
 							inner join obs obsInhStart on obsInhStart.encounter_id=e.encounter_id 
 					where 	e.voided=0 and p.voided=0 and obsInhStart.value_datetime between :startDate and :endDate and  										
 							obsInh.voided=0 and obsInh.concept_id=23985 and obsInh.value_coded=656 and e.encounter_type=53 and  
-							e.location_id=:location and obsInhStart.concept_id=165326 and obsInhStart.voided=0			
+							e.location_id=:location and obsInhStart.concept_id=6128 and obsInhStart.voided=0			
 					group by p.patient_id 
 					
 					union
@@ -763,7 +763,7 @@ from
 									inner join obs obsInhStart on obsInhStart.encounter_id=e.encounter_id 
 							where 	e.voided=0 and p.voided=0 and obsInhStart.value_datetime between (:startDate - INTERVAL 14 MONTH) and :endDate and  										
 									obsInh.voided=0 and obsInh.concept_id=23985 and obsInh.value_coded=656 and e.encounter_type=53 and  
-									e.location_id=:location and obsInhStart.concept_id=165326 and obsInhStart.voided=0
+									e.location_id=:location and obsInhStart.concept_id=6128 and obsInhStart.voided=0
 							
 							union 
 							
@@ -1007,7 +1007,7 @@ from
 							inner join obs obs3hpStart on obs3hpStart.encounter_id=e.encounter_id 
 					where 	e.voided=0 and p.voided=0 and obs3hpStart.value_datetime between (:startDate - INTERVAL 4 MONTH) and :endDate and  										
 							obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=23954 and e.encounter_type=53 and  
-							e.location_id=:location and obs3hpStart.concept_id=165326 and obs3hpStart.voided=0			 
+							e.location_id=:location and obs3hpStart.concept_id=6128 and obs3hpStart.voided=0			 
 				)  																																			
 				inicioAnterior on inicioAnterior.patient_id=inicio.patient_id 																				
 					and	inicioAnterior.data_inicio_3HP between (inicio.data_inicio_3HP - INTERVAL 4 MONTH) and (inicio.data_inicio_3HP - INTERVAL 1 day)  	
@@ -1026,7 +1026,7 @@ from
 					inner join obs obs3hpStart on obs3hpStart.encounter_id=e.encounter_id 
 			where 	e.voided=0 and p.voided=0 and obs3hpStart.value_datetime between :startDate and :endDate and  										
 					obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=23954 and e.encounter_type=53 and  
-					e.location_id=:location and obs3hpStart.concept_id=165326 and obs3hpStart.voided=0			
+					e.location_id=:location and obs3hpStart.concept_id=6128 and obs3hpStart.voided=0			
 			group by p.patient_id		
 		) ini3hpResumo on ini3hpResumo.patient_id=inicio_tpi.patient_id 
         left join 
@@ -1081,7 +1081,7 @@ from
 						inner join obs obs3hpStart on obs3hpStart.encounter_id=e.encounter_id 
 				where 	e.voided=0 and p.voided=0 and obs3hpStart.value_datetime BETWEEN :startDate and curdate() and  										
 						obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=23954 and e.encounter_type=53 and  
-						e.location_id=:location and obs3hpStart.concept_id=165327 and obs3hpStart.voided=0			
+						e.location_id=:location and obs3hpStart.concept_id=6129 and obs3hpStart.voided=0			
 				group by p.patient_id
 			) hp3final
 			group by patient_id			
@@ -1123,7 +1123,7 @@ from
 					inner join obs obs3hpStart on obs3hpStart.encounter_id=e.encounter_id 
 			where 	e.voided=0 and p.voided=0 and obs3hpStart.value_datetime BETWEEN :startDate and curdate() and  										
 					obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=23954 and e.encounter_type=53 and  
-					e.location_id=:location and obs3hpStart.concept_id=165327 and obs3hpStart.voided=0			
+					e.location_id=:location and obs3hpStart.concept_id=6129 and obs3hpStart.voided=0			
 			group by p.patient_id
 		) TPT_INI_FR16_CO on inicio3hp_TPT_INI_FR4.patient_id=TPT_INI_FR16_CO.patient_id and TPT_INI_FR16_CO.data_final_3HP>=inicio3hp_TPT_INI_FR4.data_inicio_3HP
 		/*Not specified 3HP Data Final on FILT */ 		
@@ -1172,7 +1172,7 @@ from
 					inner join obs obsInhStart on obsInhStart.encounter_id=e.encounter_id 
 			where 	e.voided=0 and p.voided=0 and obsInhStart.value_datetime between :startDate and :endDate and  										
 					obsInh.voided=0 and obsInh.concept_id=23985 and obsInh.value_coded=656 and e.encounter_type=53 and  
-					e.location_id=:location and obsInhStart.concept_id=165326 and obsInhStart.voided=0			
+					e.location_id=:location and obsInhStart.concept_id=6128 and obsInhStart.voided=0			
 			group by p.patient_id 		
 		
 		) iniinhresumo on iniinhresumo.patient_id=inicio_tpi.patient_id  
@@ -1283,11 +1283,11 @@ from
 						inner join obs obsInhStart on obsInhStart.encounter_id=e.encounter_id 
 				where 	e.voided=0 and p.voided=0 and obsInhStart.value_datetime between :startDate and curdate() and  										
 						obsInh.voided=0 and obsInh.concept_id=23985 and obsInh.value_coded=656 and e.encounter_type=53 and  
-						e.location_id=:location and obsInhStart.concept_id=165327 and obsInhStart.voided=0			
+						e.location_id=:location and obsInhStart.concept_id=6129 and obsInhStart.voided=0			
 				group by p.patient_id
 			) finalResumo
 			group by patient_id
-		) finalinhresumo on finalinhresumo.patient_id=inicioInh_TPT_INI_FR5.patient_id and inicioInh_TPT_INI_FR5.data_inicio_tpi>=finalinhresumo.data_final_inhresumo
+		) finalinhresumo on finalinhresumo.patient_id=inicioInh_TPT_INI_FR5.patient_id and finalinhresumo.data_final_inhresumo>=inicioInh_TPT_INI_FR5.data_inicio_tpi
         left join  
 		(  				
 			/* TPT_INI_FR21:
@@ -1313,7 +1313,7 @@ from
 				from 	patient p  																														
 						inner join encounter e on p.patient_id=e.patient_id  																				
 						inner join obs o on o.encounter_id=e.encounter_id  																					
-				where 	e.voided=0 and p.voided=0 and e.encounter_datetime between :startDate and :endDate  												
+				where 	e.voided=0 and p.voided=0 and e.encounter_datetime between :startDate and curdate()  												
 						and o.voided=0 and o.concept_id=6122 and o.value_coded=1267 and e.encounter_type in (6,9) and  e.location_id=:location 				
 				group by p.patient_id
 				
@@ -1324,13 +1324,13 @@ from
 						inner join encounter e on p.patient_id=e.patient_id																				 		
 						inner join obs obsInh on obsInh.encounter_id=e.encounter_id		 																				
 						inner join obs obsInhStart on obsInhStart.encounter_id=e.encounter_id																
-				where 	e.voided=0 and p.voided=0 and e.encounter_datetime between :startDate and :endDate	 			  									
+				where 	e.voided=0 and p.voided=0 and e.encounter_datetime between :startDate and curdate()	 			  									
 						and obsInh.voided=0 and obsInh.concept_id=23985 and obsInh.value_coded=656 and e.encounter_type=6 and  e.location_id=:location	  		
 						and obsInhStart.voided =0 and obsInhStart.concept_id =165308 and obsInhStart.value_coded=1267 							
 				group by p.patient_id	
 			) finalClinica
 			group by patient_id				
-         )finalinhseguimento on finalinhseguimento.patient_id=inicioInh_TPT_INI_FR5.patient_id and inicioInh_TPT_INI_FR5.data_inicio_tpi>=finalinhseguimento.data_final_inhSeguimento  
+         )finalinhseguimento on finalinhseguimento.patient_id=inicioInh_TPT_INI_FR5.patient_id and finalinhseguimento.data_final_inhSeguimento>=inicioInh_TPT_INI_FR5.data_inicio_tpi 
 		 left join  
 		 ( 
 			select patient_id,max(data_fim_tpi) data_final_inh 
@@ -1355,7 +1355,7 @@ from
 							inner join obs obsInhStart on obsInhStart.encounter_id=e.encounter_id 
 					where 	e.voided=0 and p.voided=0 and obsInhStart.value_datetime between :startDate and curdate() and  										
 							obsInh.voided=0 and obsInh.concept_id=23985 and obsInh.value_coded=656 and e.encounter_type=53 and  
-							e.location_id=:location and obsInhStart.concept_id=165327 and obsInhStart.voided=0			
+							e.location_id=:location and obsInhStart.concept_id=6129 and obsInhStart.voided=0			
 					group by p.patient_id
 
 					union

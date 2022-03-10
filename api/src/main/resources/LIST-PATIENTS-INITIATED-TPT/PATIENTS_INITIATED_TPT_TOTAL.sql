@@ -11,7 +11,7 @@ from
 				inner join obs obs3hpStart on obs3hpStart.encounter_id=e.encounter_id 
 		where 	e.voided=0 and p.voided=0 and obs3hpStart.value_datetime between :startDate and :endDate and  										
 				obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=23954 and e.encounter_type=53 and  
-				e.location_id=:location and obs3hpStart.concept_id=165326 and obs3hpStart.voided=0			
+				e.location_id=:location and obs3hpStart.concept_id=6128 and obs3hpStart.voided=0			
 		group by p.patient_id 
 
 		union 
@@ -183,7 +183,7 @@ from
 					inner join obs obs3hpStart on obs3hpStart.encounter_id=e.encounter_id 
 			where 	e.voided=0 and p.voided=0 and obs3hpStart.value_datetime between (:startDate - INTERVAL 4 MONTH) and :endDate and  										
 					obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=23954 and e.encounter_type=53 and  
-					e.location_id=:location and obs3hpStart.concept_id=165326 and obs3hpStart.voided=0			 
+					e.location_id=:location and obs3hpStart.concept_id=6128 and obs3hpStart.voided=0			 
 		)  																																			
 		inicioAnterior on inicioAnterior.patient_id=inicio.patient_id 																				
 			and	inicioAnterior.data_inicio_3HP between (inicio.data_inicio_3HP - INTERVAL 4 MONTH) and (inicio.data_inicio_3HP - INTERVAL 1 day)  	
@@ -219,7 +219,7 @@ from
 				inner join obs obsInhStart on obsInhStart.encounter_id=e.encounter_id 
 		where 	e.voided=0 and p.voided=0 and obsInhStart.value_datetime between :startDate and :endDate and  										
 				obsInh.voided=0 and obsInh.concept_id=23985 and obsInh.value_coded=656 and e.encounter_type=53 and  
-				e.location_id=:location and obsInhStart.concept_id=165326 and obsInhStart.voided=0			
+				e.location_id=:location and obsInhStart.concept_id=6128 and obsInhStart.voided=0			
 		group by p.patient_id 
 		
 		union
@@ -343,7 +343,7 @@ from
 						inner join obs obsInhStart on obsInhStart.encounter_id=e.encounter_id 
 				where 	e.voided=0 and p.voided=0 and obsInhStart.value_datetime between (:startDate - INTERVAL 14 MONTH) and :endDate and  										
 						obsInh.voided=0 and obsInh.concept_id=23985 and obsInh.value_coded=656 and e.encounter_type=53 and  
-						e.location_id=:location and obsInhStart.concept_id=165326 and obsInhStart.voided=0
+						e.location_id=:location and obsInhStart.concept_id=6128 and obsInhStart.voided=0
 				
 				union 
 				
