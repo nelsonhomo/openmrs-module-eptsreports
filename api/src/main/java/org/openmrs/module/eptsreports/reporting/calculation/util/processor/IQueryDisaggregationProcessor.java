@@ -27,7 +27,7 @@ public interface IQueryDisaggregationProcessor {
             + "		inner join encounter e on p.patient_id=e.patient_id "
             + "		inner join obs baseObs on e.encounter_id=baseObs.encounter_id "
             + "	  where e.voided=0 and p.voided=0 and baseObs.voided=0 and e.encounter_type=%s "
-            + "		and e.encounter_datetime>= :startDate and e.encounter_datetime<= :endDate  and  e.location_id= :location and "
+            + "		and e.encounter_datetime<= :endDate  and  e.location_id= :location and "
             + "		baseObs.concept_id in (%s) and baseObs.value_coded in (%s) group by p.patient_id ";
 
     public static final String
