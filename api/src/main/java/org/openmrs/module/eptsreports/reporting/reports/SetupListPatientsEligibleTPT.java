@@ -26,6 +26,8 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
 
   @Autowired private ListOfPatientsEligileToTPTDataSet listOfPatientsEligileToTPTDataSet;
 
+  @Autowired private DatinCodeDataSet DatinCodeDataSet;
+
   @Override
   public String getExcelDesignUuid() {
     return "a608e799-df5c-4183-99b4-de76f374a4e8";
@@ -67,6 +69,9 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
         "TPTTOTAL",
         Mapped.mapStraightThrough(
             this.listOfPatientsEligileToTPTDataSet.getTotalEligibleTPTDataset()));
+    rd.addDataSetDefinition(
+        "D",
+        Mapped.mapStraightThrough(this.DatinCodeDataSet.constructDataset(this.getParameters())));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(
