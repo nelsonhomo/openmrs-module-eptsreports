@@ -203,7 +203,7 @@ select coorte12meses_final.patient_id as patient_id,
                             left join obs regimeTPT on (regimeTPT.encounter_id  = e.encounter_id and  regimeTPT.concept_id = 23985 and regimeTPT.voided = 0)
                     where p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0   
                         and e.encounter_type in (6,9,53) and ultimaProfilaxiaIsoniazia.concept_id=6128  
-                        and ultimaProfilaxiaIsoniazia.value_datetime between (:endDate - INTERVAL 210 DAY) and :endDate and e.location_id=:location 
+                        and ultimaProfilaxiaIsoniazia.value_datetime between (:endDate - INTERVAL 7 MONTH) and :endDate and e.location_id=:location 
                         and regimeTPT.person_id is null
                         group by p.patient_id 
                 
@@ -216,7 +216,7 @@ select coorte12meses_final.patient_id as patient_id,
                         inner join obs dataInicioINH on dataInicioINH.encounter_id = e.encounter_id 
                     where p.voided = 0  and e.voided = 0 and regimeINH.voided = 0 and dataInicioINH.voided = 0   
                     and e.encounter_type = 53 and regimeINH.concept_id = 23985 and regimeINH.value_coded = 656 and dataInicioINH.concept_id  = 6128  
-                        and dataInicioINH.value_datetime between (:endDate - INTERVAL 210 DAY) and :endDate and  e.location_id=:location
+                        and dataInicioINH.value_datetime between (:endDate - INTERVAL 7 MONTH) and :endDate and  e.location_id=:location
                         group by p.patient_id 
                   
                   union
@@ -228,7 +228,7 @@ select coorte12meses_final.patient_id as patient_id,
                        inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id 
                   where p.voided = 0 and e.voided = 0 and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 
                     and e.encounter_type = 6 and profilaxiaINH.concept_id = 23985 and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256
-                       and e.encounter_datetime between (:endDate - INTERVAL 210 DAY) and :endDate and e.location_id = :location
+                       and e.encounter_datetime between (:endDate - INTERVAL 7 MONTH) and :endDate and e.location_id = :location
                        group by p.patient_id
 
                     union 
@@ -239,7 +239,7 @@ select coorte12meses_final.patient_id as patient_id,
                         inner join obs profilaxiaINH on profilaxiaINH.encounter_id=e.encounter_id 
                     where p.voided=0 and e.voided=0 and profilaxiaINH.voided=0   
                         and e.encounter_type in (6,9) and profilaxiaINH.concept_id=6122 and profilaxiaINH.value_coded=1256
-                        and e.encounter_datetime between (:endDate - INTERVAL 210 DAY) and :endDate and  e.location_id=:location 
+                        and e.encounter_datetime between (:endDate - INTERVAL 7 MONTH) and :endDate and  e.location_id=:location 
                         group by p.patient_id 
                     
                     union
@@ -250,7 +250,7 @@ select coorte12meses_final.patient_id as patient_id,
                         inner join obs seguimentoTPT on seguimentoTPT.encounter_id=e.encounter_id                                                                    
                     where p.voided=0 and e.voided=0 and regimeIsoniazida.voided=0 and seguimentoTPT.voided =0 
                         and e.encounter_type=60 and regimeIsoniazida.concept_id=23985 and regimeIsoniazida.value_coded in (656,23982)  and seguimentoTPT.concept_id =23987 and seguimentoTPT.value_coded in (1256,1705)  
-                        and e.encounter_datetime between (:endDate - INTERVAL 210 DAY) and :endDate and  e.location_id=:location                  
+                        and e.encounter_datetime between (:endDate - INTERVAL 7 MONTH) and :endDate and  e.location_id=:location                  
                         group by p.patient_id 
                     
                     union 
@@ -264,7 +264,7 @@ select coorte12meses_final.patient_id as patient_id,
                             inner join obs seguimentoTPT on seguimentoTPT.encounter_id=e.encounter_id
                         where p.voided=0 and e.voided=0 and regimeIsoniazida.voided=0 and seguimentoTPT.voided =0
                             and e.encounter_type=60 and regimeIsoniazida.concept_id=23985 and regimeIsoniazida.value_coded in (656,23982) and seguimentoTPT.concept_id =23987 and seguimentoTPT.value_coded in (1257)
-                            and e.encounter_datetime between (:endDate - INTERVAL 210 DAY) and :endDate and  e.location_id=:location 
+                            and e.encounter_datetime between (:endDate - INTERVAL 7 MONTH) and :endDate and  e.location_id=:location 
                             group by p.patient_id 
                         
                         union
@@ -279,7 +279,7 @@ select coorte12meses_final.patient_id as patient_id,
                                 and seguimentoTPT.voided =0)    
                             where p.voided=0 and e.voided=0 and regimeIsoniazida.voided=0 
                                 and e.encounter_type=60 and regimeIsoniazida.concept_id=23985 and regimeIsoniazida.value_coded in (656,23982)
-                                and e.encounter_datetime between (:endDate - INTERVAL 210 DAY) and :endDate and e.location_id=:location 
+                                and e.encounter_datetime between (:endDate - INTERVAL 7 MONTH) and :endDate and e.location_id=:location 
                                 and seguimentoTPT.obs_id is null
                                 group by p.patient_id 
                         )
@@ -338,7 +338,7 @@ select coorte12meses_final.patient_id as patient_id,
                            
                         )
                     inicioAnterior on inicioAnterior.patient_id=inicio.patient_id and  
-                                        inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 210 day) and (inicio.data_inicio_INH - INTERVAL 1 day) 
+                                        inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 7 MONTH) and (inicio.data_inicio_INH - INTERVAL 1 day) 
                     where inicioAnterior.patient_id is null 
                     
                     union 
@@ -633,7 +633,7 @@ select coorte12meses_final.patient_id as patient_id,
                             
                         )
                      inicioAnterior on inicioAnterior.patient_id=inicio.patient_id and  
-                                         inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 210 day) and (inicio.data_inicio_INH - INTERVAL 1 day) 
+                                         inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 7 MONTH) and (inicio.data_inicio_INH - INTERVAL 1 day) 
                      where inicioAnterior.patient_id is null 
                   ) 
                 inicio_inh
@@ -755,7 +755,7 @@ select coorte12meses_final.patient_id as patient_id,
                                 and e.encounter_datetime <= :endDate and e.location_id = :location
                     )
                 consultasINH on inicio_inh.patient_id = consultasINH.patient_id
-                where consultasINH.encounter_datetime between (inicio_inh.data_inicio_INH + INTERVAL 1 day) and (inicio_inh.data_inicio_INH + INTERVAL 210 DAY)
+                where consultasINH.encounter_datetime between (inicio_inh.data_inicio_INH + INTERVAL 1 day) and (inicio_inh.data_inicio_INH + INTERVAL 7 MONTH)
                     group by inicio_inh.patient_id,inicio_inh.data_inicio_INH having count(*)>=5  
                 
                 union
@@ -1094,7 +1094,7 @@ select coorte12meses_final.patient_id as patient_id,
                             
                         )
                      inicioAnterior on inicioAnterior.patient_id=inicio.patient_id and  
-                                         inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 210 day) and (inicio.data_inicio_INH - INTERVAL 1 day) 
+                                         inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 7 MONTH) and (inicio.data_inicio_INH - INTERVAL 1 day) 
                      where inicioAnterior.patient_id is null 
                   ) 
                 inicio_inh
@@ -1204,7 +1204,7 @@ select coorte12meses_final.patient_id as patient_id,
                             
                         )
                      inicioAnterior on inicioAnterior.patient_id=inicio.patient_id and  
-                                         inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 210 day) and (inicio.data_inicio_INH - INTERVAL 1 day) 
+                                         inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 7 MONTH) and (inicio.data_inicio_INH - INTERVAL 1 day) 
                      where inicioAnterior.patient_id is null 
                   ) 
                 inicio_inh
@@ -1316,7 +1316,7 @@ select coorte12meses_final.patient_id as patient_id,
                                 
                             )
                          inicioAnterior on inicioAnterior.patient_id=inicio.patient_id and  
-                                             inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 210 day) and (inicio.data_inicio_INH - INTERVAL 1 day) 
+                                             inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 7 MONTH) and (inicio.data_inicio_INH - INTERVAL 1 day) 
                          where inicioAnterior.patient_id is null 
                       ) 
                     inicio_inh
@@ -1425,7 +1425,7 @@ select coorte12meses_final.patient_id as patient_id,
                                 
                             )
                          inicioAnterior on inicioAnterior.patient_id=inicio.patient_id and  
-                                             inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 210 day) and (inicio.data_inicio_INH - INTERVAL 1 day) 
+                                             inicioAnterior.data_inicio_INH between (inicio.data_inicio_INH - INTERVAL 7 MONTH) and (inicio.data_inicio_INH - INTERVAL 1 day) 
                          where inicioAnterior.patient_id is null 
                       ) 
                     inicio_inh
@@ -2022,7 +2022,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
                         inner join obs o on o.encounter_id=e.encounter_id 
                 where   e.encounter_type in (6,9) and e.voided=0 and o.voided=0 and p.voided=0  
                         and o.concept_id=1268 and o.value_coded=1256 and e.location_id=:location  
-                        and o.obs_datetime between (:endDate - INTERVAL 210 DAY) and :endDate 
+                        and o.obs_datetime between (:endDate - INTERVAL 7 MONTH) and :endDate 
                 union 
                 select  p.patient_id 
                 from    patient p 
@@ -2030,11 +2030,11 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
                         inner join obs o on o.encounter_id=e.encounter_id 
                 where   e.encounter_type in (6,9) and e.voided=0 and o.voided=0 and p.voided=0 and 
                         o.concept_id=1113 and e.location_id=:location and  
-                        o.value_datetime between (:endDate - INTERVAL 210 DAY) and :endDate  
+                        o.value_datetime between (:endDate - INTERVAL 7 MONTH) and :endDate  
                 union 
                 select  patient_id 
                 from    patient_program 
-                where   program_id=5 and voided=0 and date_enrolled between (:endDate - INTERVAL 210 DAY) and :endDate and 
+                where   program_id=5 and voided=0 and date_enrolled between (:endDate - INTERVAL 7 MONTH) and :endDate and 
                         location_id=:location 
                 union 
                 SELECT  p.patient_id  
@@ -2045,7 +2045,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
                         AND e.encounter_type=53 
                         AND o.concept_id = 1406 
                         AND o.value_coded=42 
-                        AND e.location_id=:location AND o.obs_datetime between (:endDate - INTERVAL 210 DAY) and :endDate 
+                        AND e.location_id=:location AND o.obs_datetime between (:endDate - INTERVAL 7 MONTH) and :endDate 
                 union 
                 select  p.patient_id 
                 from    patient p 
@@ -2053,7 +2053,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
                         inner join obs o on o.encounter_id=e.encounter_id 
                 where   e.encounter_type=6 and e.voided=0 and o.voided=0 and p.voided=0 and 
                         o.concept_id=23761 and o.value_coded=1065 and  
-                        e.encounter_datetime between (:endDate - INTERVAL 210 DAY) and :endDate and  
+                        e.encounter_datetime between (:endDate - INTERVAL 7 MONTH) and :endDate and  
                         e.location_id=:location 
             )TPT_ELIG_FR10 on TPT_ELIG_FR10.patient_id=coorte12meses_final.patient_id 
             left join  
