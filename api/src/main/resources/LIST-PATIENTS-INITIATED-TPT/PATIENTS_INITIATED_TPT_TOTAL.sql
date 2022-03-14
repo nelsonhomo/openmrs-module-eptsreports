@@ -204,9 +204,11 @@ from
 		select 	p.patient_id,min(o.value_datetime) data_inicio_tpi  																			
 		from 	patient p  																														
 				inner join encounter e on p.patient_id=e.patient_id  																				
-				inner join obs o on o.encounter_id=e.encounter_id  																					
+				inner join obs o on o.encounter_id=e.encounter_id  
+				left join obs regimeTPT on (regimeTPT.encounter_id  = e.encounter_id and  regimeTPT.concept_id = 23985 and regimeTPT.voided = 0)																					
 		where 	e.voided=0 and p.voided=0 and o.value_datetime between :startDate and :endDate  													
-				and o.voided=0 and o.concept_id=6128 and e.encounter_type in (53,6,9) and e.location_id=:location 									
+				and o.voided=0 and o.concept_id=6128 and e.encounter_type in (53,6,9) and e.location_id=:location 
+				and regimeTPT.person_id is null									
 		group by p.patient_id
 		
 		union 
@@ -329,10 +331,11 @@ from
 				select 	p.patient_id,o.value_datetime data_inicio_tpi  																			
 				from 	patient p  																														
 						inner join encounter e on p.patient_id=e.patient_id  																				
-						inner join obs o on o.encounter_id=e.encounter_id  																					
+						inner join obs o on o.encounter_id=e.encounter_id
+						left join obs regimeTPT on (regimeTPT.encounter_id  = e.encounter_id and  regimeTPT.concept_id = 23985 and regimeTPT.voided = 0)  																					
 				where 	e.voided=0 and p.voided=0 and o.value_datetime between (:startDate - INTERVAL 14 MONTH) and :endDate  													
 						and o.voided=0 and o.concept_id=6128 and e.encounter_type in (53,6,9) and e.location_id=:location 
-				
+						and regimeTPT.person_id is null
 				union 
 				
 				-- Change concept
