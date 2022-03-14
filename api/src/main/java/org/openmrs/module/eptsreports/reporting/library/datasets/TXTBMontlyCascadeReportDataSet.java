@@ -386,6 +386,30 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
         "7. Screened patients with pos TB testing result who initiated treatment -Total",
         EptsReportUtils.map(startedTBTreatment, mappings),
         "");
+
+    dataSetDefinition.addColumn(
+        "TBD-STB-baciloscopia",
+        "7. Screened patients with pos TB testing result who initiated treatment - Baciloscopia",
+        EptsReportUtils.map(startedTBTreatment, mappings),
+        "diagnostictest=baciloscopia");
+
+    dataSetDefinition.addColumn(
+        "TBD-STB-genexpert",
+        " 7. Screened patients with pos TB testing result who initiated treatment - GeneXpert MTB/RIF",
+        EptsReportUtils.map(startedTBTreatment, mappings),
+        "diagnostictest=genexpert");
+
+    dataSetDefinition.addColumn(
+        "TBD-STB-tblam",
+        "7. Screened patients with pos TB testing result who initiated treatment - TB LAM",
+        EptsReportUtils.map(startedTBTreatment, mappings),
+        "diagnostictest=tblam");
+
+    dataSetDefinition.addColumn(
+        "TBD-STB-other",
+        "7. Screened patients with pos TB testing result who initiated treatment  - Additional test other",
+        EptsReportUtils.map(startedTBTreatment, mappings),
+        "diagnostictest=additonalDiagnostic");
   }
 
   private void addSection8(CohortIndicatorDataSetDefinition dataSetDefinition, String mappings) {

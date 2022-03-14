@@ -45,12 +45,12 @@ public class SetupTxTBMontlyCascadeReport extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "TX TB Montly Cascade Report";
+    return "TB4: Relatório Cascata Mensal de TX_TB";
   }
 
   @Override
   public String getDescription() {
-    return "TX TB Montly Cascade Report";
+    return "The TX_TB Monthly Cascade Report will generate the numbers of ART patients in each of the 8 indicators representing the steps of the TX_TB clinical cascade. This report will serve as a tool to detect areas of underperformance in a timely manner";
   }
 
   @Override
