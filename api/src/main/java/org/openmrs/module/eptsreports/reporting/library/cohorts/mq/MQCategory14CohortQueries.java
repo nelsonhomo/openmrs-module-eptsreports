@@ -1,21 +1,19 @@
 package org.openmrs.module.eptsreports.reporting.library.cohorts.mq;
 
 import java.util.Date;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.DSDCohortQueries;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.PvlsCohortQueries;
+import org.openmrs.Location;
+import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory14QueriesInterface;
+import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory14QueriesInterface.QUERY.WomanState;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
+import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MQCategory14CohortQueries {
-
-  @Autowired private PvlsCohortQueries pvlsCohortQueries;
-  @Autowired private DSDCohortQueries dSDCohortQueries;
 
   @DocumentedDefinition(value = "getDenominatorCategory14Indicator")
   public CohortDefinition getDenominatorCategory14Indicator() {
@@ -32,22 +30,19 @@ public class MQCategory14CohortQueries {
     definition.addSearch(
         "DENOMINATOR-TXPVLS",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "A1-PREGNANT",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "A2-BREASTFEEDING",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.setCompositionString("DENOMINATOR-TXPVLS NOT (A1-PREGNANT OR A2-BREASTFEEDING");
@@ -70,15 +65,13 @@ public class MQCategory14CohortQueries {
     definition.addSearch(
         "DENOMINATOR-TXPVLS",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "A1-PREGNANT",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.setCompositionString("DENOMINATOR-TXPVLS AND A1-PREGNANT");
@@ -101,15 +94,13 @@ public class MQCategory14CohortQueries {
     definition.addSearch(
         "DENOMINATOR-TXPVLS",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "A2-BREASTFEEDING",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.setCompositionString("DENOMINATOR-TXPVLS AND A2-BREASTFEEDING");
@@ -132,16 +123,14 @@ public class MQCategory14CohortQueries {
     definition.addSearch(
         "DENOMINATOR-TXPVLS",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "DSD",
         EptsReportUtils.map(
-            this.dSDCohortQueries
-                .findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression(),
-            "endRevisionDate=${endRevisionDate},location=${location}"));
+            findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression(),
+            "endDate=${endRevisionDate},location=${location}"));
 
     definition.setCompositionString("DENOMINATOR-TXPVLS AND DSD");
 
@@ -163,22 +152,19 @@ public class MQCategory14CohortQueries {
     definition.addSearch(
         "NUMERATOR-TXPVLS",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(),
+            findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "B1-PREGNANT",
         EptsReportUtils.map(
-            this.pvlsCohortQueries
-                .findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "B2-BREASTFEEDING",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.setCompositionString("NUMERATOR-TXPVLS NOT (B1-PREGNANT OR B2-BREASTFEEDING");
@@ -201,22 +187,19 @@ public class MQCategory14CohortQueries {
     definition.addSearch(
         "NUMERATOR-TXPVLS",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(),
+            findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "B1-PREGNANT",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "B2-BREASTFEEDING",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.setCompositionString("(NUMERATOR-TXPVLS AND B1-PREGNANT) NOT B2-BREASTFEEDING");
@@ -239,22 +222,19 @@ public class MQCategory14CohortQueries {
     definition.addSearch(
         "NUMERATOR-TXPVLS",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(),
+            findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "B2-BREASTFEEDING",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "B1-PREGNANT",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.setCompositionString("(NUMERATOR-TXPVLS AND B2-BREASTFEEDING) NOT B1-PREGNANT");
@@ -277,19 +257,111 @@ public class MQCategory14CohortQueries {
     definition.addSearch(
         "NUMERATOR-TXPVLS",
         EptsReportUtils.map(
-            pvlsCohortQueries
-                .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(),
+            findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.addSearch(
         "DSD",
         EptsReportUtils.map(
-            this.dSDCohortQueries
-                .findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression(),
-            "endRevisionDate=${endRevisionDate},location=${location}"));
+            findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression(),
+            "endDate=${endRevisionDate},location=${location}"));
 
     definition.setCompositionString("NUMERATOR-TXPVLS AND DSD");
 
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months")
+  private CohortDefinition
+      findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "MQ - PatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months");
+    definition.addParameter(new Parameter("endDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+    String query =
+        MQCategory14QueriesInterface.QUERY
+            .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months;
+    definition.setQuery(query);
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value =
+          "findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months")
+  private CohortDefinition
+      findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "MQ - PatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months");
+    definition.addParameter(new Parameter("endDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+    String query =
+        MQCategory14QueriesInterface.QUERY
+            .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months;
+    definition.setQuery(query);
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "PregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months")
+  public CohortDefinition
+      findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "PregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.setQuery(
+        MQCategory14QueriesInterface.QUERY
+            .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(
+                WomanState.PREGNANT));
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value =
+          "BreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months")
+  public CohortDefinition
+      findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "BreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.setQuery(
+        MQCategory14QueriesInterface.QUERY
+            .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(
+                WomanState.BREASTFEEDING));
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression")
+  private CohortDefinition findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("MQ - PatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression");
+    definition.addParameter(new Parameter("endDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+    String query =
+        MQCategory14QueriesInterface.QUERY
+            .findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression;
+    definition.setQuery(query);
     return definition;
   }
 }
