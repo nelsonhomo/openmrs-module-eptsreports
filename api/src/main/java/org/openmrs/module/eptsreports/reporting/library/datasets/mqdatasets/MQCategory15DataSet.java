@@ -233,7 +233,7 @@ public class MQCategory15DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortCategory15Queries
-                    .findPatientsElegibleForMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriod_Denominator_15_13(),
+                    .findPatientsElegibleForMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodAndRegisteredAtLeastInOneMDS_Numerator_15_13(),
                 "CAT15INDICATOR_15_13_NUMERATOR",
                 mappings),
             mappings),
@@ -257,7 +257,7 @@ public class MQCategory15DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortCategory15Queries
-                    .findPatientsRegisteredInMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodWhoReceivedCargaViralGreaterThan1000_Denominator_15_14(),
+                    .findPatientsRegisteredInMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodWhoReceivedCargaViralGreaterThan1000AndSuspendedInTheMDS_Numerator_15_14(),
                 "CAT15NUMERADOR_15_14",
                 mappings),
             mappings),
@@ -265,7 +265,7 @@ public class MQCategory15DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT15DENOMINADOR_15_15",
-        "15.3 % de pacientes inscritos em MDS em TARV há mais de 21 meses, que conhecem o seu resultado de CV de seguimento - DENOMINADOR",
+        "15.15 % de utentes inscritos em MDS (para pacientes estáveis) em TARV há mais de 24 meses, que conhecem o resultado de CV de seguimento - DENOMINADOR",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortCategory15Queries
@@ -276,13 +276,13 @@ public class MQCategory15DataSet extends MQAbstractDataSet {
         "");
 
     dataSetDefinition.addColumn(
-        "CAT15NUMERADOR_15_3",
-        "15.3 % de pacientes inscritos em MDS em TARV há mais de 21 meses, que conhecem o seu resultado de CV de seguimento - NUMERADOR",
+        "CAT15NUMERADOR_15_15",
+        "15.15 % de utentes inscritos em MDS (para pacientes estáveis) em TARV há mais de 24 meses, que conhecem o resultado de CV de seguimento - NUMERADOR",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortCategory15Queries
                     .findPatientsRegisteredInOneMDSForStablePatientsAndHadCVBetweenTwelveAndEigtheenMonthsAfterCVLessThan1000_Numerator_15_15(),
-                "CAT15NUMERADOR_15_3",
+                "CAT15NUMERADOR_15_15",
                 mappings),
             mappings),
         "");

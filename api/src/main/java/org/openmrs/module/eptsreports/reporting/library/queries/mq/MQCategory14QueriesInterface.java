@@ -1,6 +1,7 @@
 package org.openmrs.module.eptsreports.reporting.library.queries.mq;
 
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
+import org.openmrs.module.eptsreports.reporting.utils.WomanState;
 
 public interface MQCategory14QueriesInterface {
 
@@ -9,11 +10,6 @@ public interface MQCategory14QueriesInterface {
     private static final String
         FIND_WOMAN_STATE_WHO_HAVE_MORE_THAN_3MONTHS_ON_ART_WITH_VIRALLOAD_REGISTERED_IN_THELAST12MONTHS =
             "MQ/FIND_WOMAN_STATE_WHO_HAVE_MORE_THAN_3MONTHS_ON_ART_WITH_VIRALLOAD_REGISTERED_IN_THELAST12MONTHS.sql";
-
-    public enum WomanState {
-      PREGNANT,
-      BREASTFEEDING;
-    }
 
     public static final String
         findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months =

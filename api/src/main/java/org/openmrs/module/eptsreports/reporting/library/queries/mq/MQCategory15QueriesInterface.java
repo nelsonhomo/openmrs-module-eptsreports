@@ -1,5 +1,7 @@
 package org.openmrs.module.eptsreports.reporting.library.queries.mq;
 
+import org.openmrs.module.eptsreports.reporting.utils.WomanState;
+
 public interface MQCategory15QueriesInterface {
 
   class QUERY {
@@ -257,26 +259,6 @@ public interface MQCategory15QueriesInterface {
             + " AND e.encounter_datetime >= DATE_SUB(:endRevisionDate, INTERVAL 14 MONTH) AND e.encounter_datetime <= :endRevisionDate "
             + " AND obsGravida.concept_id = 1982 AND obsGravida.value_coded = 1065 AND pe.gender = 'F' ";
 
-    public static final String findPatientsWhoArePregnant9MonthsSpecificForCategory15 =
-        " SELECT p.patient_id FROM person pe "
-            + " INNER JOIN patient p ON pe.person_id = p.patient_id "
-            + " INNER JOIN encounter e ON p.patient_id = e.patient_id "
-            + " INNER JOIN obs obsGravida ON e.encounter_id = obsGravida.encounter_id "
-            + " WHERE pe.voided = 0 AND p.voided = 0 AND e.voided = 0 AND obsGravida.voided = 0 AND e.encounter_type = 6 AND e.location_id = :location "
-            + " AND e.encounter_datetime between (:endRevisionDate - INTERVAL 9 MONTH + INTERVAL 1 DAY) and :endRevisionDate "
-            + " AND obsGravida.concept_id = 1982 AND obsGravida.value_coded = 1065 AND pe.gender = 'F' "
-            + " group by patient_id ";
-
-    public static final String findPatientsWhoAreBreastfeeding18MonthsSpecificForCategory15 =
-        " SELECT p.patient_id FROM person pe "
-            + " INNER JOIN patient p ON pe.person_id = p.patient_id "
-            + " INNER JOIN encounter e ON p.patient_id = e.patient_id "
-            + " INNER JOIN obs obsLactante ON e.encounter_id = obsLactante.encounter_id "
-            + " WHERE pe.voided = 0 AND p.voided = 0 AND e.voided = 0 AND obsLactante.voided = 0 AND e.encounter_type = 6 AND e.location_id = :location "
-            + " AND e.encounter_datetime between (:endRevisionDate - INTERVAL 18 MONTH + INTERVAL 1 DAY) and :endRevisionDate "
-            + " AND obsLactante.concept_id = 6332 AND obsLactante.value_coded = 1065 AND pe.gender = 'F' "
-            + " group by patient_id ";
-
     public static final String findPatientsWhoAreBreastfeedingSpecificForCategory15 =
         " SELECT p.patient_id FROM person pe "
             + " INNER JOIN patient p ON pe.person_id = p.patient_id "
@@ -331,5 +313,50 @@ public interface MQCategory15QueriesInterface {
             + "dataMaximoModelo.data=obsGaac.obs_datetime "
             + "group by maxEnc.patient_id "
             + ") final ";
+
+    public static String findPatientWhoArePregnantOrBreastfeeding14Months(WomanState womanState) {
+      String query =
+          " select f.patient_id from ( "
+              + "select p.person_id as  patient_id,	 "
+              + "lactante.data_lactante, "
+              + "gravida.data_gravida, "
+              + "if(max(lactante.data_lactante) is null,1, "
+              + "if(max(gravida.data_gravida) is null,2, "
+              + "if(max(gravida.data_gravida)>=max(lactante.data_lactante),1,2))) decisao from person p "
+              + "left join ( "
+              + "SELECT p.patient_id, e.encounter_datetime data_lactante FROM person pe  "
+              + "INNER JOIN patient p ON pe.person_id = p.patient_id  "
+              + "INNER JOIN encounter e ON p.patient_id = e.patient_id  "
+              + "INNER JOIN obs obsLactante ON e.encounter_id = obsLactante.encounter_id  "
+              + "WHERE pe.voided = 0 AND p.voided = 0 AND e.voided = 0 AND obsLactante.voided = 0 AND e.encounter_type = 6 AND e.location_id = :location  "
+              + "AND e.encounter_datetime between (:endRevisionDate - INTERVAL 14 MONTH + INTERVAL 1 DAY) and :endRevisionDate  "
+              + "AND obsLactante.concept_id = 6332 AND obsLactante.value_coded = 1065 AND pe.gender = 'F'  "
+              + "group by patient_id  "
+              + ") lactante on p.person_id=lactante.patient_id "
+              + "left join ( "
+              + "SELECT p.patient_id, e.encounter_datetime data_gravida FROM person pe  "
+              + "INNER JOIN patient p ON pe.person_id = p.patient_id  "
+              + "INNER JOIN encounter e ON p.patient_id = e.patient_id  "
+              + "INNER JOIN obs obsGravida ON e.encounter_id = obsGravida.encounter_id  "
+              + "WHERE pe.voided = 0 AND p.voided = 0 AND e.voided = 0 AND obsGravida.voided = 0 AND e.encounter_type = 6 AND e.location_id = :location  "
+              + "AND e.encounter_datetime between (:endRevisionDate - INTERVAL 14 MONTH + INTERVAL 1 DAY) and :endRevisionDate  "
+              + "AND obsGravida.concept_id = 1982 AND obsGravida.value_coded = 1065 AND pe.gender = 'F'  "
+              + "group by patient_id  "
+              + ")gravida on gravida.patient_id=p.person_id "
+              + "where 	(lactante.data_lactante is not null or gravida.data_gravida is not null) and p.voided=0 and p.gender='F' "
+              + "group by p.person_id "
+              + ")f ";
+
+      switch (womanState) {
+        case PREGNANT:
+          query = "where decisao=1 ";
+          break;
+
+        case BREASTFEEDING:
+          query = "where decisao=2 ";
+          break;
+      }
+      return query;
+    }
   }
 }
