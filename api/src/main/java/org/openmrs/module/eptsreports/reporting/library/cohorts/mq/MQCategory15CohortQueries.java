@@ -904,15 +904,15 @@ public class MQCategory15CohortQueries {
                 .findPatientsWithRegularClinicalConsultationOrRegularArtPickUpInTheLastThreeMonths(),
             mappings));
 
-    //    definition.addSearch(
-    //        "C",
-    //        EptsReportUtils.map(
-    //            this.findPatientsWhoArePregnant14MonthsSpecificForCategory15(), mappings));
-    //
-    //    definition.addSearch(
-    //        "D",
-    //        EptsReportUtils.map(
-    //            this.findPatientsWhoAreBreastfeeding14MonthsSpecificForCategory15(), mappings));
+    definition.addSearch(
+        "C",
+        EptsReportUtils.map(
+            this.findPatientsWhoArePregnant14MonthsSpecificForCategory15(), mappings));
+
+    definition.addSearch(
+        "D",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreBreastfeeding14MonthsSpecificForCategory15(), mappings));
 
     definition.addSearch(
         "F",
@@ -965,12 +965,11 @@ public class MQCategory15CohortQueries {
                 .findPatientsElegibleForMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriod_Denominator_15_13(),
             mappingsDen));
 
-    //    definition.addSearch(
-    //        "K",
-    //        EptsReportUtils.map(this.findPatientsWhoHasRegisteredAsIniciarInAtLeastOneMDS(),
-    // mappings));
+    definition.addSearch(
+        "K",
+        EptsReportUtils.map(this.findPatientsWhoHasRegisteredAsIniciarInAtLeastOneMDS(), mappings));
 
-    definition.setCompositionString("(DENOMINATOR-15-13)");
+    definition.setCompositionString("(DENOMINATOR-15-13 AND K)");
 
     return definition;
   }
