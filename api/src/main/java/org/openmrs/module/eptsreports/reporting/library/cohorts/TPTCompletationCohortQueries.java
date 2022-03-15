@@ -584,7 +584,7 @@ public class TPTCompletationCohortQueries {
     dsd.addParameter(new Parameter("startDate", "Start Date", Date.class));
     dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
     dsd.addParameter(new Parameter("location", "location", Location.class));
-    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${endDate-7m},endDate=${endDate},location=${location}";
 
     dsd.addSearch(
         "STARTED-TPT",
