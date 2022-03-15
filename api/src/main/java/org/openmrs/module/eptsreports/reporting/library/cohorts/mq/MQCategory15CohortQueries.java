@@ -809,8 +809,7 @@ public class MQCategory15CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        String.format(
-            "MQ - PatientsWhoAreNewlyEnrolledOnARTByAgeUsingAgeRange %s To %s ", startAge, endAge));
+        String.format("MQ - PatientsWhoAreNewlyEnrolledOnARTByAgeUsingAgeRange", startAge, endAge));
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -830,8 +829,7 @@ public class MQCategory15CohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName(
-        String.format("MQ - findPatientsWhoHasRegisteredAsIniciarInAtLeastOneMDS %s To %s "));
+    definition.setName(String.format("MQ - findPatientsWhoHasRegisteredAsIniciarInAtLeastOneMDS "));
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -850,8 +848,7 @@ public class MQCategory15CohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName(
-        String.format("MQ - findPatientsWhoHasRegisteredAsIniciarInAtLeastOneMDS %s To %s "));
+    definition.setName(String.format("MQ - findPatientsWhoHasRegisteredAsIniciarInAtLeastOneMDS "));
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
