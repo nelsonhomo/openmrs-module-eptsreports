@@ -45,12 +45,12 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "LISTA DE PACIENTES ELEGIVEIS AO TPT";
+    return "TB2: Lista de Pacientes Elegíveis ao TPT";
   }
 
   @Override
   public String getDescription() {
-    return "LISTA DE PACIENTES ELEGIVEIS AO TPT";
+    return "This report generates the aggregate numbers and lists all active patients on ART who are eligible for TPT by reporting end date.";
   }
 
   @Override

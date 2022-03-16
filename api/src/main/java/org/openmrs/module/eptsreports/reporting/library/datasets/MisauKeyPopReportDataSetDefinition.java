@@ -143,7 +143,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E1-MSM",
         "Homosexual",
         EptsReportUtils.map(txNewPatientEnrolledInArtIndicator, mappings),
-        "age=15+|homosexual=homosexual");
+        "age=15+|gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "E1-PWID",
@@ -161,7 +161,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E1-FSW",
         "Sex Worker",
         EptsReportUtils.map(txNewPatientEnrolledInArtIndicator, mappings),
-        "age=15+|sex-worker=sex-worker");
+        "age=15+|gender=F|sex-worker=sex-worker");
 
     dataSetDefinition.addColumn(
         "E2",
@@ -173,7 +173,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E2-MSM",
         "Homosexual",
         EptsReportUtils.map(txCurrPatientCurrentOnARTIndicator, mappingEndDate),
-        "age=15+|homosexual=homosexual");
+        "age=15+|gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "E2-PWID",
@@ -191,7 +191,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E2-FSW",
         "Sex Worker",
         EptsReportUtils.map(txCurrPatientCurrentOnARTIndicator, mappingEndDate),
-        "age=15+|sex-worker=sex-worker");
+        "age=15+|gender=F|sex-worker=sex-worker");
 
     dataSetDefinition.addColumn(
         "E3",
@@ -203,7 +203,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E3-MSM",
         "Homosexual",
         EptsReportUtils.map(txCurrWithVLResultIndicator, mappings),
-        "age=15+|homosexual=homosexual");
+        "age=15+|gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "E3-PWID",
@@ -221,7 +221,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E3-FSW",
         "Sex Worker",
         EptsReportUtils.map(txCurrWithVLResultIndicator, mappings),
-        "age=15+|sex-worker=sex-worker");
+        "age=15+|gender=F|sex-worker=sex-worker");
 
     dataSetDefinition.addColumn(
         "E4",
@@ -233,7 +233,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E4-MSM",
         "Homosexual",
         EptsReportUtils.map(currentlyOnTarvWhitSuppressedVLResultsIndicator, mappings),
-        "age=15+|homosexual=homosexual");
+        "age=15+|gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "E4-PWID",
@@ -251,7 +251,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E4-FSW",
         "Sex Worker",
         EptsReportUtils.map(currentlyOnTarvWhitSuppressedVLResultsIndicator, mappings),
-        "age=15+|sex-worker=sex-worker");
+        "age=15+|gender=F|sex-worker=sex-worker");
 
     //
     dataSetDefinition.addColumn(
@@ -264,7 +264,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E5-MSM",
         "Homosexual",
         EptsReportUtils.map(patientsCoort12StartArtIndicator, mappings),
-        "age=15+|homosexual=homosexual");
+        "age=15+|gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "E5-PWID",
@@ -282,7 +282,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E5-FSW",
         "Sex Worker",
         EptsReportUtils.map(patientsCoort12StartArtIndicator, mappings),
-        "age=15+|sex-worker=sex-worker");
+        "age=15+|gender=F|sex-worker=sex-worker");
 
     //
     dataSetDefinition.addColumn(
@@ -295,7 +295,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E6-MSM",
         "Homosexual",
         EptsReportUtils.map(patientsCoort12CurrentOnArtIndicator, mappings),
-        "age=15+|homosexual=homosexual");
+        "age=15+|gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "E6-PWID",
@@ -313,7 +313,7 @@ public class MisauKeyPopReportDataSetDefinition extends BaseDataSet {
         "E6-FSW",
         "Sex Worker",
         EptsReportUtils.map(patientsCoort12CurrentOnArtIndicator, mappings),
-        "age=15+|sex-worker=sex-worker");
+        "age=15+|gender=F|sex-worker=sex-worker");
 
     return dataSetDefinition;
   }
