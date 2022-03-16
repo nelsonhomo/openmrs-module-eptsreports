@@ -873,7 +873,7 @@ public class MQCategory15CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsElegibleForMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriod");
+            "MQ-MDS-eligible patients for stable patients who had a consultation during the evaluation period - Denominator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -946,7 +946,9 @@ public class MQCategory15CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsElegibleForMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodAndRegisteredAtLeastInOneMDS_Numerator_15_13");
+            "MQ-of patients eligible for MDS for stable patients who had a visit during the "
+                + "evaluation period and who were enrolled in at least one MDS for a stable patient "
+                + "(GAAC, DT, DS, FR) at the same visit - Numerator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -982,7 +984,8 @@ public class MQCategory15CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsRegisteredInMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodWhoReceivedCargaViralGreaterThan1000");
+            "MQ-patients on ART enrolled in MDS for stable patients, seen in the review period, "
+            + "who have received a CV result greater than or equal to 1000 copies - Denominator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -1024,7 +1027,9 @@ public class MQCategory15CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsRegisteredInMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodWhoReceivedCargaViralGreaterThan1000AndSuspendedInTheMDS");
+            "Patients on ART enrolled in MDS for stable patients, seen in the review period, "
+            + "who received a CV result greater than or equal to 1000 copies, "
+            + "and who were suspended from the MDS at that same appointment - Numerator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -1061,7 +1066,7 @@ public class MQCategory15CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsRegisteredInMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodInARTMoreThan21Months");
+            "patients enrolled in MDS for stable patients who had a consultation in the evaluation period and in ART for more than 24 months - Denominator " );
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -1110,7 +1115,9 @@ public class MQCategory15CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsRegisteredInOneMDSForStablePatientsAndHadCVBetweenTwelveAndEigtheenMonthsAfterCVLessThan1000_Numerator_15_15");
+            "of patients enrolled in MDS to stable patients who had a consultation in the evaluation period (review period)"
+            + " and who have been on ART for more than 24 months and who have a VC result 18 to 24 months "
+            + " after the last VC result < 1000 copies - Numerator ");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
