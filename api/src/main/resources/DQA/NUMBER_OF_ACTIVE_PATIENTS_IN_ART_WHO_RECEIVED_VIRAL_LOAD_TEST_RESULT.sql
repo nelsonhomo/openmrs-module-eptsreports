@@ -1,5 +1,5 @@
     
-select cv.patient_id,cv.data_usar,cv.DATA_INICIO_TARV,cv.DATA_CV,cv.CV_Qualitativa,cv.CV_Quantitativa,pid.identifier as NID,pe.gender SEXO,round(datediff(:endDate,pe.birthdate)/365) as AGE
+select (@cnt := @cnt + 1) as ID,cv.patient_id,cv.data_usar,cv.DATA_INICIO_TARV,cv.DATA_CV,cv.CV_Qualitativa,cv.CV_Quantitativa,pid.identifier as NID,pe.gender SEXO,round(datediff(:endDate,pe.birthdate)/365) as AGE
  from (
 
     select
@@ -577,3 +577,5 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
               ) pid2 
               where pid1.patient_id=pid2.patient_id and pid1.patient_identifier_id=pid2.id 
             ) pid on pid.patient_id=cv.patient_id 
+            CROSS JOIN (SELECT @cnt := 0) as DEMMY
+
