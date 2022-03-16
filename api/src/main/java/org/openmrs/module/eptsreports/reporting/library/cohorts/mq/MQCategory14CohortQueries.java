@@ -33,19 +33,7 @@ public class MQCategory14CohortQueries {
             findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
-    definition.addSearch(
-        "A1-PREGNANT",
-        EptsReportUtils.map(
-            findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
-            "endDate=${endRevisionDate},location=${location}"));
-
-    definition.addSearch(
-        "A2-BREASTFEEDING",
-        EptsReportUtils.map(
-            findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
-            "endDate=${endRevisionDate},location=${location}"));
-
-    definition.setCompositionString("DENOMINATOR-TXPVLS NOT (A1-PREGNANT OR A2-BREASTFEEDING");
+    definition.setCompositionString("DENOMINATOR-TXPVLS");
 
     return definition;
   }
@@ -55,7 +43,7 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("pregnantDenominatorCategory14Indicator");
+    definition.setName("MQ Cat 14 - Patients with Viral Supression And Pregnant - Denominator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -84,7 +72,8 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("breastfeedingDenominatorCategory14Indicator");
+    definition.setName(
+        "MQ Cat 14 - Patients with Viral Supression And BreastFeeding - Denominator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -113,7 +102,8 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("patientsInDSDWithViralSupressionDenominatorCategory14Indicator");
+    definition.setName(
+        "MQ Cat 14 - Get Patients With Viral Supression And At Least One DSD - Denominator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -142,7 +132,7 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("MQ - NumeratorCategory14_Indicator");
+    definition.setName("MQ - Numerator Category14_Indicator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -155,19 +145,7 @@ public class MQCategory14CohortQueries {
             findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
-    definition.addSearch(
-        "B1-PREGNANT",
-        EptsReportUtils.map(
-            findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
-            "endDate=${endRevisionDate},location=${location}"));
-
-    definition.addSearch(
-        "B2-BREASTFEEDING",
-        EptsReportUtils.map(
-            findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
-            "endDate=${endRevisionDate},location=${location}"));
-
-    definition.setCompositionString("NUMERATOR-TXPVLS NOT (B1-PREGNANT OR B2-BREASTFEEDING");
+    definition.setCompositionString("NUMERATOR-TXPVLS");
 
     return definition;
   }
@@ -177,7 +155,7 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("pregnantNumeratorCategory14Indicator");
+    definition.setName("MQ Cat 14 - Patients with Viral Supression And Pregnant - Numerator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -196,13 +174,7 @@ public class MQCategory14CohortQueries {
             findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
-    definition.addSearch(
-        "B2-BREASTFEEDING",
-        EptsReportUtils.map(
-            findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
-            "endDate=${endRevisionDate},location=${location}"));
-
-    definition.setCompositionString("(NUMERATOR-TXPVLS AND B1-PREGNANT) NOT B2-BREASTFEEDING");
+    definition.setCompositionString("NUMERATOR-TXPVLS AND B1-PREGNANT");
 
     return definition;
   }
@@ -212,7 +184,7 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("breastfeedingNumeratorCategory14Indicator");
+    definition.setName("MQ Cat 14 - Patients with Viral Supression And BreastFeeding - Numerator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -231,13 +203,7 @@ public class MQCategory14CohortQueries {
             findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
-    definition.addSearch(
-        "B1-PREGNANT",
-        EptsReportUtils.map(
-            findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
-            "endDate=${endRevisionDate},location=${location}"));
-
-    definition.setCompositionString("(NUMERATOR-TXPVLS AND B2-BREASTFEEDING) NOT B1-PREGNANT");
+    definition.setCompositionString("NUMERATOR-TXPVLS AND B2-BREASTFEEDING");
 
     return definition;
   }
@@ -247,7 +213,8 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("patientsInDSDWithViralSupressionNumeratorCategory14Indicator");
+    definition.setName(
+        "MQ Cat 14 - Get Patients With Viral Supression And At Least One DSD - Denominator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));

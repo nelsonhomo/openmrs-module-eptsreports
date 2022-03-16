@@ -167,7 +167,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
         "ageMq=10-14");
 
     dataSetDefinition.addColumn(
-        "CAT14_15_19_INDICATOR_DENOMINATOR",
+        "CAT14_15_19_INDICATOR_NUMERATOR",
         "14.4: % de utentes (15 -19 anos) em TARV com supressão viral (CV<1000 Cps/ml) Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(

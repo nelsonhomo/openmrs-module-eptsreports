@@ -809,7 +809,10 @@ public class MQCategory15CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        String.format("MQ - PatientsWhoAreNewlyEnrolledOnARTByAgeUsingAgeRange", startAge, endAge));
+        "MQ - PatientsWhoAreNewlyEnrolledOnARTByAgeUsingAgeRange "
+            + String.valueOf(startAge)
+            + " to "
+            + String.valueOf(endAge));
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
