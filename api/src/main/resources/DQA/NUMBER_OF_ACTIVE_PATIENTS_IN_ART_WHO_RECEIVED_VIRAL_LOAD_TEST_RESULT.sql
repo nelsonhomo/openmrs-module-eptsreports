@@ -195,7 +195,7 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
         union
     
 
-        -- Aqui  Neste Bloco vamos buscar a activos do primeiro mes e aqueles que tem carga viral no segundo mes
+        -- Aqui  Neste Bloco vamos buscar a activos do segundo mes e aqueles que tem carga viral no segundo mes
 
     select
         coorte12meses_final.patient_id,
@@ -377,11 +377,11 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
             where (coorte12meses_final.data_estado is null or (coorte12meses_final.data_estado is not null and  coorte12meses_final.data_usar_c>coorte12meses_final.data_estado)) and date_add(coorte12meses_final.data_usar, interval 60 day) >=:startDate + interval 2 month - interval 1 day
             group by coorte12meses_final.patient_id
 
-        -- Aqui  Neste Bloco vamos buscar a activos do primeiro mes e aqueles que tem carga viral no segundo mes
+        -- Aqui  Neste Bloco vamos buscar a activos do terceiro mes e aqueles que tem carga viral no terceiro mes
 
          union
 
-        select
+            select
         coorte12meses_final.patient_id,
         coorte12meses_final.data_usar,
         DATE_FORMAT(coorte12meses_final.data_inicio, '%d-%m-%Y') DATA_INICIO_TARV,
@@ -412,14 +412,14 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
             union 
             SELECT e.patient_id, MIN(e.encounter_datetime) AS data_inicio  FROM   patient p 
             inner join encounter e on p.patient_id=e.patient_id 
-            WHERE p.voided=0 and e.encounter_type=18 AND e.voided=0 and e.encounter_datetime <= :endDate AND :endDate and e.location_id=:location 
+            WHERE p.voided=0 and e.encounter_type=18 AND e.voided=0 and e.encounter_datetime <= :endDate  and e.location_id=:location 
             GROUP BY p.patient_id 
             union 
             Select p.patient_id,min(value_datetime) data_inicio from patient p 
             inner join encounter e on p.patient_id=e.patient_id 
             inner join obs o on e.encounter_id=o.encounter_id 
             where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and  o.concept_id=23866 and o.value_datetime is not null and  
-            o.value_datetime BETWEEN :startDate + interval 2 month AND :endDate and e.location_id=:location 
+            o.value_datetime <= :endDate and e.location_id=:location 
             group by p.patient_id
             ) inicio_real group by patient_id)inicio 
             left join ( 
@@ -448,7 +448,7 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
             left join ( 
             Select p.patient_id,max(encounter_datetime) data_fila from patient p  
             inner join encounter e on e.patient_id=p.patient_id 
-            where p.voided=0 and e.voided=0 and e.encounter_type=18 and e.location_id=:location and date(e.encounter_datetime) BETWEEN :startDate + interval 2 month AND :endDate 
+            where p.voided=0 and e.voided=0 and e.encounter_type=18 and e.location_id=:location and date(e.encounter_datetime) <= :endDate
             group by p.patient_id) max_fila on inicio.patient_id=max_fila.patient_id  
             left join (Select p.patient_id,max(encounter_datetime) data_seguimento from patient p 
             inner join encounter e on e.patient_id=p.patient_id 
@@ -559,7 +559,8 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
         )cv_qualitativo on cv_quantitativa.patient_id = cv_qualitativo.patient_id 
         ) L 
         )L on L.patient_id=coorte12meses_final.patient_id
-            where (coorte12meses_final.data_estado is null or (coorte12meses_final.data_estado is not null and  coorte12meses_final.data_usar_c>coorte12meses_final.data_estado)) and date_add(coorte12meses_final.data_usar, interval 60 day) >=:endDate
+            where (coorte12meses_final.data_estado is null or (coorte12meses_final.data_estado is not null and  coorte12meses_final.data_usar_c>coorte12meses_final.data_estado)) 
+            and date_add(coorte12meses_final.data_usar, interval 60 day) >=:endDate 
             group by coorte12meses_final.patient_id
 
         )cv
