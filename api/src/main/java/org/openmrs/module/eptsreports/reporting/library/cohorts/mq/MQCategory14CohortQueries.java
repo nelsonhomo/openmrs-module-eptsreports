@@ -20,7 +20,7 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("MQ - Denominator Category14_Indicator");
+    definition.setName("MQ Category 14 - Denominator  Indicator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -43,7 +43,8 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("MQ Cat 14 - Patients with Viral Supression And Pregnant - Denominator");
+    definition.setName(
+        "MQ Category 14 - Get patients with viral supression and pregnant - Denominator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -73,7 +74,7 @@ public class MQCategory14CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "MQ Cat 14 - Patients with Viral Supression And BreastFeeding - Denominator");
+        "MQ Category 14 - Patients with viral supression and breastFeeding - Denominator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -103,7 +104,7 @@ public class MQCategory14CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "MQ Cat 14 - Get Patients With Viral Supression And At Least One DSD - Denominator");
+        "MQ Category 14 - Get patients With viral supression snd at least one DSD - Denominator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -132,7 +133,7 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("MQ - Numerator Category14_Indicator");
+    definition.setName("MQ Category 14 - Numerator Indicator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -155,7 +156,7 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("MQ Cat 14 - Patients with Viral Supression And Pregnant - Numerator");
+    definition.setName("MQ Cat 14 - Get patients with viral supression and pregnant - Numerator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -184,7 +185,8 @@ public class MQCategory14CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("MQ Cat 14 - Patients with Viral Supression And BreastFeeding - Numerator");
+    definition.setName(
+        "MQ Category 14 - Get patients with viral supression and breastFeeding - Numerator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -214,7 +216,7 @@ public class MQCategory14CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "MQ Cat 14 - Get Patients With Viral Supression And At Least One DSD - Denominator");
+        "MQ Cat 14 - Get patients with viral supression and at least one DSD - Numerator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -246,7 +248,7 @@ public class MQCategory14CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "MQ - PatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months");
+        "MQ Category 14 - Get patients who have more than 3 months on ART with viral load registered in the last 12 months");
     definition.addParameter(new Parameter("endDate", "End Revision Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
     String query =
@@ -265,7 +267,7 @@ public class MQCategory14CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "MQ - PatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months");
+        "MQ Category 14 - Get patients who have more than 3 months on ART with viral load result less than 1000 registered in the last 12 months");
     definition.addParameter(new Parameter("endDate", "End Revision Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
     String query =
@@ -282,7 +284,7 @@ public class MQCategory14CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "PregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months");
+        "MQ Category 14 - Get pregnant woman patients who have more than 3 months on ART with viral load registered in the last 12 months");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
@@ -303,7 +305,7 @@ public class MQCategory14CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "BreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months");
+        "MQ Category 14 -  Get breastfeeding woman patients who have more than 3 months on ART with viral load registered in the last 12 months");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
@@ -322,7 +324,8 @@ public class MQCategory14CohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("MQ - PatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression");
+    definition.setName(
+        "MQ Category 14 - Get patients who are active on ART and in at least one DSD with viral supression");
     definition.addParameter(new Parameter("endDate", "End Revision Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
     String query =
