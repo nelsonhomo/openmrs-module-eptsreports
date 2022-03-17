@@ -129,7 +129,7 @@ public interface MisauResumoMensalPRepQueries {
             + "		inner join obs o on o.encounter_id = e.encounter_id 																							"
             + "		inner join patient_program pp on pp.patient_id = p.patient_id 																					"
             + "where p.voided = 0 and e.voided = 0 and o.voided = 0 																								"
-            + "	and e.encounter_type = 81 and o.concept_id = 165213 and o.value_coded in (165214,165215,165224) 													"
+            + "	and e.encounter_type = 81 and o.concept_id = 165213 and o.value_coded in (165214,165215) 															"
             + " and e.encounter_datetime between :startDate and :endDate and pp.program_id = 25 and pp.voided is false and e.location_id = :location 				";
 
     public static final String findNumberOfUseresCurrentlyOnPrep =

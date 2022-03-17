@@ -21,7 +21,7 @@ public class MisauResumoMensalPrepReportCohortQueries {
   @DocumentedDefinition(value = "A1 - NumberOfUsersEligibleToPREP")
   public CohortDefinition getIndicatorA1() {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
-    definition.setName("A1 - NumberOfUsersEligibleToPREP");
+    definition.setName("A1 - Number Of Users Eligible To PREP");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
@@ -32,7 +32,7 @@ public class MisauResumoMensalPrepReportCohortQueries {
   @DocumentedDefinition(value = "B1 - NumberOfUsersWhoseInitiatedPrepForTheFirstTime")
   public CohortDefinition getIndicatorB1() {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
-    definition.setName("B1 - NumberOfUsersWhoseInitiatedPrepForTheFirstTime");
+    definition.setName("B1 - Number Of Users Who Initiated Prep For The First Time");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
@@ -44,7 +44,7 @@ public class MisauResumoMensalPrepReportCohortQueries {
   @DocumentedDefinition(value = "B2 - NumberOfUsersWhoseRestartedPREP")
   public CohortDefinition getIndicatorB2() {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
-    definition.setName(" B2 - NumberOfUsersWhoseRestartedPREP");
+    definition.setName(" B2 - Number Of Users Who Restarted PREP");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
@@ -55,7 +55,7 @@ public class MisauResumoMensalPrepReportCohortQueries {
   @DocumentedDefinition(value = "C1 - NumberOfUsersWhoReceivePrepREgimen")
   public CohortDefinition getIndicatorC1() {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
-    definition.setName("C1 - NumberOfUsersWhoReceivePrepREgimen");
+    definition.setName("C1 - Number Of Users Who Receive Prep REgimen");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
@@ -66,7 +66,7 @@ public class MisauResumoMensalPrepReportCohortQueries {
   @DocumentedDefinition(value = " D1 - NumberOfUseresCurrentlyOnPrep")
   public CohortDefinition getIndicatorD1() {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
-    definition.setName(" D1 - NumberOfUseresCurrentlyOnPrep");
+    definition.setName(" D1 - Number Of Users Currently On Prep");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
