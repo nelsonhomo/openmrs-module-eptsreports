@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Properties;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.midatasets.MIDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.viralloadmidatasets.VLMIDataSet;
@@ -28,7 +29,7 @@ public class SetupIntensiveMonitoringReport extends EptsDataExportManager {
   @Autowired protected GenericCohortQueries genericCohortQueries;
   @Autowired MIDataSet miDataSet;
   @Autowired VLMIDataSet vlMIDataSet;
-  @Autowired private DatinCodeDataSet DatinCodeDataSet;
+  @Autowired private DatimCodeDataSet datimCodeDataset;
 
   @Override
   public String getUuid() {
@@ -74,7 +75,7 @@ public class SetupIntensiveMonitoringReport extends EptsDataExportManager {
 
     reportDefinition.addDataSetDefinition(
         "D",
-        Mapped.mapStraightThrough(this.DatinCodeDataSet.constructDataset(this.getParameters())));
+        Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
 
     reportDefinition.setBaseCohortDefinition(
         EptsReportUtils.map(

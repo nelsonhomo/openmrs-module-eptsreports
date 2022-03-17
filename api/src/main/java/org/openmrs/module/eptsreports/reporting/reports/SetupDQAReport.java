@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.dqa.DQAViralLoadDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.dqa.DQAViralLoadSummuryDataset;
@@ -45,7 +46,7 @@ public class SetupDQAReport extends EptsDataExportManager {
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
 
-  @Autowired private DatinCodeDataSet datimCodeDataSet;
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
 
   @Override
   public String getExcelDesignUuid() {

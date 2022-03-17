@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TXTBMontlyCascadeReportDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -26,7 +27,7 @@ public class SetupTxTBMontlyCascadeReport extends EptsDataExportManager {
 
   @Autowired private TXTBMontlyCascadeReportDataSet txtbMontlyCascadeReportDataSet;
 
-  @Autowired private DatinCodeDataSet datimCodeDataSet;
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
 
   @Override
   public String getExcelDesignUuid() {

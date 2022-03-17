@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.ListOfPatientsEligileToTPTDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -26,7 +27,7 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
 
   @Autowired private ListOfPatientsEligileToTPTDataSet listOfPatientsEligileToTPTDataSet;
 
-  @Autowired private DatinCodeDataSet DatinCodeDataSet;
+  @Autowired private DatimCodeDataSet datimCodeDataset;
 
   @Override
   public String getExcelDesignUuid() {
@@ -71,7 +72,7 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
             this.listOfPatientsEligileToTPTDataSet.getTotalEligibleTPTDataset()));
     rd.addDataSetDefinition(
         "D",
-        Mapped.mapStraightThrough(this.DatinCodeDataSet.constructDataset(this.getParameters())));
+        Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(

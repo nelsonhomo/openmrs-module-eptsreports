@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.MisauResumoMensalPrepDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TxRttDataset;
@@ -41,7 +42,7 @@ public class SetupMisauResumoMensalPrepReport extends EptsDataExportManager {
   @Autowired private MisauResumoMensalPrepDataset misauResumoMensalPrepDataset;
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
-  @Autowired private DatinCodeDataSet DatinCodeDataSet;
+  @Autowired private DatimCodeDataSet datimCodeDataset;
 
   @Override
   public String getVersion() {
@@ -82,7 +83,7 @@ public class SetupMisauResumoMensalPrepReport extends EptsDataExportManager {
 
     reportDefinition.addDataSetDefinition(
         "D",
-        Mapped.mapStraightThrough(this.DatinCodeDataSet.constructDataset(this.getParameters())));
+        Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
 
     reportDefinition.addDataSetDefinition(
         "HF", mapStraightThrough(new LocationDataSetDefinition()));

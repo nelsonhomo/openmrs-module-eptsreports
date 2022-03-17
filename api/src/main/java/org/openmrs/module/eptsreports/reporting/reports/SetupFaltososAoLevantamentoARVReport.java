@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.FaltososAoLevantamentoARVDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -24,7 +25,7 @@ public class SetupFaltososAoLevantamentoARVReport extends EptsDataExportManager 
 
   @Autowired private FaltososAoLevantamentoARVDataSet faltososAoLevantamentoARVDataSet;
   @Autowired private GenericCohortQueries genericCohortQueries;
-  @Autowired private DatinCodeDataSet datimCodeDataSet;
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
 
   @Override
   public String getExcelDesignUuid() {
