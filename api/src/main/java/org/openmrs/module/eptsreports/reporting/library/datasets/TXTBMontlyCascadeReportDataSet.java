@@ -15,6 +15,7 @@ package org.openmrs.module.eptsreports.reporting.library.datasets;
 
 import java.util.Arrays;
 import java.util.List;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.TXTBCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.TXTBDenominatorForTBMontlyCascadeQueries;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.TXTBMontlyCascadeReporCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.TxCurrCohortQueries;
@@ -43,6 +44,8 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
   @Autowired private TXTBDenominatorForTBMontlyCascadeQueries txTBDenominatorForMontlyCascadeQuery;
 
   @Autowired private TXTBMontlyCascadeReporCohortQueries txtbMontlyCascadeReporCohortQueries;
+
+  @Autowired private TXTBCohortQueries txtbCohortQueries;
 
   @Autowired private EptsCommonDimension eptsCommonDimension;
 
@@ -309,7 +312,9 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
 
     CohortIndicator positiveResults =
         this.getIndicator(
-            this.txTBDenominatorForMontlyCascadeQuery.getPositiveResultCohortDefinition());
+            this.txtbCohortQueries.getPositiveResultCohortDefinition(
+                txTBDenominatorForMontlyCascadeQuery.getTxTBDenominator(),
+                "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
 
     dataSetDefinition.addColumn(
         "TBD-PR",

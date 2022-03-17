@@ -1109,13 +1109,14 @@ public class TXTBCohortQueries {
   }
 
   @DocumentedDefinition(value = "get Positive Results")
-  public CohortDefinition getPositiveResultCohortDefinition() {
+  public CohortDefinition getPositiveResultCohortDefinition(
+      CohortDefinition denominator, String generalParameterMapping) {
 
     final CompositionCohortDefinition cd = new CompositionCohortDefinition();
     this.addGeneralParameters(cd);
     cd.setName("TxTB - Positive Results");
 
-    final CohortDefinition tbPositiveResultReturned =
+    final CohortDefinition tbPositiveResultInFichaClinica =
         this.genericCohortQueries.generalSql(
             "tbPositiveResultReturned",
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
@@ -1123,26 +1124,35 @@ public class TXTBCohortQueries {
                 Arrays.asList(
                     this.tbMetadata.getTbGenexpertTest().getConceptId(),
                     this.tbMetadata.getCultureTest().getConceptId(),
-                    this.tbMetadata.getTbLam().getConceptId()),
+                    this.tbMetadata.getTbLam().getConceptId(),
+                    this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
                 Arrays.asList(this.tbMetadata.getPositiveConcept().getConceptId())));
 
-    final CohortDefinition baciloscopiaResult =
+    final CohortDefinition tbPositiveResultsInFichaLaboratorio =
         this.genericCohortQueries.generalSql(
             "baciloscopiaResult",
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
                 this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
-                Arrays.asList(this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
+                Arrays.asList(
+                    this.tbMetadata.getSputumForAcidFastBacilli().getConceptId(),
+                    this.tbMetadata.getTbGenexpertTest().getConceptId(),
+                    this.tbMetadata.getCultureTest().getConceptId(),
+                    this.tbMetadata.getTbLam().getConceptId()),
                 Arrays.asList(this.tbMetadata.getPositiveConcept().getConceptId())));
 
-    this.addGeneralParameters(tbPositiveResultReturned);
-    this.addGeneralParameters(baciloscopiaResult);
+    this.addGeneralParameters(tbPositiveResultInFichaClinica);
+    this.addGeneralParameters(tbPositiveResultsInFichaLaboratorio);
 
     cd.addSearch(
-        "tb-positive-result", this.map(tbPositiveResultReturned, this.generalParameterMapping));
-    cd.addSearch("baciloscopia-result", this.map(baciloscopiaResult, this.generalParameterMapping));
-    cd.addSearch("DENOMINATOR", this.map(this.getDenominator(), this.generalParameterMapping));
+        "tb-positive-result-ficha-clinica",
+        EptsReportUtils.map(tbPositiveResultInFichaClinica, generalParameterMapping));
+    cd.addSearch(
+        "tb-positive-result-laboratorio",
+        EptsReportUtils.map(tbPositiveResultsInFichaLaboratorio, generalParameterMapping));
+    cd.addSearch("DENOMINATOR", EptsReportUtils.map(denominator, generalParameterMapping));
 
-    cd.setCompositionString("(tb-positive-result OR baciloscopia-result) AND DENOMINATOR");
+    cd.setCompositionString(
+        "(tb-positive-result-ficha-clinica OR tb-positive-result-laboratorio) AND DENOMINATOR");
 
     return cd;
   }

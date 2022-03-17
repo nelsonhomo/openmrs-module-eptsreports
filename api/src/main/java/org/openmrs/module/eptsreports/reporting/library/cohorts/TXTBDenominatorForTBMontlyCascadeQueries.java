@@ -752,7 +752,10 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
 
     definition.addSearch(
         "posetiveResults",
-        EptsReportUtils.map(this.getPositiveResultCohortDefinition(), generalParameterMapping));
+        EptsReportUtils.map(
+            txtbCohortQueries.getPositiveResultCohortDefinition(
+                getTxTBDenominator(), generalParameterMapping),
+            generalParameterMapping));
     definition.addSearch(
         "txtbNumerator", EptsReportUtils.map(this.txTbNumerator(), generalParameterMapping));
 
@@ -793,56 +796,6 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
 
     definition.setCompositionString("txTB AND txCurr");
     return definition;
-  }
-
-  @DocumentedDefinition(value = "get Positive Results")
-  public CohortDefinition getPositiveResultCohortDefinition() {
-
-    final CompositionCohortDefinition cd = new CompositionCohortDefinition();
-    this.addGeneralParameters(cd);
-    cd.setName("TxTB -Denominator Positive Results");
-
-    final CohortDefinition tbPositiveResultInFichaClinica =
-        this.genericCohortQueries.generalSql(
-            "tbPositiveResultReturned",
-            TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
-                this.hivMetadata.getAdultoSeguimentoEncounterType().getEncounterTypeId(),
-                Arrays.asList(
-                    this.tbMetadata.getTbGenexpertTest().getConceptId(),
-                    this.tbMetadata.getCultureTest().getConceptId(),
-                    this.tbMetadata.getTbLam().getConceptId(),
-                    this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
-                Arrays.asList(this.tbMetadata.getPositiveConcept().getConceptId())));
-
-    final CohortDefinition tbPositiveResultsInFichaLaboratorio =
-        this.genericCohortQueries.generalSql(
-            "baciloscopiaResult",
-            TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
-                this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
-                Arrays.asList(
-                    this.tbMetadata.getSputumForAcidFastBacilli().getConceptId(),
-                    this.tbMetadata.getTbGenexpertTest().getConceptId(),
-                    this.tbMetadata.getCultureTest().getConceptId(),
-                    this.tbMetadata.getTbLam().getConceptId()),
-                Arrays.asList(this.tbMetadata.getPositiveConcept().getConceptId())));
-
-    this.addGeneralParameters(tbPositiveResultInFichaClinica);
-    this.addGeneralParameters(tbPositiveResultsInFichaLaboratorio);
-
-    cd.addSearch(
-        "tb-positive-result-ficha-clinica",
-        EptsReportUtils.map(tbPositiveResultInFichaClinica, this.generalParameterMapping));
-    cd.addSearch(
-        "tb-positive-result-laboratorio",
-        EptsReportUtils.map(tbPositiveResultsInFichaLaboratorio, this.generalParameterMapping));
-    cd.addSearch(
-        "DENOMINATOR",
-        EptsReportUtils.map(this.getTxTBDenominator(), this.generalParameterMapping));
-
-    cd.setCompositionString(
-        "(tb-positive-result-ficha-clinica OR tb-positive-result-laboratorio) AND DENOMINATOR");
-
-    return cd;
   }
 
   @DocumentedDefinition(value = "get Negative Results")
@@ -895,7 +848,9 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     cd.addSearch(
         "positive-results",
         EptsReportUtils.map(
-            this.getPositiveResultCohortDefinition(), this.generalParameterMapping));
+            txtbCohortQueries.getPositiveResultCohortDefinition(
+                getTxTBDenominator(), generalParameterMapping),
+            this.generalParameterMapping));
 
     cd.setCompositionString(
         "((tb-negative-result-ficha-clinica OR tb-negative-result-laboratorio) AND DENOMINATOR ) NOT positive-results ");
