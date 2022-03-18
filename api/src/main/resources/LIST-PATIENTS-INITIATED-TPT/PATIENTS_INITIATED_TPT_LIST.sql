@@ -11,7 +11,7 @@ from
 				seguimento.ultimo_seguimento,  
 				if(receivedTPT.encounter_id is null,'Não','Sim') recebeu_profilaxia,  
 				inicioInh_TPT_INI_FR5.data_completa_6meses, 
-				timestampdiff(day,inicioInh_TPT_INI_FR5.data_completa_6meses,finalinh.data_final_inh) diferencaFinalEsperada,
+				if (timestampdiff(day,inicioInh_TPT_INI_FR5.data_completa_6meses,finalinh.data_final_inh) >= 0,timestampdiff(day,inicioInh_TPT_INI_FR5.data_completa_6meses,finalinh.data_final_inh),null) diferencaFinalEsperada,
 				inicio_tarv.data_inicio data_inicio_tarv,  
 				ini3hpclinica.data_inicio_3hpclinica, 
 				ini3hpResumo.data_inicio_3hpResumo, 
@@ -33,7 +33,7 @@ from
 				inicio3hp_TPT_INI_FR4.data_inicio_3HP,
 				inicio3hp_TPT_INI_FR4.expected3hpCompletion,
 				final3hp.data_final_3HP,
-				timestampdiff(day,inicio3hp_TPT_INI_FR4.expected3hpCompletion, final3hp.data_final_3HP) expected3hpDiference
+				if(timestampdiff(day,inicio3hp_TPT_INI_FR4.expected3hpCompletion, final3hp.data_final_3HP)>= 0, timestampdiff(day,inicio3hp_TPT_INI_FR4.expected3hpCompletion, final3hp.data_final_3HP) ,null) expected3hpDiference
 	from  	(  
 			select inicio_tpi.patient_id, min(data_inicio_3HP) data_inicio_tpi  
 			from  
