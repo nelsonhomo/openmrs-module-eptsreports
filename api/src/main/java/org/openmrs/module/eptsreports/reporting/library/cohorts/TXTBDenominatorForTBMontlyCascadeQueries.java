@@ -177,7 +177,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
         "new-on-art", EptsReportUtils.map(this.getNewOnArt(), this.generalParameterMapping));
 
     this.addGeneralParameters(definition);
-    definition.setCompositionString("denominator NOT (new-on-art OR positive-screening)");
+    definition.setCompositionString("denominator NOT positive-screening");
     return definition;
   }
 
