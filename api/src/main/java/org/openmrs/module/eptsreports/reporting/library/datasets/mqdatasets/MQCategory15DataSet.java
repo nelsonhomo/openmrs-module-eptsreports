@@ -212,5 +212,79 @@ public class MQCategory15DataSet extends MQAbstractDataSet {
                 mappings),
             mappings),
         "ageOnEndInclusionDate=10-14");
+
+    // Adicionando as novos indicadores ao MQ
+
+    dataSetDefinition.addColumn(
+        "CAT15INDICATOR_15_13_DENOMINATOR",
+        "'15.13: % de Utentes elegíveis a MDS (para pacientes estáveis) e que foram inscritos em MDS",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                this.mqCohortCategory15Queries
+                    .findPatientsElegibleForMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriod_Denominator_15_13(),
+                "CAT15INDICATOR_15_13_DENOMINATOR",
+                mappings),
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "CAT15INDICATOR_15_13_NUMERATOR",
+        "'15.13: % de Utentes elegíveis a MDS (para pacientes estáveis) e que foram inscritos em MDS",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                this.mqCohortCategory15Queries
+                    .findPatientsElegibleForMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodAndRegisteredAtLeastInOneMDS_Numerator_15_13(),
+                "CAT15INDICATOR_15_13_NUMERATOR",
+                mappings),
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "CAT15DENOMINADOR_15_14",
+        "15.14: % de utentes inscritos em MDS (para pacientes estáveis) com CV > 1000 cópias e que foram suspensos de MDS",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                this.mqCohortCategory15Queries
+                    .findPatientsRegisteredInMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodWhoReceivedCargaViralGreaterThan1000_Denominator_15_14(),
+                "CAT15DENOMINADOR_15_14",
+                mappings),
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "CAT15NUMERADOR_15_14",
+        "15.14: % de utentes inscritos em MDS (para pacientes estáveis) com CV > 1000 cópias e que foram suspensos de MDS",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                this.mqCohortCategory15Queries
+                    .findPatientsRegisteredInMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodWhoReceivedCargaViralGreaterThan1000AndSuspendedInTheMDS_Numerator_15_14(),
+                "CAT15NUMERADOR_15_14",
+                mappings),
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "CAT15DENOMINADOR_15_15",
+        "15.15 % de utentes inscritos em MDS (para pacientes estáveis) em TARV há mais de 24 meses, que conhecem o resultado de CV de seguimento - DENOMINADOR",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                this.mqCohortCategory15Queries
+                    .findPatientsRegisteredInMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodInARTMoreThan21Months_Denominator_15_15(),
+                "CAT15DENOMINADOR_15_15",
+                mappings),
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "CAT15NUMERADOR_15_15",
+        "15.15 % de utentes inscritos em MDS (para pacientes estáveis) em TARV há mais de 24 meses, que conhecem o resultado de CV de seguimento - NUMERADOR",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                this.mqCohortCategory15Queries
+                    .findPatientsRegisteredInOneMDSForStablePatientsAndHadCVBetweenTwelveAndEigtheenMonthsAfterCVLessThan1000_Numerator_15_15(),
+                "CAT15NUMERADOR_15_15",
+                mappings),
+            mappings),
+        "");
   }
 }
