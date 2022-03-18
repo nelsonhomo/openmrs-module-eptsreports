@@ -238,18 +238,15 @@ public interface TXTBMontlyCascadeReportQueries {
               + " group by inicio_fila_seg.patient_id																													"
               + " ) inicio_fila_seg_prox																																"
               + " group by patient_id																																	"
-              + " ) coorte12meses_final																																"
-              /* -- Verificação qual é o estado final */
-              /* -- where estado_final=6 */
-              + " where (data_estado is null or (data_estado is not null and  data_usar_c>data_estado))     ";
+              + " ) coorte12meses_final																																";
 
       switch (enrollmentPeriod) {
         case NEWLY:
-          query += " and data_inicio between (:endDate - interval 6 month) and :endDate";
+          query += " where data_inicio between (:endDate - interval 6 month) and :endDate";
           break;
 
         case PREVIOUSLY:
-          query += " and data_inicio < (:endDate - interval 6 month)";
+          query += " where data_inicio < (:endDate - interval 6 month)";
           break;
       }
       return query;
