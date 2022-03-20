@@ -108,9 +108,13 @@ select (@cnt := @cnt + 1) as ID,cv.patient_id,cv.data_usar,cv.DATA_INICIO_TARV,c
             if(cv_quantitativa.concept_id = 856 ,cv_quantitativa.value_numeric, 'N/A') as valor_quantitativo,
             cv_qualitativo.valor_qualitativo,
             cv_qualitativo.concept_id concept_qualitativa
-            
             from (
-            
+            select 
+      cv_quantitativa.patient_id,
+      min(cv_quantitativa.encounter_datetime) as encounter_datetime,
+      cv_quantitativa.concept_id,
+      cv_quantitativa.value_numeric
+            from(
 SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob.value_coded,ob.value_numeric 
          FROM   patient pat JOIN encounter enc ON pat.patient_id=enc.patient_id 
              JOIN   obs ob ON enc.encounter_id=ob.encounter_id 
@@ -135,7 +139,8 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
               WHERE   p.voided=0 AND e.voided=0 AND o.voided=0 AND e.location_id=:location 
                   AND e.encounter_datetime BETWEEN if(MONTH(:startDate) = 12  && DAY(:startDate) = 21, :startDate, CONCAT(YEAR(:startDate)-1, '-12','-21')) AND (:startDate -interval 1 day) 
            AND o.concept_id in (856,1305)
-           AND e.encounter_type=6               )               
+           AND e.encounter_type=6)   
+           )cv_quantitativa group by cv_quantitativa.patient_id         
           )cv_quantitativa
           
           left join
@@ -143,7 +148,7 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
           (
             select 
             cv_qualitativo.patient_id,
-            cv_qualitativo.encounter_datetime,
+            min(cv_qualitativo.encounter_datetime) as encounter_datetime,
             cv_qualitativo.concept_id ,
       if(cv_qualitativo.concept_id=1305,
           case cv_qualitativo.value_coded 
@@ -183,8 +188,8 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
            AND o.concept_id in (856,1305)
            AND e.encounter_type=6
                )
-          )cv_qualitativo
-        )cv_qualitativo on cv_quantitativa.patient_id = cv_qualitativo.patient_id 
+          )cv_qualitativo group by cv_qualitativo.patient_id
+        )cv_qualitativo on cv_quantitativa.patient_id = cv_qualitativo.patient_id and cv_quantitativa.encounter_datetime = cv_qualitativo.encounter_datetime 
         
         ) L 
         )L on L.patient_id=coorte12meses_final.patient_id
@@ -299,10 +304,15 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
             if(cv_quantitativa.concept_id = 856 ,cv_quantitativa.value_numeric, 'N/A') as valor_quantitativo,
             cv_qualitativo.valor_qualitativo,
             cv_qualitativo.concept_id concept_qualitativa
-            
-            from (
-            
 
+            from (
+                        select 
+      cv_quantitativa.patient_id,
+      min(cv_quantitativa.encounter_datetime) as encounter_datetime,
+      cv_quantitativa.concept_id,
+           cv_quantitativa.value_numeric
+            from (
+          
                SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob.value_coded,ob.value_numeric FROM patient pat JOIN encounter enc ON pat.patient_id=enc.patient_id JOIN obs ob ON enc.encounter_id=ob.encounter_id 
                WHERE 
                pat.voided=0 
@@ -325,13 +335,13 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
                AND o.concept_id in (856,1305)
                AND e.encounter_type=6
                )
-
+               ) cv_quantitativa group by cv_quantitativa.patient_id
           )cv_quantitativa
           left join
           (
             select 
             cv_qualitativo.patient_id,
-            cv_qualitativo.encounter_datetime,
+            min(cv_qualitativo.encounter_datetime) as encounter_datetime,
             cv_qualitativo.concept_id ,
             if(cv_qualitativo.concept_id=1305,
             case cv_qualitativo.value_coded 
@@ -370,8 +380,8 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
                AND o.concept_id in (856,1305)
                AND e.encounter_type=6
                )
-          )cv_qualitativo
-        )cv_qualitativo on cv_quantitativa.patient_id = cv_qualitativo.patient_id 
+          )cv_qualitativo group by cv_qualitativo.patient_id
+        )cv_qualitativo on cv_quantitativa.patient_id = cv_qualitativo.patient_id and cv_quantitativa.encounter_datetime = cv_qualitativo.encounter_datetime
         ) L 
         )L on L.patient_id=coorte12meses_final.patient_id
             where (coorte12meses_final.data_estado is null or (coorte12meses_final.data_estado is not null and  coorte12meses_final.data_usar_c>coorte12meses_final.data_estado)) and date_add(coorte12meses_final.data_usar, interval 60 day) >=:startDate + interval 2 month - interval 1 day
@@ -481,12 +491,16 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
       cv_quantitativa.patient_id,
       cv_quantitativa.encounter_datetime,
       cv_quantitativa.concept_id as concept_quantitativa,
-            if(cv_quantitativa.concept_id = 856 ,cv_quantitativa.value_numeric, 'N/A') as valor_quantitativo,
-            cv_qualitativo.valor_qualitativo,
-            cv_qualitativo.concept_id concept_qualitativa
-            
+            if(cv_quantitativa.concept_id = 856 ,cv_quantitativa.value_numeric, 'N/A') as valor_quantitativo
+            ,cv_qualitativo.valor_qualitativo,
+           cv_qualitativo.concept_id concept_qualitativa
             from (
-            
+            select 
+      cv_quantitativa.patient_id,
+      min(cv_quantitativa.encounter_datetime) as encounter_datetime,
+      cv_quantitativa.concept_id,
+      cv_quantitativa.value_numeric
+            from (
                SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob.value_coded,ob.value_numeric FROM patient pat 
                JOIN encounter enc ON pat.patient_id=enc.patient_id 
                JOIN obs ob ON enc.encounter_id=ob.encounter_id 
@@ -510,13 +524,13 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
                AND e.encounter_datetime BETWEEN if(MONTH(:startDate + interval 2 month) = 12  && DAY(:startDate + interval 2 month) = 21, :startDate + interval 2 month, CONCAT(YEAR(:startDate + interval 2 month)-1, '-12','-21')) AND ((:startDate + interval 2 month) -interval 1 day) 
                AND o.concept_id in (856,1305)
                AND e.encounter_type=6
-               )
-          )cv_quantitativa
+               ))cv_quantitativa group by cv_quantitativa.patient_id
+          )cv_quantitativa 
           left join
           (
             select 
             cv_qualitativo.patient_id,
-            cv_qualitativo.encounter_datetime,
+            min(cv_qualitativo.encounter_datetime) as encounter_datetime,
             cv_qualitativo.concept_id ,
       if(cv_qualitativo.concept_id=1305,
           case cv_qualitativo.value_coded 
@@ -555,8 +569,8 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
                AND o.concept_id in (856,1305)
                AND e.encounter_type=6
                )
-          )cv_qualitativo
-        )cv_qualitativo on cv_quantitativa.patient_id = cv_qualitativo.patient_id 
+          )cv_qualitativo group by cv_qualitativo.patient_id
+        )cv_qualitativo on cv_quantitativa.patient_id = cv_qualitativo.patient_id and cv_quantitativa.encounter_datetime = cv_qualitativo.encounter_datetime
         ) L 
         )L on L.patient_id=coorte12meses_final.patient_id
             where (coorte12meses_final.data_estado is null or (coorte12meses_final.data_estado is not null and  coorte12meses_final.data_usar_c>coorte12meses_final.data_estado)) 
@@ -579,4 +593,4 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
               where pid1.patient_id=pid2.patient_id and pid1.patient_identifier_id=pid2.id 
             ) pid on pid.patient_id=cv.patient_id 
             CROSS JOIN (SELECT @cnt := 0) as DEMMY
-
+            
