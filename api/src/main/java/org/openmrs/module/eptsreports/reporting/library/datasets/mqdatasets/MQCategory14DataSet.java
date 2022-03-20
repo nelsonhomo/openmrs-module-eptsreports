@@ -29,7 +29,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
                 "CAT14_MENOR_1_INDICATOR_DENOMINATOR",
                 mappings),
             mappings),
-        "ageMq=<1");
+        "ageMqEndRevisionDate=<1");
 
     dataSetDefinition.addColumn(
         "CAT14_1_4_INDICATOR_DENOMINATOR",
@@ -40,7 +40,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
                 "CAT14_1_4_INDICATOR_DENOMINATOR",
                 mappings),
             mappings),
-        "ageMq=1-4");
+        "ageMqEndRevisionDate=1-4");
 
     dataSetDefinition.addColumn(
         "CAT14_5_9_INDICATOR_DENOMINATOR",
@@ -51,7 +51,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
                 "CAT14_5_9_INDICATOR_DENOMINATOR",
                 mappings),
             mappings),
-        "ageMq=5-9");
+        "ageMqEndRevisionDate=5-9");
 
     dataSetDefinition.addColumn(
         "CAT14_10_14_INDICATOR_DENOMINATOR",
@@ -62,29 +62,29 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
                 "CAT14_10_14_INDICATOR_DENOMINATOR",
                 mappings),
             mappings),
-        "ageMq=10-14");
+        "ageMqEndRevisionDate=10-14");
 
     dataSetDefinition.addColumn(
         "CAT14_15_19_INDICATOR_DENOMINATOR",
-        "14.4: % de utentes (15 -19 anos) em TARV com supressão viral (CV<1000 Cps/ml) Denominador",
+        "14.5: % de utentes (15 -19 anos) em TARV com supressão viral (CV<1000 Cps/ml) Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueryCategory14.getDenominatorCategory14Indicator(),
                 "CAT14_15_19_INDICATOR_DENOMINATOR",
                 mappings),
             mappings),
-        "ageMq=15-19");
+        "ageMqEndRevisionDate=15-19");
 
     dataSetDefinition.addColumn(
         "CAT14_20PLUS_INDICATOR_DENOMINATOR",
-        "14.4: % de utentes (20/+ anos) em TARV com supressão viral (CV<1000 Cps/ml) Denominador",
+        "14.6: % de utentes (20/+ anos) em TARV com supressão viral (CV<1000 Cps/ml) Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueryCategory14.getDenominatorCategory14Indicator(),
                 "CAT14_20PLUS_INDICATOR_DENOMINATOR",
                 mappings),
             mappings),
-        "ageMq=20+");
+        "ageMqEndRevisionDate=20+");
 
     dataSetDefinition.addColumn(
         "CAT14_MG_INDICATOR_DENOMINATOR",
@@ -99,7 +99,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT14_ML_INDICATOR_DENOMINATOR",
-        "14.4: Mulher Lactante em TARV com supressão viral Denominador",
+        "14.7: Mulher Lactante em TARV com supressão viral Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueryCategory14.getBreastfeedingDenominatorCategory14Indicator(),
@@ -131,7 +131,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
                 "CAT14_MENOR_1_INDICATOR_NUMERATOR",
                 mappings),
             mappings),
-        "ageMq=<1");
+        "ageMqEndRevisionDate=<1");
 
     dataSetDefinition.addColumn(
         "CAT14_1_4_INDICATOR_NUMERATOR",
@@ -142,7 +142,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
                 "CAT14_1_4_INDICATOR_DENOMINATOR",
                 mappings),
             mappings),
-        "ageMq=1-4");
+        "ageMqEndRevisionDate=1-4");
 
     dataSetDefinition.addColumn(
         "CAT14_5_9_INDICATOR_NUMERATOR",
@@ -153,7 +153,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
                 "CAT14_5_9_INDICATOR_NUMERATOR",
                 mappings),
             mappings),
-        "ageMq=5-9");
+        "ageMqEndRevisionDate=5-9");
 
     dataSetDefinition.addColumn(
         "CAT14_10_14_INDICATOR_NUMERATOR",
@@ -164,7 +164,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
                 "CAT14_10_14_INDICATOR_NUMERATOR",
                 mappings),
             mappings),
-        "ageMq=10-14");
+        "ageMqEndRevisionDate=10-14");
 
     dataSetDefinition.addColumn(
         "CAT14_15_19_INDICATOR_NUMERATOR",
@@ -179,14 +179,14 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT14_20PLUS_INDICATOR_NUMERATOR",
-        "14.4: % de utentes (20/+ anos) em TARV com supressão viral (CV<1000 Cps/ml) Denominador",
+        "14.6: % de utentes (20/+ anos) em TARV com supressão viral (CV<1000 Cps/ml) Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueryCategory14.getNumeratorCategory14Indicator(),
                 "CAT14_20PLUS_INDICATOR_NUMERATOR",
                 mappings),
             mappings),
-        "ageMq=20+");
+        "ageMqEndRevisionDate=20+");
 
     dataSetDefinition.addColumn(
         "CAT14_MG_INDICATOR_NUMERATOR",
