@@ -498,6 +498,21 @@ public interface MQQueriesInterface {
             + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 AND person.voided=0 "
             + "AND TIMESTAMPDIFF(year,birthdate,:endInclusionDate) BETWEEN %d AND %d AND birthdate IS NOT NULL";
 
+    public static final String findPatientsAgeRangeEndRevisionDate =
+        "SELECT patient_id FROM patient "
+            + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 AND person.voided=0 "
+            + "AND TIMESTAMPDIFF(year,birthdate,:endRevisionDate) BETWEEN %d AND %d AND birthdate IS NOT NULL";
+
+    public static final String findPatientsBiggerThanRevisionDate =
+        "SELECT patient_id FROM patient "
+            + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 AND person.voided=0 "
+            + "AND TIMESTAMPDIFF(year,birthdate,:endRevisionDate) >= %d AND birthdate IS NOT NULL";
+
+    public static final String findPatientsLessThanRevisionDate =
+        "SELECT patient_id FROM patient "
+            + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 AND person.voided=0 "
+            + "AND TIMESTAMPDIFF(year,birthdate,:endRevisionDate) <  %d AND birthdate IS NOT NULL";
+
     public static final String findPatientsBiggerThan =
         "SELECT patient_id FROM patient "
             + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 AND person.voided=0 "
