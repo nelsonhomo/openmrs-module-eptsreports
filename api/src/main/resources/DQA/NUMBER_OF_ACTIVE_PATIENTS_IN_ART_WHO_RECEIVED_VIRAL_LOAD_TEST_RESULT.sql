@@ -1,5 +1,6 @@
     
-select (@cnt := @cnt + 1) as ID,cv.patient_id,cv.data_usar,cv.DATA_INICIO_TARV,cv.DATA_CV,cv.CV_Qualitativa,cv.CV_Quantitativa,pid.identifier as NID,pe.gender SEXO,round(datediff(:endDate,pe.birthdate)/365) as AGE
+select (@cnt := @cnt + 1) as ID,cv.patient_id,cv.data_usar,cv.DATA_INICIO_TARV,cv.DATA_CV,cv.CV_Qualitativa,cv.CV_Quantitativa      
+,pid.identifier as NID,pe.gender SEXO,round(datediff(:endDate,pe.birthdate)/365) as AGE
  from (
 
     select
@@ -9,7 +10,8 @@ select (@cnt := @cnt + 1) as ID,cv.patient_id,cv.data_usar,cv.DATA_INICIO_TARV,c
         L.encounter_datetime DATA_CV,
         if(max(if(L.concept_qualitativa=1305,L.valor_qualitativo,null)) is null, 'N/A', max(if(L.concept_qualitativa=1305,L.valor_qualitativo,null))) as CV_Qualitativa,
         if(max(if(L.concept_quantitativa=856,L.valor_quantitativo,null)) is null, 'N/A', max(if(L.concept_quantitativa=856,L.valor_quantitativo,null))) as CV_Quantitativa
-        
+
+     
         from (
           select  inicio_fila_seg_prox.*,GREATEST(COALESCE(data_fila,data_seguimento,data_recepcao_levantou),COALESCE(data_seguimento,data_fila,data_recepcao_levantou),COALESCE(data_recepcao_levantou,data_seguimento,data_fila))  data_usar_c, 
             GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30),COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_usar from (select inicio_fila_seg.*, 
@@ -319,7 +321,7 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
                AND enc.voided=0 
                AND ob.voided=0 
                AND enc.location_id=:location 
-               AND enc.encounter_datetime BETWEEN :startDate + interval 1 month AND :startDate + interval 2 month - interval 1 day AND ob.concept_id in (856,1305) 
+               AND enc.encounter_datetime BETWEEN :startDate + interval 1 month AND :startDate + interval 2 month - interval 1 day AND ob.concept_id in (856,1305)
                AND enc.encounter_type=6
                AND pat.patient_id not in 
                (
@@ -364,7 +366,7 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
                AND enc.voided=0 
                AND ob.voided=0 
                AND enc.location_id=:location 
-               AND enc.encounter_datetime BETWEEN :startDate + interval 1 month AND :startDate + interval 2 month - interval 1 day AND ob.concept_id = 1305 
+               AND enc.encounter_datetime BETWEEN :startDate + interval 1 month AND :startDate + interval 2 month - interval 1 day AND ob.concept_id in (856,1305) 
                AND enc.encounter_type=6
                AND pat.patient_id not in 
                (
@@ -517,14 +519,15 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
                JOIN (SELECT pat.patient_id AS patient_id, enc.encounter_datetime AS endDate FROM patient pat JOIN encounter enc ON pat.patient_id=enc.patient_id JOIN obs ob 
                ON enc.encounter_id=ob.encounter_id 
                WHERE pat.voided=0 AND enc.voided=0 AND ob.voided=0 AND enc.location_id=:location AND enc.encounter_datetime 
-               BETWEEN :startDate + interval 2 month AND :endDate AND ob.concept_id in (856,1305) AND enc.encounter_type=6 
+               BETWEEN :startDate + interval 2 month AND :endDate AND ob.concept_id in (856,1305)
+               AND enc.encounter_type=6 
                ) ed 
                ON p.patient_id=ed.patient_id 
                WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.location_id=:location 
                AND e.encounter_datetime BETWEEN if(MONTH(:startDate + interval 2 month) = 12  && DAY(:startDate + interval 2 month) = 21, :startDate + interval 2 month, CONCAT(YEAR(:startDate + interval 2 month)-1, '-12','-21')) AND ((:startDate + interval 2 month) -interval 1 day) 
                AND o.concept_id in (856,1305)
                AND e.encounter_type=6
-               ))cv_quantitativa group by cv_quantitativa.patient_id
+               ))cv_quantitativa group by cv_quantitativa.patient_id 
           )cv_quantitativa 
           left join
           (
@@ -561,7 +564,8 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
                JOIN (SELECT pat.patient_id AS patient_id, enc.encounter_datetime AS endDate FROM patient pat JOIN encounter enc ON pat.patient_id=enc.patient_id JOIN obs ob 
                ON enc.encounter_id=ob.encounter_id 
                WHERE pat.voided=0 AND enc.voided=0 AND ob.voided=0 AND enc.location_id=:location AND enc.encounter_datetime 
-               BETWEEN :startDate + interval 2 month AND :endDate AND ob.concept_id in (856,1305) AND enc.encounter_type=6 
+               BETWEEN :startDate + interval 2 month AND :endDate AND ob.concept_id in (856,1305)
+               AND enc.encounter_type=6 
                ) ed 
                ON p.patient_id=ed.patient_id 
                WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.location_id=:location 
@@ -569,7 +573,7 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
                AND o.concept_id in (856,1305)
                AND e.encounter_type=6
                )
-          )cv_qualitativo group by cv_qualitativo.patient_id
+          )cv_qualitativo group by cv_qualitativo.patient_id,cv_qualitativo.concept_id 
         )cv_qualitativo on cv_quantitativa.patient_id = cv_qualitativo.patient_id and cv_quantitativa.encounter_datetime = cv_qualitativo.encounter_datetime
         ) L 
         )L on L.patient_id=coorte12meses_final.patient_id
