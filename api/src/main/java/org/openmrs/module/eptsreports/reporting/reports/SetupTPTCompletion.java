@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TPTCompletationDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -25,6 +26,8 @@ public class SetupTPTCompletion extends EptsDataExportManager {
   @Autowired private GenericCohortQueries genericCohortQueries;
 
   @Autowired private TPTCompletationDataSet tPTCompletationDataSet;
+
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
 
   @Override
   public String getExcelDesignUuid() {
@@ -80,6 +83,11 @@ public class SetupTPTCompletion extends EptsDataExportManager {
               "TPT Completion Cascade Report",
               getExcelDesignUuid(),
               null);
+
+      reportDefinition.addDataSetDefinition(
+          "D",
+          Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
+
       Properties props = new Properties();
       props.put("sortWeight", "5000");
       reportDesign.setProperties(props);
