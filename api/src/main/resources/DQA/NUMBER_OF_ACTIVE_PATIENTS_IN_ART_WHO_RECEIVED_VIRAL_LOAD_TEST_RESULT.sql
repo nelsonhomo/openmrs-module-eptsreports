@@ -56,7 +56,7 @@ select (@cnt := @cnt + 1) as ID,cv.patient_id,cv.data_usar,cv.DATA_INICIO_TARV,c
             inner join patient_program pg2 on pg2.patient_id=maxEstado.patient_id 
             inner join patient_state ps2 on pg2.patient_program_id=ps2.patient_program_id 
             where pg2.voided=0 and ps2.voided=0 and pg2.program_id=2 and 
-            ps2.start_date=maxEstado.data_transferidopara and pg2.location_id=:location and ps2.state in (7,8,10) 
+            ps2.start_date=maxEstado.data_transferidopara and pg2.location_id=:location and ps2.state in (7,8,10) and ps2.end_date is null
             union 
             select p.patient_id, max(o.obs_datetime) data_estado from patient p  
             inner join encounter e on p.patient_id=e.patient_id 
@@ -244,11 +244,12 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
             inner join patient_program pg on p.patient_id=pg.patient_id 
             inner join patient_state ps on pg.patient_program_id=ps.patient_program_id 
             where pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and ps.start_date<=:startDate + interval 2 month - interval 1 day and pg.location_id=:location 
-            group by p.patient_id )maxEstado 
+            group by p.patient_id 
+            )maxEstado 
             inner join patient_program pg2 on pg2.patient_id=maxEstado.patient_id 
             inner join patient_state ps2 on pg2.patient_program_id=ps2.patient_program_id 
             where pg2.voided=0 and ps2.voided=0 and pg2.program_id=2 and 
-            ps2.start_date=maxEstado.data_transferidopara and pg2.location_id=:location and ps2.state in (7,8,10) 
+            ps2.start_date=maxEstado.data_transferidopara and pg2.location_id=:location and ps2.state in (7,8,10) and ps2.end_date is null
             union 
             select p.patient_id, max(o.obs_datetime) data_estado from patient p  
             inner join encounter e on p.patient_id=e.patient_id 
@@ -429,11 +430,12 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
             inner join patient_program pg on p.patient_id=pg.patient_id 
             inner join patient_state ps on pg.patient_program_id=ps.patient_program_id 
             where pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and ps.start_date <= :endDate and pg.location_id=:location 
-            group by p.patient_id )maxEstado 
+            group by p.patient_id 
+            )maxEstado 
             inner join patient_program pg2 on pg2.patient_id=maxEstado.patient_id 
             inner join patient_state ps2 on pg2.patient_program_id=ps2.patient_program_id 
             where pg2.voided=0 and ps2.voided=0 and pg2.program_id=2 and 
-            ps2.start_date=maxEstado.data_transferidopara and pg2.location_id=:location and ps2.state in (7,8,10) 
+            ps2.start_date=maxEstado.data_transferidopara and pg2.location_id=:location and ps2.state in (7,8,10) and ps2.end_date is null
             union 
             select p.patient_id, max(o.obs_datetime) data_estado from patient p  
             inner join encounter e on p.patient_id=e.patient_id 

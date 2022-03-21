@@ -375,7 +375,7 @@
 								max_estado                                                                                                                        
 									inner join patient_program pp on pp.patient_id = max_estado.patient_id															
 									inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado	        
-								where pp.program_id = 2 and ps.state in (9,10,8,7) and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location 
+								where pp.program_id = 2 and ps.state in (9,10,8,7) and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location and ps.end_date is null
 						)last_state on last_state.patient_id = inicio_real.patient_id
                         left join  obs obsProximaConsulta  on obsProximaConsulta.person_id=seguimento.patient_id and obsProximaConsulta.concept_id=1410 and  obsProximaConsulta.obs_datetime=seguimento.data_seguimento and obsProximaConsulta.voided=0
                         left join
