@@ -157,7 +157,7 @@ public interface TxTbPrevQueriesInterface {
             + "						max_estado                                                                                                                        							"
             + "							inner join patient_program pp on pp.patient_id = max_estado.patient_id																					"
             + "							inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_transferidopara	        			"
-            + "						where pp.program_id = 2 and ps.state = 7 and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location													"
+            + "						where pp.program_id = 2 and ps.state = 7 and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location	 and ps.end_date is null												"
             + "            	         		union 																																				"
             + "            	          	select p.patient_id,max(e.encounter_datetime) data_transferidopara from patient p 																		"
             + "            	           		inner join encounter e on p.patient_id=e.patient_id 																								"
