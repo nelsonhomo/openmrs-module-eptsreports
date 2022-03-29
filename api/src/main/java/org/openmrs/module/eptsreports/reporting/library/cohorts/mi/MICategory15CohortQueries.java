@@ -19,7 +19,8 @@ public class MICategory15CohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("findPatientsWhoAreActiveOnArtAndInAtleastOneDSD");
+    definition.setName(
+        "MI Category 15 - Get patients who are active on ART and in at least one DSD");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -38,7 +39,8 @@ public class MICategory15CohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("findPatientsWithClinicalConsultationDuringRevisionPeriod");
+    definition.setName(
+        "MI Category 15 - Get patients with clinical consultation during revision period");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -57,7 +59,7 @@ public class MICategory15CohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("findPatientsWhoHasRegisteredAsIniciarInAtLeastOneMDS");
+    definition.setName("MI Category 15 - Get patients registered as iniciar in at least one MDS");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -76,7 +78,7 @@ public class MICategory15CohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("findPatientsWhoHasRegisteredAsFimInAtLeastOneMDS");
+    definition.setName("MI Category 15 - Get patients registered as fim in at least one MDS");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -95,7 +97,7 @@ public class MICategory15CohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("findPatientsWhoArePregnantSpecificForCategory15MI");
+    definition.setName("MI Category 15 - Get pregnat patients");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -114,7 +116,7 @@ public class MICategory15CohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("findPatientsWhoAreBreastfeedingSpecificForCategory15MI");
+    definition.setName("MI Category 15 - Get Breastfeeding Patients");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -133,7 +135,7 @@ public class MICategory15CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("PREGNANT_LAST_NINE_MONTHS");
+    definition.setName("MI Category 15 - Get Patients who was Pregnant in The last 9 months");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -156,7 +158,8 @@ public class MICategory15CohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("BREASTFEEDING_LAST_EIGHTEEN_MONTHS");
+    definition.setName(
+        "MI Category 15 - Get Patients registered as breastfeeding in the last eighteen months");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -182,7 +185,8 @@ public class MICategory15CohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("findPatientsWithClinicalConsultationAndARTStartDateBiggerThanThreeMonths");
+    definition.setName(
+        "MI Category 15 - Get patients with clinical consultation and ART start date bigger than 3 months");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -204,7 +208,8 @@ public class MICategory15CohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("findPatientsWithClinicalConsultationOrARTPickUpInTheLastThreeMonths");
+    definition.setName(
+        "MI Category 15 - Get patients with clinical consultation or ART pickup in the last 3 months");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -228,7 +233,7 @@ public class MICategory15CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "findPatientsWithTheLastCargaViralBiggerOrEqualThan1000InClinicalConsultation");
+        "MI Category 15 - Get patients with the last CV>=1000 in the last clinical consultation");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -251,7 +256,7 @@ public class MICategory15CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "findPatientsWithTheLastCargaViralGreaterOrEqualThan1000InClinicalConsultation");
+        "MI Category 15 - Get patients with the last CV>1000 in clinical consultation");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -273,7 +278,7 @@ public class MICategory15CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "findPatientsWithTheLastCargaViralBiggerOrEqualThan1000InClinicalConsultation");
+        "MI Category 15 - Get patients with the last CD4<=200 in clinical consultation");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -296,7 +301,7 @@ public class MICategory15CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsElegibleForMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriod");
+        "MI Category 15 - Get patients elegible for MDS stable patients in cinical consultation in the revision period");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -365,7 +370,7 @@ public class MICategory15CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsElegibleForMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodAndRegisteredAtLeastInOneMDS");
+        "MI Category 15 - Get patients elegible for MDS stable patients in clinical consultation in the revision period and registered at least one MDS");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -404,7 +409,7 @@ public class MICategory15CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "findPatientsWithClinicalConsultationDuringRevisionPeriodAndAgeGreaterOrEqualTwoYears");
+        "MI Category 15 - Get patients with clinica consultation during revision period and age>= 2years");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -427,7 +432,7 @@ public class MICategory15CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsRegisteredInMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodWhoReceivedCargaViralGreaterThan1000");
+        "MI Category 15 - Get patients registered in MDS for stable patients with clinical consultation in the revision period who received CV>1000");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -467,7 +472,7 @@ public class MICategory15CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsRegisteredInMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodWhoReceivedCargaViralGreaterThan1000AndSuspendedInTheMDS");
+        "MI Category 15 - Get patients registered in MDS for stable patients with clinical consultaion in the revision period who received CV>1000 and suspended in the MDS");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -504,7 +509,7 @@ public class MICategory15CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "findPatientsWithClinicalConsultationAndARTStartDateGreaterThanTwentyOneMonths");
+        "MI Category 15 -Get patients with clinical consultaion and ART start date> 21 Months");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -520,6 +525,29 @@ public class MICategory15CohortQueries {
   }
 
   @DocumentedDefinition(
+      value = "findPatientsWithClinicalConsultationAndARTStartDateGreaterThanTwentyFourMonths")
+  public CohortDefinition
+      findPatientsWithClinicalConsultationAndARTStartDateGreaterThanTwentyFourMonths() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "MI Catefory 15 - Get patients with clinical consultation and ART start date> 21 months");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MICategory15QueriesInterface.QUERY
+            .findPatientsWithClinicalConsultationAndARTStartDateGreaterThanTwentyFourMonths;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
       value =
           "findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths")
   public CohortDefinition
@@ -528,7 +556,7 @@ public class MICategory15CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths");
+        "MI Category 15 - Get all patients who have laboratory investigations request and viral charge in the last consultation during the last 3 months");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -551,7 +579,7 @@ public class MICategory15CohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsRegisteredInMDSForStablePatientsWithClinicalConsultationInTheRevisionPeriodInARTMoreThan21Months");
+        "MI Category 15 - Get patients registered in MDS for stable patients with clinical consultation in the revision period and in ART for more than 21 months - Denominator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
@@ -598,7 +626,7 @@ public class MICategory15CohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "findPatientsRegisteredInOneMDSForStablePatientsAndHadCVBetweenTwelveAndEigtheenMonthsAfterCVLessThan1000");
+        "MI Category 15 - Get patients registered in one MDS for stable patients and had CV between 11 and 18 months after CV<1000");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -615,13 +643,37 @@ public class MICategory15CohortQueries {
 
   @DocumentedDefinition(
       value =
+          "findPatientsRegisteredInOneMDSForStablePatientsAndHadCVBetween18And24nMonthsAfterCVLessThan1000")
+  public CohortDefinition
+      findPatientsRegisteredInOneMDSForStablePatientsAndHadCVBetween18And24nMonthsAfterCVLessThan1000() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "MI Category 15 - Get patients registered in one MDS stable patients and had CV between 11 and 24 after CV<1000");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MICategory15QueriesInterface.QUERY
+            .findPatientsRegisteredInOneMDSForStablePatientsAndHadCVBetween18And24nMonthsAfterCVLessThan1000;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value =
           "findPatientsRegisteredInOneMDSForStablePatientsAndHadCVBetweenTwelveAndEigtheenMonthsAfterCVLessThan1000_Numerator_15_3")
   public CohortDefinition
       findPatientsRegisteredInOneMDSForStablePatientsAndHadCVBetweenTwelveAndEigtheenMonthsAfterCVLessThan1000_Numerator_15_3() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPatientsRegisteredInOneMDSForStablePatientsAndHadCVBetweenTwelveAndEigtheenMonthsAfterCVLessThan1000");
+        "MI Category 15 - Get patients registered in one MDS for stable patients and had CV between 11 and 18 months after CV<1000 - Numerator");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));

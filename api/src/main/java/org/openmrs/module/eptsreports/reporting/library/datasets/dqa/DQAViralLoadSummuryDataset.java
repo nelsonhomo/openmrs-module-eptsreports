@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.DQACohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.ResumoMensalCohortQueries;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.TxCurrCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.BaseDataSet;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.AgeDimensionCohortInterface;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.EptsCommonDimension;
@@ -36,7 +35,6 @@ public class DQAViralLoadSummuryDataset extends BaseDataSet {
 
   @Autowired private EptsGeneralIndicator eptsGeneralIndicator;
   @Autowired private ResumoMensalCohortQueries resumoMensalCohortQueries;
-  @Autowired private TxCurrCohortQueries txCurrCohortQueries;
   @Autowired private DQACohortQueries dQACohortQueries;
 
   @Autowired
@@ -81,7 +79,7 @@ public class DQAViralLoadSummuryDataset extends BaseDataSet {
             this.eptsGeneralIndicator.getIndicator(
                 "Number de Activos em TARV no fim do período de revisao (SESP - SISMA)",
                 EptsReportUtils.map(
-                    this.txCurrCohortQueries.findPatientsWhoAreActiveOnART(), mappingsTxCurr)),
+                    this.dQACohortQueries.findPatientsWhoAreActiveOnART(), mappingsTxCurr)),
             mappingsTxCurr),
         this.getDQAColumns());
 

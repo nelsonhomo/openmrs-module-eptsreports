@@ -13,12 +13,16 @@
  */
 package org.openmrs.module.eptsreports.reporting.library.datasets;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.TPTCompletationCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.TxCurrCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.reporting.ReportingConstants;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
+import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +39,7 @@ public class TPTCompletationDataSet extends BaseDataSet {
     CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
     String mappings = "endDate=${endDate},location=${location}";
     dsd.setName("TPT Completion Cascade Data Set");
-    dsd.addParameters(getParameters());
+    dsd.addParameters(this.getParameters());
 
     dsd.addColumn(
         "TXCURR",
@@ -135,5 +139,12 @@ public class TPTCompletationDataSet extends BaseDataSet {
         "");
 
     return dsd;
+  }
+
+  public List<Parameter> getParameters() {
+    List<Parameter> parameters = new ArrayList<Parameter>();
+    parameters.add(ReportingConstants.END_DATE_PARAMETER);
+    parameters.add(ReportingConstants.LOCATION_PARAMETER);
+    return parameters;
   }
 }

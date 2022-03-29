@@ -399,6 +399,66 @@ public class MQAgeDimensions {
     return definition;
   }
 
+  @DocumentedDefinition(value = "calculateDefaulteAgeByAgeRenge")
+  public CohortDefinition findPatientsAgeRangeEndRevisionDate(int startAge, int endAge) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = MQQueriesInterface.QUERY.findPatientsAgeRangeEndRevisionDate;
+
+    String finalQuery = String.format(query, startAge, endAge);
+
+    definition.setQuery(finalQuery);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "calculateDefaulteAgeBiggerThan")
+  public CohortDefinition calculateDefaulteAgeBiggerThanEndRevisionDate(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = MQQueriesInterface.QUERY.findPatientsBiggerThanRevisionDate;
+
+    String finalQuery = String.format(query, age);
+
+    definition.setQuery(finalQuery);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "calculateDefaulteAgeLessThan")
+  public CohortDefinition calculateDefaulteAgeLessThanEndRevisionDate(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = MQQueriesInterface.QUERY.findPatientsLessThanRevisionDate;
+
+    String finalQuery = String.format(query, age);
+
+    definition.setQuery(finalQuery);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "calculateDefaulteAgeBiggerThan")
   public CohortDefinition calculateDefaulteAgeBiggerThan(int age) {
 
@@ -477,6 +537,39 @@ public class MQAgeDimensions {
 
     dimension.addCohortDefinition(
         "2-9", EptsReportUtils.map(this.calculateDefaulteAgeByAgeRenge(2, 9), mappings));
+
+    return dimension;
+  }
+
+  public CohortDefinitionDimension getDimensionAgeEndInclusionDateEndRevisionDate() {
+    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
+
+    dimension.setName("patientsPregnantEnrolledOnART");
+    dimension.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    dimension.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    dimension.addParameter(new Parameter("location", "Location", Location.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    dimension.addCohortDefinition(
+        "<1", EptsReportUtils.map(this.calculateDefaulteAgeLessThanEndRevisionDate(1), mappings));
+
+    dimension.addCohortDefinition(
+        "1-4", EptsReportUtils.map(this.findPatientsAgeRangeEndRevisionDate(1, 4), mappings));
+
+    dimension.addCohortDefinition(
+        "5-9", EptsReportUtils.map(this.findPatientsAgeRangeEndRevisionDate(5, 9), mappings));
+    dimension.addCohortDefinition(
+        "10-14", EptsReportUtils.map(this.findPatientsAgeRangeEndRevisionDate(10, 14), mappings));
+
+    dimension.addCohortDefinition(
+        "15-19", EptsReportUtils.map(this.findPatientsAgeRangeEndRevisionDate(15, 19), mappings));
+
+    dimension.addCohortDefinition(
+        "20+",
+        EptsReportUtils.map(this.calculateDefaulteAgeBiggerThanEndRevisionDate(20), mappings));
 
     return dimension;
   }

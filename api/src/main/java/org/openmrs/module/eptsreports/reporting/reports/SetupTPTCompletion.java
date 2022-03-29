@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TPTCompletationDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -26,6 +27,8 @@ public class SetupTPTCompletion extends EptsDataExportManager {
 
   @Autowired private TPTCompletationDataSet tPTCompletationDataSet;
 
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
+
   @Override
   public String getExcelDesignUuid() {
     return "ac2a0a1c-b530-4a52-b384-af8c70aa6a51";
@@ -43,12 +46,12 @@ public class SetupTPTCompletion extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "TPT Completion Cascade Report";
+    return "TB1: Relatório Cascata de Completude de TPT";
   }
 
   @Override
   public String getDescription() {
-    return "TPT Completion Cascade Report";
+    return "The TPT Completion Cascade Report generates the number of patients who are eligible or completed TPT in their lifetime until the end of reporting period";
   }
 
   @Override
@@ -80,6 +83,11 @@ public class SetupTPTCompletion extends EptsDataExportManager {
               "TPT Completion Cascade Report",
               getExcelDesignUuid(),
               null);
+
+      reportDefinition.addDataSetDefinition(
+          "D",
+          Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
+
       Properties props = new Properties();
       props.put("sortWeight", "5000");
       reportDesign.setProperties(props);

@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.ListPatientsInitiatedTPTDataSet;
-import org.openmrs.module.eptsreports.reporting.library.datasets.ListPatientsLnitiatedTPTTotalDataseet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TxRttDataset;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -21,10 +21,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class SetupListPatientsInitiatedTPTReport extends EptsDataExportManager {
 
-  @Autowired private ListPatientsInitiatedTPTDataSet tptListDataSet;
-  @Autowired private ListPatientsLnitiatedTPTTotalDataseet tptTotalDataseet;
+  @Autowired private ListPatientsInitiatedTPTDataSet listPatientsInitiatedTPTDataSet;
+
   @Autowired protected GenericCohortQueries genericCohortQueries;
+
   @Autowired private TxRttDataset txRttDataset;
+
+  @Autowired private DatimCodeDataSet datimCodeDataset;
 
   @Override
   public String getExcelDesignUuid() {
@@ -38,12 +41,12 @@ public class SetupListPatientsInitiatedTPTReport extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "LISTA DE PACIENTES QUE INICIARAM TRATAMENTO PREVENTIVO DE TUBERCULOSE (TPT)";
+    return "TB3: Lista de Pacientes que Iniciaram TPT";
   }
 
   @Override
   public String getDescription() {
-    return "LISTA DE PACIENTES QUE INICIARAM TRATAMENTO PREVENTIVO DE TUBERCULOSE (TPT)";
+    return "The List of Patients who Initiated TPT generates the list of patients who initiated TPT in the selected reporting period";
   }
 
   @Override
@@ -56,11 +59,15 @@ public class SetupListPatientsInitiatedTPTReport extends EptsDataExportManager {
 
     rd.addDataSetDefinition(
         "INICIOTPI",
-        Mapped.mapStraightThrough(
-            tptListDataSet.eTptDataSetDefinition(txRttDataset.getParameters())));
+        Mapped.mapStraightThrough(listPatientsInitiatedTPTDataSet.constructListDataset()));
 
     rd.addDataSetDefinition(
-        "TPI", Mapped.mapStraightThrough(this.tptTotalDataseet.constructDataset()));
+        "TPI",
+        Mapped.mapStraightThrough(this.listPatientsInitiatedTPTDataSet.constructTotalDataset()));
+
+    rd.addDataSetDefinition(
+        "D",
+        Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(

@@ -54,5 +54,10 @@ public class MQCommonsDementions {
         "ageMq",
         EptsReportUtils.map(
             eptsCommonDimension.age(ageDimensionCohort), "effectiveDate=${endDate}"));
+
+    dataSetDefinition.addDimension(
+        "ageMqEndRevisionDate",
+        EptsReportUtils.map(
+            this.mQAgeDimensions.getDimensionAgeEndInclusionDateEndRevisionDate(), mappings));
   }
 }

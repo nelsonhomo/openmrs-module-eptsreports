@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.kpdatasets.KeyPopDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -21,7 +22,7 @@ public class SetupKeyPopDataSet extends EptsDataExportManager {
 
   @Autowired private KeyPopDataSet keyPopDataSet;
   @Autowired private GenericCohortQueries genericCohortQueries;
-  @Autowired private DatinCodeDataSet DatinCodeDataSet;
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
 
   @Override
   public String getExcelDesignUuid() {
@@ -60,7 +61,7 @@ public class SetupKeyPopDataSet extends EptsDataExportManager {
 
     rd.addDataSetDefinition(
         "D",
-        Mapped.mapStraightThrough(this.DatinCodeDataSet.constructDataset(this.getParameters())));
+        Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(

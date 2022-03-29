@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Properties;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.QualityImprovementCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.mqdatasets.MQDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -24,8 +23,6 @@ public class SetupQualityImprovementReport extends EptsDataExportManager {
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
 
-  @Autowired QualityImprovementCohortQueries qualityImprovementCohortQueries;
-
   @Autowired MQDataSet mqDataSet;
 
   @Override
@@ -35,7 +32,7 @@ public class SetupQualityImprovementReport extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "Melhoria de Qualidade - 2020";
+    return "Melhoria de Qualidade - 2022";
   }
 
   @Override
@@ -79,7 +76,7 @@ public class SetupQualityImprovementReport extends EptsDataExportManager {
           createXlsReportDesign(
               reportDefinition,
               "MQ.xls",
-              "Melhoria de Qualidade - 2020",
+              "Melhoria de Qualidade - 2022",
               getExcelDesignUuid(),
               null);
       Properties props = new Properties();

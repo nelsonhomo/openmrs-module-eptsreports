@@ -6,8 +6,35 @@
                        from 
                        ( 
                           Select 
-                          inicio_real.patient_id,min(data_inicio) data_inicio
-                 
+                          inicio_real.patient_id,
+                          pid.identifier,
+                          concat(ifnull(pn.given_name,''),' ',ifnull(pn.middle_name,''),' ',ifnull(pn.family_name,'')) as NomeCompleto,
+                          p.gender as gender,
+                          if(p.birthdate is not null, floor(datediff(:evaluationDate,p.birthdate)/365),'N/A') idade,
+                          min(data_inicio) data_inicio,
+                          preg_or_lac.PREG_LAC,
+                          if(tbFinal.patient_id is not null, 'SIM', '') as TB,
+                          fila.data_levantamento,
+                          fila.data_proximo_levantamento,
+                          recepcao.data_levantamento_recepcao,
+                          recepcao.data_proximo_levantamento_recepcao,
+                          seguimento.data_seguimento,
+                          obsProximaConsulta.value_datetime data_proximo_seguimento,
+                          case 
+                          when ps.state = 9 then 'ABANDONO' 
+                          -- when ps.state = 6 then 'ACTIVO NO PROGRAMA' 
+                          when ps.state = 10 then 'OBITO' 
+                          when ps.state = 8 then 'SUSPENSO' 
+                          when ps.state = 7 then 'TRANSFERIDO PARA' 
+                          -- when ps.state = 29 then 'TRANSFERIDO DE' 
+                          end AS state,
+                          ps.start_date,
+                          homeCardVisit.state_home_card,
+                          homeCardVisit.encounter_datetime as home_card_date,
+                          FC.state_fc,
+                          FC.encounter_datetime as SATE_FC_DATE,
+                          FR.state_fr,
+                          FR.encounter_datetime as STATE_FR_DATE
 
                           from 
                           ( 
@@ -187,7 +214,7 @@
 
                            union
 
-                           SELECT p.patient_id,pg.date_enrolled data_consulta,2 orderF FROM patient p
+                           SELECT p.patient_id,ps.start_date data_consulta,2 orderF FROM patient p
                            INNER JOIN patient_program pg ON p.patient_id=pg.patient_id 
                            INNER JOIN patient_state ps ON pg.patient_program_id=ps.patient_program_id  
                            WHERE  pg.program_id=8  and ps.voided = 0 AND ps.state=27
@@ -217,7 +244,7 @@
                            group by p.patient_id
                               )final
                              order by patient_id,data_consulta desc,orderF
-                         )preg_or_lac
+                         )preg_or_lac inner join person pe on pe.person_id = preg_or_lac.patient_id where pe.gender = 'F'
                           group by preg_or_lac.patient_id
                         ) preg_or_lac on preg_or_lac.patient_id=inicio_real.patient_id
 
@@ -243,7 +270,7 @@
                                INNER JOIN patient_program pg ON p.patient_id=pg.patient_id 
                                INNER JOIN patient_state ps ON pg.patient_program_id=ps.patient_program_id  
                                WHERE pg.program_id=5 AND (ps.start_date IS NOT NULL AND ps.end_date IS NULL and ps.voided = 0) 
-                               and pg.date_enrolled between date_sub(CURDATE(), INTERVAL 9 MONTH) and CURDATE() 
+                               and pg.date_enrolled between date_sub(CURDATE(), INTERVAL 7 MONTH) and CURDATE() 
                                GROUP BY p.patient_id
 
                                union
@@ -251,8 +278,8 @@
                                select p.patient_id,max(e.encounter_datetime) data_consulta from patient p 
                                inner join encounter e on e.patient_id=p.patient_id
                                inner join obs o on o.encounter_id=e.encounter_id
-                               where e.encounter_type in(53) and o.concept_id=42 and o.value_coded=1065 and p.voided=0 and e.voided=0 and o.voided=0 
-                               and e.encounter_datetime between date_sub(CURDATE(), INTERVAL 9 MONTH) and CURDATE()
+                               where e.encounter_type in(53) and o.concept_id=1406 and o.value_coded=42 and p.voided=0 and e.voided=0 and o.voided=0 
+                               and e.encounter_datetime between date_sub(CURDATE(), INTERVAL 7 MONTH) and CURDATE()
                                group by p.patient_id
 
                                union
@@ -269,26 +296,16 @@
                                select p.patient_id,max(e.encounter_datetime) data_consulta  from patient p 
                                inner join encounter e on e.patient_id=p.patient_id
                                inner join obs o on o.encounter_id=e.encounter_id
-                               where e.encounter_type in(6) and o.concept_id in (23761) and o.value_coded in(1065,1066) and p.voided=0 and e.voided=0 and o.voided=0 
+                               where e.encounter_type in(6) and o.concept_id in (23761) and o.value_coded in(1065) and p.voided=0 and e.voided=0 and o.voided=0 
                                and e.encounter_datetime between date_sub(CURDATE(), INTERVAL 7 MONTH) and CURDATE()
                                group by p.patient_id
-
-                               union
-
-                               select p.patient_id,max(e.encounter_datetime) data_consulta  from patient p 
-                               inner join encounter e on e.patient_id=p.patient_id
-                               inner join obs o on o.encounter_id=e.encounter_id
-                               where e.encounter_type in(6) and o.concept_id in (23722) and o.value_coded in(23723,23774,23951,307,12) and p.voided=0 and e.voided=0 and o.voided=0 
-                               and e.encounter_datetime between date_sub(CURDATE(), INTERVAL 7 MONTH) and CURDATE()
-                               group by p.patient_id
-
                                )tb
                         ) tbFinal on tbFinal.patient_id=inicio_real.patient_id
 
 
                         left join
-                        (
-                           select fila.patient_id, fila.data_levantamento,obs_fila.value_datetime data_proximo_levantamento from (  
+                        (  select fila.patient_id,fila.data_levantamento,fila.data_proximo_levantamento from (
+                           select fila.patient_id, fila.data_levantamento as data_levantamento ,max(obs_fila.value_datetime) data_proximo_levantamento from (  
                            select p.patient_id,max(e.encounter_datetime) as data_levantamento from patient p 
                            inner join encounter e on p.patient_id=e.patient_id 
                            where encounter_type=18 and e.encounter_datetime <=:evaluationDate and e.location_id=:location and e.voided=0 and p.voided=0 
@@ -296,11 +313,13 @@
                            )fila 
                            inner join obs obs_fila on obs_fila.person_id=fila.patient_id 
                            where obs_fila.voided=0 and obs_fila.concept_id=5096 and fila.data_levantamento=obs_fila.obs_datetime
+                           group by fila.patient_id
 
-                        )fila on fila.patient_id=inicio_real.patient_id
+                        )fila 
+                        group by fila.patient_id
+                        ) fila on fila.patient_id=inicio_real.patient_id
 
-
-                        left join
+                        left join 
 
                         (
                         select p.patient_id,max(o.value_datetime) data_levantamento_recepcao, date_add(max(o.value_datetime), INTERVAL 30 day) data_proximo_levantamento_recepcao 
@@ -313,19 +332,17 @@
 
                         left join
                         (
-                           select fila.patient_id, fila.data_seguimento,obs_seguimento.value_datetime data_proximo_seguimento from (  
+                           select seguimento.patient_id, seguimento.data_seguimento from (  
                            select p.patient_id,max(e.encounter_datetime) as data_seguimento from patient p 
                            inner join encounter e on p.patient_id=e.patient_id 
                            where encounter_type in(6,9) and e.encounter_datetime <=:evaluationDate and e.location_id=:location and e.voided=0 and p.voided=0 
                            group by p.patient_id 
-                           )fila 
-                           inner join obs obs_seguimento on obs_seguimento.person_id=fila.patient_id 
-                           where obs_seguimento.voided=0 and obs_seguimento.concept_id=1410 and fila.data_seguimento=obs_seguimento.obs_datetime
-
+                           )seguimento 
                         ) seguimento on seguimento.patient_id=inicio_real.patient_id
 
                         left join  patient_program pg ON p.person_id = pg.patient_id and pg.program_id = 2 and pg.location_id=:location
-                        left join  patient_state ps ON pg.patient_program_id = ps.patient_program_id and ps.start_date IS NOT NULL AND ps.end_date IS NULL and ps.start_date<=:evaluationDate
+                        left join  patient_state ps ON pg.patient_program_id = ps.patient_program_id and ps.start_date IS NOT NULL AND ps.end_date IS NULL and ps.start_date<=:evaluationDate and ps.state in(9,10,8,7) and ps.voided=0
+                        left join  obs obsProximaConsulta  on obsProximaConsulta.person_id=seguimento.patient_id and obsProximaConsulta.concept_id=1410 and  obsProximaConsulta.obs_datetime=seguimento.data_seguimento and obsProximaConsulta.voided=0
 
                         left join
 
@@ -340,15 +357,21 @@
                          from  patient p 
                              inner join encounter e on e.patient_id=p.patient_id
                              inner join obs o on o.encounter_id=e.encounter_id
-                         where  o.voided=0 and o.concept_id in(2031,23944) and e.encounter_type in (21) and e.voided=0 and e.location_id=:location and e.encounter_datetime<=:evaluationDate
+                         where o.voided=0 
+                         and o.concept_id in(2031,23944,23945,2016) 
+                         and o.value_coded in(1366,1706,23863) 
+                         and e.encounter_type in (21) 
+                         and e.voided=0 and e.location_id=:location 
+                         and e.encounter_datetime<=:evaluationDate
                          GROUP BY p.patient_id 
                         ) homeCardVisit on homeCardVisit.patient_id=inicio_real.patient_id
 
                         left join
 
                         (
-                           select 
-                             p.patient_id,max(encounter_datetime) as encounter_datetime,   
+                       SELECT f.patient_id, encounter_datetime, state_fr FROM (
+                             select 
+                             p.patient_id,o.obs_datetime as encounter_datetime,   
                              case o.value_coded
                              when 1366  then  'OBITO '
                              when 1706  then  'TRANSFERIDO PARA'
@@ -358,15 +381,17 @@
                          from  patient p 
                              inner join encounter e on e.patient_id=p.patient_id
                              inner join obs o on o.encounter_id=e.encounter_id
-                         where   o.voided=0 and o.concept_id in(6272) and e.encounter_type in (53) and e.voided=0 and e.location_id=:location and e.encounter_datetime<=:evaluationDate
-                         GROUP BY p.patient_id 
-
+                         where o.voided=0 and o.concept_id in(6272) and e.encounter_type in (53) and e.voided=0 and e.location_id=:location and o.obs_datetime<=:evaluationDate
+                         order by p.patient_id, encounter_datetime desc
+                         ) f
+                         GROUP BY f.patient_id 
                         )FR on FR.patient_id=inicio_real.patient_id
 
                         left join
                         (
+                        SELECT * FROM (
                            select 
-                             p.patient_id,max(encounter_datetime) as encounter_datetime,   
+                             p.patient_id,encounter_datetime as encounter_datetime,   
                              case o.value_coded
                              when 1366  then  'OBITO '
                              when 1706  then  'TRANSFERIDO PARA'
@@ -377,7 +402,9 @@
                              inner join encounter e on e.patient_id=p.patient_id
                              inner join obs o on o.encounter_id=e.encounter_id
                          where   o.voided=0 and o.concept_id in(6273) and e.encounter_type in (6) and e.voided=0 and e.location_id=:location and e.encounter_datetime<=:evaluationDate
-                         GROUP BY p.patient_id 
+                         order by p.patient_id, encounter_datetime desc
+                         ) fcc
+                         GROUP BY fcc.patient_id 
  
                         )FC on FC.patient_id=inicio_real.patient_id
 

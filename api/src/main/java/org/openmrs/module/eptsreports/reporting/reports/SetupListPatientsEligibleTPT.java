@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.ListOfPatientsEligileToTPTDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -26,6 +27,8 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
 
   @Autowired private ListOfPatientsEligileToTPTDataSet listOfPatientsEligileToTPTDataSet;
 
+  @Autowired private DatimCodeDataSet datimCodeDataset;
+
   @Override
   public String getExcelDesignUuid() {
     return "a608e799-df5c-4183-99b4-de76f374a4e8";
@@ -43,12 +46,12 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "LISTA DE PACIENTES ELEGIVEIS AO TPT";
+    return "TB2: Lista de Pacientes Elegíveis ao TPT";
   }
 
   @Override
   public String getDescription() {
-    return "LISTA DE PACIENTES ELEGIVEIS AO TPT";
+    return "This report generates the aggregate numbers and lists all active patients on ART who are eligible for TPT by reporting end date.";
   }
 
   @Override
@@ -67,6 +70,9 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
         "TPTTOTAL",
         Mapped.mapStraightThrough(
             this.listOfPatientsEligileToTPTDataSet.getTotalEligibleTPTDataset()));
+    rd.addDataSetDefinition(
+        "D",
+        Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(

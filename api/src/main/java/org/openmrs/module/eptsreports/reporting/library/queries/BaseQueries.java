@@ -53,20 +53,11 @@ public class BaseQueries {
             + "INNER JOIN obs o ON e.encounter_id=o.encounter_id "
             + "WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.encounter_type=53 AND o.concept_id=23891 "
             + "AND o.value_datetime IS NOT NULL AND o.value_datetime<=:endDate AND e.location_id=:location  "
-            + " union																				"
-            + " select client.patient_id from patient client											"
-            + " 	inner join encounter e on e.patient_id = client.patient_id							"
-            + " 	inner join obs o on o.encounter_id = e.encounter_id 								"
-            + " where client.voided = 0 and e.voided = 0 and o.voided = 0							"
-            + " and e.encounter_type = 80 and o.concept_id =165296 and o.value_coded = 1256			"
-            + "  and e.location_id = :location and o.obs_datetime <= :endDate						"
-            + " union 																				"
-            + " select client.patient_id from patient client 										"
-            + " 	inner join encounter e on e.patient_id = client.patient_id 							"
-            + " 	inner join obs o on o.encounter_id = e.encounter_id 								"
-            + " where client.voided = 0 and e.voided = 0 and o.voided = 0 							"
-            + " 	and e.encounter_type = 80   and o.concept_id =165211 and e.location_id = :location  "
-            + "	and o.value_datetime <= :endDate 													";
+            + " union																						"
+            + "	select p.patient_id from patient p                                 							"
+            + "    	inner join patient_program pp on pp.patient_id = p.patient_id  							"
+            + "	where p.voided = 0 and pp.voided = 0 and pp.program_id = 25        							"
+            + "  	and pp.date_enrolled <= :endDate                                						";
 
     return query;
   }

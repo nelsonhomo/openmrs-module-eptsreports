@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.dqa.DQAViralLoadDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.dqa.DQAViralLoadSummuryDataset;
@@ -30,6 +31,7 @@ import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportMa
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.ReportingConstants;
 import org.openmrs.module.reporting.ReportingException;
+import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.ReportDesign;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
@@ -44,6 +46,8 @@ public class SetupDQAReport extends EptsDataExportManager {
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
 
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
+
   @Override
   public String getExcelDesignUuid() {
     return "54981b6c-5be2-11ec-8115-ebcabc659bdf";
@@ -56,12 +60,12 @@ public class SetupDQAReport extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "DQA Carga Viral - MISAU";
+    return "DQA HIV - MISAU";
   }
 
   @Override
   public String getDescription() {
-    return "DQA Carga Viral - MISAU";
+    return "DQA HIV - MISAU";
   }
 
   @Override
@@ -77,6 +81,10 @@ public class SetupDQAReport extends EptsDataExportManager {
         "DQA", mapStraightThrough(dQAViralLoadDataset.constructDataset(getParameters())));
 
     rd.addDataSetDefinition("DQ", mapStraightThrough(viralLoadSummuryDataset.constructDatset()));
+
+    rd.addDataSetDefinition(
+        "D",
+        Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(
@@ -99,12 +107,12 @@ public class SetupDQAReport extends EptsDataExportManager {
           createXlsReportDesign(
               reportDefinition,
               "DQA_Carga_Viral_MISAU.xls",
-              "DQA CARGA VIRAL MISAU",
+              "DQA HIV - MISAU",
               getExcelDesignUuid(),
               null);
       Properties props = new Properties();
       props.put("sortWeight", "5000");
-      props.put("repeatingSections", "sheet:1,row:7,dataset:DQA");
+      props.put("repeatingSections", "sheet:1,row:8,dataset:DQA");
       reportDesign.setProperties(props);
     } catch (IOException e) {
       throw new ReportingException(e.toString());
