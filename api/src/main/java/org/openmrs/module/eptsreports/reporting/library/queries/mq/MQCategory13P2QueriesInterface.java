@@ -203,5 +203,30 @@ public interface MQCategory13P2QueriesInterface {
             + " INNER JOIN obs o ON o.encounter_id = e.encounter_id AND o.voided = 0 "
             + " WHERE o.concept_id = 856 AND o.value_numeric IS NOT NULL AND "
             + " o.obs_datetime >= B4.encounter_datetime AND o.obs_datetime <= date_add(B4.encounter_datetime, INTERVAL 33 DAY) ";
+
+    public static final String
+        findAllPatientsWhoDroppedOutARTInFirstThreeMonthsAfterInitiatedTreatment =
+            "SELECT art_start.patient_id FROM ( "
+                + " SELECT patient_id,art_start_date FROM ( "
+                + " SELECT patient_id, MIN(art_start_date) art_start_date FROM ( "
+                + " SELECT p.patient_id, MIN(value_datetime) art_start_date FROM patient p "
+                + " INNER JOIN encounter e ON p.patient_id = e.patient_id "
+                + " INNER JOIN obs o ON e.encounter_id = o.encounter_id "
+                + " WHERE p.voided = 0 AND e.voided = 0 AND o.voided = 0 AND e.encounter_type = 53 "
+                + " AND o.concept_id = 1190 AND o.value_datetime is NOT NULL AND o.value_datetime <= :endRevisionDate AND e.location_id = :location "
+                + " GROUP BY p.patient_id "
+                + " ) art_start "
+                + " GROUP BY patient_id "
+                + " ) tx_new WHERE art_start_date BETWEEN :startInclusionDate AND :endRevisionDate "
+                + " )art_start "
+                + "  inner join "
+                + " ( "
+                + "select p.patient_id, max(o.obs_datetime) data_estado from patient p "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "inner join obs  o on e.encounter_id=o.encounter_id "
+                + "where e.voided=0 and o.voided=0 and p.voided=0 and  e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded in (1707) and e.location_id=:location "
+                + "group by p.patient_id "
+                + " ) abandono on abandono.patient_id = art_start.patient_id "
+                + "where abandono.data_estado between art_start.art_start_date and date_add(art_start.art_start_date, interval 3 MONTH) ";
   }
 }

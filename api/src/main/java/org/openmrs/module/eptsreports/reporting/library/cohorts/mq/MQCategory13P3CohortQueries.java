@@ -389,8 +389,267 @@ public class MQCategory13P3CohortQueries {
     definition.addSearch(
         "DEAD", EptsReportUtils.map(this.findAllPatientWhoAreDeadByEndOfRevisonPeriod(), mappings));
 
+    definition.addSearch(
+        "DROPPED-OUT-AFTER-ART-INITIATED",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findAllPatientsWhoDroppedOutARTAtTheEndOfFirstSixMonthsAfterInitiatedART(),
+            mappings));
+
+    definition.addSearch(
+        "DEAD-AFTER-REGIMEN-CHANGE",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findPatientsDeclaredDeadAtTheEndOfSixMonthsAfterChangeRegimenInFirstLineART(),
+            mappings));
+
     definition.setCompositionString(
-        "((START-ART NOT PREGNANT NOT BREASTFEEDING) OR (BI1 NOT B1E)) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD)");
+        "((START-ART NOT PREGNANT NOT BREASTFEEDING NOT DROPPED-OUT-AFTER-ART-INITIATED) OR (BI1 NOT B1E NOT DEAD-AFTER-REGIMEN-CHANGE)) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD)");
+
+    return definition;
+  }
+
+  /**
+   * 13.10: Crianças (5-9 anos de idade) na 1a linha de TARV que receberam o resultado da " + "Carga
+   * Viral entre o sexto e o nono mês após o início do TARV Denominador
+   */
+  @DocumentedDefinition(
+      value =
+          "findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_10Denominador")
+  public CohortDefinition
+      findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_10Denominador() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("CAT13_3 DENOMINATOR_13_2");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
+
+    definition.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
+
+    definition.addSearch(
+        "TRANSFERED-IN",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+            mappings));
+
+    definition.addSearch(
+        "TRANSFERED-OUT",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+
+    definition.addSearch(
+        "START-ART",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoAreNewlyEnrolledOnARTRF05(), mappings));
+
+    definition.addSearch(
+        "BI1",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreInAlternativeLineFirstLineCategory13_3_BI1_Denominator(),
+            mappings));
+
+    definition.addSearch(
+        "B1E",
+        EptsReportUtils.map(
+            this
+                .findPatientsWhoHasTherapeuthicLineDiferentThanFirstLineFromConsultationClinicalCategory13_3_B1E_Denominator(),
+            mappings));
+
+    definition.addSearch(
+        "DEAD", EptsReportUtils.map(this.findAllPatientWhoAreDeadByEndOfRevisonPeriod(), mappings));
+
+    definition.addSearch(
+        "DROPPED-OUT-AFTER-ART-INITIATED",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findAllPatientsWhoDroppedOutARTAtTheEndOfFirstSixMonthsAfterInitiatedART(),
+            mappings));
+
+    definition.addSearch(
+        "DROPPED-OUT-AFTER-REGIMEN-CHANGE",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findPatientsWhoDroppedOutAtTheEndOfSixMonthsOfRegimenChangeInFirstLine(),
+            mappings));
+    definition.setCompositionString(
+        "((START-ART NOT PREGNANT NOT BREASTFEEDING NOT DROPPED-OUT-AFTER-ART-INITIATED) OR (BI1 NOT B1E NOT DROPPED-OUT-AFTER-REGIMEN-CHANGE)) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD)");
+
+    return definition;
+  }
+
+  /**
+   * 13.11: Crianças (10-14 anos de idade) na 1a linha de TARV que receberam o resultado da " +
+   * "Carga Viral entre o sexto e o nono mês após o início do TARV Denominador
+   */
+  @DocumentedDefinition(
+      value =
+          "findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_11Denominador")
+  public CohortDefinition
+      findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_11Denominador() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("CAT13_3 DENOMINATOR_13_2");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
+
+    definition.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
+
+    definition.addSearch(
+        "TRANSFERED-IN",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+            mappings));
+
+    definition.addSearch(
+        "TRANSFERED-OUT",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+
+    definition.addSearch(
+        "START-ART",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoAreNewlyEnrolledOnARTRF05(), mappings));
+
+    definition.addSearch(
+        "BI1",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreInAlternativeLineFirstLineCategory13_3_BI1_Denominator(),
+            mappings));
+
+    definition.addSearch(
+        "B1E",
+        EptsReportUtils.map(
+            this
+                .findPatientsWhoHasTherapeuthicLineDiferentThanFirstLineFromConsultationClinicalCategory13_3_B1E_Denominator(),
+            mappings));
+
+    definition.addSearch(
+        "DEAD", EptsReportUtils.map(this.findAllPatientWhoAreDeadByEndOfRevisonPeriod(), mappings));
+
+    definition.addSearch(
+        "DROPPED-OUT-AFTER-ART-INITIATED",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findAllPatientsWhoDroppedOutARTAtTheEndOfFirstSixMonthsAfterInitiatedART(),
+            mappings));
+
+    definition.addSearch(
+        "DROPPED-OUT-AFTER-REGIMEN-CHANGE",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findPatientsWhoDroppedOutAtTheEndOfSixMonthsOfRegimenChangeInFirstLine(),
+            mappings));
+
+    definition.setCompositionString(
+        "((START-ART NOT PREGNANT NOT BREASTFEEDING NOT DROPPED-OUT-AFTER-ART-INITIATED) OR (BI1 NOT B1E NOT DROPPED-OUT-AFTER-REGIMEN-CHANGE)) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD)");
+
+    return definition;
+  }
+
+  /**
+   * 13.9: Crianças (0-4 anos de idade) na 1a linha de TARV que receberam o resultado da " + "Carga
+   * Viral entre o sexto e o nono mês após o início do TARV Denominador
+   */
+  @DocumentedDefinition(
+      value =
+          "findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_9Denominador")
+  public CohortDefinition
+      findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_9Denominador() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("CAT13_3 DENOMINATOR_13_9");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
+
+    definition.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
+
+    definition.addSearch(
+        "TRANSFERED-IN",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+            mappings));
+
+    definition.addSearch(
+        "TRANSFERED-OUT",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+
+    definition.addSearch(
+        "START-ART",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoAreNewlyEnrolledOnARTRF05(), mappings));
+
+    definition.addSearch(
+        "BI1",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreInAlternativeLineFirstLineCategory13_3_BI1_Denominator(),
+            mappings));
+
+    definition.addSearch(
+        "B1E",
+        EptsReportUtils.map(
+            this
+                .findPatientsWhoHasTherapeuthicLineDiferentThanFirstLineFromConsultationClinicalCategory13_3_B1E_Denominator(),
+            mappings));
+
+    definition.addSearch(
+        "DEAD", EptsReportUtils.map(this.findAllPatientWhoAreDeadByEndOfRevisonPeriod(), mappings));
+
+    definition.addSearch(
+        "DROPPED-OUT-AFTER-ART-INITIATED",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findAllPatientsWhoDroppedOutARTAtTheEndOfFirstSixMonthsAfterInitiatedART(),
+            mappings));
+
+    definition.addSearch(
+        "DROPPED-OUT-AFTER-REGIMEN-CHANGE",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findPatientsWhoDroppedOutAtTheEndOfSixMonthsOfRegimenChangeInFirstLine(),
+            mappings));
+
+    definition.setCompositionString(
+        "((START-ART NOT PREGNANT NOT BREASTFEEDING NOT DROPPED-OUT-AFTER-ART-INITIATED) OR (BI1 NOT B1E NOT DROPPED-OUT-AFTER-REGIMEN-CHANGE)) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD)");
 
     return definition;
   }
@@ -438,7 +697,15 @@ public class MQCategory13P3CohortQueries {
     definition.addSearch(
         "DEAD", EptsReportUtils.map(this.findAllPatientWhoAreDeadByEndOfRevisonPeriod(), mappings));
 
-    definition.setCompositionString("B2 NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD)");
+    definition.addSearch(
+        "DROPPED-OUT-AFTER-CHANGE-REGIMEN",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findPatientsDroppedOutARTInTheFirstSixMonthsAfterInitiatedSecondLineART(),
+            mappings));
+
+    definition.setCompositionString(
+        "(B2 NOT DROPPED-OUT-AFTER-CHANGE-REGIMEN) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD)");
 
     return definition;
   }
@@ -532,8 +799,128 @@ public class MQCategory13P3CohortQueries {
                 .findPatientsWhoHasTherapeuthicLineDiferentThanFirstLineFromConsultationClinicalCategory13_3_B1E_Denominator(),
             mappings));
 
+    definition.addSearch(
+        "DROPPED-OUT-AFTER-ART-INITIATED",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findAllPatientsWhoDroppedOutARTAtTheEndOfFirstSixMonthsAfterInitiatedART(),
+            mappings));
+
+    definition.addSearch(
+        "DROPPED-OUT-AFTER-REGIMEN-CHANGE",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findPatientsWhoDroppedOutAtTheEndOfSixMonthsOfRegimenChangeInFirstLine(),
+            mappings));
+
     definition.setCompositionString(
-        "(((START-ART AND (G OR J)) NOT PREGNANT NOT BREASTFEEDING NOT DD) OR ((BI1 NOT B1E) AND (H OR K ))) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DD)");
+        "(((START-ART AND (G OR J)) NOT PREGNANT NOT BREASTFEEDING NOT DROPPED-OUT-AFTER-ART-INITIATED NOT DD) OR ((BI1 NOT B1E NOT DROPPED-OUT-AFTER-REGIMEN-CHANGE) AND (H OR K ))) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DD)");
+
+    return definition;
+  }
+
+  /**
+   * 13.10: Crianças (5-9 anos de idade) na 1a linha de TARV que receberam o resultado da " + "Carga
+   * Viral entre o sexto e o nono mês após o início do TARV Numerador
+   */
+  @DocumentedDefinition(
+      value =
+          "findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_10Numerador")
+  public CohortDefinition
+      findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_10Numerador() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("CAT13_3_NUMERADOR_13_2");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
+
+    definition.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
+
+    definition.addSearch(
+        "TRANSFERED-IN",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+            mappings));
+
+    definition.addSearch(
+        "TRANSFERED-OUT",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+
+    definition.addSearch(
+        "START-ART",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoAreNewlyEnrolledOnARTRF05(), mappings));
+
+    definition.addSearch(
+        "G",
+        EptsReportUtils.map(
+            this.findPatientsFromClinicalConsultationWhoHaveViralChargeCategory13_3_G(), mappings));
+
+    definition.addSearch(
+        "H",
+        EptsReportUtils.map(
+            this.findPatientsFromClinicalConsultationWhoHaveViralChargeCategory13_3_H(), mappings));
+
+    definition.addSearch(
+        "J",
+        EptsReportUtils.map(
+            this
+                .findAllPatientsWhoHaveClinicalConsultationWithViralChargeBetweenSixAndNineMonthsAfterARTStartDateCategory13_3_J_Numerator(),
+            mappings));
+
+    definition.addSearch(
+        "K",
+        EptsReportUtils.map(
+            this
+                .findAllPatientsWhoHaveClinicalConsultationAndEncounterDateTimeBetweenAlternativeFirstLineDateCategory13_3_K_Numerator(),
+            mappings));
+
+    definition.addSearch(
+        "DD", EptsReportUtils.map(this.findAllPatientWhoAreDeadByEndOfRevisonPeriod(), mappings));
+
+    definition.addSearch(
+        "BI1",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreInAlternativeLineFirstLineCategory13_3_BI1_Denominator(),
+            mappings));
+
+    definition.addSearch(
+        "B1E",
+        EptsReportUtils.map(
+            this
+                .findPatientsWhoHasTherapeuthicLineDiferentThanFirstLineFromConsultationClinicalCategory13_3_B1E_Denominator(),
+            mappings));
+
+    definition.addSearch(
+        "DROPPED-OUT-AFTER-ART-INITIATED",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findAllPatientsWhoDroppedOutARTAtTheEndOfFirstSixMonthsAfterInitiatedART(),
+            mappings));
+
+    definition.addSearch(
+        "DEAD-AFTER-REGIMEN-CHANGE",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findPatientsDeclaredDeadAtTheEndOfSixMonthsAfterChangeRegimenInFirstLineART(),
+            mappings));
+
+    definition.setCompositionString(
+        "(((START-ART AND (G OR J)) NOT PREGNANT NOT BREASTFEEDING NOT DROPPED-OUT-AFTER-ART-INITIATED NOT DD) OR ((BI1 NOT B1E NOT DEAD-AFTER-REGIMEN-CHANGE) AND (H OR K ))) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DD)");
 
     return definition;
   }

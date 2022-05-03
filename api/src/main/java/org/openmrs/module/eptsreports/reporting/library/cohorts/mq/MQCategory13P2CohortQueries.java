@@ -55,8 +55,15 @@ public class MQCategory13P2CohortQueries {
         "TRANSFERED-OUT",
         EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
 
+    definition.addSearch(
+        "DROPPED-OUT",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .findAllPatientsWhoDroppedOutARTInFirstThreeMonthsAfterInitiatedTreatment(),
+            mappings));
+
     definition.setCompositionString(
-        "(START-ART AND PREGNANT) NOT (BREASTFEEDING OR TRANSFERED-OUT OR TRANSFERED-IN)");
+        "((START-ART NOT DROPPED-OUT) AND PREGNANT) NOT (BREASTFEEDING OR TRANSFERED-OUT OR TRANSFERED-IN)");
     return definition;
   }
 
@@ -262,23 +269,14 @@ public class MQCategory13P2CohortQueries {
                 .findPatientsWhoAreRequestForLaboratoryInvestigationAndPregnantInclusionPeriodCAT13DenumeratorP2ByB4(),
             mappings));
 
-    /*definition.addSearch(
-        "BREASTFEEDING",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
-
     definition.addSearch(
-        "TRANSFERED-IN",
+        "DROPPED-OUT",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+                .findAllPatientsWhoDroppedOutARTInFirstThreeMonthsAfterInitiatedTreatment(),
             mappings));
 
-    definition.addSearch(
-        "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));*/
-
-    definition.setCompositionString("(B2 AND J)");
+    definition.setCompositionString("((B2 NOT DROPPED-OUT) AND J)");
     return definition;
   }
 
