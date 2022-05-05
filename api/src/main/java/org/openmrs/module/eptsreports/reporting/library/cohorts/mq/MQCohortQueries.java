@@ -367,6 +367,24 @@ public class MQCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientWhoStartTPINHDuringPeriodCategory7")
+  public CohortDefinition findPatientWhoStartTPINHDuringPeriodCategory7() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientWhoStartTPIDuringPeriodCategory7");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = MQQueriesInterface.QUERY.findPatientWhoStartTPINHDuringPeriodCategory7;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientWhoStartTPI4MonthsAfterDateOfInclusionCategory7")
   public CohortDefinition findPatientWhoStartTPI4MonthsAfterDateOfInclusionCategory7() {
 
