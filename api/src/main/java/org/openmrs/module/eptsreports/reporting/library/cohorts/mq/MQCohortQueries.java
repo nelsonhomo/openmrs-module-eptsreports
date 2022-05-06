@@ -1204,13 +1204,14 @@ public class MQCohortQueries {
   }
 
   @DocumentedDefinition(
-      value = "findAllPatientsWhoDroppedOutARTAtTheEndOfFirstSixMonthsAfterInitiatedART")
+      value = "findAllPatientsWhoDroppedOutARTDuringTheFirstSixMonthsAfterInitiatedART")
   public CohortDefinition
-      findAllPatientsWhoDroppedOutARTAtTheEndOfFirstSixMonthsAfterInitiatedART() {
+      findAllPatientsWhoDroppedOutARTDuringTheFirstSixMonthsAfterInitiatedART() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("Patients who dropped out ART in first six months after initiated ART");
+    definition.setName(
+        "Patients who dropped out ART during the first six months after initiated ART");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -1218,7 +1219,7 @@ public class MQCohortQueries {
 
     String query =
         MQCategory13P3QueriesInterface.QUERY
-            .findAllPatientsWhoDroppedOutARTAtTheEndOfFirstSixMonthsAfterInitiatedART;
+            .findAllPatientsWhoDroppedOutARTDuringTheFirstSixMonthsAfterInitiatedART;
 
     definition.setQuery(query);
 
@@ -1228,12 +1229,12 @@ public class MQCohortQueries {
   @DocumentedDefinition(
       value = "findPatientsDeclaredDeadAtTheEndOfSixMonthsAfterChangeRegimenInFirstLineART")
   public CohortDefinition
-      findPatientsDeclaredDeadAtTheEndOfSixMonthsAfterChangeRegimenInFirstLineART() {
+      findPatientsDeclaredDeadDuringTheFirstSixMonthsAfterChangeRegimenInFirstLineART() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "Patients who dead in the first six months after change regimen in First Line ART");
+        "Patients who dead during the first six months after change regimen in First Line ART");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -1241,7 +1242,7 @@ public class MQCohortQueries {
 
     String query =
         MQCategory13P3QueriesInterface.QUERY
-            .findPatientsDeclaredDeadAtTheEndOfSixMonthsAfterChangeRegimenInFirstLineART;
+            .findPatientsDeclaredDeadDuringTheFirstSixMonthsAfterChangeRegimenInFirstLineART;
 
     definition.setQuery(query);
 
@@ -1249,8 +1250,9 @@ public class MQCohortQueries {
   }
 
   @DocumentedDefinition(
-      value = "findPatientsWhoDroppedOutAtTheEndOfSixMonthsOfRegimenChangeInFirstLine")
-  public CohortDefinition findPatientsWhoDroppedOutAtTheEndOfSixMonthsOfRegimenChangeInFirstLine() {
+      value = "findPatientsWhoDroppedOutARTDuringTheFirstSixMonthsOfRegimenChangeInFirstLine")
+  public CohortDefinition
+      findPatientsWhoDroppedOutARTDuringTheFirstSixMonthsOfRegimenChangeInFirstLine() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
@@ -1263,7 +1265,7 @@ public class MQCohortQueries {
 
     String query =
         MQCategory13P3QueriesInterface.QUERY
-            .findPatientsWhoDroppedOutAtTheEndOfSixMonthsOfRegimenChangeInFirstLine;
+            .findPatientsWhoDroppedOutARTDuringTheFirstSixMonthsOfRegimenChangeInFirstLine;
 
     definition.setQuery(query);
 
@@ -1271,14 +1273,14 @@ public class MQCohortQueries {
   }
 
   @DocumentedDefinition(
-      value = "findPatientsDroppedOutARTInTheFirstSixMonthsAfterInitiatedSecondLineART")
+      value = "findPatientsWhoDeadARTDuringTheFirstSixMonthsAfterInitiatedSecondLineART")
   public CohortDefinition
-      findPatientsDroppedOutARTInTheFirstSixMonthsAfterInitiatedSecondLineART() {
+      findPatientsWhoDeadARTDuringTheFirstSixMonthsAfterInitiatedSecondLineART() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "Patients who dropped out in the first six months after change regimen in Second Line ART");
+        "Patients who dead during the first six months after change regimen in Second Line ART");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -1286,7 +1288,30 @@ public class MQCohortQueries {
 
     String query =
         MQCategory13P3QueriesInterface.QUERY
-            .findPatientsDroppedOutARTInTheFirstSixMonthsAfterInitiatedSecondLineART;
+            .findPatientsWhoDeadARTDuringTheFirstSixMonthsAfterInitiatedSecondLineART;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "findPatientsDroppedOutARTDuringTheFirstSixMonthsAfterInitiatedSecondLineART")
+  public CohortDefinition
+      findPatientsDroppedOutARTDuringTheFirstSixMonthsAfterInitiatedSecondLineART() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "Patients who dropped out during the first six months after change regimen in Second Line ART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory13P3QueriesInterface.QUERY
+            .findPatientsDroppedOutARTDuringTheFirstSixMonthsAfterInitiatedSecondLineART;
 
     definition.setQuery(query);
 

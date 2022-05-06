@@ -334,7 +334,24 @@ public class MQCategory13Section1CohortQueries {
     definition.addSearch(
         "D", EptsReportUtils.map(this.findPatientsWhoAreBreastfeedingCAT13Part1(), mappings));
 
-    definition.setCompositionString("(B1 AND (B2NEW OR (B3 NOT B3E))) NOT B4E NOT B5E NOT C NOT D");
+    definition.addSearch(
+        "DROPPED-OUT",
+        EptsReportUtils.map(
+            this.findPatientsWhoAbandonedARTInTheFirstSixMonthsOfARTStart(), mappings));
+
+    definition.addSearch(
+        "REINITIATED-ART",
+        EptsReportUtils.map(
+            this.findPatientsWhoReinitiatedARTForAtLeastSixMonthsWithoutDroppOutART(), mappings));
+
+    definition.addSearch(
+        "CHANGE-REGIMEN-IN-FIRST-LINE",
+        EptsReportUtils.map(
+            this.findPatientsWhoAbandonedARTInTheFirstSixMonthsAfterChangeFirstLineRegimenART(),
+            mappings));
+
+    definition.setCompositionString(
+        "(B1 AND ((B2NEW NOT DROPPED-OUT) OR REINITIATED-ART OR (B3 NOT B3E NOT CHANGE-REGIMEN-IN-FIRST-LINE))) NOT B4E NOT B5E NOT C NOT D");
 
     return definition;
   }

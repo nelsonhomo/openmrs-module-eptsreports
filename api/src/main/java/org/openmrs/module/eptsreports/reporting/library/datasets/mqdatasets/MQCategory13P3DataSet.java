@@ -45,7 +45,7 @@ public class MQCategory13P3DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueries13_3
-                    .findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_9Denominador(),
+                    .findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13Denominador(),
                 "CAT13_PART_3_13_9_DENOMINATOR",
                 mappings),
             mappings),
@@ -71,7 +71,7 @@ public class MQCategory13P3DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueries13_3
-                    .findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_10Denominador(),
+                    .findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13Denominador(),
                 "CAT13_PART_3_13_10_DENOMINATOR",
                 mappings),
             mappings),
@@ -97,7 +97,7 @@ public class MQCategory13P3DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueries13_3
-                    .findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_11Denominador(),
+                    .findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13Denominador(),
                 "CAT13_PART_3_13_11_DENOMINATOR",
                 mappings),
             mappings),
@@ -149,7 +149,7 @@ public class MQCategory13P3DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueries13_3
-                    .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5(),
+                    .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5_DroppedOutART(),
                 "CAT13_PART_3_13_14_DENOMINATOR",
                 mappings),
             mappings),
