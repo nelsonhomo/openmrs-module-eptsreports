@@ -90,7 +90,8 @@ from	(
 								                              from (  
 															    select p.patient_id, max(e.encounter_datetime) encounter_datetime from  patient p
 																inner join encounter e on e.patient_id = p.patient_id 
-																where e.voided = 0  and e.encounter_type in (13, 51, 6,53)  and e.location_id =:location
+																inner join obs o on e.encounter_id = o.encounter_id 
+																where e.voided = 0 and o.voided=0  and e.encounter_type in (13, 51, 6,53) and o.concept_id=856 and e.location_id =:location
 																and e.encounter_datetime  between date_sub(:endDate, interval 12 month) and :endDate 
 								                                group by p.patient_id
 																   ) f 
@@ -135,7 +136,8 @@ from	(
 								                              from (  
 															    select p.patient_id, max(e.encounter_datetime) encounter_datetime from  patient p
 																inner join encounter e on e.patient_id = p.patient_id 
-																where e.voided = 0  and e.encounter_type in (13, 51, 6,53)  and e.location_id =:location
+																inner join obs o on e.encounter_id = o.encounter_id 
+																where e.voided = 0 and o.voided=0  and e.encounter_type in (13, 51, 6,53) and o.concept_id=856 and e.location_id =:location
 																and e.encounter_datetime  between date_sub(:endDate, interval 12 month) and :endDate 
 								                                group by p.patient_id
 																   ) f 

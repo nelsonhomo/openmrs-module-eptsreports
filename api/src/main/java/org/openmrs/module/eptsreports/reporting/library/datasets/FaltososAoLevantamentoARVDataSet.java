@@ -112,7 +112,7 @@ public class FaltososAoLevantamentoARVDataSet extends BaseDataSet {
     ColumnParameters a7 =
         new ColumnParameters("10-14 famale", "10-14 years famele", "gender=M|age=10-14", "07");
 
-    ColumnParameters a8 = new ColumnParameters("15+", "15+", "age=0-14", "08");
+    ColumnParameters a8 = new ColumnParameters("15+", "15+", "age=15+", "08");
 
     ColumnParameters a9 = new ColumnParameters("15-24", "15-24", "age=15-24", "09");
 
