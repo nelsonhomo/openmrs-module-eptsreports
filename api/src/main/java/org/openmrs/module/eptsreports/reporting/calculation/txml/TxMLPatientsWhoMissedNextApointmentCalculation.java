@@ -77,14 +77,28 @@ public class TxMLPatientsWhoMissedNextApointmentCalculation extends TxMLPatientC
 
     EvaluationContext newContext = this.getNewEvaluationContext(parameters);
 
-    this.excludeTransferredOutFromPreviousReportingPeriod(newContext, resultMap);
-    this.excludeDeadFromPreviousReportingPeriod(newContext, resultMap);
+    this.excludeTransferredOutFromPreviousReportingPeriod(
+        newContext,
+        resultMap,
+        lastFilaCalculationResult,
+        lastSeguimentoCalculationResult,
+        lastRecepcaoLevantamentoResult);
+    this.excludeDeadFromPreviousReportingPeriod(
+        newContext,
+        resultMap,
+        lastFilaCalculationResult,
+        lastSeguimentoCalculationResult,
+        lastRecepcaoLevantamentoResult);
 
     return resultMap;
   }
 
   private void excludeTransferredOutFromPreviousReportingPeriod(
-      EvaluationContext context, CalculationResultMap numerator) {
+      EvaluationContext context,
+      CalculationResultMap numerator,
+      CalculationResultMap lastFilaCalculationResult,
+      CalculationResultMap lastSeguimentoCalculationResult,
+      CalculationResultMap lastRecepcaoLevantamentoResult) {
 
     Map<Integer, Date> transferedOutByProgram =
         this.disaggregationProcessor
@@ -125,7 +139,11 @@ public class TxMLPatientsWhoMissedNextApointmentCalculation extends TxMLPatientC
 
     transferredOutInHomeVisitForm =
         TxMLPatientCalculation.excludeEarlyHomeVisitDatesFromNextExpectedDateNumerator(
-            numerator, transferredOutInHomeVisitForm);
+            numerator,
+            transferredOutInHomeVisitForm,
+            lastFilaCalculationResult,
+            lastSeguimentoCalculationResult,
+            lastRecepcaoLevantamentoResult);
 
     @SuppressWarnings("unchecked")
     Map<Integer, Date> maxResultFromAllSources =
@@ -157,7 +175,11 @@ public class TxMLPatientsWhoMissedNextApointmentCalculation extends TxMLPatientC
   }
 
   private void excludeDeadFromPreviousReportingPeriod(
-      EvaluationContext context, CalculationResultMap numerator) {
+      EvaluationContext context,
+      CalculationResultMap numerator,
+      CalculationResultMap lastFilaCalculationResult,
+      CalculationResultMap lastSeguimentoCalculationResult,
+      CalculationResultMap lastRecepcaoLevantamentoResult) {
 
     Map<Integer, Date> patientsDeadInArtProgram =
         this.disaggregationProcessor
@@ -201,7 +223,11 @@ public class TxMLPatientsWhoMissedNextApointmentCalculation extends TxMLPatientC
 
     deadInHomeVisitForm =
         TxMLPatientCalculation.excludeEarlyHomeVisitDatesFromNextExpectedDateNumerator(
-            numerator, deadInHomeVisitForm);
+            numerator,
+            deadInHomeVisitForm,
+            lastFilaCalculationResult,
+            lastSeguimentoCalculationResult,
+            lastRecepcaoLevantamentoResult);
 
     @SuppressWarnings("unchecked")
     Map<Integer, Date> maxResultFromAllSources =
