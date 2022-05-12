@@ -90,13 +90,22 @@ from	(
 							join 
 					        (
 								 select f.patient_id,f.encounter_datetime,obCv.obs_datetime,obCv.value_numeric, obCv.encounter_id
-								                              from (  
-															    select p.patient_id, max(e.encounter_datetime) encounter_datetime from  patient p
-																inner join encounter e on e.patient_id = p.patient_id 
-																inner join obs o on e.encounter_id = o.encounter_id 
-																where e.voided = 0 and o.voided=0  and e.encounter_type in (13, 51, 6,53) and o.concept_id=856 and e.location_id =:location
-																and e.encounter_datetime  between date_sub(:endDate, interval 12 month) and :endDate 
+								                              from (
+								                                select cv.patient_id, max(cv.encounter_datetime) encounter_datetime from (
+														    select p.patient_id, max(e.encounter_datetime) encounter_datetime from  patient p
+															inner join encounter e on e.patient_id = p.patient_id 
+															inner join obs o on e.encounter_id = o.encounter_id 
+															where e.voided = 0 and o.voided=0  and e.encounter_type in (13, 51, 6) and o.concept_id=856 and e.location_id =:location
+															and e.encounter_datetime  between date_sub(:endDate, interval 12 month) and :endDate 
 								                                group by p.patient_id
+								                                union
+													     select p.patient_id, max(o.obs_datetime)  encounter_datetime from patient p
+															inner join encounter e on e.patient_id = p.patient_id
+															inner join obs o on o.encounter_id = e.encounter_id
+														where p.voided = 0  and e.voided = 0 and o.voided = 0 and e.encounter_type  = 53 and o.concept_id = 856 
+																and e.location_id =:location and o.obs_datetime between date_sub(:endDate, interval 12 month) and :endDate
+															group by p.patient_id
+															)cv group by cv.patient_id
 																   ) f 
 								inner join obs obCv on obCv.person_id=f.patient_id and obCv.concept_id=856 and obCv.value_numeric>=1000 and date(obCv.obs_datetime)=date(f.encounter_datetime)  and obCv.voided=0					
 						     ) filter on filter.patient_id=cargaQuantitativa.patient_id
