@@ -278,5 +278,34 @@ public interface IMR1Queries {
             + "where   e.encounter_type in (6,9) and e.encounter_datetime between diagnostico.data_diagnostico     "
             + "  and (diagnostico.data_diagnostico + INTERVAL  7 DAY)                                              "
             + "        and e.voided=0 and e.location_id=:location                                                  ";
+
+    public static final String findPatientsWhoAreNewlyEnrolledOnArtCareByAgeRange =
+        "                    																							"
+            + "SELECT patient_id FROM                                                                                                                                            		"
+            + "            (SELECT patient_id, MIN(art_start_date) art_start_date FROM                                                                                           "
+            + "            (SELECT p.patient_id, MIN(e.encounter_datetime) art_start_date FROM patient p                                                                         "
+            + "            INNER JOIN encounter e ON p.patient_id=e.patient_id                                                                                                   "
+            + "            INNER JOIN obs o ON o.encounter_id=e.encounter_id                                                                                                     "
+            + "            WHERE e.voided=0 AND o.voided=0 AND p.voided=0 AND e.encounter_type in (18,6,9)                                                                       "
+            + "            AND o.concept_id=1255 AND o.value_coded=1256 AND e.encounter_datetime <= :endDate AND e.location_id=:location GROUP BY p.patient_id                   "
+            + "            UNION                                                                                                                                                 "
+            + "            SELECT p.patient_id, MIN(value_datetime) art_start_date FROM patient p INNER JOIN encounter e ON p.patient_id=e.patient_id                            "
+            + "            INNER JOIN obs o ON e.encounter_id=o.encounter_id WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.encounter_type IN (18,6,9,53)                  "
+            + "            AND o.concept_id=1190 AND o.value_datetime is NOT NULL AND o.value_datetime <= :location AND e.location_id=:location GROUP BY p.patient_id            "
+            + "            UNION                                                                                                                                                 "
+            + "            SELECT pg.patient_id, MIN(date_enrolled) art_start_date FROM patient p                                                                                "
+            + "            INNER JOIN patient_program pg ON p.patient_id=pg.patient_id                                                                                           "
+            + "            WHERE pg.voided=0 AND p.voided=0 AND program_id=1 AND date_enrolled <= :endDate AND location_id=:location GROUP BY pg.patient_id                      "
+            + "            UNION SELECT e.patient_id, MIN(e.encounter_datetime) AS art_start_date FROM patient p                                                                 "
+            + "            INNER JOIN encounter e ON p.patient_id=e.patient_id                                                                                                   "
+            + "            WHERE p.voided=0 AND e.encounter_type=18 AND e.voided=0 AND e.encounter_datetime <= :endDate AND e.location_id=:location GROUP BY p.patient_id        "
+            + "            UNION                                                                                                                                                 "
+            + "            SELECT p.patient_id, MIN(value_datetime) art_start_date FROM patient p                                                                                "
+            + "            INNER JOIN encounter e ON p.patient_id=e.patient_id                                                                                                   "
+            + "            INNER JOIN obs o ON e.encounter_id=o.encounter_id                                                                                                     "
+            + "            WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.encounter_type=52                                                                                "
+            + "            AND o.concept_id=23866 AND o.value_datetime is NOT NULL AND o.value_datetime <= :endDate AND e.location_id=:location GROUP BY p.patient_id)           "
+            + "            art_start GROUP BY patient_id ) tx_new                                                                                                                "
+            + "            INNER JOIN person pe ON tx_new.patient_id=pe.person_id WHERE TIMESTAMPDIFF(year,birthdate,art_start_date) BETWEEN %d AND %d AND birthdate IS NOT NULL ";
   }
 }
