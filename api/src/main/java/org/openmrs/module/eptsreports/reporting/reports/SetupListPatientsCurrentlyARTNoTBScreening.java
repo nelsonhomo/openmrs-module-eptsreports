@@ -6,7 +6,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.Location;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.ListPatientsCurrentlyARTNoTBScreeningDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.reporting.ReportingException;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
@@ -21,6 +23,10 @@ public class SetupListPatientsCurrentlyARTNoTBScreening extends EptsDataExportMa
 
   @Autowired
   private ListPatientsCurrentlyARTNoTBScreeningDataSet listPatientsCurrentlyARTNoTBScreeningDataSet;
+
+  @Autowired private SismaCodeDataSet sismaCodeDataSet;
+
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
 
   @Override
   public String getExcelDesignUuid() {
@@ -46,6 +52,7 @@ public class SetupListPatientsCurrentlyARTNoTBScreening extends EptsDataExportMa
   public ReportDefinition constructReportDefinition() {
     ReportDefinition rd = new ReportDefinition();
     rd.setUuid(getUuid());
+
     rd.setName(getName());
     rd.setDescription(getDescription());
     rd.addParameters(this.getParameters());
@@ -58,6 +65,14 @@ public class SetupListPatientsCurrentlyARTNoTBScreening extends EptsDataExportMa
         "RG",
         Mapped.mapStraightThrough(
             this.listPatientsCurrentlyARTNoTBScreeningDataSet.getTotalPatientsWhoOnTB5()));
+
+    rd.addDataSetDefinition(
+        "D",
+        Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
+
+    rd.addDataSetDefinition(
+        "S",
+        Mapped.mapStraightThrough(this.sismaCodeDataSet.constructDataset(this.getParameters())));
 
     return rd;
   }
@@ -74,7 +89,7 @@ public class SetupListPatientsCurrentlyARTNoTBScreening extends EptsDataExportMa
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "List_Patients_Currently_ART_No_TB_Screening.xls",
+              "Template_List_Patients_Currently_ART_No_TB_Screening.xls",
               "Lista de Pacientes Actualmente Em TARV Sem Rastreio de Tuberculose",
               getExcelDesignUuid(),
               null);

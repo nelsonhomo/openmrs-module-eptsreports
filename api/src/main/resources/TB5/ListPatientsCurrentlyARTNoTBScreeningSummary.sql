@@ -1,13 +1,15 @@
-        select   distinct coorte12meses_final.patient_id 
+select coorte12meses_final.patient_id
               from                                                                                                      
-              (select inicio_fila_seg_prox.*,                                         
+              (
+                select inicio_fila_seg_prox.*,                                         
                   GREATEST(COALESCE(data_fila,data_seguimento,data_recepcao_levantou),COALESCE(data_seguimento,data_fila,data_recepcao_levantou),COALESCE(data_recepcao_levantou,data_seguimento,data_fila))  data_usar_c,      
                   GREATEST(COALESCE(data_proximo_lev,data_proximo_seguimento,data_recepcao_levantou30),COALESCE(data_proximo_seguimento,data_proximo_lev,data_recepcao_levantou30),COALESCE(data_recepcao_levantou30,data_proximo_seguimento,data_proximo_lev)) data_usar
               from                                                            
-                (select inicio_fila_seg.*,                                              
+                (
+                select inicio_fila_seg.*,                                              
                 max(obs_fila.value_datetime) data_proximo_lev,                                      
                 max(obs_seguimento.value_datetime) data_proximo_seguimento,                               
-                date_add(data_recepcao_levantou, interval 30 day) data_recepcao_levantou30,
+                 date_add(data_recepcao_levantou, interval 30 day) data_recepcao_levantou30,
                  case obs_dispensa.value_coded 
                  when 165175 then 'HORARIO NORMAL DE EXPEDINTE'
                  when 165176 then 'FORA DO HORÁRIO'
@@ -18,12 +20,13 @@
                  when 165181 then 'BRIGADAS MOVEIS NOTURNAS(HOTSPOTS)'
                  when 165182 then 'CLINICAS MOVEIS DIURNAS'  
                  when 165183 then 'CLINICAS MOVEIS NOTURNAS(HOTSPOTS)'
-                else null end as type_dispensation,
+                 else null end as type_dispensation,
                  case obs_seguimento_dispensa.value_coded 
                  when 1098  then 'DM'
                  when 23720 then 'DT'
                  when 23888 then 'DS'
-                else null end as type_dispensation_seguimento                      
+                else null end as type_dispensation_seguimento
+
               from                                                              
             (
               select inicio.*,                                                         
@@ -201,9 +204,9 @@
               
              ) inicio_fila_seg_prox                                                               
              group by patient_id                                                                  
-             ) coorte12meses_final                                                                
+             ) coorte12meses_final
 
-             inner join person p on p.person_id=coorte12meses_final.patient_id          
+            inner join person p on p.person_id=coorte12meses_final.patient_id          
             left join   ( 
             select pad1.*  from person_address pad1  
             inner join   (  
@@ -232,12 +235,12 @@
             where pid1.patient_id=pid2.patient_id and pid1.patient_identifier_id=pid2.id  
             ) pid on pid.patient_id=coorte12meses_final.patient_id
 
-            left join person_attribute pt on pt.person_id=coorte12meses_final.patient_id and pt. person_attribute_type_id=9
+            left join person_attribute pat on pat.person_id=coorte12meses_final.patient_id and pat.person_attribute_type_id=9 and pat.value is not null and pat.value<>'' and pat.voided=0
 
 
             left join
                           (
-                           select preg_or_lac.patient_id, preg_or_lac.data_consulta,if(preg_or_lac.orderF=1,'Grávida','Lactante') as PREG_LAC from 
+                           select distinct preg_or_lac.patient_id, preg_or_lac.data_consulta,if(preg_or_lac.orderF=1,'Grávida','Lactante') as PREG_LAC from 
                            (
                           select final.patient_id,final.data_consulta,final.orderF 
 
@@ -385,10 +388,9 @@
                           group by preg_or_lac.patient_id
                         ) preg_or_lac on preg_or_lac.patient_id=coorte12meses_final.patient_id
 
-                      left join
+         inner join(
 
-                      (
-                        select TX_TB.patient_id, TX_TB.data_inicio data_inicio from 
+         select   TX_TB.patient_id,TX_TB.data_inicio,EX1.data_transferidopara,EX2.data_tratamento  from 
                         (
                             Select  p.patient_id,max(o.value_datetime) data_inicio                                                           
                             from    patient p                                                                                                   
@@ -507,14 +509,11 @@
 
                             )TX_TB
 
-                           )TX_TB  on TX_TB.patient_id=coorte12meses_final.patient_id
-
-            where TX_TB.patient_id not in
-           
-            (
+         left join
 
 
-                  select TRF_OUT.patient_id from ( 
+         (
+              select TRF_OUT.patient_id,TRF_OUT.data_transferidopara,INICIO_TB.data_tratamento from ( 
 
                    select transferidopara.patient_id, transferidopara.data_transferidopara from 
                           ( 
@@ -589,7 +588,7 @@
 
                    select inicio.patient_id,inicio.data_inicio,TB.data_tratamento from 
 
-                   (
+                         (
 
                             Select patient_id,min(data_inicio) data_inicio                                                                              
                                             from                                                                                                                        
@@ -681,12 +680,14 @@
                    ) INICIO_TB on INICIO_TB.patient_id=TRF_OUT.patient_id 
                    
                    where INICIO_TB.data_tratamento is  null
-            )
+         
+         )EX1 on EX1.patient_id=TX_TB.patient_id
 
-            and TX_TB.patient_id not in
 
-            ( 
-                    select TB.patient_id from 
+         left join
+
+         (
+                    select TB.patient_id, TB.data_tratamento from 
 
                        (
                                 Select patient_id,min(data_inicio) data_inicio                                                                              
@@ -775,9 +776,64 @@
                            )TB on inicio.patient_id=TB.patient_id
                           
                            
-                      where TB.data_tratamento between date_sub(inicio.data_inicio, INTERVAL 6 MONTH) and inicio.data_inicio
+                            where TB.data_tratamento between date_sub(inicio.data_inicio, INTERVAL 6 MONTH) and inicio.data_inicio
 
-            )
-            and (data_estado is null or (data_estado is not null and  data_usar_c>data_estado)) 
-            and date_add(data_usar, interval 28 day) >=:endDate      
-            and TX_TB.data_inicio between coorte12meses_final.data_inicio and :endDate    
+              ) EX2 on EX2.patient_id=TX_TB.patient_id
+
+            where 
+
+            (EX1.data_transferidopara is null and EX2.data_tratamento is null)  and TX_TB.data_inicio <= date_sub("2021-06-20", INTERVAL 6 MONTH)
+
+            group by TX_TB.patient_id
+
+            )TX_TB on coorte12meses_final.patient_id=TX_TB.patient_id
+
+            left join
+
+            (
+                 select     f.patient_id,f.encounter_datetime as encounter_datetime,
+                            @num_mdc := 1 + LENGTH(f.MDC) - LENGTH(REPLACE(f.MDC, ',', '')) AS MDC,  
+                            SUBSTRING_INDEX(f.MDC, ',', 1) AS MDC1,  
+                            IF(@num_mdc > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(f.MDC, ',', 2), ',', -1), '') AS MDC2,  
+                            IF(@num_mdc > 2, SUBSTRING_INDEX(SUBSTRING_INDEX(f.MDC, ',', 3), ',', -1), '') AS MDC3,  
+                            IF(@num_mdc > 3, SUBSTRING_INDEX(SUBSTRING_INDEX(f.MDC, ',', 4), ',', -1), '') AS MDC4, 
+                            IF(@num_mdc > 4, SUBSTRING_INDEX(SUBSTRING_INDEX(f.MDC, ',', 5), ',', -1), '') AS MDC5
+
+                        from(
+                        select  p.patient_id,max(e.encounter_datetime) encounter_datetime,
+                                group_concat( case o.value_coded 
+                                 when  23730  then 'DISPENSA TRIMESTRAL (DT)'
+                                 when  23888  then 'DISPENSA SEMESTRAL'
+                                 when 165314  then 'DISPENSA ANUAL DE ARV'
+                                 when 165315  then 'DISPENSA DESCENTRALIZADA DE ARV'
+                                 when 165178  then 'DISPENSA COMUNITÁRIA VIA PROVEDOR'
+                                 when 165179  then 'DISPENSA COMUNITARIA VIA APE'
+                                 when 165264  then 'BRIGADAS MVEIS (DCBM)'
+                                 when 165265  then 'CLINICAS MOVEIS (DCCM)'
+                                 when  23725  then 'ABORDAGEM FAMILIAR (AF)'
+                                 when  23729  then 'FLUXO RÁPIDO (FR)'
+                                 when  23724  then 'GAAC'
+                                 when  23726  then 'CLUBES DE ADESÃO (CA)'
+                                 when 165316  then 'EXTENSAO DE HORARIO'
+                                 when 165317  then  'PARAGEM UNICA NO SECTOR DA TB'
+                                 when 165318  then 'PARAGEM UNICA NOS SERVICOS DE TARV' 
+                                 when 165319  then 'PARAGEM UNICA NO SAAJ'
+                                 when 165320  then  'PARAGEM UNICA NA SMI'
+                                 when 165321  then  'DOENCA AVANCADA POR HIV'
+                        else null end) as MDC
+                 from patient p 
+                        join encounter e on p.patient_id=e.patient_id
+                        join obs grupo on grupo.encounter_id=e.encounter_id 
+                        join obs o on o.encounter_id=e.encounter_id 
+                where   grupo.concept_id=165323 and o.concept_id=165174 and e.encounter_type in(6,9) and e.location_id=:location
+
+                group by p.patient_id
+
+                )f
+            ) MDC on MDC.patient_id=coorte12meses_final.patient_id
+            
+            where
+
+            (coorte12meses_final.data_estado is null or (coorte12meses_final.data_estado is not null and  coorte12meses_final.data_usar_c>coorte12meses_final.data_estado)) 
+            and date_add(coorte12meses_final.data_usar, interval 28 day) >=:endDate      
+            group by coorte12meses_final.patient_id

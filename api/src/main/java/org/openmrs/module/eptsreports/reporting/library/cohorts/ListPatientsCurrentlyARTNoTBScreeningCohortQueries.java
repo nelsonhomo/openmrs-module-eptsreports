@@ -3,7 +3,9 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts;
 import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
+import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
+import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.stereotype.Component;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class ListPatientsCurrentlyARTNoTBScreeningCohortQueries {
 
   private static final String TB5 = "TB5/ListPatientsCurrentlyARTNoTBScreeningSummary.sql";
+  private static final String TB5_WITH_FC = "TB5/TB5_WITH_FC.sql";
 
   public CohortDefinition findPatientsWhoActiveOnARTAndNotHaveTBScreening() {
 
@@ -24,6 +27,77 @@ public class ListPatientsCurrentlyARTNoTBScreeningCohortQueries {
     String query = EptsQuerysUtils.loadQuery(TB5);
 
     definition.setQuery(query);
+
+    return definition;
+  }
+
+  public CohortDefinition
+      findPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithOneConsultation() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "Lista de Pacientes Actualmente Em TARV Sem Rastreio de Tuberculose Com Consulta Clinica");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    String query = EptsQuerysUtils.loadQuery(TB5_WITH_FC);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  public CohortDefinition
+      getPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithOneConsultation() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName(
+        "getPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithOneConsultation");
+
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    definition.addSearch(
+        "ART-TB",
+        EptsReportUtils.map(
+            this.findPatientsWhoActiveOnARTAndNotHaveTBScreening(),
+            "endDate=${endDate},location=${location}"));
+
+    definition.addSearch(
+        "FC",
+        EptsReportUtils.map(
+            this.findPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithOneConsultation(),
+            "endDate=${cohortEndDate},location=${location}"));
+
+    definition.setCompositionString("ART-TB AND FC");
+
+    return definition;
+  }
+
+  public CohortDefinition
+      getPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithoutOneConsultation() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName(
+        "getPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithoutOneConsultation");
+
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    definition.addSearch(
+        "ART-TB",
+        EptsReportUtils.map(
+            this.findPatientsWhoActiveOnARTAndNotHaveTBScreening(),
+            "endDate=${endDate},location=${location}"));
+
+    definition.addSearch(
+        "FC",
+        EptsReportUtils.map(
+            this.findPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithOneConsultation(),
+            "endDate=${cohortEndDate},location=${location}"));
+
+    definition.setCompositionString("ART-TB NOT FC");
 
     return definition;
   }

@@ -49,6 +49,14 @@ public class ListPatientsCurrentlyARTNoTBScreeningDataSet extends BaseDataSet {
         this.listPatientsCurrentlyARTNoTBScreeningCohortQueries
             .findPatientsWhoActiveOnARTAndNotHaveTBScreening();
 
+    final CohortDefinition TB5_FC =
+        this.listPatientsCurrentlyARTNoTBScreeningCohortQueries
+            .getPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithOneConsultation();
+
+    final CohortDefinition TB5_NOT_FC =
+        this.listPatientsCurrentlyARTNoTBScreeningCohortQueries
+            .getPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithoutOneConsultation();
+
     dataSetDefinition.addColumn(
         "TOTAL",
         "Lista de Pacientes Actualmente Em TARV Sem Rastreio de Tuberculose",
@@ -58,6 +66,27 @@ public class ListPatientsCurrentlyARTNoTBScreeningDataSet extends BaseDataSet {
                 EptsReportUtils.map(TB5, mappings)),
             mappings),
         "");
+
+    dataSetDefinition.addColumn(
+        "TOTALTBFC",
+        "Lista de Pacientes Actualmente Em TARV Sem Rastreio de Tuberculose Com consulta clinica nos ultimos 6 meses",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "Lista de Pacientes Actualmente Em TARV Sem Rastreio de Tuberculose",
+                EptsReportUtils.map(TB5_FC, mappings)),
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TOTALTBNOTFC",
+        "Lista de Pacientes Actualmente Em TARV Sem Rastreio de Tuberculose Sem consulta clinica nos ultimos 6 meses",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "Lista de Pacientes Actualmente Em TARV Sem Rastreio de Tuberculose Sem consulta clinica nos ultimos 6 meses",
+                EptsReportUtils.map(TB5_NOT_FC, mappings)),
+            mappings),
+        "");
+
     return dataSetDefinition;
   }
 
