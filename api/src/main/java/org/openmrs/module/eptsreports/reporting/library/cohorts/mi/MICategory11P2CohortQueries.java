@@ -250,6 +250,9 @@ public class MICategory11P2CohortQueries {
     final String mappings =
         "startInclusionDate=${endRevisionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
+    final String mappingsMI =
+        "startInclusionDate=${endRevisionDate-5m+1d},endInclusionDate=${endRevisionDate-4m},endRevisionDate=${endRevisionDate},location=${location}";
+
     definition.addSearch(
         "DENOMINADOR",
         EptsReportUtils.map(
@@ -262,7 +265,7 @@ public class MICategory11P2CohortQueries {
         EptsReportUtils.map(
             this
                 .findPatientsOnARTWithMinimum3APSSFollowupConsultationsIntheFirst3MonthsAfterStartingARTCategory11Numerator(),
-            mappings));
+            mappingsMI));
 
     definition.setCompositionString("(DENOMINADOR AND G-APSS-PP)");
 
