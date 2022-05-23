@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Properties;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate.ficharesumo.EC1PatientListDuplicateFichaResumoDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate.ficharesumo.EC2PatientListDuplicateFichaResumoDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate.ficharesumo.SummaryDataQualityDuplicateFichaResumoDataset;
@@ -40,6 +41,8 @@ public class SetupDataQualityDuplicateFichaResumoReport extends EptsDataExportMa
       summaryDataQualityDuplicateFichaResumoDataset;
 
   @Autowired private DatimCodeDataSet datimCodeDataset;
+
+  @Autowired private SismaCodeDataSet sismaCodeDataset;
 
   @Autowired
   private EC1PatientListDuplicateFichaResumoDataset eC1PatientListDuplicateFichaResumoDataset;
@@ -84,6 +87,10 @@ public class SetupDataQualityDuplicateFichaResumoReport extends EptsDataExportMa
     rd.addDataSetDefinition(
         "D",
         Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
+
+    rd.addDataSetDefinition(
+        "SC",
+        Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
 
     rd.addDataSetDefinition(
         "ECD1",

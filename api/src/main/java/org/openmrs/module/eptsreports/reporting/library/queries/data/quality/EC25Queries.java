@@ -70,7 +70,7 @@ public class EC25Queries {
             + "and e.location_id =:location and e.encounter_datetime "
             + "group by p.patient_id "
             + "union "
-            + "select p.patient_id, min(o.obs_datetime) obs_datetime from patient p "
+            + "select p.patient_id, min(o.value_datetime) value_datetime from patient p "
             + "	inner join encounter e on e.patient_id = p.patient_id "
             + "	inner join obs o on o.encounter_id = e.encounter_id "
             + "where p.voided = 0  and e.voided = 0 and o.voided = 0 and e.encounter_type = 52 "
@@ -110,7 +110,7 @@ public class EC25Queries {
 
   public static String getEc25Total() {
     String query =
-        " SELECT "
+        "SELECT "
             + " pe.person_id As patient_id "
             + " FROM "
             + " person pe "
@@ -156,7 +156,7 @@ public class EC25Queries {
             + "and e.location_id =:location and e.encounter_datetime "
             + "group by p.patient_id "
             + "union "
-            + "select p.patient_id, min(o.obs_datetime) obs_datetime from patient p "
+            + "select p.patient_id, min(o.value_datetime) value_datetime from patient p "
             + "	inner join encounter e on e.patient_id = p.patient_id "
             + "	inner join obs o on o.encounter_id = e.encounter_id "
             + "where p.voided = 0  and e.voided = 0 and o.voided = 0 and e.encounter_type = 52 "
@@ -176,7 +176,7 @@ public class EC25Queries {
             + "select p.patient_id, min(e.encounter_datetime) encounter_datetime from patient p "
             + "	inner join encounter e on e.patient_id = p.patient_id "
             + "where p.voided = 0  and e.voided = 0 and e.encounter_type = 18 "
-            + "and e.location_id =:location and e.encounter_datetime "
+            + "and e.location_id =:location "
             + "group by p.patient_id "
             + ") fila on fila.patient_id = pe.person_id "
             + "left join "

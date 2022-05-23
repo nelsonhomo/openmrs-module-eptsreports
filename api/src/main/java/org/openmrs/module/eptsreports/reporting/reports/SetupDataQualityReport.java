@@ -24,6 +24,7 @@ import org.openmrs.module.eptsreports.metadata.HivMetadata;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.data.quality.SummaryDataQualityCohorts;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.data.quality.SummaryEc20DataQualityCohorts;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.Ec10PatientListDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.Ec11PatientListDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.Ec12PatientListDataset;
@@ -119,6 +120,8 @@ public class SetupDataQualityReport extends EptsDataExportManager {
   private Ec25PatientListDataset ec25PatientListDataset;
 
   @Autowired private DatimCodeDataSet datimCodeDataset;
+
+  @Autowired private SismaCodeDataSet sismaCodeDataset;
 
   @Autowired
   public SetupDataQualityReport(
@@ -218,6 +221,10 @@ public class SetupDataQualityReport extends EptsDataExportManager {
     rd.addDataSetDefinition(
         "D",
         Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
+
+    rd.addDataSetDefinition(
+        "SC",
+        Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
 
     rd.addDataSetDefinition(
         "S20",
