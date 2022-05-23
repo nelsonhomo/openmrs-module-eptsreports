@@ -808,7 +808,7 @@ select             coorte12meses_final.patient_id,
 
             where 
 
-            (EX1.data_transferidopara is null and EX2.data_tratamento is null)  and TX_TB.data_inicio <= date_sub("2021-06-20", INTERVAL 6 MONTH)
+            (EX1.data_transferidopara is null and EX2.data_tratamento is null)  and TX_TB.data_inicio <= date_sub(:endDate, INTERVAL 6 MONTH)
 
             group by TX_TB.patient_id
 
