@@ -199,7 +199,7 @@ public class MICategory11P2CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappingsMIB1 =
-        "startInclusionDate=${endRevisionDate-4m+1d},endInclusionDate=${endRevisionDate-3m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
 
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
@@ -221,18 +221,11 @@ public class MICategory11P2CohortQueries {
             mappingsMIB1));
 
     definition.addSearch(
-        "TRANSFERED-IN",
-        EptsReportUtils.map(
-            this.mQCohortQueries
-                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
-            mappings));
-
-    definition.addSearch(
         "TRANSFERED-OUT",
         EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
 
     definition.setCompositionString(
-        "(B1 AND PREGNANT-B4) NOT (BREASTFEEDING-B5 OR TRANSFERED-IN OR TRANSFERED-OUT)");
+        "(B1 AND PREGNANT-B4) NOT (BREASTFEEDING-B5 OR TRANSFERED-OUT)");
 
     return definition;
   }
@@ -295,7 +288,7 @@ public class MICategory11P2CohortQueries {
     final String mappings =
         "startInclusionDate=${endRevisionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsMI =
-        "startInclusionDate=${endRevisionDate-4m+1d},endInclusionDate=${endRevisionDate-3m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "DENOMINADOR",
