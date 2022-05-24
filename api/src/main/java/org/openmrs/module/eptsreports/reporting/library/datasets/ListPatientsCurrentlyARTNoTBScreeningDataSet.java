@@ -51,7 +51,7 @@ public class ListPatientsCurrentlyARTNoTBScreeningDataSet extends BaseDataSet {
 
     final CohortDefinition TB5_FC =
         this.listPatientsCurrentlyARTNoTBScreeningCohortQueries
-            .getPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithOneConsultation();
+            .findPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithOneConsultation();
 
     final CohortDefinition TB5_NOT_FC =
         this.listPatientsCurrentlyARTNoTBScreeningCohortQueries

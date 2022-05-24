@@ -1,30 +1,4 @@
-select             coorte12meses_final.patient_id as PATIENT_ID, 
-                   pid.identifier as NID,
-                   concat(ifnull(pn.given_name,''),' ',ifnull(pn.middle_name,''),' ',ifnull(pn.family_name,'')) as NAME,
-                   p.gender as GENDER, 
-                   (TIMESTAMPDIFF(year,birthdate,:endDate)) as AGE,
-                   pad3.address6 as 'localidade',
-                   pad3.address5 as 'bairro',
-                   pad3.address1 as 'pontoReferencia', 
-                   pat.value as CONTACTO,                                                
-                   coorte12meses_final.data_inicio as INIT_ARV,
-                   preg_or_lac.PREG_LAC as PREG_LAC,
-                   coorte12meses_final.data_fila as LAST_FILA,                              
-                   coorte12meses_final.data_proximo_lev as NEXT_FILA,
-                   coorte12meses_final.type_dispensation as TIPO_DESPENSA_FILA,
-                   coorte12meses_final.data_recepcao_levantou as LAST_RECEPCAO,                              
-                   coorte12meses_final.data_recepcao_levantou30 as PROXIMO_RECEPCAO,
-                   coorte12meses_final.data_seguimento as ULTIMO_SEGUIMENTO,
-                   coorte12meses_final.data_proximo_seguimento as PROXIMO_SEGUIMENTO,  
-                   coorte12meses_final.type_dispensation_seguimento as TIPO_DISPENSA_SEGUIMENTO,
-                   TX_TB.data_inicio as DATA_TB,
-                   DATE(MDC.encounter_datetime) as DATA_MDC,
-                   MDC.MDC1 as MDC1,
-                   MDC.MDC2 as MDC2,
-                   MDC.MDC3 as MDC3,
-                   MDC.MDC4 AS MDC4,
-                   MDC.MDC5 as MDC5
-
+select coorte12meses_final.patient_id
               from                                                                                                      
               (
                 select inicio_fila_seg_prox.*,                                         
@@ -862,4 +836,17 @@ select             coorte12meses_final.patient_id as PATIENT_ID,
 
             (coorte12meses_final.data_estado is null or (coorte12meses_final.data_estado is not null and  coorte12meses_final.data_usar_c>coorte12meses_final.data_estado)) 
             and date_add(coorte12meses_final.data_usar, interval 28 day) >=:endDate      
-            group by coorte12meses_final.patient_id
+
+            and coorte12meses_final.patient_id not in(
+
+
+			Select  p.patient_id                                          
+              from  patient p                                                                 
+                  inner join encounter e on e.patient_id=p.patient_id                                             
+      where       p.voided=0 and e.voided=0 and e.encounter_type in (6,9) 
+                  and e.location_id=:location     
+                  and e.encounter_datetime between date_sub(:endDate, INTERVAL 6 MONTH) and :endDate    
+                  
+            ) 
+       group by coorte12meses_final.patient_id
+				

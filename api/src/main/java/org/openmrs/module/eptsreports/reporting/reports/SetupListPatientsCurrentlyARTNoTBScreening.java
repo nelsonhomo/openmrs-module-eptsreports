@@ -71,7 +71,7 @@ public class SetupListPatientsCurrentlyARTNoTBScreening extends EptsDataExportMa
         Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
 
     rd.addDataSetDefinition(
-        "S",
+        "SC",
         Mapped.mapStraightThrough(this.sismaCodeDataSet.constructDataset(this.getParameters())));
 
     return rd;
@@ -90,7 +90,7 @@ public class SetupListPatientsCurrentlyARTNoTBScreening extends EptsDataExportMa
           createXlsReportDesign(
               reportDefinition,
               "Template_List_Patients_Currently_ART_No_TB_Screening.xls",
-              "Lista de Pacientes Actualmente Em TARV Sem Rastreio de Tuberculose",
+              "TB5_Lista_Pacientes_Activos_em_TARV_sem_Rastreio_de_TB",
               getExcelDesignUuid(),
               null);
       Properties props = new Properties();
