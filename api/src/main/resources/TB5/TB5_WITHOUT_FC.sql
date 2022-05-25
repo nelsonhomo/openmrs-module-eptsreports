@@ -825,10 +825,13 @@ select coorte12meses_final.patient_id
                         join encounter e on p.patient_id=e.patient_id
                         join obs grupo on grupo.encounter_id=e.encounter_id 
                         join obs o on o.encounter_id=e.encounter_id 
-                where   grupo.concept_id=165323 and o.concept_id=165174 and e.encounter_type in(6,9) and e.location_id=:location
+                        join obs obsEstado on obsEstado.encounter_id=e.encounter_id
+                where   grupo.concept_id=165323 and o.concept_id=165174 and e.encounter_type in(6,9) and e.location_id=:location and
+                        obsEstado.concept_id=165322 and obsEstado.value_coded in(1256,1257) and obsEstado.voided=0 and o.voided=0 and grupo.voided=0
+						and e.encounter_datetime <= CURDATE()
 
                 group by p.patient_id
-
+                
                 )f
             ) MDC on MDC.patient_id=coorte12meses_final.patient_id
             

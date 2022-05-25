@@ -40,12 +40,12 @@ public class SetupListPatientsCurrentlyARTNoTBScreening extends EptsDataExportMa
 
   @Override
   public String getName() {
-    return "Lista de Pacientes Actualmente Em TARV Sem Rastreio de Tuberculose";
+    return "TB5: Lista Pacientes Activos em TARV sem Rastreio de TB";
   }
 
   @Override
   public String getDescription() {
-    return "Lista de Pacientes Actualmente Em TARV Sem Rastreio de Tuberculose";
+    return "TB5: Lista Pacientes Activos em TARV sem Rastreio de TB";
   }
 
   @Override

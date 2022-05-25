@@ -17,7 +17,7 @@ select             coorte12meses_final.patient_id as PATIENT_ID,
                    coorte12meses_final.data_seguimento as ULTIMO_SEGUIMENTO,
                    coorte12meses_final.data_proximo_seguimento as PROXIMO_SEGUIMENTO,  
                    coorte12meses_final.type_dispensation_seguimento as TIPO_DISPENSA_SEGUIMENTO,
-                   DATE_FORMAT(TX_TB.data_inicio,%d-%m-%Y) as DATA_TB,
+                   DATE_FORMAT(DATE(TX_TB.data_inicio), '%d-%m-%Y') as DATA_TB,
                    DATE(MDC.encounter_datetime) as DATA_MDC,
                    MDC.MDC1 as MDC1,
                    MDC.MDC2 as MDC2,
@@ -851,7 +851,10 @@ select             coorte12meses_final.patient_id as PATIENT_ID,
                         join encounter e on p.patient_id=e.patient_id
                         join obs grupo on grupo.encounter_id=e.encounter_id 
                         join obs o on o.encounter_id=e.encounter_id 
-                where   grupo.concept_id=165323 and o.concept_id=165174 and e.encounter_type in(6,9) and e.location_id=:location
+                        join obs obsEstado on obsEstado.encounter_id=e.encounter_id
+                where   grupo.concept_id=165323 and o.concept_id=165174 and e.encounter_type in(6,9) and e.location_id=:location and
+                        obsEstado.concept_id=165322 and obsEstado.value_coded in(1256,1257) and obsEstado.voided=0 and o.voided=0 and grupo.voided=0
+						and e.encounter_datetime <= CURDATE()
 
                 group by p.patient_id
 
