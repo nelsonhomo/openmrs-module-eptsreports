@@ -70,6 +70,25 @@ public class MQCategory15CohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientsWithDTWithRequestForVLCategory15_7_FR20")
+  public CohortDefinition findPatientsWithDTWithRequestForVLCategory15_7_FR20() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory15QueriesInterface.QUERY.findPatientsWithDTWithRequestForVLCategory15_7_FR20;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientsWithDTandGaacWithRequestForVLCategory15H2")
   public CohortDefinition findPatientsWithDTandGaacWithRequestForVLCategory15H2() {
 
@@ -83,6 +102,25 @@ public class MQCategory15CohortQueries {
 
     String query =
         MQCategory15QueriesInterface.QUERY.findPatientsWithDTandGaacWithRequestForVLCategory15H2;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWithDTWithRequestForVLAndVLResultCategory15")
+  public CohortDefinition findPatientsWithDTWithRequestForVLAndVLResultCategory15() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory15QueriesInterface.QUERY.findPatientsWithDTWithRequestForVLAndVLResultCategory15;
 
     definition.setQuery(query);
 
@@ -262,8 +300,7 @@ public class MQCategory15CohortQueries {
 
     definition.addSearch(
         "H1",
-        EptsReportUtils.map(
-            this.findPatientsWithDTandGaacWithRequestForVLCategory15H1(), mappings));
+        EptsReportUtils.map(this.findPatientsWithDTWithRequestForVLCategory15_7_FR20(), mappings));
 
     definition.addSearch(
         "DENOMINATOR",
@@ -290,8 +327,7 @@ public class MQCategory15CohortQueries {
 
     definition.addSearch(
         "H1",
-        EptsReportUtils.map(
-            this.findPatientsWithDTandGaacWithRequestForVLCategory15H1(), mappings));
+        EptsReportUtils.map(this.findPatientsWithDTWithRequestForVLCategory15_7_FR20(), mappings));
 
     definition.addSearch(
         "DENOMINATOR",
@@ -347,7 +383,7 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "H2",
         EptsReportUtils.map(
-            this.findPatientsWithDTandGaacWithRequestForVLCategory15H2(), mappings));
+            this.findPatientsWithDTWithRequestForVLAndVLResultCategory15(), mappings));
 
     definition.addSearch(
         "DENOMINATOR",
