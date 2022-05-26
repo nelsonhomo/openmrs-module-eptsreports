@@ -127,6 +127,24 @@ public class MQCategory15CohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientsWithDTWithCV1000Category15I")
+  public CohortDefinition findPatientsWithDTWithCV1000Category15I() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = MQCategory15QueriesInterface.QUERY.findPatientsWithDTWithCV1000Category15I;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientsWithDTandGaacWithCV1000Category15I")
   public CohortDefinition findPatientsWithDTandGaacWithCV1000Category15I() {
 
@@ -409,7 +427,7 @@ public class MQCategory15CohortQueries {
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
-        "I", EptsReportUtils.map(this.findPatientsWithDTandGaacWithCV1000Category15I(), mappings));
+        "I", EptsReportUtils.map(this.findPatientsWithDTWithCV1000Category15I(), mappings));
 
     definition.addSearch(
         "DENOMINATOR",
@@ -435,7 +453,7 @@ public class MQCategory15CohortQueries {
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
-        "I", EptsReportUtils.map(this.findPatientsWithDTandGaacWithCV1000Category15I(), mappings));
+        "I", EptsReportUtils.map(this.findPatientsWithDTWithCV1000Category15I(), mappings));
 
     definition.addSearch(
         "DENOMINATOR",
