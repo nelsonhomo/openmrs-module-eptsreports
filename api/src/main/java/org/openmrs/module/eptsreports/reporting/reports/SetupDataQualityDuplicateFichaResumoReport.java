@@ -62,12 +62,12 @@ public class SetupDataQualityDuplicateFichaResumoReport extends EptsDataExportMa
 
   @Override
   public String getName() {
-    return "RELATÓRIO DE QUALIDADE DE DADOS PARA IDENTIFICAR FICHAS RESUMO DUPLICADAS";
+    return "Relatório De Qualidade De Dados Para Identificar Fichas Resumo Duplicadas";
   }
 
   @Override
   public String getDescription() {
-    return "Este relatório gera uma listagem de pacientes que atendem a determinadas verificações/validações dos dados existentes no sistema, e permite que os utilizadores confirmem as informações de modo a corrigir os registos duplicados no sistema OpenMRS EPTS.";
+    return "Este relatório gera uma listagem de pacientes que atendem a determinadas verificações/validações dos dados existentes no sistema, e permite que os utilizadores confirmem as informações de modo a corrigir os registos duplicados no sistema SESP.";
   }
 
   @Override
@@ -120,7 +120,7 @@ public class SetupDataQualityDuplicateFichaResumoReport extends EptsDataExportMa
           createXlsReportDesign(
               reportDefinition,
               "Data_Quality_Duplicates_Ficha_Resumo_Report.xls",
-              "Relatório de Qualidade de Dados Para Identificar Fichas Resumo Duplicadas",
+              "Relatório De Qualidade De Dados Para Identificar Fichas Resumo Duplicadas",
               getExcelDesignUuid(),
               null);
       Properties props = new Properties();

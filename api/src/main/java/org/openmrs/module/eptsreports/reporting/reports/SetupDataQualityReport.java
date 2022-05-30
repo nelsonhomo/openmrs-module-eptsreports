@@ -197,12 +197,12 @@ public class SetupDataQualityReport extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "Data Quality Report";
+    return "Relatório de Qualidade de Dados";
   }
 
   @Override
   public String getDescription() {
-    return "This report provides a line listing of patient records failing to meet certain edit checks and allows the user to review the information so the patient’s information can be corrected";
+    return "Este relatório gera uma listagem de pacientes que não atendem a determinadas verificações/validações dos dados existentes no sistema, e permite que os utilizadores confirmem as informações do paciente de modo a corrigir os dados no sistema.";
   }
 
   @Override
@@ -352,7 +352,7 @@ public class SetupDataQualityReport extends EptsDataExportManager {
           createXlsReportDesign(
               reportDefinition,
               "Data_Quality_Report.xls",
-              "Data Quality Report",
+              "Relatório de Qualidade de Dados",
               getExcelDesignUuid(),
               null);
       Properties props = new Properties();
