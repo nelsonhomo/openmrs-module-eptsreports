@@ -14,7 +14,6 @@
 package org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate;
 
 import java.util.Date;
-import java.util.List;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.datasets.BaseDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.data.quality.duplicate.EC2DuplicateQueries;
@@ -28,10 +27,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class EC2PatientListDuplicateDataset extends BaseDataSet {
 
-  public DataSetDefinition ec2PatientDuplicateListDataset(List<Parameter> parameterList) {
+  public DataSetDefinition ec2PatientDuplicateListDataset() {
     SqlDataSetDefinition dsd = new SqlDataSetDefinition();
     dsd.setName("EC2");
-    dsd.setParameters(parameterList);
     dsd.setSqlQuery(EC2DuplicateQueries.QUERY.findPatiendsWithDuplicatedNID);
 
     return dsd;

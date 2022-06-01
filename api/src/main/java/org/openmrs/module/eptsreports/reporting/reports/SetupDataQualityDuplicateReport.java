@@ -15,23 +15,17 @@
 package org.openmrs.module.eptsreports.reporting.reports;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
-import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
-import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate.EC1PatientListDuplicateDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate.EC2PatientListDuplicateDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate.SummaryDataQualityDuplicateDataset;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
-import org.openmrs.module.reporting.ReportingConstants;
 import org.openmrs.module.reporting.ReportingException;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
-import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.ReportDesign;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +41,6 @@ public class SetupDataQualityDuplicateReport extends EptsDataExportManager {
   @Autowired private EC2PatientListDuplicateDataset ec2PatientListDuplicateDataset;
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
-
-  @Autowired private DatimCodeDataSet datimCodeDataset;
-
-  @Autowired private SismaCodeDataSet sismaCodeDataset;
 
   @Override
   public String getExcelDesignUuid() {
@@ -78,31 +68,19 @@ public class SetupDataQualityDuplicateReport extends EptsDataExportManager {
     rd.setUuid(getUuid());
     rd.setName(getName());
     rd.setDescription(getDescription());
-    rd.addParameters(getDataParameters());
 
     rd.addDataSetDefinition(
         "SD",
         Mapped.mapStraightThrough(
-            summaryDataQualityDuplicateDataset.constructSummaryDataQualityDatset(
-                getDataParameters())));
-
-    rd.addDataSetDefinition(
-        "D",
-        Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
-
-    rd.addDataSetDefinition(
-        "SC",
-        Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
+            summaryDataQualityDuplicateDataset.constructSummaryDataQualityDatset()));
 
     rd.addDataSetDefinition(
         "ECD1",
-        Mapped.mapStraightThrough(
-            ec1PatientListDuplicateDataset.ec1PatientDuplicateListDataset(getDataParameters())));
+        Mapped.mapStraightThrough(ec1PatientListDuplicateDataset.ec1PatientDuplicateListDataset()));
 
     rd.addDataSetDefinition(
         "ECD2",
-        Mapped.mapStraightThrough(
-            ec2PatientListDuplicateDataset.ec2PatientDuplicateListDataset(getDataParameters())));
+        Mapped.mapStraightThrough(ec2PatientListDuplicateDataset.ec2PatientDuplicateListDataset()));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(
@@ -138,14 +116,5 @@ public class SetupDataQualityDuplicateReport extends EptsDataExportManager {
     }
 
     return Arrays.asList(reportDesign);
-  }
-
-  private List<Parameter> getDataParameters() {
-    List<Parameter> parameters = new ArrayList<Parameter>();
-    parameters.add(ReportingConstants.START_DATE_PARAMETER);
-    parameters.add(ReportingConstants.END_DATE_PARAMETER);
-    parameters.add(new Parameter("location", "Unidade Sanitária", Location.class));
-
-    return parameters;
   }
 }
