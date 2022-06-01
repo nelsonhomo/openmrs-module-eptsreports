@@ -15,17 +15,23 @@
 package org.openmrs.module.eptsreports.reporting.reports;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate.EC1PatientListDuplicateDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate.EC2PatientListDuplicateDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate.SummaryDataQualityDuplicateDataset;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.reporting.ReportingConstants;
 import org.openmrs.module.reporting.ReportingException;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
+import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.ReportDesign;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +48,10 @@ public class SetupDataQualityDuplicateReport extends EptsDataExportManager {
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
 
+  @Autowired private DatimCodeDataSet datimCodeDataset;
+
+  @Autowired private SismaCodeDataSet sismaCodeDataset;
+
   @Override
   public String getExcelDesignUuid() {
     return "3784716d-c6a5-49ca-b25c-14f804eb4f6e";
@@ -54,12 +64,12 @@ public class SetupDataQualityDuplicateReport extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "RELATÓRIO DE QUALIDADE DE DADOS PARA POTENCIAIS DUPLICAÇÕES";
+    return "Relatório de Qualidade de Dados para Identificar Potenciais Duplicações de NIDs-Pacientes";
   }
 
   @Override
   public String getDescription() {
-    return "Este relatório gera uma listagem de pacientes que atendem a determinadas verificações/validações dos dados existentes no sistema, e permite que os utilizadores confirmem as informações de modo a corrigir os registos duplicados no sistema OpenMRS EPTS";
+    return "Este relatório gera uma listagem de pacientes que atendem a determinadas verificações/validações dos dados existentes no sistema, e permite que os utilizadores confirmem as informações de modo a corrigir os registos duplicados no sistema SESP.";
   }
 
   @Override
@@ -68,19 +78,31 @@ public class SetupDataQualityDuplicateReport extends EptsDataExportManager {
     rd.setUuid(getUuid());
     rd.setName(getName());
     rd.setDescription(getDescription());
+    rd.addParameters(getDataParameters());
 
     rd.addDataSetDefinition(
         "SD",
         Mapped.mapStraightThrough(
-            summaryDataQualityDuplicateDataset.constructSummaryDataQualityDatset()));
+            summaryDataQualityDuplicateDataset.constructSummaryDataQualityDatset(
+                getDataParameters())));
+
+    rd.addDataSetDefinition(
+        "D",
+        Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
+
+    rd.addDataSetDefinition(
+        "SC",
+        Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
 
     rd.addDataSetDefinition(
         "ECD1",
-        Mapped.mapStraightThrough(ec1PatientListDuplicateDataset.ec1PatientDuplicateListDataset()));
+        Mapped.mapStraightThrough(
+            ec1PatientListDuplicateDataset.ec1PatientDuplicateListDataset(getDataParameters())));
 
     rd.addDataSetDefinition(
         "ECD2",
-        Mapped.mapStraightThrough(ec2PatientListDuplicateDataset.ec1PatientDuplicateListDataset()));
+        Mapped.mapStraightThrough(
+            ec2PatientListDuplicateDataset.ec2PatientDuplicateListDataset(getDataParameters())));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(
@@ -103,7 +125,7 @@ public class SetupDataQualityDuplicateReport extends EptsDataExportManager {
           createXlsReportDesign(
               reportDefinition,
               "Data_Quality_Duplicates_Report.xls",
-              "RELATÓRIO DE QUALIDADE DE DADOS PARA POTENCIAIS DUPLICAÇÕES",
+              "Relatório de Qualidade de Dados para Identificar Potenciais Duplicações de NIDs-Pacientes",
               getExcelDesignUuid(),
               null);
       Properties props = new Properties();
@@ -116,5 +138,14 @@ public class SetupDataQualityDuplicateReport extends EptsDataExportManager {
     }
 
     return Arrays.asList(reportDesign);
+  }
+
+  private List<Parameter> getDataParameters() {
+    List<Parameter> parameters = new ArrayList<Parameter>();
+    parameters.add(ReportingConstants.START_DATE_PARAMETER);
+    parameters.add(ReportingConstants.END_DATE_PARAMETER);
+    parameters.add(new Parameter("location", "Unidade Sanitária", Location.class));
+
+    return parameters;
   }
 }

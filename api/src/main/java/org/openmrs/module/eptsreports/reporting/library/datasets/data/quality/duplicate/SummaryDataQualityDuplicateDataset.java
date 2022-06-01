@@ -1,11 +1,13 @@
 package org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate;
 
+import java.util.List;
 import org.openmrs.module.eptsreports.reporting.library.datasets.BaseDataSet;
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
+import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,14 +20,15 @@ public class SummaryDataQualityDuplicateDataset extends BaseDataSet {
 
   @Autowired private EC2PatientListDuplicateDataset eC2PatientListDuplicateDataset;
 
-  public DataSetDefinition constructSummaryDataQualityDatset() {
+  public DataSetDefinition constructSummaryDataQualityDatset(List<Parameter> parameterList) {
     CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
     dsd.setName("Data Quality Duplicated Summary Dataset");
-    final String mappings = "";
+    dsd.addParameters(parameterList);
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     final CohortDefinition summaryCohortQueryEC1 = eC1PatientListDuplicateDataset.getEC1Total();
 
-    final CohortDefinition summaryCohortQueryEC2 = eC2PatientListDuplicateDataset.getEC1Total();
+    final CohortDefinition summaryCohortQueryEC2 = eC2PatientListDuplicateDataset.getEC2Total();
 
     dsd.addColumn(
         "EC1D-TOTAL",
