@@ -73,8 +73,8 @@ public class TXTBCohortQueries {
         this.genericCohortQueries.generalSql(
             "pulmonaryTBeWithinReportingDate",
             TXTBQueries.dateObsByObsDateTimeClausule(
+                this.hivMetadata.getOtherDiagnosis().getConceptId(),
                 this.tbMetadata.getPulmonaryTB().getConceptId(),
-                this.hivMetadata.getYesConcept().getConceptId(),
                 this.hivMetadata.getMasterCardEncounterType().getEncounterTypeId()));
     this.addGeneralParameters(definition);
     return definition;
