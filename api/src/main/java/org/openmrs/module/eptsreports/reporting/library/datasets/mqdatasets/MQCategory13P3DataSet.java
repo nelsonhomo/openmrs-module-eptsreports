@@ -149,7 +149,7 @@ public class MQCategory13P3DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueries13_3
-                    .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5_DroppedOutART(),
+                    .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5(),
                 "CAT13_PART_3_13_14_DENOMINATOR",
                 mappings),
             mappings),

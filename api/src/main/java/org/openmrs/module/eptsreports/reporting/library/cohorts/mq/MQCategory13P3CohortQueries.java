@@ -421,58 +421,6 @@ public class MQCategory13P3CohortQueries {
       findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("Category13_3_Denominador_13_5");
-    definition.addParameter(
-        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
-    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
-    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
-    definition.addParameter(new Parameter("location", "location", Date.class));
-
-    final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
-
-    definition.addSearch(
-        "TRANSFERED-IN",
-        EptsReportUtils.map(
-            mQCohortQueries
-                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
-            mappings));
-
-    definition.addSearch(
-        "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
-
-    definition.addSearch(
-        "B2",
-        EptsReportUtils.map(
-            this
-                .findAllPatientsWhoHaveTherapheuticLineSecondLineDuringInclusionPeriodCategory13P3B2NEWDenominator(),
-            mappings));
-
-    definition.addSearch(
-        "DEAD", EptsReportUtils.map(this.findAllPatientWhoAreDeadByEndOfRevisonPeriod(), mappings));
-
-    definition.addSearch(
-        "DEAD-AFTER-CHANGE-REGIMEN",
-        EptsReportUtils.map(
-            mQCohortQueries
-                .findPatientsWhoDeadARTDuringTheFirstSixMonthsAfterInitiatedSecondLineART(),
-            mappings));
-
-    definition.setCompositionString(
-        "(B2 NOT DEAD-AFTER-CHANGE-REGIMEN) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD)");
-
-    return definition;
-  }
-
-  /** 13.5. PATIENTS WHO DROPPED OUT ART */
-  @DocumentedDefinition(
-      value =
-          "findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5_DroppedOutART")
-  public CohortDefinition
-      findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5_DroppedOutART() {
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-
     definition.setName("Patients in second line who dropped out ART");
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
@@ -720,14 +668,14 @@ public class MQCategory13P3CohortQueries {
             mappings));
 
     definition.addSearch(
-        "DEAD-AFTER-REGIMEN-CHANGE",
+        "DROPPED-OUT-AFTER-REGIMEN-CHANGE",
         EptsReportUtils.map(
             mQCohortQueries
-                .findPatientsDeclaredDeadDuringTheFirstSixMonthsAfterChangeRegimenInFirstLineART(),
+                .findPatientsWhoDroppedOutARTDuringTheFirstSixMonthsOfRegimenChangeInFirstLine(),
             mappings));
 
     definition.setCompositionString(
-        "(((START-ART AND (G OR J)) NOT PREGNANT NOT BREASTFEEDING NOT DROPPED-OUT-AFTER-ART-INITIATED NOT DD) OR ((BI1 NOT B1E NOT DEAD-AFTER-REGIMEN-CHANGE) AND (H OR K ))) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DD)");
+        "(((START-ART AND (G OR J)) NOT PREGNANT NOT BREASTFEEDING NOT DROPPED-OUT-AFTER-ART-INITIATED NOT DD) OR ((BI1 NOT B1E NOT DROPPED-OUT-AFTER-REGIMEN-CHANGE) AND (H OR K ))) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DD)");
 
     return definition;
   }
@@ -755,10 +703,10 @@ public class MQCategory13P3CohortQueries {
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
-        "DENOMINATOR-B2-DROPPEDOUT",
+        "DENOMINATOR-B2",
         EptsReportUtils.map(
             this
-                .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5_DroppedOutART(),
+                .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5(),
             mappings));
 
     definition.addSearch(
@@ -775,7 +723,7 @@ public class MQCategory13P3CohortQueries {
                 .findAllPatientsWhoHaveClinicalConsultationAndEncounterDateTimeBetweenSecondTherapheuticLineDateCategory13_3_L_Numerator(),
             mappings));
 
-    definition.setCompositionString("DENOMINATOR-B2-DROPPEDOUT AND (I OR L)");
+    definition.setCompositionString("DENOMINATOR-B2 AND (I OR L)");
 
     return definition;
   }
