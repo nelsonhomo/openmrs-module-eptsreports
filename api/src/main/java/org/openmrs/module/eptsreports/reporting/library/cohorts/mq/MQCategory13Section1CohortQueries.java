@@ -9,10 +9,13 @@ import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinitio
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MQCategory13Section1CohortQueries {
+
+  @Autowired private MQCohortQueries mQCohortQueries;
 
   @DocumentedDefinition(value = "findPatientsWhoArePregnantCAT13Part1")
   public CohortDefinition findPatientsWhoArePregnantCAT13Part1() {
@@ -335,14 +338,24 @@ public class MQCategory13Section1CohortQueries {
         "D", EptsReportUtils.map(this.findPatientsWhoAreBreastfeedingCAT13Part1(), mappings));
 
     definition.addSearch(
-        "DROPPED-OUT",
+        "DROPPED-OUT-AFTER-ART-INITIATED",
         EptsReportUtils.map(
-            this.findPatientsWhoAbandonedARTInTheFirstSixMonthsOfARTStart(), mappings));
+            mQCohortQueries
+                .findAllPatientsWhoDroppedOutARTDuringTheFirstSixMonthsAfterInitiatedART(),
+            mappings));
 
     definition.addSearch(
         "REINITIATED-ART",
         EptsReportUtils.map(
-            this.findPatientsWhoReinitiatedARTForAtLeastSixMonthsWithoutDroppOutART(), mappings));
+            this
+                .findPatientsMarkedAsReinitiatedARTForAtLeastSixMonthsBeforeLastClinicalConsultation(),
+            mappings));
+
+    definition.addSearch(
+        "REINITIATED-ART-AND-DROPPED-OUT",
+        EptsReportUtils.map(
+            this.findPatientsMarkedAsReinitiatedARTAndDroppedOutARTInSixMonthsAfterReinitiated(),
+            mappings));
 
     definition.addSearch(
         "CHANGE-REGIMEN-IN-FIRST-LINE",
@@ -351,7 +364,7 @@ public class MQCategory13Section1CohortQueries {
             mappings));
 
     definition.setCompositionString(
-        "(B1 AND ((B2NEW NOT DROPPED-OUT) OR REINITIATED-ART OR (B3 NOT B3E NOT CHANGE-REGIMEN-IN-FIRST-LINE))) NOT B4E NOT B5E NOT C NOT D");
+        "(B1 AND ((B2NEW NOT DROPPED-OUT-AFTER-ART-INITIATED) OR (REINITIATED-ART NOT REINITIATED-ART-AND-DROPPED-OUT) OR (B3 NOT (B3E OR CHANGE-REGIMEN-IN-FIRST-LINE)))) NOT B4E NOT B5E NOT C NOT D");
 
     return definition;
   }
@@ -403,8 +416,32 @@ public class MQCategory13Section1CohortQueries {
   }
 
   @DocumentedDefinition(
-      value = "findPatientsWhoReinitiatedARTForAtLeastSixMonthsWithoutDroppOutART")
-  public CohortDefinition findPatientsWhoReinitiatedARTForAtLeastSixMonthsWithoutDroppOutART() {
+      value = "findPatientsMarkedAsReinitiatedARTForAtLeastSixMonthsBeforeLastClinicalConsultation")
+  public CohortDefinition
+      findPatientsMarkedAsReinitiatedARTForAtLeastSixMonthsBeforeLastClinicalConsultation() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "Patients who reinitiated ART 6 months before the last clinical consultation");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory13Section1QueriesInterface.QUERY
+            .findPatientsMarkedAsReinitiatedARTForAtLeastSixMonthsBeforeLastClinicalConsultation;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "findPatientsMarkedAsReinitiatedARTAndDroppedOutARTInSixMonthsAfterReinitiated")
+  public CohortDefinition
+      findPatientsMarkedAsReinitiatedARTAndDroppedOutARTInSixMonthsAfterReinitiated() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
@@ -416,7 +453,7 @@ public class MQCategory13Section1CohortQueries {
 
     String query =
         MQCategory13Section1QueriesInterface.QUERY
-            .findPatientsWhoReinitiatedARTForAtLeastSixMonthsWithoutDroppOutART;
+            .findPatientsMarkedAsReinitiatedARTAndDroppedOutARTInSixMonthsAfterReinitiated;
 
     definition.setQuery(query);
 

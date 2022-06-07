@@ -126,7 +126,7 @@ public class MQCategory13Section2CohortQueries {
             mappings));
 
     definition.setCompositionString(
-        "(B1 AND (B2NEWII NOT B2ENEW NOT SECOND-LINE-ART))  NOT (B4E OR B5E OR C OR D)");
+        "(B1 AND (B2NEWII NOT (B2ENEW OR SECOND-LINE-ART)))  NOT (B4E OR B5E OR C OR D)");
 
     return definition;
   }

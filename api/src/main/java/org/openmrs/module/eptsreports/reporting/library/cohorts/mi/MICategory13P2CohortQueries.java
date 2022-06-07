@@ -143,21 +143,13 @@ public class MICategory13P2CohortQueries {
     definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
     definition.addParameter(new Parameter("location", "location", Date.class));
 
-    final String mappings =
-        "startInclusionDate=${endRevisionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
-
     final String mappingsMI =
-        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-4m+1d},endInclusionDate=${endRevisionDate-3m},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
-        "START-ART",
+        "DENOMINATOR-13-15",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoAreNewlyEnrolledOnARTRF05(), mappingsMI));
-
-    definition.addSearch(
-        "PREGNANT",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappingsMI));
+            this.findPatientsWhoArePregnantWithCVInTARVCategory13P2Denumerator(), mappingsMI));
 
     definition.addSearch(
         "H",
@@ -166,24 +158,7 @@ public class MICategory13P2CohortQueries {
                 .findPatientsWhoAreRequestForLaboratoryInvestigationsInclusionPeriodCAT13DenumeratorP2ByB3(),
             mappingsMI));
 
-    definition.addSearch(
-        "BREASTFEEDING",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
-
-    definition.addSearch(
-        "TRANSFERED-IN",
-        EptsReportUtils.map(
-            this.mQCohortQueries
-                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
-            mappings));
-
-    definition.addSearch(
-        "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
-
-    definition.setCompositionString(
-        "(START-ART AND PREGNANT AND H) NOT (BREASTFEEDING OR TRANSFERED-OUT OR TRANSFERED-IN)");
+    definition.setCompositionString("(DENOMINATOR-13-15 AND H)");
     return definition;
   }
 
