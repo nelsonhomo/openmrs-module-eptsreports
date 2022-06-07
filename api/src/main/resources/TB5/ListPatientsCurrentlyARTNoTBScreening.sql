@@ -998,7 +998,8 @@ select             coorte12meses_final.patient_id as PATIENT_ID,
             left join
 
             (
-                 select     f.patient_id,f.encounter_datetime as encounter_datetime,
+               	select     
+                            f.patient_id,f.encounter_datetime as encounter_datetime,
                             @num_mdc := 1 + LENGTH(f.MDC) - LENGTH(REPLACE(f.MDC, ',', '')) AS MDC,  
                             SUBSTRING_INDEX(f.MDC, ',', 1) AS MDC1,  
                             IF(@num_mdc > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(f.MDC, ',', 2), ',', -1), '') AS MDC2,  
@@ -1006,40 +1007,52 @@ select             coorte12meses_final.patient_id as PATIENT_ID,
                             IF(@num_mdc > 3, SUBSTRING_INDEX(SUBSTRING_INDEX(f.MDC, ',', 4), ',', -1), '') AS MDC4, 
                             IF(@num_mdc > 4, SUBSTRING_INDEX(SUBSTRING_INDEX(f.MDC, ',', 5), ',', -1), '') AS MDC5
 
-                        from(
-                        select  p.patient_id,max(e.encounter_datetime) encounter_datetime,
-                                group_concat( case o.value_coded 
-                                 when  23730  then 'DISPENSA TRIMESTRAL (DT)'
-                                 when  23888  then 'DISPENSA SEMESTRAL'
-                                 when 165314  then 'DISPENSA ANUAL DE ARV'
-                                 when 165315  then 'DISPENSA DESCENTRALIZADA DE ARV'
-                                 when 165178  then 'DISPENSA COMUNITÁRIA VIA PROVEDOR'
-                                 when 165179  then 'DISPENSA COMUNITARIA VIA APE'
-                                 when 165264  then 'BRIGADAS MVEIS (DCBM)'
-                                 when 165265  then 'CLINICAS MOVEIS (DCCM)'
-                                 when  23725  then 'ABORDAGEM FAMILIAR (AF)'
-                                 when  23729  then 'FLUXO RÁPIDO (FR)'
-                                 when  23724  then 'GAAC'
-                                 when  23726  then 'CLUBES DE ADESÃO (CA)'
-                                 when 165316  then 'EXTENSAO DE HORARIO'
-                                 when 165317  then  'PARAGEM UNICA NO SECTOR DA TB'
-                                 when 165318  then 'PARAGEM UNICA NOS SERVICOS DE TARV' 
-                                 when 165319  then 'PARAGEM UNICA NO SAAJ'
-                                 when 165320  then  'PARAGEM UNICA NA SMI'
-                                 when 165321  then  'DOENCA AVANCADA POR HIV'
-                        else null end) as MDC
-                 from patient p 
-                        join encounter e on p.patient_id=e.patient_id
-                        join obs grupo on grupo.encounter_id=e.encounter_id 
-                        join obs o on o.encounter_id=e.encounter_id 
-                        join obs obsEstado on obsEstado.encounter_id=e.encounter_id
-                where   grupo.concept_id=165323 and o.concept_id=165174 and e.encounter_type in(6,9) and e.location_id= :location and
-                        obsEstado.concept_id=165322 and obsEstado.value_coded in(1256,1257) and obsEstado.voided=0 and o.voided=0 and grupo.voided=0
-                        and e.encounter_datetime <= CURDATE()
 
-                group by p.patient_id
-
-                )f
+                        from (     
+                        select f.patient_id,max(f.encounter_datetime) as encounter_datetime,group_concat(f.MDC) as MDC from 
+                        (
+                   
+	                   select  distinct e.patient_id,e.encounter_datetime encounter_datetime,
+									case o.value_coded
+	                                 when  23730  then 'DISPENSA TRIMESTRAL (DT)'
+	                                 when  23888  then 'DISPENSA SEMESTRAL'
+	                                 when 165314  then 'DISPENSA ANUAL DE ARV'
+	                                 when 165315  then 'DISPENSA DESCENTRALIZADA DE ARV'
+	                                 when 165178  then 'DISPENSA COMUNITÁRIA VIA PROVEDOR'
+	                                 when 165179  then 'DISPENSA COMUNITARIA VIA APE'
+	                                 when 165264  then 'BRIGADAS MVEIS (DCBM)'
+	                                 when 165265  then 'CLINICAS MOVEIS (DCCM)'
+	                                 when  23725  then 'ABORDAGEM FAMILIAR (AF)'
+	                                 when  23729  then 'FLUXO RÁPIDO (FR)'
+	                                 when  23724  then 'GAAC'
+	                                 when  23726  then 'CLUBES DE ADESÃO (CA)'
+	                                 when 165316  then 'EXTENSAO DE HORARIO'
+	                                 when 165317  then 'PARAGEM UNICA NO SECTOR DA TB'
+	                                 when 165318  then 'PARAGEM UNICA NOS SERVICOS DE TARV' 
+	                                 when 165319  then 'PARAGEM UNICA NO SAAJ'
+	                                 when 165320  then  'PARAGEM UNICA NA SMI'
+	                                 when 165321  then  'DOENCA AVANCADA POR HIV'
+	                        else null end  as MDC
+	                 from  encounter e  
+	                        join obs grupo on grupo.encounter_id=e.encounter_id 
+	                        join obs o on o.encounter_id=e.encounter_id 
+	                        join obs obsEstado on obsEstado.encounter_id=e.encounter_id
+	                where   grupo.concept_id=165323 
+	                        and o.concept_id=165174 
+	                        and e.encounter_type in(6,9) 
+	                        and e.location_id= :location 
+	                        and obsEstado.concept_id=165322 
+							and o.obs_group_id = grupo.obs_id  
+	                        and obsEstado.value_coded in(1256,1257) 
+	                        and obsEstado.voided=0 
+	                        and o.voided=0 
+	                        and grupo.voided=0
+	                        and e.encounter_datetime <= CURDATE()
+	                        )f
+	
+	                        group by f.patient_id,f.encounter_datetime
+	
+	                )f
             ) MDC on MDC.patient_id=coorte12meses_final.patient_id
             
             where
