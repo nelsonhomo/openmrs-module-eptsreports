@@ -300,8 +300,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     cd.addSearch(
         "iii",
         EptsReportUtils.map(
-            txtbCohortQueries.getPulmonaryTBWithinPreviousReportingDate(),
-            this.generalParameterMapping));
+            txtbCohortQueries.getPulmonaryTBWithinReportingDate(), this.generalParameterMapping));
 
     cd.addSearch(
         "iv",
