@@ -88,6 +88,24 @@ public class MICategory7CohortQueries {
             mappingsMI));
 
     definition.addSearch(
+        "A",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1(),
+            mappingsMI));
+
+    definition.addSearch(
+        "B",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientWhoAreTBScreeningSixMonthfterLastConsultationRF13_1(),
+            mappingsMI));
+
+    definition.addSearch(
+        "C",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientWhoAreTBTretmantSixMonthfterLastConsultationRF13_1(),
+            mappingsMI));
+
+    definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
             this.mQCohortQueries
@@ -109,7 +127,18 @@ public class MICategory7CohortQueries {
             this.mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
 
     definition.setCompositionString(
-        "(START-ART-A AND (START-TPI-INH-B4 OR START-TPI-3HP-B4)) NOT (TB-ACTIVE-CAT7-B1 OR TB-SCREENING-CAT7-B2 OR TB-TREATMENT-CAT7-B3 OR TRANSFERED-IN OR TRANSFERED-OUT OR PREGNANT OR BREASTFEEDING OR TB-ACTIVE-TPI-CAT7-H OR TB-TBSCREENING-TPI-CAT7-I OR TB-TREATMENT-TPI-CAT7-J)");
+        "(START-ART-A AND (START-TPI-INH-B4 OR START-TPI-3HP-B4)) "
+            + "NOT (TB-ACTIVE-CAT7-B1 "
+            + "OR TB-SCREENING-CAT7-B2 "
+            + "OR TB-TREATMENT-CAT7-B3 "
+            + "OR TRANSFERED-IN "
+            + "OR TRANSFERED-OUT "
+            + "OR PREGNANT "
+            + "OR BREASTFEEDING "
+            + "OR TB-ACTIVE-TPI-CAT7-H "
+            + "OR TB-TBSCREENING-TPI-CAT7-I "
+            + "OR TB-TREATMENT-TPI-CAT7-J "
+            + "OR A OR B OR C )");
 
     return definition;
   }
@@ -196,11 +225,6 @@ public class MICategory7CohortQueries {
             this.mQCohortQueries.findPatientWhoStartTPINHDuringPeriodCategory7(), mappingsMI));
 
     definition.addSearch(
-        "START-TPI-3HP-B4",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoStartTPI3HPDuringPeriodCategory7(), mappingsMI));
-
-    definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
             this.mQCohortQueries
@@ -247,7 +271,7 @@ public class MICategory7CohortQueries {
             mappingsMI));
 
     definition.setCompositionString(
-        "((PREGNANT  AND START-ART-A) AND (START-TPI-INH-B4 OR START-TPI-3HP-B4)) NOT (TB-ACTIVE-CAT7-B1 OR TB-SCREENING-CAT7-B2 OR TB-TREATMENT-CAT7-B3 OR TRANSFERED-IN OR TRANSFERED-OUT OR TB-ACTIVE-TPI-CAT7-H OR TB-TBSCREENING-TPI-CAT7-I OR TB-TREATMENT-TPI-CAT7-J)");
+        "(PREGNANT AND START-ART-A AND START-TPI-INH-B4) NOT (TB-ACTIVE-CAT7-B1 OR TB-SCREENING-CAT7-B2 OR TB-TREATMENT-CAT7-B3 OR TRANSFERED-IN OR TRANSFERED-OUT OR TB-ACTIVE-TPI-CAT7-H OR TB-TBSCREENING-TPI-CAT7-I OR TB-TREATMENT-TPI-CAT7-J)");
 
     return definition;
   }
@@ -287,12 +311,7 @@ public class MICategory7CohortQueries {
         EptsReportUtils.map(
             this.mQCohortQueries.findPatientWhoCompleteTPIINHCategory7(), mappingsMI));
 
-    definition.addSearch(
-        "END-TPI-3HP-G",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoCompleteTPI3HPCategory7(), mappingsMI));
-
-    definition.setCompositionString("RF29-DENOMINATOR AND (END-TPI-INH-G OR END-TPI-3HP-G)");
+    definition.setCompositionString("RF29-DENOMINATOR AND END-TPI-INH-G");
 
     return definition;
   }
@@ -519,12 +538,7 @@ public class MICategory7CohortQueries {
         EptsReportUtils.map(
             this.mQCohortQueries.findPatientWhoStartTPINHDuringPeriodCategory7(), mappingsMI));
 
-    definition.addSearch(
-        "START-TPI-3HP-B4",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoStartTPI3HPDuringPeriodCategory7(), mappingsMI));
-
-    definition.setCompositionString("RF23-DENOMINATOR AND (START-TPI-INH-B4 OR START-TPI-3HP-B4)");
+    definition.setCompositionString("RF23-DENOMINATOR AND (START-TPI-INH-B4)");
 
     return definition;
   }

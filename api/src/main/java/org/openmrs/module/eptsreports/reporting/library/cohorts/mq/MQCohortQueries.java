@@ -1215,4 +1215,61 @@ public class MQCohortQueries {
 
     return definition;
   }
+
+  @DocumentedDefinition(value = "findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1")
+  public CohortDefinition findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQQueriesInterface.QUERY.findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientWhoAreTBScreeningSixMonthfterLastConsultationRF13_1")
+  public CohortDefinition findPatientWhoAreTBScreeningSixMonthfterLastConsultationRF13_1() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientWhoAreTBScreeningSixMonthfterLastConsultationRF13_1");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQQueriesInterface.QUERY.findPatientWhoAreTBScreeningSixMonthfterLastConsultationRF13_1;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientWhoAreTBTretmantSixMonthfterLastConsultationRF13_1")
+  public CohortDefinition findPatientWhoAreTBTretmantSixMonthfterLastConsultationRF13_1() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientWhoAreTBTretmantSixMonthfterLastConsultationRF13_1");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQQueriesInterface.QUERY.findPatientWhoAreTBTretmantSixMonthfterLastConsultationRF13_1;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
 }
