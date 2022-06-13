@@ -1,25 +1,50 @@
-package org.openmrs.module.eptsreports.reporting.library.queries.mq;
+package org.openmrs.module.eptsreports.reporting.library.queries.mi;
 
-public interface MQCategory11P2QueriesInterface {
+public interface MICategory11QueriesInterface {
+
   class QUERY {
-    public static final String findPatientsWhoArePregnantDuringInclusionPeriodByB3 =
-        " SELECT tx_new.patient_id FROM ( "
-            + " SELECT patient_id, MIN(art_start_date) art_start_date FROM ( "
-            + " SELECT p.patient_id, MIN(value_datetime) art_start_date FROM patient p "
-            + " INNER JOIN encounter e ON p.patient_id = e.patient_id "
-            + " INNER JOIN obs o ON e.encounter_id = o.encounter_id "
-            + " WHERE p.voided = 0 AND e.voided = 0 AND o.voided = 0 AND e.encounter_type = 53 "
-            + " AND o.concept_id = 1190 AND o.value_datetime is NOT NULL AND o.value_datetime <= :endInclusionDate AND e.location_id = :location "
-            + " GROUP BY p.patient_id "
-            + " ) art_start "
-            + " GROUP BY patient_id "
-            + " ) tx_new "
-            + " INNER JOIN encounter e ON e.patient_id = tx_new.patient_id AND e.voided = 0 AND e.encounter_type = 6  AND e.location_id = :location "
-            + " INNER JOIN obs o ON o.encounter_id = e.encounter_id AND o.concept_id = 1982 AND o.value_coded = 1065 AND o.voided = 0 "
-            + " INNER JOIN person pe ON tx_new.patient_id = pe.person_id "
-            + " WHERE tx_new.art_start_date BETWEEN :startInclusionDate AND :endInclusionDate "
-            + " AND tx_new.art_start_date = e.encounter_datetime "
-            + " AND pe.voided = 0 and pe.gender = 'F' ";
+
+    public static final String
+        findPatientsWhoHaveAtLeast3APSSConsultationIn99DaysAfterInitiatedART =
+            "SELECT patient_id from ( "
+                + "select tx_new.patient_id, count(apss.patient_id) apss_count "
+                + "from ( "
+                + "	select patient_id, min(art_start_date) art_start_date "
+                + "	from ( "
+                + "		select p.patient_id, min(value_datetime) art_start_date "
+                + " 		from patient p "
+                + " 			join encounter e on p.patient_id=e.patient_id "
+                + " 			join obs o on e.encounter_id=o.encounter_id "
+                + " 		where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=53 "
+                + " 			and o.concept_id=1190 and o.value_datetime is not null "
+                + "			and o.value_datetime<=:endInclusionDate and e.location_id=:location "
+                + " 		group by p.patient_id "
+                + " 	) art_start "
+                + " 	group by patient_id) tx_new "
+                + " 	inner join "
+                + " 	(select p.patient_id, e.encounter_datetime "
+                + " 	from patient p "
+                + "	 	join encounter e on e.patient_id = p.patient_id "
+                + "	where p.voided=0 and e.voided=0 and e.encounter_type = 35 "
+                + "	 	and e.encounter_datetime and e.location_id=:location "
+                + "	) apss on apss.patient_id = tx_new.patient_id "
+                + "where tx_new.art_start_date between :startInclusionDate and :endInclusionDate and apss.encounter_datetime between tx_new.art_start_date and date_add(tx_new.art_start_date, INTERVAL 99 DAY) "
+                + "group by tx_new.patient_id "
+                + "having apss_count >=3 "
+                + ") apss ";
+
+    public static final String findPatientWithCVOver1000CopiesRegistredInClinicalConsultation =
+        " select patient_id from ( "
+            + " select carga_viral.patient_id, min(data_carga) data_carga from ( "
+            + " Select p.patient_id, min(e.encounter_datetime) data_carga from patient p "
+            + " inner join encounter e on p.patient_id = e.patient_id "
+            + " inner join obs o on e.encounter_id=o.encounter_id "
+            + " where p.voided = 0 and e.voided = 0 and o.voided = 0 and e.encounter_type = 6 and  o.concept_id = 856 and "
+            + " DATE(e.encounter_datetime) between :startInclusionDate and :endInclusionDate and e.location_id = :location and o.value_numeric >= 1000 "
+            + " group by p.patient_id "
+            + " ) carga_viral "
+            + " group by carga_viral.patient_id "
+            + " ) final ";
 
     public static final String
         findPatientsWhoHasCVBiggerThan1000AndMarkedAsPregnantInTheSameClinicalConsultation =
@@ -51,7 +76,7 @@ public interface MQCategory11P2QueriesInterface {
                 + " inner join obs o on e.encounter_id=o.encounter_id "
                 + " where 	p.voided = 0 and e.voided = 0 and o.voided = 0 and e.encounter_type = 6 and  o.concept_id = 856 and "
                 + " DATE(e.encounter_datetime) between :startInclusionDate and :endInclusionDate  and e.location_id = :location and o.value_numeric >= 1000 "
-                + " group by p.patient_id  "
+                + " group by p.patient_id "
                 + " ) primeiraCVAlta "
                 + " inner join encounter consultaLactante on consultaLactante.patient_id = primeiraCVAlta.patient_id "
                 + " inner join obs obsLactante on consultaLactante.encounter_id = obsLactante.encounter_id "

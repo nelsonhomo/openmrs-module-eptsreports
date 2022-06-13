@@ -53,7 +53,7 @@ public class MICategory11DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory11CohortQueries
-                    .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory11Denominator(),
+                    .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTRANSFEREDOUTWITH1000CVCategory11Denominator(),
                 "CAT11Adulto1000CVDENOMINATOR",
                 mappings),
             mappings),
@@ -66,7 +66,7 @@ public class MICategory11DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory11CohortQueries
-                    .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory11NUMERATOR(),
+                    .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTRANSFEREDOUTWITH1000CVCategory11NUMERATOR(),
                 "CAT11Adulto1000CVNUMERATOR",
                 mappings),
             mappings),
@@ -131,7 +131,7 @@ public class MICategory11DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory11CohortQueries
-                    .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory11Denominator(),
+                    .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTRANSFEREDOUTWITH1000CVCategory11Denominator(),
                 "CAT11Children1000CVDENOMINATOR",
                 mappings),
             mappings),
@@ -144,7 +144,7 @@ public class MICategory11DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory11CohortQueries
-                    .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory11NUMERATOR(),
+                    .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTRANSFEREDOUTWITH1000CVCategory11NUMERATOR(),
                 "CAT11Children1000CVNUMERATOR",
                 mappings),
             mappings),
@@ -183,7 +183,7 @@ public class MICategory11DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory11P2CohortQueries
-                    .findPregnantOnARTStartedExcludingBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory11DenominatorP2(),
+                    .findPregnantOnARTStartedExcludingBreastfeedingAndTRANSFEREDOUTWITH1000CVCategory11DenominatorP2(),
                 "CAT11PREGNANT1000CVDENOMINATOR",
                 mappings),
             mappings),
@@ -196,7 +196,7 @@ public class MICategory11DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory11P2CohortQueries
-                    .findPregnantOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory11NUMERATOR(),
+                    .findPregnantOnARTStartedExcludingPregantAndBreastfeedingAndTRANSFEREDOUTWITH1000CVCategory11NUMERATOR(),
                 "CAT11PREGNANT1000CVNUMINATOR",
                 mappings),
             mappings),
