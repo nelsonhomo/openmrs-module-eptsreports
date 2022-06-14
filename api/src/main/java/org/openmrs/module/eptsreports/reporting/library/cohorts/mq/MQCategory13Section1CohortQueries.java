@@ -338,10 +338,10 @@ public class MQCategory13Section1CohortQueries {
         "D", EptsReportUtils.map(this.findPatientsWhoAreBreastfeedingCAT13Part1(), mappings));
 
     definition.addSearch(
-        "DROPPED-OUT-AFTER-ART-INITIATED",
+        "DROPPEDOUT-FIRSTLINE",
         EptsReportUtils.map(
             mQCohortQueries
-                .findAllPatientsWhoDroppedOutARTDuringTheFirstSixMonthsAfterInitiatedART(),
+                .findAllPatientsWhoDroppedOutARTDuringTheLastSixMonthsAfterInitiatedARTFirstLine(),
             mappings));
 
     definition.addSearch(
@@ -364,7 +364,7 @@ public class MQCategory13Section1CohortQueries {
             mappings));
 
     definition.setCompositionString(
-        "(B1 AND ((B2NEW NOT DROPPED-OUT-AFTER-ART-INITIATED) OR (REINITIATED-ART NOT REINITIATED-ART-AND-DROPPED-OUT) OR (B3 NOT (B3E OR CHANGE-REGIMEN-IN-FIRST-LINE)))) NOT B4E NOT B5E NOT C NOT D");
+        "(B1 AND ((B2NEW NOT DROPPEDOUT-FIRSTLINE) OR (REINITIATED-ART NOT REINITIATED-ART-AND-DROPPED-OUT) OR (B3 NOT (B3E OR CHANGE-REGIMEN-IN-FIRST-LINE)))) NOT B4E NOT B5E NOT C NOT D");
 
     return definition;
   }
