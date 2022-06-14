@@ -1054,7 +1054,8 @@ select             coorte12meses_final.patient_id
             left join
 
             (
-                select     
+                        
+                         select     
                             f.patient_id,f.encounter_datetime as encounter_datetime,
                             @num_mdc := 1 + LENGTH(f.MDC) - LENGTH(REPLACE(f.MDC, ',', '')) AS MDC,  
                             SUBSTRING_INDEX(f.MDC, ',', 1) AS MDC1,  
@@ -1062,11 +1063,9 @@ select             coorte12meses_final.patient_id
                             IF(@num_mdc > 2, SUBSTRING_INDEX(SUBSTRING_INDEX(f.MDC, ',', 3), ',', -1), '') AS MDC3,  
                             IF(@num_mdc > 3, SUBSTRING_INDEX(SUBSTRING_INDEX(f.MDC, ',', 4), ',', -1), '') AS MDC4, 
                             IF(@num_mdc > 4, SUBSTRING_INDEX(SUBSTRING_INDEX(f.MDC, ',', 5), ',', -1), '') AS MDC5
-
-
-                        from (     
-                        select f.patient_id,max(f.encounter_datetime) as encounter_datetime,group_concat(f.MDC) as MDC from 
-                        (
+                         from (   
+                           select f.patient_id,max(f.encounter_datetime) as encounter_datetime,group_concat(f.MDC) as MDC from 
+                            (
                    
                            select  distinct e.patient_id,e.encounter_datetime encounter_datetime,
                                                                         case o.value_coded
@@ -1098,18 +1097,19 @@ select             coorte12meses_final.patient_id
                                 and e.encounter_type in(6,9) 
                                 and e.location_id= :location 
                                 and obsEstado.concept_id=165322 
-                                                        and o.obs_group_id = grupo.obs_id  
+                                and o.obs_group_id = grupo.obs_id  
                                 and obsEstado.value_coded in(1256,1257) 
                                 and obsEstado.voided=0 
                                 and o.voided=0 
                                 and grupo.voided=0
                                 and e.encounter_datetime <= CURDATE()
+                                order by e.encounter_datetime
                                 )f
-        
-                                group by f.patient_id,f.encounter_datetime
-        
-                        )f
-            ) MDC on MDC.patient_id=coorte12meses_final.patient_id
+                                group by f.patient_id,f.encounter_datetime  order by f.encounter_datetime desc
+                                )f
+                          group by f.patient_id order by @num_mdc                        
+                          
+                          ) MDC on MDC.patient_id=coorte12meses_final.patient_id
             
             where
 
