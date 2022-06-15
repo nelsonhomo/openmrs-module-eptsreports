@@ -211,7 +211,7 @@ select             coorte12meses_final.patient_id
             left join   ( 
             select pad1.*  from person_address pad1  
             inner join   (  
-            select person_id,min(person_address_id) id   from person_address  
+            select person_id,max(person_address_id) id   from person_address  
             where voided=0  
             group by person_id  
             ) pad2  
