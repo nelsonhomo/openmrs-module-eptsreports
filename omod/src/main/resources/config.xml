@@ -1746,9 +1746,9 @@
 	</globalProperty>
 	
 	<globalProperty>
-		<property>eptsoldreports.ad418753-8a1c-4f5f-8c61-5599369bd5d2</property>
-		<defaultValue>ad418753-8a1c-4f5f-8c61-5599369bd5d2</defaultValue>
-		<description>Report to be Deleted:Number of All Transfers Report</description>
+		<property>eptsoldreports.b39c4c4c-4881-11e7-a919-92ebcb67fe33</property>
+		<defaultValue>b39c4c4c-4881-11e7-a919-92ebcb67fe33</defaultValue>
+		<description>Report to be Deleted:Number of Transfers Report</description>
 	</globalProperty>
 	
 	<globalProperty>
