@@ -14,7 +14,6 @@ public class MICategory11DataSet extends MQAbstractDataSet {
 
   @Autowired private MICategory11CohortQueries miCategory11CohortQueries;
   @Autowired private MICategory11P2CohortQueries miCategory11P2CohortQueries;
-
   @Autowired private MQGenericCohortQueries mQGenericCohortQueries;
 
   public void constructTMiDatset(
