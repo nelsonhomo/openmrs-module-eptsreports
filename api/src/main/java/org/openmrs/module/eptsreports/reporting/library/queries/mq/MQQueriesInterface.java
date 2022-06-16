@@ -316,7 +316,7 @@ public interface MQQueriesInterface {
         "select DISTINCT patient_id from ( "
             + "select B4_1_2.patient_id, B4_1_2.dataInicioTPI, obsFimTPI.obs_datetime dataFimTPI,  "
             + "obsTBActiva.obs_datetime dataTBActiva, obsRastreio.obs_datetime dataRastreioPositivo, obsTB.obs_datetime dataTB from (  "
-            + "SELECT patient_id, MAX(dataInicioTPI) dataInicioTPI FROM (  "
+            + " SELECT patient_id, MAX(dataInicioTPI) dataInicioTPI FROM (  "
             + " SELECT p.patient_id,MAX(obsStart.value_datetime) dataInicioTPI FROM patient p "
             + " INNER JOIN encounter e ON e.patient_id = p.patient_id "
             + " INNER JOIN obs obsTPI ON obsTPI.encounter_id = e.encounter_id "
