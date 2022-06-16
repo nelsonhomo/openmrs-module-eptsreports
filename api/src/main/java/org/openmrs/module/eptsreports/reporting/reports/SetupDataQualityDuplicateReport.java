@@ -54,7 +54,7 @@ public class SetupDataQualityDuplicateReport extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "Relatório de Qualidade de Dados para Identificar Potenciais Duplicações de NIDs-Pacientes";
+    return "RQD3: Relatório de Qualidade de Dados para Identificar Potenciais Duplicações de NIDs-Pacientes";
   }
 
   @Override
