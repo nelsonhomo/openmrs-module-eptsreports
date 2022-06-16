@@ -211,10 +211,10 @@ public class MQCategory7CohortQueries {
             mappings));
 
     definition.setCompositionString(
-        "(START-ART-A AND (START-TPI-INH OR START-TPI-3HP)) "
-            + "NOT (TB-ACTIVE-CAT7-B1 "
-            + "OR TB-SCREENING-CAT7-B2 "
-            + "OR TB-TREATMENT-CAT7-B3 "
+        "(START-ART AND (START-TPI-INH OR START-TPI-3HP)) "
+            + "NOT (TB-ACTIVE-CAT7  "
+            + "OR TB-SCREENING-CAT7 "
+            + "OR TB-TREATMENT-CAT7 "
             + "OR TRANSFERED-IN "
             + "OR TRANSFERED-OUT "
             + "OR PREGNANT "

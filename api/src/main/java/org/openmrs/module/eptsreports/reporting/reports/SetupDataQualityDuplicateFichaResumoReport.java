@@ -62,7 +62,7 @@ public class SetupDataQualityDuplicateFichaResumoReport extends EptsDataExportMa
 
   @Override
   public String getName() {
-    return "Relatório De Qualidade De Dados Para Identificar Fichas Resumo Duplicadas";
+    return "RQD2: Relatório De Qualidade De Dados Para Identificar Fichas Resumo Duplicadas";
   }
 
   @Override

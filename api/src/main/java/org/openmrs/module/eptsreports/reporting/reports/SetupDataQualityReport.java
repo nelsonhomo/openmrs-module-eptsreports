@@ -197,7 +197,7 @@ public class SetupDataQualityReport extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "Relatório de Qualidade de Dados";
+    return "RQD1: Relatório de Qualidade de Dados";
   }
 
   @Override

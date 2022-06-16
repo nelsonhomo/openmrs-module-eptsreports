@@ -11,9 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ListPatientsCurrentlyARTNoTBScreeningCohortQueries {
 
-  private static final String TB5 = "TB5/ListPatientsCurrentlyARTNoTBScreeningSummary.sql";
-  private static final String TB5_WITH_FC = "TB5/TB5_WITH_FC.sql";
-  private static final String TB5_WITHOUT_FC = "TB5/TB5_WITHOUT_FC.sql";
+  private static final String TB5_SUMMARY = "TB5/ListPatientsCurrentlyARTNoTBScreeningSummary.sql";
+  private static final String TB5_WITH_CLINICAL_CONSULTATION =
+      "TB5/ListPatientsCurrentlyARTNoTBScreeningWithClinicalConsultation.sql";
+  private static final String TB5_WITHOUT_CLINICAL_CONSULTATION =
+      "TB5/ListPatientsCurrentlyARTNoTBScreeningWithouClinicalConsultation.sql";
 
   public CohortDefinition findPatientsWhoActiveOnARTAndNotHaveTBScreening() {
 
@@ -23,7 +25,7 @@ public class ListPatientsCurrentlyARTNoTBScreeningCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String query = EptsQuerysUtils.loadQuery(TB5);
+    String query = EptsQuerysUtils.loadQuery(TB5_SUMMARY);
 
     definition.setQuery(query);
 
@@ -40,7 +42,7 @@ public class ListPatientsCurrentlyARTNoTBScreeningCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String query = EptsQuerysUtils.loadQuery(TB5_WITH_FC);
+    String query = EptsQuerysUtils.loadQuery(TB5_WITH_CLINICAL_CONSULTATION);
 
     definition.setQuery(query);
 
@@ -55,7 +57,7 @@ public class ListPatientsCurrentlyARTNoTBScreeningCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String query = EptsQuerysUtils.loadQuery(TB5_WITHOUT_FC);
+    String query = EptsQuerysUtils.loadQuery(TB5_WITHOUT_CLINICAL_CONSULTATION);
 
     definition.setQuery(query);
 
