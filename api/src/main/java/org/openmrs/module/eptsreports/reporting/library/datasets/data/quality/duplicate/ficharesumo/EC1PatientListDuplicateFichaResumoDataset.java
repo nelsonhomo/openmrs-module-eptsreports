@@ -11,12 +11,11 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate;
+package org.openmrs.module.eptsreports.reporting.library.datasets.data.quality.duplicate.ficharesumo;
 
-import java.util.Date;
-import org.openmrs.Location;
+import java.util.List;
 import org.openmrs.module.eptsreports.reporting.library.datasets.BaseDataSet;
-import org.openmrs.module.eptsreports.reporting.library.queries.data.quality.duplicate.EC1DuplicateQueries;
+import org.openmrs.module.eptsreports.reporting.library.queries.data.quality.duplicate.ficharesumo.EC1DuplicateFichaResumoQueries;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
@@ -25,24 +24,24 @@ import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EC1PatientListDuplicateDataset extends BaseDataSet {
+public class EC1PatientListDuplicateFichaResumoDataset extends BaseDataSet {
 
-  public DataSetDefinition ec1PatientDuplicateListDataset() {
+  public DataSetDefinition ec1PatientWithDuplicatedFichaResumoListDataset(
+      List<Parameter> parameterList) {
     SqlDataSetDefinition dsd = new SqlDataSetDefinition();
     dsd.setName("EC1");
-    dsd.setSqlQuery(EC1DuplicateQueries.QUERY.findPatiendsWithDuplicatedNID);
+    dsd.addParameters(parameterList);
+    dsd.setSqlQuery(EC1DuplicateFichaResumoQueries.QUERY.findPatiendsWithDuplicatedFichaResumo);
 
     return dsd;
   }
 
-  public CohortDefinition getEC1Total() {
+  public CohortDefinition getEC1Total(List<Parameter> parameterList) {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
     definition.setName("EC1");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "Location", Location.class));
-    definition.setQuery(EC1DuplicateQueries.QUERY.getEc1Total);
+    definition.addParameters(parameterList);
+    definition.setQuery(EC1DuplicateFichaResumoQueries.QUERY.getEc1Total);
 
     return definition;
   }
