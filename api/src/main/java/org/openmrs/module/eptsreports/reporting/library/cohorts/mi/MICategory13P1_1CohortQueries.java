@@ -30,7 +30,7 @@ public class MICategory13P1_1CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate-1m},location=${location}";
 
     definition.addSearch(
         "B1",
@@ -68,7 +68,9 @@ public class MICategory13P1_1CohortQueries {
     definition.addSearch(
         "B5E",
         EptsReportUtils.map(
-            MQCategory13Section1CohortQueries.findPatientsWithRequestCVDenominatorB5E(), mappings));
+            MQCategory13Section1CohortQueries
+                .findPatientsWithRequestCVInTheLast12MonthsBeforeLastConsultation(),
+            mappings));
 
     definition.addSearch(
         "C",
