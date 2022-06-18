@@ -106,7 +106,7 @@ public class SetupDQAReport extends EptsDataExportManager {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "AQD _Carga_Viral_MISAU.xls",
+              "DQA_Carga_Viral_MISAU.xls",
               "AQD HIV MISAU",
               getExcelDesignUuid(),
               null);
