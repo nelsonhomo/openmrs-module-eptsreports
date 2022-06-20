@@ -2,6 +2,7 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts.mi;
 
 import java.util.Date;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCategory13Section1CohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCohortQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class MICategory13P1_1CohortQueries {
 
   @Autowired private MQCategory13Section1CohortQueries MQCategory13Section1CohortQueries;
+  @Autowired private MQCohortQueries mQCohortQueries;
 
   @DocumentedDefinition(value = "findDenominatorCategory13SectionIB")
   public CohortDefinition findDenominatorCategory13SectionIB() {
@@ -30,12 +32,18 @@ public class MICategory13P1_1CohortQueries {
     final String mappings =
         "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
 
+    final String mappingsMI =
+        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate-1m},location=${location}";
+
+    final String mappingsReinitiated =
+        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate-1m},location=${location}";
+
     definition.addSearch(
         "B1",
         EptsReportUtils.map(
             MQCategory13Section1CohortQueries
                 .findPatientsWithLastClinicalConsultationDenominatorB1(),
-            mappings));
+            mappingsMI));
 
     definition.addSearch(
         "B2NEW",
@@ -49,37 +57,68 @@ public class MICategory13P1_1CohortQueries {
         EptsReportUtils.map(
             MQCategory13Section1CohortQueries
                 .findPatientsWithLastClinicalConsultationwhoAreInLinhaAlternativaDenominatorB3(),
-            mappings));
+            mappingsMI));
 
     definition.addSearch(
         "B3E",
         EptsReportUtils.map(
             MQCategory13Section1CohortQueries
                 .findPatientsWithLastClinicalConsultationwhoAreDiferentFirstLineLinhaAternativaDenominatorB3E(),
-            mappings));
+            mappingsMI));
 
     definition.addSearch(
         "B4E",
         EptsReportUtils.map(
-            MQCategory13Section1CohortQueries.findPatientsWithCVDenominatorB4E(), mappings));
+            MQCategory13Section1CohortQueries.findPatientsWithCVDenominatorB4E(), mappingsMI));
 
     definition.addSearch(
         "B5E",
         EptsReportUtils.map(
-            MQCategory13Section1CohortQueries.findPatientsWithRequestCVDenominatorB5E(), mappings));
+            MQCategory13Section1CohortQueries
+                .findPatientsWithRequestCVInTheLast12MonthsBeforeLastConsultation(),
+            mappingsMI));
 
     definition.addSearch(
         "C",
         EptsReportUtils.map(
-            MQCategory13Section1CohortQueries.findPatientsWhoArePregnantCAT13Part1(), mappings));
+            MQCategory13Section1CohortQueries.findPatientsWhoArePregnantCAT13Part1(), mappingsMI));
 
     definition.addSearch(
         "D",
         EptsReportUtils.map(
             MQCategory13Section1CohortQueries.findPatientsWhoAreBreastfeedingCAT13Part1(),
+            mappingsMI));
+
+    definition.addSearch(
+        "DROPPEDOUT-FIRSTLINE",
+        EptsReportUtils.map(
+            mQCohortQueries
+                .findAllPatientsWhoDroppedOutARTDuringTheLastSixMonthsAfterInitiatedARTFirstLine(),
             mappings));
 
-    definition.setCompositionString("(B1 AND (B2NEW OR (B3 NOT B3E))) NOT B4E NOT B5E NOT C NOT D");
+    definition.addSearch(
+        "REINITIATED-ART",
+        EptsReportUtils.map(
+            MQCategory13Section1CohortQueries
+                .findPatientsMarkedAsReinitiatedARTForAtLeastSixMonthsBeforeLastClinicalConsultation(),
+            mappingsReinitiated));
+
+    definition.addSearch(
+        "REINITIATED-ART-AND-DROPPED-OUT",
+        EptsReportUtils.map(
+            MQCategory13Section1CohortQueries
+                .findPatientsMarkedAsReinitiatedARTAndDroppedOutARTInSixMonthsAfterReinitiated(),
+            mappingsReinitiated));
+
+    definition.addSearch(
+        "CHANGE-REGIMEN-IN-FIRST-LINE",
+        EptsReportUtils.map(
+            MQCategory13Section1CohortQueries
+                .findPatientsWhoAbandonedARTInTheFirstSixMonthsAfterChangeFirstLineRegimenART(),
+            mappingsMI));
+
+    definition.setCompositionString(
+        "(B1 AND ((B2NEW NOT DROPPEDOUT-FIRSTLINE) OR (REINITIATED-ART NOT REINITIATED-ART-AND-DROPPED-OUT) OR (B3 NOT (B3E OR CHANGE-REGIMEN-IN-FIRST-LINE)))) NOT B4E NOT B5E NOT C NOT D");
 
     return definition;
   }
@@ -99,13 +138,16 @@ public class MICategory13P1_1CohortQueries {
     final String mappings =
         "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
 
+    final String mappingsMI =
+        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate-1m},location=${location}";
+
     definition.addSearch(
         "Denominator", EptsReportUtils.map(this.findDenominatorCategory13SectionIB(), mappings));
 
     definition.addSearch(
         "G",
         EptsReportUtils.map(
-            MQCategory13Section1CohortQueries.findNumeratorCategory13Section1C(), mappings));
+            MQCategory13Section1CohortQueries.findNumeratorCategory13Section1C(), mappingsMI));
 
     definition.setCompositionString("(Denominator AND G)");
 

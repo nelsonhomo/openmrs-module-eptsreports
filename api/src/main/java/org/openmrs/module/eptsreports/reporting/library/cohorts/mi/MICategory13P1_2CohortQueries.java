@@ -75,7 +75,7 @@ public class MICategory13P1_2CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate-1m},location=${location}";
 
     definition.addSearch(
         "B1",
@@ -119,7 +119,15 @@ public class MICategory13P1_2CohortQueries {
             mQCategory13Section1CohortQueries.findPatientsWhoAreBreastfeedingCAT13Part1(),
             mappings));
 
-    definition.setCompositionString("(B1 AND (B2NEWII NOT B2ENEW))  NOT (B4E OR B5E OR C OR D)");
+    definition.addSearch(
+        "SECOND-LINE-ART",
+        EptsReportUtils.map(
+            mQCategory13Section1CohortQueries
+                .findPatientsWhoAbandonedARTInTheFirstSixMonthsAfterInitiatedSecondLineRegimenART(),
+            mappings));
+
+    definition.setCompositionString(
+        "(B1 AND (B2NEWII NOT (B2ENEW OR SECOND-LINE-ART)))  NOT (B4E OR B5E OR C OR D)");
 
     return definition;
   }
