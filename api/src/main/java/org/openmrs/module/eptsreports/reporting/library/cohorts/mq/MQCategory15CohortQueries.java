@@ -1736,7 +1736,7 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "P",
         EptsReportUtils.map(
-            mICategory15CohortQueries
+            this
                 .findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths(),
             mappings));
 
@@ -1782,6 +1782,30 @@ public class MQCategory15CohortQueries {
             mappings));
 
     definition.setCompositionString("(DENOMINATOR-15-15 AND I)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value =
+          "findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths")
+  public CohortDefinition
+      findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "MQ Category 15 - Get Patients with Pedido de Investigacoes Laboratoriais in the Last 3 Months of Last Consultation");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory15QueriesInterface.QUERY
+            .findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths;
+
+    definition.setQuery(query);
 
     return definition;
   }

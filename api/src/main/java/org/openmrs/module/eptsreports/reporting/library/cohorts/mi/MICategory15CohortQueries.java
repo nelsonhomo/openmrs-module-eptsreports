@@ -567,9 +567,9 @@ public class MICategory15CohortQueries {
 
   @DocumentedDefinition(
       value =
-          "findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths")
+          "findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLast12Months")
   public CohortDefinition
-      findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths() {
+      findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLast12Months() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
@@ -582,7 +582,7 @@ public class MICategory15CohortQueries {
 
     String query =
         MICategory15QueriesInterface.QUERY
-            .findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths;
+            .findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLast12Months;
 
     definition.setQuery(query);
 
@@ -627,7 +627,7 @@ public class MICategory15CohortQueries {
         "P",
         EptsReportUtils.map(
             this
-                .findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths(),
+                .findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLast12Months(),
             mappings));
 
     definition.setCompositionString("(A AND J AND B2) NOT P");

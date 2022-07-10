@@ -627,7 +627,7 @@ public interface MQCategory15QueriesInterface {
 
     public static final String findPatientsWhoOnARTAndHaveCVBiggerThan1000AndWhoSuspendTratment =
         "select result.patient_id from ( "
-            + "select cv.patient_id,cv.data_ultima_consulta,cv.data_cv,cv.valor, fila.data_levantamento,fila.data_proximo_levantamento, DATEDIFF(fila.data_proximo_levantamento,fila.data_levantamento),fila.encounter_id from "
+            + "select cv.patient_id, max(fila.data_levantamento) data_levantamento from "
             + "( "
             + "select maxEnc.patient_id,maxEnc.data_ultima_consulta, cvLab.data_cv,cvLab.valor from  ( "
             + "select p.patient_id, max(e.encounter_datetime) data_ultima_consulta FROM patient p "
@@ -645,21 +645,20 @@ public interface MQCategory15QueriesInterface {
             + "where maxEnc.data_ultima_consulta=cvLab.data_cv "
             + ")cv "
             + "inner join ( "
-            + "select fila.patient_id,max(fila.data_levantamento) data_levantamento,obs_fila.value_datetime data_proximo_levantamento,obs_fila.encounter_id  from  ( "
-            + "Select p.patient_id,max(encounter_datetime) data_levantamento,e.encounter_id  from  patient p "
+            + "select fila.patient_id,fila.data_levantamento,obs_fila.value_datetime data_proximo_levantamento  from  ( "
+            + "Select p.patient_id,encounter_datetime data_levantamento  from  patient p "
             + "inner join encounter e on e.patient_id=p.patient_id "
-            + "where  p.voided=0 and e.voided=0 and e.encounter_type=18 and e.location_id=:location and e.encounter_datetime<=:endRevisionDate "
-            + "group by p.patient_id "
+            + "where  p.voided=0 and e.voided=0 and e.encounter_type=18 and e.location_id=:location "
             + ")fila "
             + "inner join  obs obs_fila on obs_fila.person_id=fila.patient_id "
             + "and obs_fila.voided=0  and obs_fila.obs_datetime=fila.data_levantamento "
             + "and obs_fila.concept_id=5096 "
             + "and obs_fila.location_id=:location "
-            + "group by fila.patient_id "
             + ")fila "
-            + "where  (fila.data_levantamento>cv.data_ultima_consulta) and (DATEDIFF(fila.data_proximo_levantamento,fila.data_levantamento) >= 23) "
+            + "where  (fila.data_levantamento>=cv.data_ultima_consulta and fila.data_levantamento<=:endRevisionDate ) and (DATEDIFF(fila.data_proximo_levantamento,fila.data_levantamento) >= 23) "
             + "and (DATEDIFF(fila.data_proximo_levantamento,fila.data_levantamento) <=37) and cv.patient_id = fila.patient_id "
-            + ")result group by result.patient_id ";
+            + "group by  cv.patient_id "
+            + ")result ";
 
     public static final String
         findPatientsWithLastGaacOrLastDispensaTrimestralRegisteredInFichaClinicaWithinRevisionPeriodB1 =
@@ -1364,14 +1363,14 @@ public interface MQCategory15QueriesInterface {
 
     public static final String
         findPatientsRegisteredInOneMDSForStablePatientsAndHadCVBetween18And24nMonthsAfterCVLessThan1000 =
-            "			select distinct e.patient_id from "
+            "			select e.patient_id  from "
                 + "			( "
-                + "			 select ultimaCVAlta.patient_id, MAX(ultimaCVAlta.data_carga) as data_carga from "
+                + "			 select ultimaCVAlta.patient_id, MAX(ultimaCVAlta.data_carga) as data_carga  from "
                 + "			 (Select p.patient_id, max(e.encounter_datetime) encounter_datetime "
                 + "			 from patient p "
                 + "                inner join encounter e on p.patient_id = e.patient_id "
                 + "                where p.voided = 0 and e.voided = 0 and e.encounter_type = 6 and "
-                + "                e.encounter_datetime >= :startInclusionDate and e.encounter_datetime <= :endInclusionDate  and e.location_id = :location "
+                + "                e.encounter_datetime >= :startInclusionDate and e.encounter_datetime <= :endInclusionDate and e.location_id = :location "
                 + "                group by p.patient_id "
                 + "                )maxEnc "
                 + "                  inner join "
@@ -1380,14 +1379,14 @@ public interface MQCategory15QueriesInterface {
                 + "                 inner join encounter e on p.patient_id = e.patient_id "
                 + "                 inner join obs o on e.encounter_id = o.encounter_id "
                 + "                 where p.voided = 0 and e.voided = 0 and o.voided = 0 and e.encounter_type = 6 and ((o.concept_id = 856 and o.value_numeric < 1000) OR (o.concept_id = 1305 and o.value_coded is not null)) and e.location_id = :location "
-                + "                 group by p.patient_id "
                 + "                 ) ultimaCVAlta on ultimaCVAlta.patient_id = maxEnc.patient_id and ultimaCVAlta.data_carga < (maxEnc.encounter_datetime - INTERVAL 24 MONTH) "
                 + "				group by ultimaCVAlta.patient_id "
                 + "                 )final "
                 + "                 inner join encounter e on e.patient_id = final.patient_id "
                 + "                 inner join obs o on e.encounter_id = o.encounter_id "
-                + "                 where e.voided = 0 and o.voided = 0 and e.encounter_type = 6 and o.concept_id = 856 and o.value_numeric is not null "
-                + "                 and e.location_id = :location and e.encounter_datetime between (final.data_carga + INTERVAL 10 MONTH) and (final.data_carga + INTERVAL 20 MONTH) ";
+                + "                 where e.voided = 0 and o.voided = 0 and e.encounter_type = 6 and ((o.concept_id = 856 and o.value_numeric is not null) OR (o.concept_id = 1305 and o.value_coded is not null)) "
+                + "                 and e.location_id = :location and e.encounter_datetime between (final.data_carga + INTERVAL 10 MONTH) and (final.data_carga + INTERVAL 20 MONTH) "
+                + "                 group by e.patient_id ";
 
     public static String findPatientWhoArePregnantOrBreastfeeding14Months(WomanState womanState) {
       String query =
@@ -1432,5 +1431,24 @@ public interface MQCategory15QueriesInterface {
       }
       return query;
     }
+
+    public static final String
+        findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths =
+            "Select patient_id from ( "
+                + "Select maxEnc.patient_id,maxEnc.encounter_datetime, obsCV.obs_datetime from ( "
+                + "Select p.patient_id,max(e.encounter_datetime) encounter_datetime from patient p "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "where p.voided=0 and e.voided=0 and e.encounter_type=6 and "
+                + "e.encounter_datetime >=:startInclusionDate and e.encounter_datetime<=:endInclusionDate and e.location_id=:location "
+                + "group by p.patient_id "
+                + ") maxEnc "
+                + "inner join encounter  e on e.patient_id=maxEnc.patient_id "
+                + "inner join obs obsCV on obsCV.encounter_id=e.encounter_id "
+                + "where obsCV.concept_id=23722 and obsCV.value_coded = 856 and obsCV.voided=0 and e.voided=0 "
+                + " and e.encounter_type  = 6 and e.location_id = :location "
+                + "and e.encounter_datetime >= (maxEnc.encounter_datetime - INTERVAL 3 MONTH) AND  e.encounter_datetime < maxEnc.encounter_datetime "
+                + "group by maxEnc.patient_id "
+                + ") final "
+                + "group by final.patient_id ";
   }
 }

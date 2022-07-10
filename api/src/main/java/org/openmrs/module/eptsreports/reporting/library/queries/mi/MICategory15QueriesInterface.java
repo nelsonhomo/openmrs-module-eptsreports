@@ -309,7 +309,7 @@ public interface MICategory15QueriesInterface {
                 + "                 and e.location_id = :location and e.encounter_datetime between (final.data_carga + INTERVAL 18 MONTH) and (final.data_carga + INTERVAL 24 MONTH) ";
 
     public static final String
-        findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths =
+        findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLast12Months =
             "Select patient_id from ( "
                 + "Select maxEnc.patient_id,maxEnc.encounter_datetime, obsCV.obs_datetime from ( "
                 + "Select p.patient_id,max(e.encounter_datetime) encounter_datetime from patient p "
