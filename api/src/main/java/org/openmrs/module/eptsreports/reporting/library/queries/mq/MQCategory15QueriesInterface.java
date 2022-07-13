@@ -1450,5 +1450,33 @@ public interface MQCategory15QueriesInterface {
                 + "group by maxEnc.patient_id "
                 + ") final "
                 + "group by final.patient_id ";
+
+    public static final String
+        findPatientsWithClinicalConsultationAndARTStartDateGreaterThanThreeMonths =
+            " SELECT patient_id from ( "
+                + " select art.patient_id, art.art_start_date from (SELECT patient_id, art_start_date FROM ( "
+                + " SELECT patient_id, MIN(art_start_date) art_start_date FROM ( "
+                + " SELECT p.patient_id, MIN(value_datetime) art_start_date FROM patient p "
+                + " INNER JOIN encounter e ON p.patient_id = e.patient_id "
+                + " INNER JOIN obs o ON e.encounter_id = o.encounter_id "
+                + " WHERE p.voided = 0 AND e.voided = 0 AND o.voided = 0 AND e.encounter_type = 53 "
+                + " AND o.concept_id = 1190 AND o.value_datetime is NOT NULL AND o.value_datetime <= :endRevisionDate AND e.location_id =:location "
+                + " GROUP BY p.patient_id "
+                + " ) art_start "
+                + " GROUP BY art_start.patient_id "
+                + " ) tx_new "
+                + ") art "
+                + "inner join "
+                + "(select patient_id, encounter_datetime from ( "
+                + "select p.patient_id, max(e.encounter_datetime) encounter_datetime FROM patient p "
+                + "INNER JOIN encounter e on p.patient_id=e.patient_id "
+                + "where p.voided=0 and e.voided=0 and  e.encounter_type = 6 "
+                + "and e.encounter_datetime between (:endRevisionDate - INTERVAL 12 MONTH + INTERVAL  1 DAY) and :endRevisionDate "
+                + "and e.location_id=:location "
+                + "group by p.patient_id "
+                + ") maxEnc "
+                + ") consulta on consulta.patient_id = art.patient_id "
+                + "where (TIMESTAMPDIFF(MONTH,art.art_start_date,consulta.encounter_datetime)) >3 "
+                + ") final ";
   }
 }

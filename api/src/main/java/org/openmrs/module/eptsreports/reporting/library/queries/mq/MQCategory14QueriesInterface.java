@@ -42,7 +42,7 @@ public interface MQCategory14QueriesInterface {
                 + "inner join obs o on e.encounter_id=o.encounter_id "
                 + "where p.voided=0 and e.voided=0 and o.voided=0 and "
                 + "e.encounter_type in (13,6,9,53,51) and  o.concept_id in (856,1305) "
-                + "and  o.obs_datetime between date_add(date_add(:endDate, interval -12 MONTH), interval 1 day) and :endDate and e.location_id=:location group by p.patient_id "
+                + "and  date(o.obs_datetime) between date_add(date_add(:endDate, interval -12 MONTH), interval 1 day) and :endDate and e.location_id=:location group by p.patient_id "
                 + ") carga_viral on inicio_real.patient_id=carga_viral.patient_id "
                 + "where carga_viral.data_carga>=date_add(inicio_real.data_inicio, INTERVAL 90 DAY )  ";
 
@@ -77,8 +77,8 @@ public interface MQCategory14QueriesInterface {
                 + "Select p.patient_id,max(o.obs_datetime) data_carga from patient p "
                 + "inner join encounter e on p.patient_id=e.patient_id "
                 + "inner join obs o on e.encounter_id=o.encounter_id "
-                + "where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (13,6,9,53,51) and  o.concept_id in (856,1305) and  o.obs_datetime between date_add(date_add(:endDate, interval -12 MONTH), interval 1 day) and :endDate and e.location_id=:location group by p.patient_id) ultima_carga "
-                + "inner join obs on obs.person_id=ultima_carga.patient_id and obs.obs_datetime=ultima_carga.data_carga "
+                + "where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (13,6,9,53,51) and  o.concept_id in (856,1305) and  date(o.obs_datetime) between date_add(date_add(:endDate, interval -12 MONTH), interval 1 day) and :endDate and e.location_id=:location group by p.patient_id) ultima_carga "
+                + "inner join obs on obs.person_id=ultima_carga.patient_id and date(obs.obs_datetime)=date(ultima_carga.data_carga) "
                 + "where obs.voided=0 and ((obs.concept_id=856 and obs.value_numeric<1000) or (obs.concept_id=1305 and obs.value_coded in (1306,23814,23905,23906,23907,23908,23904)))  and obs.location_id=:location) carga_viral on inicio_real.patient_id=carga_viral.patient_id "
                 + "where carga_viral.data_carga>=date_add(inicio_real.data_inicio, INTERVAL 90 DAY) ";
 
@@ -149,7 +149,7 @@ public interface MQCategory14QueriesInterface {
             + "                inner join obs o on e.encounter_id=o.encounter_id "
             + "                where p.voided=0 and e.voided=0 and o.voided=0 and "
             + "                e.encounter_type in (13,6,9,53,51) and  o.concept_id in (856,1305) and "
-            + "                o.obs_datetime between date_add(date_add(:endDate, interval -12 MONTH), interval 1 day) and :endDate and e.location_id=:location  "
+            + "                date(o.obs_datetime) between date_add(date_add(:endDate, interval -12 MONTH), interval 1 day) and :endDate and e.location_id=:location  "
             + "                group by p.patient_id "
             + "                ) carga_viral "
             + "                )carga_viral on carga_viral.patient_id=mds.patient_id   "

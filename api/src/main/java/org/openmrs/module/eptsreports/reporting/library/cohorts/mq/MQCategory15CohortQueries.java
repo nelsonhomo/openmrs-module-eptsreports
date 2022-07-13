@@ -1526,15 +1526,13 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "A",
         EptsReportUtils.map(
-            mICategory15CohortQueries
-                .findPatientsWithClinicalConsultationDuringRevisionPeriodAndAgeGreaterOrEqualTwoYears(),
+            mICategory15CohortQueries.findPatientsWithClinicalConsultationDuringRevisionPeriod(),
             mappings));
 
     definition.addSearch(
         "B1",
         EptsReportUtils.map(
-            mICategory15CohortQueries
-                .findPatientsWithClinicalConsultationDuringRevisionPeriodAndARTStartDateBiggerThanThreeMonths(),
+            this.findPatientsWithClinicalConsultationAndARTStartDateGreaterThanThreeMonths(),
             mappings));
 
     definition.addSearch(
@@ -1564,7 +1562,6 @@ public class MQCategory15CohortQueries {
         "J",
         EptsReportUtils.map(
             this.findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44(), mappings));
-
     definition.setCompositionString("(A AND B1 AND E) NOT (C OR D OR F OR G OR J)");
 
     return definition;
@@ -1633,8 +1630,7 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "A",
         EptsReportUtils.map(
-            mICategory15CohortQueries
-                .findPatientsWithClinicalConsultationDuringRevisionPeriodAndAgeGreaterOrEqualTwoYears(),
+            mICategory15CohortQueries.findPatientsWithClinicalConsultationDuringRevisionPeriod(),
             mappings));
 
     definition.addSearch(
@@ -1717,8 +1713,7 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "A",
         EptsReportUtils.map(
-            mICategory15CohortQueries
-                .findPatientsWithClinicalConsultationDuringRevisionPeriodAndAgeGreaterOrEqualTwoYears(),
+            mICategory15CohortQueries.findPatientsWithClinicalConsultationDuringRevisionPeriod(),
             mappings));
 
     definition.addSearch(
@@ -1804,6 +1799,28 @@ public class MQCategory15CohortQueries {
     String query =
         MQCategory15QueriesInterface.QUERY
             .findAllPatientsWhoHaveLaboratoryInvestigationsRequestsAndViralChargeInLastConsultationDuringLastThreeMonths;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "findPatientsWithClinicalConsultationAndARTStartDateGreaterThanThreeMonths")
+  public CohortDefinition
+      findPatientsWithClinicalConsultationAndARTStartDateGreaterThanThreeMonths() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("MQ Category 15 - Get Patients in ART in 3 Months");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory15QueriesInterface.QUERY
+            .findPatientsWithClinicalConsultationAndARTStartDateGreaterThanThreeMonths;
 
     definition.setQuery(query);
 
