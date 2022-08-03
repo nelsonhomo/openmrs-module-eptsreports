@@ -49,12 +49,12 @@ public class SetupListOfChildrenAndAdolescentsOAartWithoutFullDisclosure
 
   @Override
   public String getName() {
-    return "LISTA DE CRIANÇAS E ADOLESCENTES EM TARV SEM DIVULGAÇÃO COMPLETA";
+    return "Lista de Crianças e Adolescentes em TARV sem Revelação Diagnóstica Total";
   }
 
   @Override
   public String getDescription() {
-    return "LISTA DE CRIANÇAS E ADOLESCENTES EM TARV SEM DIVULGAÇÃO COMPLETA";
+    return "Lista de Crianças e Adolescentes em TARV sem Revelação Diagnóstica Total";
   }
 
   @Override
@@ -95,7 +95,7 @@ public class SetupListOfChildrenAndAdolescentsOAartWithoutFullDisclosure
           createXlsReportDesign(
               reportDefinition,
               "Template_ListChildrenAdolescentARTWithoutFullDisclosure.xls",
-              "LISTA DE CRIANÇAS E ADOLESCENTES EM TARV SEM DIVULGAÇÃO COMPLETA",
+              "Lista de Crianças e Adolescentes em TARV sem Revelação Diagnóstica Total",
               getExcelDesignUuid(),
               null);
       Properties props = new Properties();
