@@ -116,7 +116,7 @@
                           e.encounter_type in (35) and o.concept_id=6340 and o.value_coded is null and  
                           e.encounter_datetime<=:endDate and e.location_id=:location 
                           ) revelacao on coorte12meses_final.patient_id=revelacao.patient_id
-                          
+                          where
                           (coorte12meses_final.data_estado is null or (coorte12meses_final.data_estado is not null and  coorte12meses_final.data_usar_c>coorte12meses_final.data_estado)) 
                           and date_add(coorte12meses_final.data_usar, interval 60 day) >=:endDate and floor(datediff(:endDate,p.birthdate)/365)  between 8 and 14
 
