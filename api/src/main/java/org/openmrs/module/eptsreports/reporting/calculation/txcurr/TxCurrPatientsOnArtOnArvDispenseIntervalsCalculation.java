@@ -23,6 +23,7 @@ public abstract class TxCurrPatientsOnArtOnArvDispenseIntervalsCalculation
   private static int CONCEPT_QUARTERLY = 23720;
   private static int CONCEPT_QUARTERLY_DISPENSATION = 23730;
   private static int CONCEPT_SEMESTER_ARV_PICKUP = 23888;
+  private static int CONCEPT_ANNUAL_ARV_PICKUP = 165314;
 
   @Override
   public CalculationResultMap evaluate(
@@ -163,17 +164,33 @@ public abstract class TxCurrPatientsOnArtOnArvDispenseIntervalsCalculation
 
   protected Map<Integer, PatientDisaggregated> getAllModeloDiferenciadoSemestral(
       EvaluationContext context) {
+
+    Map<Integer, PatientDisaggregated> result = new HashMap<>();
+
     Map<Integer, Date> map =
         Context.getRegisteredComponents(LastFilaProcessor.class)
             .get(0)
             .getLastMarkedInModelosDiferenciadosDeCuidadosOnFichaClinicaMasterCard(
                 context, CONCEPT_SEMESTER_ARV_PICKUP);
-    Map<Integer, PatientDisaggregated> result = new HashMap<>();
+
     for (Integer patientId : map.keySet()) {
       result.put(
           patientId,
           new ModeloDiferenciadoSemestralPatientDisaggregated(patientId, map.get(patientId)));
     }
+
+    Map<Integer, Date> mapAnnual =
+        Context.getRegisteredComponents(LastFilaProcessor.class)
+            .get(0)
+            .getLastMarkedInModelosDiferenciadosDeCuidadosOnFichaClinicaMasterCard(
+                context, CONCEPT_ANNUAL_ARV_PICKUP);
+    for (Integer patientId : mapAnnual.keySet()) {
+
+      result.put(
+          patientId,
+          new ModeloDiferenciadoSemestralPatientDisaggregated(patientId, map.get(patientId)));
+    }
+
     return result;
   }
 
