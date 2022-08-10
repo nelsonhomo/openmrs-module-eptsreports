@@ -211,20 +211,17 @@ public abstract class TxCurrPatientsOnArtOnArvDispenseIntervalsCalculation
 
   protected List<PatientDisaggregated> getMaximumPatientDisaggregatedByDate(
       List<PatientDisaggregated> patients) {
-
     List<PatientDisaggregated> result = new ArrayList<>();
     Map<Date, List<PatientDisaggregated>> mapDisaggregated =
         groupPatienDisaggregatedByDate(patients);
-
     Date maxDate = DateUtil.getDateTime(Integer.MAX_VALUE, 1, 1);
-
     for (Entry<Date, List<PatientDisaggregated>> entry : mapDisaggregated.entrySet()) {
-
       Date dateIteration = entry.getKey();
-
-      if (dateIteration.after(maxDate)) {
-        maxDate = dateIteration;
-        result = entry.getValue();
+      if (dateIteration != null) {
+        if (dateIteration.after(maxDate)) {
+          maxDate = dateIteration;
+          result = entry.getValue();
+        }
       }
     }
     return result;
