@@ -210,7 +210,7 @@
 																seguimentoTPT.concept_id=23987)
 							where 	firstFilt.dataFirstFilt=e.encounter_datetime and 
 									e.encounter_type=60 and obsTPT.voided=0 and obsTPT.concept_id=23985 and obsTPT.value_coded in (656,23982) and 
-									e.location_id=:location and (seguimentoTPT.value_coded in (1257,1267) or seguimentoTPT.value_coded is null) 																											
+									e.location_id=:location and (seguimentoTPT.value_coded = 1257 or seguimentoTPT.value_coded is null) 																											
 						) inicio  																																
 						left join   																															
 						( 	
