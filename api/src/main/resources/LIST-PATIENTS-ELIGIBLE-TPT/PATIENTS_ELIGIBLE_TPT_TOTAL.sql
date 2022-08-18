@@ -443,7 +443,7 @@ select coorte12meses_final.patient_id
 
                     )consultasINH on inicio_inh.patient_id = consultasINH.patient_id
                     where consultasINH.encounter_datetime between (inicio_inh.data_inicio_INH + INTERVAL 1 day) and (inicio_inh.data_inicio_INH + INTERVAL 7 MONTH)
-                    group by inicio_inh.patient_id,inicio_inh.data_inicio_INH having count(*)>=5                  
+                    group by inicio_inh.patient_id having count(distinct consultasINH.encounter_datetime)>=5                  
                
                 union
                
@@ -476,7 +476,7 @@ select coorte12meses_final.patient_id
                           and obsEstado.obs_datetime <= :endDate
                     ) consultasINH on inicio_inh.patient_id = consultasINH.patient_id
                 where consultasINH.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 5 MONTH)
-                group by inicio_inh.patient_id,inicio_inh.data_inicio_INH having count(*)>=2  
+                group by inicio_inh.patient_id having count(distinct consultasINH.encounter_datetime)>=2  
                
                 union
                 
@@ -496,10 +496,7 @@ select coorte12meses_final.patient_id
                 			) 
                 		inicio_inh
                  		inner join
-                    	(
-                        		select consultasSemDTINH.patient_id, consultasSemDTINH.encounter_datetime, outraPrescricaoDTINH.obs_datetime 
-                        		from(  
-                        			select p.patient_id,obsEstado.obs_datetime encounter_datetime 
+                    	(	select p.patient_id,obsEstado.obs_datetime encounter_datetime 
                         			from patient p 
                             			inner join encounter e on p.patient_id = e.patient_id 
                             			inner join obs ultimaProfilaxiaIsoniazia on ultimaProfilaxiaIsoniazia.encounter_id = e.encounter_id 
@@ -508,15 +505,9 @@ select coorte12meses_final.patient_id
                           			and obsEstado.concept_id=165308 and  obsEstado.value_coded in(1256,1257)   
                           			and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and  e.location_id =:location
                           			and obsEstado.obs_datetime <= :endDate
-                         		)
-                         	consultasSemDTINH
-                        			inner join encounter e on e.patient_id = consultasSemDTINH.patient_id
-                        			left join obs outraPrescricaoDTINH on e.encounter_id=outraPrescricaoDTINH.encounter_id
-                        		where e.encounter_type  = 6 and e.voided = 0 and outraPrescricaoDTINH.encounter_id is null 
-                        
-                        )consultasSemDTINH on inicio_inh.patient_id = consultasSemDTINH.patient_id
+                         )consultasSemDTINH on inicio_inh.patient_id = consultasSemDTINH.patient_id
                     where consultasSemDTINH.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH)
-                    group by inicio_inh.patient_id,inicio_inh.data_inicio_INH having count(consultasSemDTINH.patient_id)>=3 
+                    group by inicio_inh.patient_id having count(distinct consultasSemDTINH.encounter_datetime)>=3 
                   ) consultasSemDTINH
              inner join 
              (
@@ -533,7 +524,6 @@ select coorte12meses_final.patient_id
                           and obsEstado.obs_datetime <= :endDate
                  ) inicio_inh
                 inner join
-
                 (
                   select distinct consultasComINH.patient_id, consultasComINH.encounter_datetime 
                         from 
@@ -551,7 +541,7 @@ select coorte12meses_final.patient_id
                             )consultasComINH
                     )consultasComINH on inicio_inh.patient_id = consultasComINH.patient_id
                     where consultasComINH.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH)
-                    group by inicio_inh.patient_id,inicio_inh.data_inicio_INH having count(*)>=1
+                    group by inicio_inh.patient_id having count(distinct consultasComINH.encounter_datetime)>=1
                 )consultasComINH on consultasComINH.patient_id=consultasSemDTINH.patient_id
                 
                 union
@@ -614,7 +604,7 @@ select coorte12meses_final.patient_id
                     and obsDTINH.concept_id=23986 and obsDTINH.value_coded=1098   
                      and obsLevTPI.concept_id=23985 and obsLevTPI.value_coded in (656,23982)  
                      and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.location_id=:location 
-                    group by inicio_inh.patient_id,inicio_inh.data_inicio_inh having count(*)>=6  
+                    group by inicio_inh.patient_id having count( distinct e.encounter_datetime)>=6  
                
                 union
                 
@@ -677,8 +667,7 @@ select coorte12meses_final.patient_id
                      and obsDTINH.concept_id=23986 and obsDTINH.value_coded=23720   
                      and obsLevTPI.concept_id=23985 and obsLevTPI.value_coded in (656,23982)  
                      and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 5 MONTH) and e.location_id=:location 
-                 group by inicio_inh.patient_id,inicio_inh.data_inicio_inh  
-                 having count(*)>=2 
+                 group by inicio_inh.patient_id  having count(distinct e.encounter_datetime)>=2 
                 
                 union
                 
@@ -742,7 +731,7 @@ select coorte12meses_final.patient_id
                         where e.voided=0 and obsDTINH.voided=0 and obsLevTPI.voided=0 and e.encounter_type in (60)          
                             and obsDTINH.concept_id=23986 and obsDTINH.value_coded=1098  and obsLevTPI.concept_id=23985 and obsLevTPI.value_coded in (656,23982)  
                             and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.location_id=:location 
-                            group by inicio_inh.patient_id,inicio_inh.data_inicio_inh having count(*)>=3 
+                            group by inicio_inh.patient_id having count(distinct e.encounter_datetime)>=3 
                     )
                  inicio_inh  
                  inner join
@@ -805,7 +794,7 @@ select coorte12meses_final.patient_id
                           where e.voided=0 and obsDTINH.voided=0 and obsLevTPI.voided=0 and e.encounter_type in (60)          
                               and obsDTINH.concept_id=23986 and obsDTINH.value_coded=23720  and obsLevTPI.concept_id=23985 and obsLevTPI.value_coded in (656,23982)  
                               and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.location_id=:location 
-                          group by inicio_inh.patient_id,inicio_inh.data_inicio_inh having count(*)>=1    
+                          group by inicio_inh.patient_id having count(distinct e.encounter_datetime)>=1    
                  ) inicio_inh_dt on inicio_inh_dt.patient_id = inicio_inh.patient_id 
             
             )TPT_ELIG_FR8 on TPT_ELIG_FR8.patient_id=coorte12meses_final.patient_id 
@@ -856,7 +845,7 @@ from
             where p.voided = 0 and e.voided = 0 and regime3HP.voided = 0 
                 and e.encounter_type = 60 and regime3HP.concept_id = 23985 and regime3HP.value_coded in (23954,23984)
                 and ( seguimentoTPT.value_coded in (1257,1267) or seguimentoTPT.value_coded is null)
-                and  e.encounter_datetime <=:endDateand  e.location_id =:location
+                and  e.encounter_datetime <= :endDate and  e.location_id =:location
        )
      inicio
     left join
@@ -867,7 +856,7 @@ from
                 inner join obs regime3HP on regime3HP.encounter_id=e.encounter_id 
             where p.voided=0 and e.voided=0 and regime3HP.voided=0 
                 and e.encounter_type=60 and regime3HP.concept_id=23985 and regime3HP.value_coded in (23954,23984) 
-                and e.encounter_datetime <=:endDate and e.location_id=:location
+                and e.encounter_datetime <= :endDate and e.location_id=:location
           union
           
           select p.patient_id, obsEstado.obs_datetime data_inicio_3HP 
@@ -949,7 +938,7 @@ from (
              ) end3HP                 
       ) termino_3HP on inicio_3HP.patient_id = termino_3HP.patient_id
 where termino_3HP.data_final_3HP between inicio_3HP.data_inicio_3HP and (inicio_3HP.data_inicio_3HP + INTERVAL 120 DAY)
- group by termino_3HP.patient_id,termino_3HP.data_final_3HP having count(*)>=3
+ group by termino_3HP.patient_id having count( distinct termino_3HP.data_final_3HP)>=3
 union
 select inicio_3HP.patient_id  
 from (
@@ -987,7 +976,7 @@ from(
              ) end3HP                 
       ) termino_3HP on inicio_3HP.patient_id = termino_3HP.patient_id
 where termino_3HP.data_final_3HP between inicio_3HP.data_inicio_3HP and (inicio_3HP.data_inicio_3HP + INTERVAL 120 DAY)
-group by termino_3HP.patient_id,termino_3HP.data_final_3HP having count(*)>=1
+group by termino_3HP.patient_id having count(distinct termino_3HP.data_final_3HP)>=1
 union
 select inicio_3HP.patient_id  
 from (                                                                                                                                                     
@@ -999,7 +988,7 @@ from (
         inner join obs seguimentoTPT on seguimentoTPT.encounter_id = e.encounter_id
     where p.voided = 0 and e.voided = 0 and regime3HP.voided = 0 and seguimentoTPT.voided = 0
         and e.encounter_type = 60 and regime3HP.concept_id = 23985 and regime3HP.value_coded in (23954,23984) and seguimentoTPT.concept_id = 23987 and seguimentoTPT.value_coded in (1256,1705) 
-        and e.encounter_datetime <=:endDateand  e.location_id=:location
+        and e.encounter_datetime <=:endDate and  e.location_id=:location
     union
     
     select inicio.patient_id, inicio.data_inicio_3HP 
@@ -1057,8 +1046,7 @@ from (
         and e.encounter_type=60 and obs3hp.concept_id=23985  
             and obs3hp.value_coded in (23954,23984) and obsTipo.concept_id=23986 and obsTipo.value_coded=23720     
             and e.encounter_datetime between inicio_3HP.data_inicio_3HP and (inicio_3HP.data_inicio_3HP + INTERVAL 4 month) and e.location_id=:location     
-        group by inicio_3HP.patient_id,inicio_3HP.data_inicio_3HP  
-          having count(*)>=1   
+        group by inicio_3HP.patient_id having count(distinct e.encounter_datetime)>=1   
 union
 select inicio_3HP.patient_id  
 from (
@@ -1083,7 +1071,7 @@ from (
             where p.voided = 0 and e.voided = 0 and regime3HP.voided = 0 
                 and e.encounter_type = 60 and regime3HP.concept_id = 23985 and regime3HP.value_coded in (23954,23984)
                 and ( seguimentoTPT.value_coded in (1257,1267) or seguimentoTPT.value_coded is null)
-                and  e.encounter_datetime <=:endDateand  e.location_id =:location
+                and  e.encounter_datetime <=:endDate and  e.location_id =:location
        )
      inicio
     left join
@@ -1130,8 +1118,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
         and obsTipo.concept_id=23986 and obsTipo.value_coded=1098     
     and e.encounter_datetime between inicio_3HP.data_inicio_3HP and (inicio_3HP.data_inicio_3HP + INTERVAL 4 month)  
         and e.location_id=:location    
-    group by inicio_3HP.patient_id,inicio_3HP.data_inicio_3HP  
-    having count(*)>=3    
+    group by inicio_3HP.patient_id having count(distinct e.encounter_datetime)>=3    
 
 )TPT_ELIG_FR9 on TPT_ELIG_FR9.patient_id=coorte12meses_final.patient_id 
             left join  
