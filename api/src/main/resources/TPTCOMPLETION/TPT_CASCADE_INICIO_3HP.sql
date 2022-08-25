@@ -9,6 +9,7 @@
 		where p.voided = 0 and e.voided = 0  and profilaxia3HP.voided = 0 and estadoProfilaxia.voided = 0  
 			and  profilaxia3HP.concept_id = 23985  and profilaxia3HP.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 
 			and e.encounter_type in (6,9,53) and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
+			group by p.patient_id,estadoProfilaxia.obs_datetime
 	  	
 	  	union
 
@@ -77,6 +78,7 @@
 			where p.voided = 0 and e.voided = 0  and profilaxia3HP.voided = 0 and estadoProfilaxia.voided = 0  
 				and  profilaxia3HP.concept_id = 23985  and profilaxia3HP.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 
 				and e.encounter_type in (6,53) and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
+				group by p.patient_id,estadoProfilaxia.obs_datetime
              	
              	union
              																																			

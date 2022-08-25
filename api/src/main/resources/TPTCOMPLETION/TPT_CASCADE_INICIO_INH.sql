@@ -1,4 +1,4 @@
-select distinct inicio_inh.patient_id                                                                                                               
+select inicio_inh.patient_id                                                                                                               
 from                                                                                                                                                
   (   
 	select p.patient_id, estadoProfilaxia.obs_datetime data_inicio_inh 
@@ -9,6 +9,7 @@ from
 	where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0  
 		and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 
 		and e.encounter_type in (6,9,53) and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
+        group by p.patient_id,estadoProfilaxia.obs_datetime
 	union
      
      select p.patient_id, e.encounter_datetime data_inicio_inh                                                                                   
@@ -62,6 +63,7 @@ from
 		where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0  
 			and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 
 			and e.encounter_type in (6,9,53) and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
+            group by p.patient_id,estadoProfilaxia.obs_datetime
 
           ) inicioAnterior                                                                                                                          
           on inicio.patient_id = inicioAnterior.patient_id
