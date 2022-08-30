@@ -438,28 +438,14 @@ public class TXTBCohortQueries {
     final CompositionCohortDefinition cd = new CompositionCohortDefinition();
     cd.setName("TxTB - txTbNumerator");
     final CohortDefinition A = this.txTbNumeratorA();
-    cd.addSearch("A", this.map(A, this.generalParameterMapping));
+    cd.addSearch("A", EptsReportUtils.map(A, this.generalParameterMapping));
 
     cd.addSearch(
-        "started-tb-treatment-previous-period",
+        "B",
         EptsReportUtils.map(
-            this.getTbDrugTreatmentStartDateWithinReportingDate(),
-            "startDate=${startDate-6m},endDate=${startDate-1d},location=${location}"));
+            A, "startDate=${startDate-6m},endDate=${startDate-1d},location=${location}"));
 
-    cd.addSearch(
-        "A-PREVIOUS-PERIOD",
-        this.map(
-            getNumeratorPreviosPeriod(),
-            "startDate=${startDate-6m},endDate=${startDate-1d},location=${location}"));
-
-    cd.addSearch(
-        "art-started-by-end-previous-reporting-period",
-        EptsReportUtils.map(
-            this.genericCohortQueries.getStartedArtBeforeDate(false),
-            "onOrBefore=${startDate-1d},location=${location}"));
-
-    cd.setCompositionString(
-        "A NOT (started-tb-treatment-previous-period OR (A-PREVIOUS-PERIOD AND art-started-by-end-previous-reporting-period ))");
+    cd.setCompositionString("A NOT B");
 
     this.addGeneralParameters(cd);
     return cd;
