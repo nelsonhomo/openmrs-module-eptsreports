@@ -1,5 +1,12 @@
-                          select 
-                          coorte12meses_final.patient_id
+                    select patient_id
+					from 
+					(
+						  select 
+                          coorte12meses_final.patient_id,
+						  dataRevelacaoTotal,
+						  dataRevelacaoParcial,
+						  dataNaoRevelado,
+                          if(revelado.patient_id is not null,1,if(revelacaoParcial.patient_id is not null,2,if(naoRevelacao.patient_id is not null,3,4))) statusRevelacao
                           from ( 
 				        	select  inicio_fila_seg_prox.*,GREATEST(COALESCE(data_fila,data_seguimento,data_recepcao_levantou),COALESCE(data_seguimento,data_fila,data_recepcao_levantou),COALESCE(data_recepcao_levantou,data_seguimento,data_fila))  data_usar_c, 
 				            GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30),COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_usar from (select inicio_fila_seg.*, 
@@ -13,7 +20,7 @@
 				            where e.voided=0 and o.voided=0 and p.voided=0 and  e.encounter_type in (18,6,9) and o.concept_id=1255 and o.value_coded=1256 and  e.encounter_datetime<=:endDate and e.location_id=:location 
 				            group by p.patient_id 
 				            union 
-				            Select p.patient_id,min(value_datetime) data_inicio from patient p 
+				            Select p.patient_id,min(value_datetime) data_inicio from patient p revelacao
 				            inner join encounter e on p.patient_id=e.patient_id 
 				            inner join obs o on e.encounter_id=o.encounter_id 
 				            where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (18,6,9,53) and  o.concept_id=1190 and o.value_datetime is not null and  o.value_datetime<=:endDate and e.location_id=:location group by p.patient_id 
@@ -75,61 +82,40 @@
 				            group by patient_id 
 				
 				            ) coorte12meses_final 
-
-                          inner join person p on p.person_id=coorte12meses_final.patient_id         
-                          left join   
-                          ( 
-                          select pad1.*  from person_address pad1  
-                          inner join   (  
-                          select person_id,max(person_address_id) id   from person_address  
-                          where voided=0  
-                          group by person_id  
-                          ) pad2  
-                          where pad1.person_id=pad2.person_id and pad1.person_address_id=pad2.id  
-                          ) pad3 on pad3.person_id=coorte12meses_final.patient_id 
-                          left join
-                          ( 
-                          select pn1.*  from person_name pn1  
-                          inner join (  
-                          select person_id,max(person_name_id) id   from person_name  
-                          where voided=0  
-                          group by person_id  
-                          ) pn2  
-                          where pn1.person_id=pn2.person_id and pn1.person_name_id=pn2.id  
-                          ) pn on pn.person_id=coorte12meses_final.patient_id 
-                          left join  
-                          ( 
-                          select pid1.*  from patient_identifier pid1  
-                          inner join  (  
-                          select patient_id,max(patient_identifier_id) id  from patient_identifier  
-                          where voided=0  
-                          group by patient_id  
-                          ) pid2 
-                          where pid1.patient_id=pid2.patient_id and pid1.patient_identifier_id=pid2.id  
-                          ) pid on pid.patient_id=coorte12meses_final.patient_id 
-                          inner  join
-                          (
-                          Select p.patient_id,e.encounter_datetime data_revelacao  from patient p  
-                          inner join encounter e on p.patient_id=e.patient_id  
-                          inner join obs o on o.encounter_id=e.encounter_id 
-                          where e.voided=0 and o.voided=0 and p.voided=0 and  
-                          e.encounter_type in (35) and o.concept_id=6340 and o.value_coded=6339 and  
-                          e.encounter_datetime<=:endDate and e.location_id=:location 
-                          ) revelacao on coorte12meses_final.patient_id=revelacao.patient_id
+                          inner join person p on p.person_id=coorte12meses_final.patient_id  
                           
                           
-                          where coorte12meses_final.patient_id 
-                          not in 
-                          (                          
-                          Select p.patient_id  from patient p  
-                          inner join encounter e on p.patient_id=e.patient_id  
-                          inner join obs o on o.encounter_id=e.encounter_id 
-                          where e.voided=0 and o.voided=0 and p.voided=0 and  
-                          e.encounter_type in (35) and o.concept_id=6340 and o.value_coded=6338 and  
-                          e.encounter_datetime<=:endDate and e.location_id=:location 
-                          ) 
-                          and 
-                          (coorte12meses_final.data_estado is null or (coorte12meses_final.data_estado is not null and  coorte12meses_final.data_usar_c>coorte12meses_final.data_estado)) 
-                          and date_add(coorte12meses_final.data_usar, interval 60 day) >=:endDate and floor(datediff(:endDate,p.birthdate)/365)  between 8 and 14
-
-                         
+						  left join 
+						  (
+							select 	p.patient_id,max(e.encounter_datetime) dataRevelacaoTotal
+							from 	patient p 
+									inner join encounter e on p.patient_id=e.patient_id
+									inner join obs o on e.encounter_id=o.encounter_id
+							where 	p.voided=0 and e.voided=0 and o.voided=0 and o.concept_id = 6340 and o.value_coded=6337 and e.encounter_type=35 and 
+									e.encounter_datetime <=:endDate and e.location_id=:location
+							group by p.patient_id
+							) revelado on revelado.patient_id=coorte12meses_final.patient_id
+							left join 
+							(
+								select 	p.patient_id,max(e.encounter_datetime) dataRevelacaoParcial
+								from 	patient p 
+										inner join encounter e on p.patient_id=e.patient_id
+										inner join obs o on e.encounter_id=o.encounter_id
+								where 	p.voided=0 and e.voided=0 and o.voided=0 and o.concept_id = 6340 and o.value_coded=6338 and e.encounter_type=35 and 
+										e.encounter_datetime <=:endDate and e.location_id=:location
+								group by p.patient_id
+							) revelacaoParcial on revelacaoParcial.patient_id=coorte12meses_final.patient_id
+							left join 
+							(
+								select 	p.patient_id,max(e.encounter_datetime) dataNaoRevelado
+								from 	patient p 
+										inner join encounter e on p.patient_id=e.patient_id
+										inner join obs o on e.encounter_id=o.encounter_id
+								where 	p.voided=0 and e.voided=0 and o.voided=0 and o.concept_id = 6340 and o.value_coded=6339 and e.encounter_type=35 and 
+										e.encounter_datetime <=:endDate and e.location_id=:location
+								group by p.patient_id
+							) naoRevelacao on naoRevelacao.patient_id=coorte12meses_final.patient_id
+							
+                          where (coorte12meses_final.data_estado is null or (coorte12meses_final.data_estado is not null and  coorte12meses_final.data_usar_c>coorte12meses_final.data_estado)) 
+                          and date_add(coorte12meses_final.data_usar, interval 60 day) >=:endDate and floor(datediff(:endDate,p.birthdate)/365)  between 8 and 14 
+				) revelacao 

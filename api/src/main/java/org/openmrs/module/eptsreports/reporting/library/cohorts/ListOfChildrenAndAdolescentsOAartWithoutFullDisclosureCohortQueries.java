@@ -2,6 +2,7 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts;
 
 import java.util.Date;
 import org.openmrs.Location;
+import org.openmrs.module.eptsreports.reporting.utils.DiscloreType;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
@@ -11,40 +12,43 @@ import org.springframework.stereotype.Component;
 @Component
 public class ListOfChildrenAndAdolescentsOAartWithoutFullDisclosureCohortQueries {
 
-  private static final String DISCLOSURE_LIST_MARKED_N =
-      "LIST_OF_CHILDREN_AND_ADOLESCENTS_ON_ART_WITHOUT_FULL_DISCLOSURE/LIST_OF_CHILDREN_AND_ADOLESCENTS_ON_ART_WITHOUT_FULL_DISCLOSURE_N.sql";
-  private static final String DISCLOSURE_LIST_MARKED_T =
-      "LIST_OF_CHILDREN_AND_ADOLESCENTS_ON_ART_WITHOUT_FULL_DISCLOSURE/LIST_OF_CHILDREN_AND_ADOLESCENTS_ON_ART_WITHOUT_FULL_DISCLOSURE_T.sql";
-  private static final String DISCLOSURE_LIST_MARKED_P =
-      "LIST_OF_CHILDREN_AND_ADOLESCENTS_ON_ART_WITHOUT_FULL_DISCLOSURE/LIST_OF_CHILDREN_AND_ADOLESCENTS_ON_ART_WITHOUT_FULL_DISCLOSURE_P.sql";
+  private static final String DISCLOSURE_LIST_MARKED =
+      "LIST_OF_CHILDREN_AND_ADOLESCENTS_ON_ART_WITHOUT_FULL_DISCLOSURE/LIST_OF_CHILDREN_AND_ADOLESCENTS_ON_ART_WITHOUT_FULL_DISCLOSURE_TOTAL.sql";
 
-  private static final String DISCLOSURE_LIST_MARKED_B =
-      "LIST_OF_CHILDREN_AND_ADOLESCENTS_ON_ART_WITHOUT_FULL_DISCLOSURE/LIST_OF_CHILDREN_AND_ADOLESCENTS_ON_ART_WITHOUT_FULL_DISCLOSURE_B.sql";
+  public static String findPatientsOAartWithoutFullDisclosure(DiscloreType discloreType) {
 
-  public CohortDefinition findPatientsOAartWithoutFullDisclosure_N() {
+    String query = EptsQuerysUtils.loadQuery(DISCLOSURE_LIST_MARKED);
 
-    final SqlCohortDefinition definition = new SqlCohortDefinition();
+    switch (discloreType) {
+      case T:
+        query = query + " where statusRevelacao=1 ";
+        break;
 
-    definition.setName("Lista de Crianças e Adolescentes em TARV sem Divulgação Completa");
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
+      case P:
+        query = query + " where statusRevelacao=2 ";
+        break;
 
-    String query = EptsQuerysUtils.loadQuery(DISCLOSURE_LIST_MARKED_N);
+      case N:
+        query = query + " where statusRevelacao=3 ";
+        break;
 
-    definition.setQuery(query);
+      case EMPTY:
+        query = query + " where statusRevelacao=4 ";
+        break;
+    }
 
-    return definition;
+    return query;
   }
 
   public CohortDefinition findPatientsOAartWithoutFullDisclosure_T() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("Lista de Crianças e Adolescentes em TARV sem Divulgação Completa");
+    definition.setName("Lista de Crianças e Adolescentes em TARV sem Divulgação Completa T");
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String query = EptsQuerysUtils.loadQuery(DISCLOSURE_LIST_MARKED_T);
+    String query = findPatientsOAartWithoutFullDisclosure(DiscloreType.T);
 
     definition.setQuery(query);
 
@@ -55,11 +59,11 @@ public class ListOfChildrenAndAdolescentsOAartWithoutFullDisclosureCohortQueries
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("Lista de Crianças e Adolescentes em TARV sem Divulgação Completa");
+    definition.setName("Lista de Crianças e Adolescentes em TARV sem Divulgação Completa P");
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String query = EptsQuerysUtils.loadQuery(DISCLOSURE_LIST_MARKED_P);
+    String query = findPatientsOAartWithoutFullDisclosure(DiscloreType.P);
 
     definition.setQuery(query);
 
@@ -70,11 +74,26 @@ public class ListOfChildrenAndAdolescentsOAartWithoutFullDisclosureCohortQueries
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("Lista de Crianças e Adolescentes em TARV sem Divulgação Completa");
+    definition.setName("Lista de Crianças e Adolescentes em TARV sem Divulgação Completa B");
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String query = EptsQuerysUtils.loadQuery(DISCLOSURE_LIST_MARKED_B);
+    String query = findPatientsOAartWithoutFullDisclosure(DiscloreType.EMPTY);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  public CohortDefinition findPatientsOAartWithoutFullDisclosure_N() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("Lista de Crianças e Adolescentes em TARV sem Divulgação Completa  N");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    String query = findPatientsOAartWithoutFullDisclosure(DiscloreType.N);
 
     definition.setQuery(query);
 

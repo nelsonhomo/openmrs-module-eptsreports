@@ -86,7 +86,7 @@ public class ListOfChildrenAndAdolescentsOAartWithoutFullDisclosureDataset exten
                         .findPatientsOAartWithoutFullDisclosure_N(),
                     mappings)),
             mappings),
-        "age=8-14");
+        "");
 
     dataSetDefinition.addColumn(
         "TXCURR_8TO14_T",
@@ -99,7 +99,7 @@ public class ListOfChildrenAndAdolescentsOAartWithoutFullDisclosureDataset exten
                         .findPatientsOAartWithoutFullDisclosure_T(),
                     mappings)),
             mappings),
-        "age=8-14");
+        "");
 
     dataSetDefinition.addColumn(
         "TXCURR_8TO14_P",
@@ -112,7 +112,7 @@ public class ListOfChildrenAndAdolescentsOAartWithoutFullDisclosureDataset exten
                         .findPatientsOAartWithoutFullDisclosure_T(),
                     mappings)),
             mappings),
-        "age=8-14");
+        "");
 
     dataSetDefinition.addColumn(
         "TXCURR_8TO14_B",
@@ -125,7 +125,7 @@ public class ListOfChildrenAndAdolescentsOAartWithoutFullDisclosureDataset exten
                         .findPatientsOAartWithoutFullDisclosure_B(),
                     mappings)),
             mappings),
-        "age=8-14");
+        "");
     return dataSetDefinition;
   }
 
