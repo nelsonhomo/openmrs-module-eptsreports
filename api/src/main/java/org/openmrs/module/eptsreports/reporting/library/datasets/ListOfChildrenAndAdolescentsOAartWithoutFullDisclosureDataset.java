@@ -109,7 +109,7 @@ public class ListOfChildrenAndAdolescentsOAartWithoutFullDisclosureDataset exten
                 "Lista de Criancas de 8 a 14 Anos Actualmente Em TARV",
                 EptsReportUtils.map(
                     ListOfChildrenAndAdolescentsOAartWithoutFullDisclosureCohortQueries
-                        .findPatientsOAartWithoutFullDisclosure_T(),
+                        .findPatientsOAartWithoutFullDisclosure_P(),
                     mappings)),
             mappings),
         "");
