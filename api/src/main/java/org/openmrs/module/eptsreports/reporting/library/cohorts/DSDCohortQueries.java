@@ -2,11 +2,16 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts;
 
 import java.util.Date;
 import org.openmrs.Location;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.eptsreports.reporting.calculation.dsd.DSDPatientsWhoExperiencedIITCalculation;
+import org.openmrs.module.eptsreports.reporting.cohort.definition.BaseFghCalculationCohortDefinition;
 import org.openmrs.module.eptsreports.reporting.library.queries.BreastfeedingQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.DsdQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.PregnantQueries;
+import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TbQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TxCurrQueries;
+import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -17,6 +22,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DSDCohortQueries {
+
+  private static final String FIND_DSD_DENOMINATOR_1 = "DSD/DSD_DENOMINATOR_D1.sql";
 
   @Autowired private GenericCohortQueries genericCohorts;
 
@@ -44,7 +51,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "patientsWhoArePregnantInAPeriod",
-                PregnantQueries.findPatientsWhoArePregnantInAPeriodNotCheckingBreastfeeding()),
+                PregnantQueries.findPatientsWhoArePregnantInAPeriod()),
             "startDate=${endDate-9m},endDate=${endDate},location=${location}"));
 
     dataSetDefinitio.addSearch(
@@ -52,7 +59,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "patientsWhoAreBreastfeeding",
-                BreastfeedingQueries.findPatientsWhoAreBreastfeedingNotCheckingPregnant()),
+                BreastfeedingQueries.findPatientsWhoAreBreastfeeding()),
             "startDate=${endDate-18m},endDate=${endDate},location=${location}"));
 
     dataSetDefinitio.addSearch(
@@ -856,5 +863,141 @@ public class DSDCohortQueries {
     dsd.setCompositionString("NOT-ELEGIBLE AND DC");
 
     return dsd;
+  }
+
+  @DocumentedDefinition(value = "DSD- Denominator 1")
+  public CohortDefinition getDSDDenominator1() {
+    final CompositionCohortDefinition dataSetDefinitio = new CompositionCohortDefinition();
+
+    dataSetDefinitio.setName("DSD- Denominator 1");
+    dataSetDefinitio.addParameter(new Parameter("endDate", "End Date", Date.class));
+    dataSetDefinitio.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    dataSetDefinitio.addSearch(
+        "DENOMINATOR-1",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "Finding DSD- Denominator 1 by Reporting Period",
+                EptsQuerysUtils.loadQuery(FIND_DSD_DENOMINATOR_1)),
+            mappings));
+
+    dataSetDefinitio.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoArePregnantInAPeriod",
+                PregnantQueries.findPatientsWhoArePregnantInAPeriod()),
+            "startDate=${endDate-9m},endDate=${endDate},location=${location}"));
+
+    dataSetDefinitio.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreBreastfeeding",
+                BreastfeedingQueries.findPatientsWhoAreBreastfeeding()),
+            "startDate=${endDate-18m},endDate=${endDate},location=${location}"));
+
+    dataSetDefinitio.addSearch(
+        "TB",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreInTbTreatment",
+                TbQueries.QUERY.findPatientsWhoAreInTbTreatmentFor7MonthsPriorEndReportingPeriod),
+            mappings));
+
+    dataSetDefinitio.addSearch(
+        "IIT-PREVIOUS-PERIOD", EptsReportUtils.map(this.getPatientsOnRTTDSD(), mappings));
+
+    dataSetDefinitio.setCompositionString(
+        "DENOMINATOR-1 NOT (PREGNANT OR BREASTFEEDING OR TB OR IIT-PREVIOUS-PERIOD)");
+
+    return dataSetDefinitio;
+  }
+
+  @DocumentedDefinition(value = "DSD- Denominator 2")
+  public CohortDefinition getDSDDenominator2() {
+    final CompositionCohortDefinition dataSetDefinitio = new CompositionCohortDefinition();
+
+    dataSetDefinitio.setName("DSD- Denominator 2");
+    dataSetDefinitio.addParameter(new Parameter("endDate", "End Date", Date.class));
+    dataSetDefinitio.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    dataSetDefinitio.addSearch(
+        "DENOMINATOR-2",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "Finding DSD- Denominator 1 by Reporting Period",
+                ResumoMensalQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHB13()),
+            mappings));
+
+    dataSetDefinitio.addSearch(
+        "DENOMINATOR-1", EptsReportUtils.map(this.getDSDDenominator1(), mappings));
+
+    dataSetDefinitio.setCompositionString("DENOMINATOR-2 NOT DENOMINATOR-1");
+
+    return dataSetDefinitio;
+  }
+
+  @DocumentedDefinition(value = "DSD- Denominator 3")
+  public CohortDefinition getDSDDenominator3() {
+    final CompositionCohortDefinition dataSetDefinitio = new CompositionCohortDefinition();
+
+    dataSetDefinitio.setName("DSD- Denominator 3");
+    dataSetDefinitio.addParameter(new Parameter("endDate", "End Date", Date.class));
+    dataSetDefinitio.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    dataSetDefinitio.addSearch(
+        "DENOMINATOR-3",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "Finding DSD- Denominator 3 by Reporting Period",
+                ResumoMensalQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHB13()),
+            mappings));
+
+    dataSetDefinitio.setCompositionString("DENOMINATOR-3");
+
+    return dataSetDefinitio;
+  }
+
+  @DocumentedDefinition(value = "PatientsOnRTTDSD")
+  public CohortDefinition getPatientsOnRTTDSD() {
+
+    final CompositionCohortDefinition compositionDefinition = new CompositionCohortDefinition();
+
+    compositionDefinition.setName("DSD - Patients on RTT 3 months before reporting endDate");
+    compositionDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    compositionDefinition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    compositionDefinition.addSearch(
+        "IIT-PREVIOUS-PERIOD",
+        EptsReportUtils.map(this.getPatientsWhoExperiencedIITCalculation(), mappings));
+
+    compositionDefinition.addSearch(
+        "TRF-IN",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreInTbTreatment",
+                DsdQueriesInterface.QUERY.findPatientsWhoWhereTransferredInPriorReportingPeriod),
+            "startDate=${endDate-3m},endDate=${endDate},location=${location}"));
+
+    compositionDefinition.setCompositionString("IIT-PREVIOUS-PERIOD NOT TRF-IN");
+
+    return compositionDefinition;
+  }
+
+  @DocumentedDefinition(value = "DSDPatientsWhoExperiencedIITCalculation")
+  private CohortDefinition getPatientsWhoExperiencedIITCalculation() {
+    BaseFghCalculationCohortDefinition definition =
+        new BaseFghCalculationCohortDefinition(
+            "DSDPatientsWhoExperiencedIITCalculation",
+            Context.getRegisteredComponents(DSDPatientsWhoExperiencedIITCalculation.class).get(0));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+    return definition;
   }
 }
