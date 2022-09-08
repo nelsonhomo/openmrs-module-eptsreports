@@ -58,8 +58,12 @@ public class TxCurrCohortQueries {
         "arvDispenseForLessThan3Months",
         EptsReportUtils.map(
             this.getPatientsOnArtOnArvDispenseForLessThan3MonthsCalculation(), mapping));
+    cd.addSearch(
+        "arvDispenseForLessThan3MonthsMaxSource",
+        EptsReportUtils.map(this.findTxCurrPatientsOnARVDispenseForLessThan3Months(), mapping));
 
-    cd.setCompositionString("patientsWhoAreActiveOnART AND arvDispenseForLessThan3Months");
+    cd.setCompositionString(
+        "patientsWhoAreActiveOnART AND arvDispenseForLessThan3Months AND arvDispenseForLessThan3MonthsMaxSource");
     return cd;
   }
 
@@ -80,7 +84,12 @@ public class TxCurrCohortQueries {
         EptsReportUtils.map(
             this.getPatientsOnArtOnArvDispenseBetween3And5MonthsCalculation(), mapping));
 
-    cd.setCompositionString("patientsWhoAreActiveOnART AND arvDispenseBetween3And5Months");
+    cd.addSearch(
+        "arvDispenseBetween3And5MonthsMaxSource",
+        EptsReportUtils.map(this.findTxCurrPatientsOnARVDispense3And5MoreMonths(), mapping));
+
+    cd.setCompositionString(
+        "patientsWhoAreActiveOnART AND arvDispenseBetween3And5Months AND arvDispenseBetween3And5MonthsMaxSource");
     return cd;
   }
 
@@ -97,11 +106,16 @@ public class TxCurrCohortQueries {
         EptsReportUtils.map(this.findPatientsWhoAreActiveOnART(), mapping));
 
     cd.addSearch(
+        "arvDispenseFor6OrMoreMonthsMaxSource",
+        EptsReportUtils.map(this.findTxCurrPatientsOnARVDispense6OrMoreMonths(), mapping));
+
+    cd.addSearch(
         "arvDispenseFor6OrMoreMonths",
         EptsReportUtils.map(
             this.getPatientsOnArtOnArvDispenseFor6OrMoreMonthsCalculation(), mapping));
 
-    cd.setCompositionString("patientsWhoAreActiveOnART AND arvDispenseFor6OrMoreMonths");
+    cd.setCompositionString(
+        "patientsWhoAreActiveOnART AND arvDispenseFor6OrMoreMonths AND arvDispenseFor6OrMoreMonthsMaxSource");
     return cd;
   }
 
@@ -147,5 +161,53 @@ public class TxCurrCohortQueries {
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
     return cd;
+  }
+
+  @DocumentedDefinition(value = "findTxCurrPatientsOnARVDispense6OrMoreMonths")
+  public CohortDefinition findTxCurrPatientsOnARVDispense6OrMoreMonths() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findTxCurrPatientsOnARVDispense6OrMoreMonths");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = TxCurrQueries.QUERY.findTxCurrPatientsOnARVDispense6OrMoreMonths;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findTxCurrPatientsOnARVDispense3And5MoreMonths")
+  public CohortDefinition findTxCurrPatientsOnARVDispense3And5MoreMonths() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findTxCurrPatientsOnARVDispense3And5MoreMonths");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = TxCurrQueries.QUERY.findTxCurrPatientsOnARVDispense3And5MoreMonths;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findTxCurrPatientsOnARVDispenseForLessThan3Months")
+  public CohortDefinition findTxCurrPatientsOnARVDispenseForLessThan3Months() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findTxCurrPatientsOnARVDispenseForLessThan3Months");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = TxCurrQueries.QUERY.findTxCurrPatientsOnARVDispenseForLessThan3Months;
+
+    definition.setQuery(query);
+
+    return definition;
   }
 }
