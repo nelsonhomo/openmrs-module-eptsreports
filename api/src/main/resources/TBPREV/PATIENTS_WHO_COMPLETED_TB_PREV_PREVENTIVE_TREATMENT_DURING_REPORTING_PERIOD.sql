@@ -724,7 +724,7 @@ from(
 		) fimINH on fimINH.patient_id=inicio_INH.patient_id
 		where fimINH.data_fim_INH BETWEEN (inicio_INH.data_inicio_INH +interval 1 day) and (inicio_INH.data_inicio_INH + interval 7 month)
 		group by inicio_INH.patient_id
-		HAVING count(distinct fimINH.data_fim_INH)>=5
+		HAVING count(fimINH.data_fim_INH)>=5
 		
 		union
 		 
