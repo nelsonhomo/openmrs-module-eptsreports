@@ -234,7 +234,7 @@ public class DSDCohortQueries {
 
     return definition;
   }
-  
+
   @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
   public CohortDefinition getDSDEligibleNumerator2() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -257,7 +257,7 @@ public class DSDCohortQueries {
 
     return definition;
   }
-  
+
   @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
   public CohortDefinition getDSDNotEligibleNumerator2() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();

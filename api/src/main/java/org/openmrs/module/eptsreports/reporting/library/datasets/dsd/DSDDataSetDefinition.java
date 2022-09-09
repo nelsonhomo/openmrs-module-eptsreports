@@ -119,36 +119,36 @@ public class DSDDataSetDefinition extends BaseDataSet {
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
         ADULT);
-    
+
     this.addColumns(
-            "N2-E",
-            "N2: Número de Pacientes Activos em TARV que encontram-se inscritos no MDS: Dispensa Trimestral (DT) - Elegíveis para MDS Estáveis",
-            dsd,
-            EptsReportUtils.map(
-                this.eptsGeneralIndicator.getIndicator(
-                    "patientsActiveOnArtEligibleForDsd",
-                    EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator2(), mappings)),
-                mappings),
-            !addWonaState,
-            TWO_TO_FOUR,
-            FIVE_TO_NINE,
-            TEN_TO_FOURTEEN,
-            ADULT);
-    
+        "N2-E",
+        "N2: Número de Pacientes Activos em TARV que encontram-se inscritos no MDS: Dispensa Trimestral (DT) - Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator2(), mappings)),
+            mappings),
+        !addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
     this.addColumns(
-            "N2-NE",
-            "N2: Número de Pacientes Activos em TARV que encontram-se inscritos no MDS: Dispensa Trimestral (DT) - Não-Elegíveis para MDS Estáveis",
-            dsd,
-            EptsReportUtils.map(
-                this.eptsGeneralIndicator.getIndicator(
-                    "patientsActiveOnArtEligibleForDsd",
-                    EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator2(), mappings)),
-                mappings),
-            !addWonaState,
-            TWO_TO_FOUR,
-            FIVE_TO_NINE,
-            TEN_TO_FOURTEEN,
-            ADULT);
+        "N2-NE",
+        "N2: Número de Pacientes Activos em TARV que encontram-se inscritos no MDS: Dispensa Trimestral (DT) - Não-Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator2(), mappings)),
+            mappings),
+        !addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
 
     this.addColumns(
         "D3",
