@@ -21,7 +21,6 @@ import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.UNDER_TWO;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.openmrs.module.eptsreports.reporting.library.cohorts.DSDCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.BaseDataSet;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.DSDCommonDimensions;
@@ -604,5 +603,4 @@ public class DSDDataSetDefinition extends BaseDataSet {
     parameters.add(ReportingConstants.LOCATION_PARAMETER);
     return parameters;
   }
-
 }
