@@ -144,7 +144,217 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 "patientsActiveOnArtEligibleForDsd",
                 EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator2(), mappings)),
             mappings),
+        addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N3-E",
+        "N3:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Semestral (DS) - Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator3(), mappings)),
+            mappings),
         !addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N3-NE",
+        "N3:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Semestral (DS) - Não-Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator3(), mappings)),
+            mappings),
+        addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N4-E",
+        "N4:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Annual (DA) - Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator4(), mappings)),
+            mappings),
+        !addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N4-NE",
+        "N4:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Annual (DA) - Não-Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator4(), mappings)),
+            mappings),
+        addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N5-E",
+        "N5: Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Descentralizada (DD) - Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator5(), mappings)),
+            mappings),
+        !addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N5-NE",
+        "N5: Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Descentralizada (DD) - Não-Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator5(), mappings)),
+            mappings),
+        addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N6-E",
+        "N6:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Comunitaria atraves do APE (DCA) - Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator6(), mappings)),
+            mappings),
+        !addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N6-NE",
+        "N6:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Comunitaria atraves do APE (DCA) - Não-Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator6(), mappings)),
+            mappings),
+        addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N7-E",
+        "N7:  Número de Pacientes activos em TARV qu encontram-se inscritos no MDS: Fluxo Rapido (FR) - Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator7(), mappings)),
+            mappings),
+        !addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N7-NE",
+        "N7:  Número de Pacientes activos em TARV qu encontram-se inscritos no MDS: Fluxo Rapido (FR) - Não-Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator7(), mappings)),
+            mappings),
+        addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N8-E",
+        "N8:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: GAAC  (GA) - Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator8(), mappings)),
+            mappings),
+        !addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N8-NE",
+        "N8:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: GAAC  (GA) - Não-Elegíveis para MDS Estáveis",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator8(), mappings)),
+            mappings),
+        addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N9",
+        "N9:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Comunitaria pelo Provedor (DCP)",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDNumerator9(), mappings)),
+            mappings),
+        addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N10",
+        "N10:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Brigada Movel (BM)",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator8(), mappings)),
+            mappings),
+        addWonaState,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
