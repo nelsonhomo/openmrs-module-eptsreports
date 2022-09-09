@@ -174,12 +174,10 @@ public class DSDCohortQueries {
   public CohortDefinition getNumerator1() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("patientsWhoAreActiveOnArtAndInAtleastOneDSD");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.setName("DSD- Numerator 1");
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
-
-    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappings = "endDate=${endDate},location=${location}";
 
     definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator1(), mappings));
 
