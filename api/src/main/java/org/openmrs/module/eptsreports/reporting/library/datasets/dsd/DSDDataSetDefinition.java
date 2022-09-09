@@ -21,6 +21,7 @@ import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.UNDER_TWO;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.openmrs.module.eptsreports.reporting.library.cohorts.DSDCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.BaseDataSet;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.DSDCommonDimensions;
@@ -145,6 +146,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator2(), mappings)),
             mappings),
         addWonaState,
+        UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
@@ -175,6 +177,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator3(), mappings)),
             mappings),
         addWonaState,
+        UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
@@ -205,6 +208,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator4(), mappings)),
             mappings),
         addWonaState,
+        UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
@@ -235,6 +239,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator5(), mappings)),
             mappings),
         addWonaState,
+        UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
@@ -265,6 +270,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator6(), mappings)),
             mappings),
         addWonaState,
+        UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
@@ -295,6 +301,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator7(), mappings)),
             mappings),
         addWonaState,
+        UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
@@ -325,6 +332,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator8(), mappings)),
             mappings),
         addWonaState,
+        UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
@@ -340,6 +348,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 EptsReportUtils.map(dsdCohortQueries.getDSDNumerator9(), mappings)),
             mappings),
         addWonaState,
+        UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
@@ -355,6 +364,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator8(), mappings)),
             mappings),
         addWonaState,
+        UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
@@ -387,7 +397,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 "patientsActiveOnArtEligibleForDsd",
                 EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator11(), mappings)),
             mappings),
-        !addWonaState,
+        addWonaState,
         UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
@@ -405,7 +415,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 "patientsActiveOnArtEligibleForDsd",
                 EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator12(), mappings)),
             mappings),
-        !addWonaState,
+        addWonaState,
         UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
@@ -423,7 +433,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 "patientsActiveOnArtEligibleForDsd",
                 EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator13(), mappings)),
             mappings),
-        !addWonaState,
+        addWonaState,
         UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
@@ -441,7 +451,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 "patientsActiveOnArtEligibleForDsd",
                 EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator14(), mappings)),
             mappings),
-        !addWonaState,
+        addWonaState,
         UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
@@ -459,7 +469,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 "patientsActiveOnArtEligibleForDsd",
                 EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator15(), mappings)),
             mappings),
-        !addWonaState,
+        addWonaState,
         UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
@@ -477,7 +487,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 "patientsActiveOnArtEligibleForDsd",
                 EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator16(), mappings)),
             mappings),
-        !addWonaState,
+        addWonaState,
         UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
@@ -495,7 +505,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 "patientsActiveOnArtEligibleForDsd",
                 EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator17(), mappings)),
             mappings),
-        !addWonaState,
+        addWonaState,
         UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
@@ -513,7 +523,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 "patientsActiveOnArtEligibleForDsd",
                 EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator18(), mappings)),
             mappings),
-        !addWonaState,
+        addWonaState,
         UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
@@ -531,7 +541,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 "patientsActiveOnArtEligibleForDsd",
                 EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator19(), mappings)),
             mappings),
-        !addWonaState,
+        addWonaState,
         UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
@@ -595,16 +605,4 @@ public class DSDDataSetDefinition extends BaseDataSet {
     return parameters;
   }
 
-  private void dsdNumerator1(
-      final CohortIndicatorDataSetDefinition definition, final String mappings) {
-    definition.addColumn(
-        "DSDN1T",
-        "DSDN1T Total",
-        EptsReportUtils.map(
-            this.eptsGeneralIndicator.getIndicator(
-                "patientsWhoAreActiveOnArtAndInAtleastOneDSD",
-                EptsReportUtils.map(this.dsdCohortQueries.getNumerator1(), mappings)),
-            mappings),
-        "");
-  }
 }

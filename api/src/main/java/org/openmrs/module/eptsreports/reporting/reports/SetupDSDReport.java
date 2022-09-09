@@ -20,12 +20,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSetDefinition;
+import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.dsd.DSDDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.ReportingException;
+import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.report.ReportDesign;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,8 @@ public class SetupDSDReport extends EptsDataExportManager {
   private DSDDataSetDefinition dsdDataSetDefinition;
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
+  @Autowired private DatimCodeDataSet datimCodeDataset;
+  @Autowired private SismaCodeDataSet sismaCodeDataset;
 
   @Autowired
   public SetupDSDReport(DSDDataSetDefinition dsdDataSetDefinition) {
@@ -72,6 +77,14 @@ public class SetupDSDReport extends EptsDataExportManager {
     rd.addParameters(dsdDataSetDefinition.getParameters());
     rd.addDataSetDefinition("HF", mapStraightThrough(new LocationDataSetDefinition()));
     rd.addDataSetDefinition("DSD", mapStraightThrough(dsdDataSetDefinition.constructDSDDataset()));
+    rd.addDataSetDefinition(
+        "D",
+        Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
+
+    rd.addDataSetDefinition(
+        "SC",
+        Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
+
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
