@@ -234,6 +234,52 @@ public class DSDCohortQueries {
 
     return definition;
   }
+  
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
+  public CohortDefinition getDSDEligibleNumerator2() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Eligible - Numerator 2");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator1(), mappings));
+
+    definition.addSearch(
+        "DT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DT", DsdQueriesInterface.QUERY.findPatientsWhoAreThreeMonthsDrugDistribution),
+            mappings));
+
+    definition.setCompositionString("IART AND DT");
+
+    return definition;
+  }
+  
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
+  public CohortDefinition getDSDNotEligibleNumerator2() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Not Eligible - Numerator 2");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator2(), mappings));
+
+    definition.addSearch(
+        "DT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DT", DsdQueriesInterface.QUERY.findPatientsWhoAreThreeMonthsDrugDistribution),
+            mappings));
+
+    definition.setCompositionString("IART AND DT");
+
+    return definition;
+  }
 
   @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSDAndAreStable")
   public CohortDefinition findPatientsWhoAreActiveOnArtAndInAtleastOneDSDAndAreStable() {
