@@ -223,7 +223,7 @@ public interface DsdQueriesInterface {
             + "join obs grupo on grupo.encounter_id=e.encounter_id   "
             + "join obs o on o.encounter_id=e.encounter_id  "
             + "join obs obsEstado on obsEstado.encounter_id=e.encounter_id   "
-            + "where  e.encounter_type in(6) and e.location_id=:location and o.concept_id=165174 and o.value_coded in(165179,) and o.voided=0   "
+            + "where  e.encounter_type in(6) and e.location_id=:location and o.concept_id=165174 and o.value_coded in(165179) and o.voided=0   "
             + "and grupo.concept_id=165323  and grupo.voided=0 and obsEstado.concept_id=165322  and obsEstado.value_coded in(1256,1257)   "
             + "and obsEstado.voided=0  and grupo.voided=0   "
             + "and grupo.obs_id=o.obs_group_id and grupo.obs_id=obsEstado.obs_group_id  and e.encounter_datetime<=:endDate "
