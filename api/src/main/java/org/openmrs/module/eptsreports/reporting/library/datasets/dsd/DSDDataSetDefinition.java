@@ -197,7 +197,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
 
     this.addColumns(
         "N4-NE",
-        "N4:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Annual (DA) - Não-Elegíveis para MDS Estáveis",
+        "N4:  Número de Pacientes activos em TARV que encontram-sgetDSDDenominator1e inscritos no MDS: Dispensa Annual (DA) - Não-Elegíveis para MDS Estáveis",
         dsd,
         EptsReportUtils.map(
             this.eptsGeneralIndicator.getIndicator(
@@ -370,6 +370,168 @@ public class DSDDataSetDefinition extends BaseDataSet {
                 EptsReportUtils.map(dsdCohortQueries.getDSDDenominator3(), mappings)),
             mappings),
         addWonaState,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    // add Numerato 11
+
+    this.addColumns(
+        "N11-E",
+        "N11: Número de Pacientes activos em TARV qu encontram-se inscritos no MDS: Clinica Movel (CM)",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator11(), mappings)),
+            mappings),
+        !addWonaState,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    // add Numerato 12
+
+    this.addColumns(
+        "N12-E",
+        "N12:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Abordagem Familiar (AF)",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator12(), mappings)),
+            mappings),
+        !addWonaState,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    // add Numerato 13
+
+    this.addColumns(
+        "N13-E",
+        "N13:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Clube de Adesao (CA)",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator13(), mappings)),
+            mappings),
+        !addWonaState,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    // add Numerato 14
+
+    this.addColumns(
+        "N14-E",
+        "N14:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Extensao de Horario (EH)",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator14(), mappings)),
+            mappings),
+        !addWonaState,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    // add Numerato 15
+
+    this.addColumns(
+        "N15-E",
+        "N15:  Número de Pacientes activos em TARV qu encontram-se inscritos no MDS: Paragem Unica no Sector de Tuberculose (TB)",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator15(), mappings)),
+            mappings),
+        !addWonaState,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    // add Numerato 16
+
+    this.addColumns(
+        "N16-E",
+        "N16:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Paragem Unica nos Servicos TARV (CT)",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator16(), mappings)),
+            mappings),
+        !addWonaState,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    // add Numerato 17
+
+    this.addColumns(
+        "N17-E",
+        "N17:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Paragem Unica nos Servicos Amigos De Adolescentes e Jovens (SAAJ)",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator17(), mappings)),
+            mappings),
+        !addWonaState,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    // add Numerato 18
+
+    this.addColumns(
+        "N18-E",
+        "N18:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Paragem Unica Saude Materno-Infantil (SMI)",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator18(), mappings)),
+            mappings),
+        !addWonaState,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    // add Numerato 19
+
+    this.addColumns(
+        "N19-E",
+        "N19:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Doenca Avancada por HIV (DAH) ",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getDSDEligibleNumerator19(), mappings)),
+            mappings),
+        !addWonaState,
         UNDER_TWO,
         TWO_TO_FOUR,
         FIVE_TO_NINE,

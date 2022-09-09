@@ -1356,4 +1356,211 @@ public class DSDCohortQueries {
     definition.addParameter(new Parameter("location", "Location", Location.class));
     return definition;
   }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
+  public CohortDefinition getDSDEligibleNumerator11() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Eligible - Numerator 11");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator3(), mappings));
+
+    definition.addSearch(
+        "CM",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "CM", DsdQueriesInterface.QUERY.findPatientsWhoAreMobileClinic),
+            mappings));
+
+    definition.setCompositionString("IART AND CM");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
+  public CohortDefinition getDSDEligibleNumerator12() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Eligible - Numerator 12");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator3(), mappings));
+
+    definition.addSearch(
+        "AF",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "AF", DsdQueriesInterface.QUERY.findPatientsWhoAreFamilyAproach),
+            mappings));
+
+    definition.setCompositionString("IART AND AF");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
+  public CohortDefinition getDSDEligibleNumerator13() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Eligible - Numerator 13");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator3(), mappings));
+
+    definition.addSearch(
+        "CA",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "CA", DsdQueriesInterface.QUERY.findPatietsWhoAreOnAdherenceClubs),
+            mappings));
+
+    definition.setCompositionString("IART AND CA");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
+  public CohortDefinition getDSDEligibleNumerator14() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Eligible - Numerator 14");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator3(), mappings));
+
+    definition.addSearch(
+        "EH",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "EH", DsdQueriesInterface.QUERY.findPatientsWhoAreInTimeExtetion),
+            mappings));
+
+    definition.setCompositionString("IART AND EH");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
+  public CohortDefinition getDSDEligibleNumerator15() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Eligible - Numerator 15");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator3(), mappings));
+
+    definition.addSearch(
+        "TB",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "TB", DsdQueriesInterface.QUERY.findPatientsWhoAreTBSector),
+            mappings));
+
+    definition.setCompositionString("IART AND TB");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
+  public CohortDefinition getDSDEligibleNumerator16() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Eligible - Numerator 16");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator3(), mappings));
+
+    definition.addSearch(
+        "CT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "CT", DsdQueriesInterface.QUERY.findPatientsWhoAreOneStopAtARTServices),
+            mappings));
+
+    definition.setCompositionString("IART AND CT");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
+  public CohortDefinition getDSDEligibleNumerator17() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Eligible - Numerator 17");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator3(), mappings));
+
+    definition.addSearch(
+        "SAAJ",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "SAAJ", DsdQueriesInterface.QUERY.findPatientsWhoAreOneSAAJ),
+            mappings));
+
+    definition.setCompositionString("IART AND SAAJ");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
+  public CohortDefinition getDSDEligibleNumerator18() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Eligible - Numerator 18");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator3(), mappings));
+
+    definition.addSearch(
+        "SMI",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "SMI", DsdQueriesInterface.QUERY.findPatientsWhoAreOneStopAtARTServicesSMI),
+            mappings));
+
+    definition.setCompositionString("IART AND SMI");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
+  public CohortDefinition getDSDEligibleNumerator19() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Eligible - Numerator 19");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator3(), mappings));
+
+    definition.addSearch(
+        "DAH",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DAH", DsdQueriesInterface.QUERY.findPatientsWhoAreOneAdvancedHIVDisease),
+            mappings));
+
+    definition.setCompositionString("IART AND DAH");
+
+    return definition;
+  }
 }
