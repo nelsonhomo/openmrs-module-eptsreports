@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 public class DSDCohortQueries {
 
   private static final String FIND_DSD_DENOMINATOR_1 = "DSD/DSD_DENOMINATOR_D1.sql";
+  private static final int GAAC_CONCEPT = 23724;
 
   @Autowired private GenericCohortQueries genericCohorts;
 
@@ -170,7 +171,7 @@ public class DSDCohortQueries {
   }
 
   @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
-  public CohortDefinition findPatientsWhoAreActiveOnArtAndInAtleastOneDSD() {
+  public CohortDefinition getNumerator1() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName("patientsWhoAreActiveOnArtAndInAtleastOneDSD");
@@ -180,67 +181,58 @@ public class DSDCohortQueries {
 
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    definition.addSearch(
-        "IART",
-        EptsReportUtils.map(
-            this.findPatientsWhoAreActiveOnArtExcludingPregnantBreastfeedingAndTb(), mappings));
-
-    definition.addSearch(
-        "GAAC",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "patientsWhoAreCommunityAdherenceGroups",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreCommunityAdherenceGroups),
-            mappings));
-
-    definition.addSearch(
-        "AF",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "patientsWhoAreFamilyAproach",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreFamilyAproach),
-            mappings));
-
-    definition.addSearch(
-        "CA",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "patietsWhoAreOnAdherenceClubs",
-                DsdQueriesInterface.QUERY.findPatietsWhoAreOnAdherenceClubs),
-            mappings));
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator1(), mappings));
 
     definition.addSearch(
         "DT",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
-                "patientsWhoAreThreeMonthsDrugDistribution",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreThreeMonthsDrugDistribution),
-            mappings));
-
-    definition.addSearch(
-        "FR",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "patientsWhoAreFastTrack", DsdQueriesInterface.QUERY.findPatientsWhoAreFastTrack),
-            mappings));
-
-    definition.addSearch(
-        "DC",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "patientsWhoAreInCommunityDrugsDistribution",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreInCommunityDrugsDistribution),
+                "DT", DsdQueriesInterface.QUERY.findPatientsWhoAreThreeMonthsDrugDistribution),
             mappings));
 
     definition.addSearch(
         "DS",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
-                "patientsWhoAreSixMonthsDrugsDistribution",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreSixMonthsDrugsDistribution),
+                "DS", DsdQueriesInterface.QUERY.findPatientsWhoAreSixMonthsDrugsDistribution),
             mappings));
 
-    definition.setCompositionString("IART AND (GAAC OR AF OR CA OR DT FR OR DC OR DS)");
+    definition.addSearch(
+        "DA",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DA", DsdQueriesInterface.QUERY.findPatientsWhoAreAnnualDrugsDistribution),
+            mappings));
+
+    definition.addSearch(
+        "DD",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DD", DsdQueriesInterface.QUERY.findPatientsWhoAreDiscentralazedDrugsDistribution),
+            mappings));
+
+    definition.addSearch(
+        "DC",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DC", DsdQueriesInterface.QUERY.findPatientsWhoAreInCommunityDrugsDistribution),
+            mappings));
+
+    definition.addSearch(
+        "FR",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "FR", DsdQueriesInterface.QUERY.findPatientsWhoAreFastTrack),
+            mappings));
+
+    definition.addSearch(
+        "GAAC",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "GAAC", DsdQueriesInterface.QUERY.findPatientWhoAreAnyMDC(GAAC_CONCEPT)),
+            mappings));
+
+    definition.setCompositionString("IART AND (DT OR DS OR DA OR DD OR DC OR  FR OR GAAC)");
 
     return definition;
   }
@@ -256,9 +248,7 @@ public class DSDCohortQueries {
 
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    definition.addSearch(
-        "IART-DSD",
-        EptsReportUtils.map(this.findPatientsWhoAreActiveOnArtAndInAtleastOneDSD(), mappings));
+    definition.addSearch("IART-DSD", EptsReportUtils.map(this.getNumerator1(), mappings));
 
     definition.addSearch(
         "STABLE",
@@ -302,9 +292,7 @@ public class DSDCohortQueries {
 
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    definition.addSearch(
-        "IART-DSD",
-        EptsReportUtils.map(this.findPatientsWhoAreActiveOnArtAndInAtleastOneDSD(), mappings));
+    definition.addSearch("IART-DSD", EptsReportUtils.map(this.getNumerator1(), mappings));
 
     definition.addSearch(
         "STABLE",

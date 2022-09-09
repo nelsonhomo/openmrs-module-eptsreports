@@ -405,9 +405,7 @@ public class EriDSDDataset extends BaseDataSet {
         EptsReportUtils.map(
             this.eptsGeneralIndicator.getIndicator(
                 "patientsWhoAreActiveOnArtAndInAtleastOneDSD",
-                EptsReportUtils.map(
-                    this.dsdCohortQueries.findPatientsWhoAreActiveOnArtAndInAtleastOneDSD(),
-                    mappings)),
+                EptsReportUtils.map(this.dsdCohortQueries.getNumerator1(), mappings)),
             mappings),
         "");
 

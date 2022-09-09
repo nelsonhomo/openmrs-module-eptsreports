@@ -70,6 +70,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
     boolean addWonaState = true;
 
     this.addAgeDimensions(dsd, UNDER_TWO, TWO_TO_FOUR, FIVE_TO_NINE, TEN_TO_FOURTEEN, ADULT);
+
     dsd.addDimension(
         "state", EptsReportUtils.map(this.dsdCommonDimensions.getDimensions(), mappings));
 
@@ -81,6 +82,21 @@ public class DSDDataSetDefinition extends BaseDataSet {
             this.eptsGeneralIndicator.getIndicator(
                 "patientsActiveOnArtEligibleForDsd",
                 EptsReportUtils.map(dsdCohortQueries.getDSDDenominator1(), mappings)),
+            mappings),
+        !addWonaState,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "N1",
+        "N1: N1: Número de Pacientes Não Grávidas, Não Lactantes e Não em Tratamento TB e Elegíveis a MDS que encontram-se em pelo menos um MDS para Pacietnes Estáveis (GA, DT, DS, DA, FR, DCA, DD)",
+        dsd,
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(dsdCohortQueries.getNumerator1(), mappings)),
             mappings),
         !addWonaState,
         TWO_TO_FOUR,
@@ -175,5 +191,18 @@ public class DSDDataSetDefinition extends BaseDataSet {
     parameters.add(ReportingConstants.END_DATE_PARAMETER);
     parameters.add(ReportingConstants.LOCATION_PARAMETER);
     return parameters;
+  }
+
+  private void dsdNumerator1(
+      final CohortIndicatorDataSetDefinition definition, final String mappings) {
+    definition.addColumn(
+        "DSDN1T",
+        "DSDN1T Total",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsWhoAreActiveOnArtAndInAtleastOneDSD",
+                EptsReportUtils.map(this.dsdCohortQueries.getNumerator1(), mappings)),
+            mappings),
+        "");
   }
 }
