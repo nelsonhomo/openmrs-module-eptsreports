@@ -678,7 +678,7 @@ public class ResumoMensalQueries {
             + "JOIN encounter enc ON pat.patient_id=enc.patient_id "
             + "JOIN obs ob "
             + " ON enc.encounter_id=ob.encounter_id "
-            + " WHERE pat.voided=0 AND enc.voided=0 AND ob.voided=0 AND enc.location_id=:location AND enc.encounter_datetime "
+            + " WHERE pat.voided=0 AND enc.voided=0 AND ob.voided=0 AND enc.location_id=:location AND ob.obs_datetime  "
             + " BETWEEN :startDate AND :endDate AND ob.concept_id IN(856,1305) AND enc.encounter_type in(6,53) ";
 
     return query;
@@ -689,13 +689,13 @@ public class ResumoMensalQueries {
         "SELECT pat.patient_id FROM patient pat "
             + " JOIN encounter enc ON pat.patient_id=enc.patient_id JOIN obs ob ON enc.encounter_id=ob.encounter_id "
             + " WHERE pat.voided=0 AND enc.voided=0 AND ob.voided=0 AND enc.location_id=:location "
-            + " AND enc.encounter_datetime BETWEEN :startDate AND :endDate AND ob.value_numeric IS NOT NULL "
+            + " AND ob.obs_datetime  BETWEEN :startDate AND :endDate AND ob.value_numeric IS NOT NULL "
             + " AND ob.concept_id=856 AND enc.encounter_type in(6,53) AND ob.value_numeric < 1000 "
             + " UNION "
             + " SELECT pat.patient_id FROM patient pat "
             + " JOIN encounter enc ON pat.patient_id=enc.patient_id JOIN obs ob ON enc.encounter_id=ob.encounter_id "
             + " WHERE pat.voided = 0 AND enc.voided = 0 AND ob.voided = 0 AND enc.location_id = :location AND "
-            + " enc.encounter_datetime BETWEEN :startDate AND :endDate AND enc.encounter_type in(6,53) AND ob.concept_id=1305 ";
+            + " ob.obs_datetime BETWEEN :startDate AND :endDate AND enc.encounter_type in(6,53) AND ob.concept_id=1305 ";
 
     return query;
   }
