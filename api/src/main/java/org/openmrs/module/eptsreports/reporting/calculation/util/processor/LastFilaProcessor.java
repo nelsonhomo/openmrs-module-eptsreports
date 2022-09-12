@@ -3,7 +3,9 @@ package org.openmrs.module.eptsreports.reporting.calculation.util.processor;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.eptsreports.reporting.calculation.txcurr.TxCurrPatientsOnArtOnArvDispenseIntervalsCalculation.DisaggregationInterval;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.openmrs.module.reporting.evaluation.querybuilder.SqlQueryBuilder;
 import org.openmrs.module.reporting.evaluation.service.EvaluationService;
@@ -27,22 +29,90 @@ public class LastFilaProcessor {
         .evaluateToMap(qb, Integer.class, Date.class, context);
   }
 
-  public Map<Integer, Date> getLastTipoDeLevantamentoOnFichaClinicaMasterCard(
-      EvaluationContext context, Integer conceptId, Integer valueCodedId) {
+  public Map<Integer, Date> getLastLevantamentoOnFilaForInterval(
+      EvaluationContext context, DisaggregationInterval disaggregationInterval) {
+
+    String sql =
+        "																							"
+            + "select levantamento.patient_id, data_levantamento   																									"
+            + "from (  																																				"
+            + "	select p.patient_id,max(e.encounter_datetime) data_levantamento  																					"
+            + "	from patient p  																																	"
+            + "		inner join encounter e on p.patient_id=e.patient_id  																							"
+            + "	where p.voided=0 and e.voided=0 and e.encounter_type=18 and date(e.encounter_datetime)<=:endDate and e.location_id=:location group by p.patient_id  "
+            + "	) 																																					"
+            + "	levantamento  																																		"
+            + "		inner join encounter e on e.patient_id = levantamento.patient_id  																				"
+            + "		inner join obs o on o.encounter_id=e.encounter_id  																								"
+            + "	where levantamento.data_levantamento=e.encounter_datetime and o.concept_id=5096  																	"
+            + "		and e.encounter_type=18 and e.voided=0 and o.voided=0 																							"
+            + "	and e.location_id=:location and  datediff(o.value_datetime,levantamento.data_levantamento) %s	 															";
+
+    switch (disaggregationInterval) {
+      case MONTHLY:
+        sql = String.format(sql, "< 83");
+        break;
+
+      case QUARTERLY:
+        sql = String.format(sql, "between 83 and 173");
+        break;
+
+      case SEMI_ANNUAL:
+        sql = String.format(sql, "> 173");
+        break;
+    }
+
+    SqlQueryBuilder qb = new SqlQueryBuilder(sql, context.getParameterValues());
+    return Context.getRegisteredComponents(EvaluationService.class)
+        .get(0)
+        .evaluateToMap(qb, Integer.class, Date.class, context);
+  }
+
+  public Map<Integer, Date> getLastTipoDeLevantamentoMensalOnFichaClinicaMasterCard(
+      EvaluationContext context) {
+
+    String sql =
+        "																						"
+            + "select consultas.patient_id, consultas.data_consulta  																								"
+            + "from( 																																				"
+            + "	select p.patient_id,max(e.encounter_datetime) data_consulta  																						"
+            + "	from patient p inner join encounter e on p.patient_id=e.patient_id  																				"
+            + "		inner join obs o on o.encounter_id=e.encounter_id  																								"
+            + "	where e.voided=0 and o.voided=0 and p.voided=0  																									"
+            + "		and e.encounter_type =6 and o.concept_id=23739  																								"
+            + "		and e.encounter_datetime<=:endDate and e.location_id=:location  																				"
+            + "	group by p.patient_id  																																"
+            + " ) 																																					"
+            + " consultas group by consultas.patient_id																																		";
+
+    SqlQueryBuilder qb = new SqlQueryBuilder(sql, context.getParameterValues());
+
+    return Context.getRegisteredComponents(EvaluationService.class)
+        .get(0)
+        .evaluateToMap(qb, Integer.class, Date.class, context);
+  }
+
+  public Map<Integer, Date> getValuesForMensalOnFichaClinicaMasterCard(
+      EvaluationContext context, List<Integer> patientIds) {
+
+    String sql =
+        "																																					"
+            + "select consultas.patient_id, consultas.data_consulta  																								"
+            + "from( 																																				"
+            + "	select p.patient_id,max(e.encounter_datetime) data_consulta  																						"
+            + "	from patient p inner join encounter e on p.patient_id=e.patient_id  																				"
+            + "		inner join obs o on o.encounter_id=e.encounter_id  																								"
+            + "	where e.voided=0 and o.voided=0 and p.voided=0  																									"
+            + "		and e.encounter_type =6 and o.concept_id=23739 and o.value_coded = 1098 																		"
+            + "		and e.encounter_datetime<=:endDate and e.location_id=:location and e.patient_id in (%s)															"
+            + "	group by p.patient_id  																																"
+            + " ) 																																					"
+            + " consultas 	group by consultas.patient_id																											";
 
     SqlQueryBuilder qb =
         new SqlQueryBuilder(
             String.format(
-                "select max_ficha.patient_id, max_ficha.data_levantamento from( "
-                    + " (Select p.patient_id,max(e.encounter_datetime) data_levantamento "
-                    + "	from 	patient p inner join encounter e on p.patient_id=e.patient_id "
-                    + "			inner join obs o on o.encounter_id=e.encounter_id "
-                    + "	where 	e.voided=0 and o.voided=0 and p.voided=0 and "
-                    + "			e.encounter_type =6 and o.concept_id=%s and o.value_coded=%s and "
-                    + "			e.encounter_datetime<=:endDate and e.location_id=:location "
-                    + "	group by p.patient_id ) max_ficha "
-                    + "inner join patient patient_without_fila on patient_without_fila.patient_id = max_ficha.patient_id) ",
-                conceptId, valueCodedId),
+                sql, StringUtils.join(patientIds, ","), StringUtils.join(patientIds, ",")),
             context.getParameterValues());
 
     return Context.getRegisteredComponents(EvaluationService.class)
@@ -50,26 +120,90 @@ public class LastFilaProcessor {
         .evaluateToMap(qb, Integer.class, Date.class, context);
   }
 
-  public Map<Integer, Date> getLastMarkedInModelosDiferenciadosDeCuidadosOnFichaClinicaMasterCard(
-      EvaluationContext context, Integer conceptId) {
+  public Map<Integer, Date>
+      getLastMarkedInModelosDiferenciadosDeCuidadosOrTipoDeLevantamentoOnFichaClinicaMasterCard(
+          EvaluationContext context) {
+
+    String query =
+        "																																				"
+            + "select consultas.patient_id, max(consultas.data_consulta)  																							"
+            + "from( 																																				"
+            + "	 																																					"
+            + "	select p.patient_id,max(e.encounter_datetime) data_consulta  																						"
+            + "	from patient p   																																	"
+            + "		inner join encounter e on p.patient_id=e.patient_id   																							"
+            + "	     inner join obs grupo on grupo.encounter_id=e.encounter_id   																					"
+            + "	     inner join obs o on o.encounter_id=e.encounter_id  																							"
+            + "	     inner join obs obsEstado on obsEstado.encounter_id=e.encounter_id   																			"
+            + "	where e.encounter_type in(6) and e.location_id=:location and o.concept_id=165174 and o.voided=0   													"
+            + "		and grupo.concept_id=165323  and grupo.voided=0 and obsEstado.concept_id=165322  and obsEstado.value_coded in(1256,1257)   						"
+            + "		and obsEstado.voided=0  and grupo.voided=0   																									"
+            + "		and grupo.obs_id=o.obs_group_id and grupo.obs_id=obsEstado.obs_group_id  and e.encounter_datetime<=:endDate  									"
+            + "		group by p.patient_id 																															"
+            + "	 																																					"
+            + "	union 																																				"
+            + "	 																																					"
+            + "	select p.patient_id,max(e.encounter_datetime) data_consulta  																						"
+            + "	from patient p inner join encounter e on p.patient_id=e.patient_id  																				"
+            + "		inner join obs o on o.encounter_id=e.encounter_id  																								"
+            + "	where e.voided=0 and o.voided=0 and p.voided=0  																									"
+            + "		and e.encounter_type =6 and o.concept_id=23739  																								"
+            + "		and e.encounter_datetime<=:endDate and e.location_id=:location  																				"
+            + "	group by p.patient_id  																																"
+            + " ) 																																					"
+            + " consultas group by consultas.patient_id 																																			";
+
+    SqlQueryBuilder qb = new SqlQueryBuilder(query, context.getParameterValues());
+
+    return Context.getRegisteredComponents(EvaluationService.class)
+        .get(0)
+        .evaluateToMap(qb, Integer.class, Date.class, context);
+  }
+
+  public Map<Integer, Date>
+      getValuesForModelosDiferenciadosDeCuidadosOrTipoDeLevantamentoOnFichaClinicaMasterCard(
+          EvaluationContext context,
+          List<Integer> patientIds,
+          Integer tipoDeLevantamentoValueCoded,
+          List<Integer> mdcValueCoded) {
+
+    String query =
+        "																					"
+            + "select consultas.patient_id, max(consultas.data_consulta) 																								"
+            + "from( 																																				"
+            + "	 																																					"
+            + "	select p.patient_id,max(e.encounter_datetime) data_consulta  																						"
+            + "	from patient p   																																	"
+            + "		inner join encounter e on p.patient_id=e.patient_id   																							"
+            + "	     inner join obs grupo on grupo.encounter_id=e.encounter_id   																					"
+            + "	     inner join obs o on o.encounter_id=e.encounter_id  																							"
+            + "	     inner join obs obsEstado on obsEstado.encounter_id=e.encounter_id   																			"
+            + "	where e.encounter_type in(6) and e.location_id=:location and o.concept_id=165174 and o.value_coded in( %s)  and o.voided=0   													"
+            + "		and grupo.concept_id=165323  and grupo.voided=0 and obsEstado.concept_id=165322  and obsEstado.value_coded in(1256,1257)   						"
+            + "		and obsEstado.voided=0  and grupo.voided=0 and p.patient_id in(%s) 																									"
+            + "		and grupo.obs_id=o.obs_group_id and grupo.obs_id=obsEstado.obs_group_id  and e.encounter_datetime<=:endDate  									"
+            + "		group by p.patient_id 																															"
+            + "	 																																					"
+            + "	union 																																				"
+            + "	 																																					"
+            + "	select p.patient_id,max(e.encounter_datetime) data_consulta  																						"
+            + "	from patient p inner join encounter e on p.patient_id=e.patient_id  																				"
+            + "		inner join obs o on o.encounter_id=e.encounter_id  																								"
+            + "	where e.voided=0 and o.voided=0 and p.voided=0  																									"
+            + "		and e.encounter_type =6 and o.concept_id=23739 and o.value_coded = %s and p.patient_id in(%s)																								"
+            + "		and e.encounter_datetime<=:endDate and e.location_id=:location  																				"
+            + "	group by p.patient_id  																																"
+            + " ) 																																					"
+            + " consultas group by consultas.patient_id																																		";
 
     SqlQueryBuilder qb =
         new SqlQueryBuilder(
             String.format(
-                "select max_ficha.patient_id, max_ficha.data_mdc from "
-                    + "( select p.patient_id,max(e.encounter_datetime) data_mdc from patient p  "
-                    + "join encounter e on p.patient_id=e.patient_id  "
-                    + "join obs grupo on grupo.encounter_id=e.encounter_id  "
-                    + "join obs o on o.encounter_id=e.encounter_id "
-                    + "join obs obsEstado on obsEstado.encounter_id=e.encounter_id  "
-                    + "where  e.encounter_type in(6) and e.location_id=:location and o.concept_id=165174 and o.value_coded in(%s) and o.voided=0  "
-                    + "and grupo.concept_id=165323  and grupo.voided=0 and obsEstado.concept_id=165322  and obsEstado.value_coded in(1256,1257)  "
-                    + "and obsEstado.voided=0  and grupo.voided=0  "
-                    + "and grupo.obs_id=o.obs_group_id and grupo.obs_id=obsEstado.obs_group_id  and e.encounter_datetime<=:endDate "
-                    + "group by p.patient_id "
-                    + ") max_ficha "
-                    + " inner join patient patient_without_fila on patient_without_fila.patient_id = max_ficha.patient_id ",
-                conceptId),
+                query,
+                StringUtils.join(mdcValueCoded, ","),
+                StringUtils.join(patientIds, ","),
+                tipoDeLevantamentoValueCoded,
+                StringUtils.join(patientIds, ",")),
             context.getParameterValues());
 
     return Context.getRegisteredComponents(EvaluationService.class)
