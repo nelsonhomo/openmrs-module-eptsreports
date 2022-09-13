@@ -508,7 +508,7 @@ from(
 	            inner join encounter e on e.patient_id = p.patient_id
 				inner join obs profilaxia3HP on profilaxia3HP.encounter_id = e.encounter_id		 																				
 				inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id																
-			 where e.voided=0 and profilaxia3HP.voided=0 and profilaxia3HP.concept_id=23985 and profilaxia3HP.value_coded = 23954 and e.encounter_type=6 and  e.location_id=208	
+			 where e.voided=0 and profilaxia3HP.voided=0 and profilaxia3HP.concept_id=23985 and profilaxia3HP.value_coded = 23954 and e.encounter_type=6 and  e.location_id=:location	
 				   and estadoProfilaxia.voided =0 and estadoProfilaxia.concept_id =165308 and estadoProfilaxia.value_coded in (1256,1257) and p.voided=0	
 	        ) fim on fim.patient_id=inicio_3HP.patient_id
 	            where fim.encounter_datetime between inicio_3HP.data_inicio_3HP and (inicio_3HP.data_inicio_3HP + interval 4 month)
