@@ -6,6 +6,14 @@ public interface TxCurrQueries {
 
   public class QUERY {
 
+    public enum DispensationIntervalType {
+      MONTHLY,
+
+      QUARTERLY,
+
+      SEMI_ANNUAL
+    }
+
     public static final String findPatientsWhoAreCurrentlyEnrolledOnART =
         "	select patient_id                                                                          							"
             + "	from                                                                                        							"
@@ -218,7 +226,8 @@ public interface TxCurrQueries {
             + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 AND person.voided=0 "
             + "AND TIMESTAMPDIFF(year,birthdate,:endDate) BETWEEN %d AND %d AND gender='%s' AND birthdate IS NOT NULL";
 
-    public static final String findPatientsWhoAreInDispenseType(final DispenseTye dispenseType) {
+    public static final String findPatientsWhoAreInDispenseType(
+        final DispensationIntervalType dispenseType) {
       String query =
           "select patient_id "
               + "from "
