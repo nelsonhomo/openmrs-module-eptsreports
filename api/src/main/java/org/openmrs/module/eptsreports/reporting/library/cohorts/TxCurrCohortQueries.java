@@ -18,6 +18,7 @@ import org.openmrs.module.eptsreports.reporting.calculation.txcurr.TxCurrPatient
 import org.openmrs.module.eptsreports.reporting.calculation.txcurr.TxCurrPatientsOnArvDispenseBetween3And5MonthsCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.txcurr.TxCurrPatientsOnArvDispenseLessThan3MonthCalculation;
 import org.openmrs.module.eptsreports.reporting.cohort.definition.BaseFghCalculationCohortDefinition;
+import org.openmrs.module.eptsreports.reporting.library.queries.DispenseTye;
 import org.openmrs.module.eptsreports.reporting.library.queries.TxCurrQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -56,8 +57,7 @@ public class TxCurrCohortQueries {
         EptsReportUtils.map(this.findPatientsWhoAreActiveOnART(), mapping));
     cd.addSearch(
         "arvDispenseForLessThan3Months",
-        EptsReportUtils.map(
-            this.getPatientsOnArtOnArvDispenseForLessThan3MonthsCalculation(), mapping));
+        EptsReportUtils.map(this.findPatientsOnArtOnArvDispenseForLessThan3Months(), mapping));
 
     cd.setCompositionString("patientsWhoAreActiveOnART AND arvDispenseForLessThan3Months");
     return cd;
@@ -77,8 +77,7 @@ public class TxCurrCohortQueries {
 
     cd.addSearch(
         "arvDispenseBetween3And5Months",
-        EptsReportUtils.map(
-            this.getPatientsOnArtOnArvDispenseBetween3And5MonthsCalculation(), mapping));
+        EptsReportUtils.map(this.findPatientsOnArtOnArvDispenseBetween3And5Months(), mapping));
 
     cd.setCompositionString("patientsWhoAreActiveOnART AND arvDispenseBetween3And5Months");
     return cd;
@@ -98,8 +97,7 @@ public class TxCurrCohortQueries {
 
     cd.addSearch(
         "arvDispenseFor6OrMoreMonths",
-        EptsReportUtils.map(
-            this.getPatientsOnArtOnArvDispenseFor6OrMoreMonthsCalculation(), mapping));
+        EptsReportUtils.map(this.findPatientsOnArtOnArvDispenseFor6OrMoreMonths(), mapping));
 
     cd.setCompositionString("patientsWhoAreActiveOnART AND arvDispenseFor6OrMoreMonths");
     return cd;
@@ -147,5 +145,44 @@ public class TxCurrCohortQueries {
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
     return cd;
+  }
+
+  @DocumentedDefinition(value = "findPatientsOnArtOnArvDispenseFor6OrMoreMonths")
+  public CohortDefinition findPatientsOnArtOnArvDispenseFor6OrMoreMonths() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsOnArtOnArvDispenseFor6OrMoreMonths");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.setQuery(TxCurrQueries.QUERY.findPatientsWhoAreInDispenseType(DispenseTye.SEMI_ANNUAL));
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsOnArtOnArvDispenseBetween3And5Months")
+  public CohortDefinition findPatientsOnArtOnArvDispenseBetween3And5Months() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsOnArtOnArvDispenseBetween3And5Months");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.setQuery(TxCurrQueries.QUERY.findPatientsWhoAreInDispenseType(DispenseTye.QUARTERLY));
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsOnArtOnArvDispenseForLessThan3Months")
+  public CohortDefinition findPatientsOnArtOnArvDispenseForLessThan3Months() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsOnArtOnArvDispenseForLessThan3Months");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.setQuery(TxCurrQueries.QUERY.findPatientsWhoAreInDispenseType(DispenseTye.MONTHLY));
+
+    return definition;
   }
 }
