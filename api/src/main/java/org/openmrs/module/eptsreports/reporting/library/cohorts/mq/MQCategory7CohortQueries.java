@@ -147,19 +147,23 @@ public class MQCategory7CohortQueries {
     definition.addSearch(
         "TB-ACTIVE-CAT7",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsDiagnosedWithActiveTBDuringDuringPeriodCategory7(),
+            this.mQCohortQueries
+                .findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPICategory7(),
             mappings));
 
     definition.addSearch(
         "TB-SCREENING-CAT7",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWithPositiveTBScreeningInDurindPeriodCategory7(),
+            this.mQCohortQueries
+                .findPatientsWithPositiveTBScreeningDuring9MonthsAfterInitiatedINHCategory7(),
             mappings));
 
     definition.addSearch(
         "TB-TREATMENT-CAT7",
         EptsReportUtils.map(
-            this.mQCohortQueries.finPatientHaveTBTreatmentDuringPeriodCategory7(), mappings));
+            this.mQCohortQueries
+                .finPatientsWhoHadTBTreatmentDuring9MonthsAfterInitiatedINHCategory7(),
+            mappings));
 
     definition.addSearch(
         "TRANSFERED-IN",
