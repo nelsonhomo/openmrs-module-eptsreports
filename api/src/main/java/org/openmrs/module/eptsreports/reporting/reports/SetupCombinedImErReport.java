@@ -92,9 +92,6 @@ public class SetupCombinedImErReport extends EptsDataExportManager {
         "ERI4", Mapped.mapStraightThrough(this.eri4MonthsDataset.constructEri4MonthsDataset()));
 
     rd.addDataSetDefinition(
-        "ERIDSD", Mapped.mapStraightThrough(this.eriDSDDataset.constructEriDSDDataset()));
-
-    rd.addDataSetDefinition(
         "D",
         Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
 
