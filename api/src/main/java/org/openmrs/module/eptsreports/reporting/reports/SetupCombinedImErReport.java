@@ -8,7 +8,6 @@ import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQue
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.Eri2MonthsDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.Eri4MonthsDataset;
-import org.openmrs.module.eptsreports.reporting.library.datasets.EriDSDDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.IMR1BDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.IMR1Dataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TxCurrDataset;
@@ -35,8 +34,6 @@ public class SetupCombinedImErReport extends EptsDataExportManager {
   @Autowired private TxNewDataset txNewDataset;
 
   @Autowired private TxCurrDataset txCurrDataset;
-
-  @Autowired private EriDSDDataset eriDSDDataset;
 
   @Autowired private IMR1Dataset imr1Dataset;
 

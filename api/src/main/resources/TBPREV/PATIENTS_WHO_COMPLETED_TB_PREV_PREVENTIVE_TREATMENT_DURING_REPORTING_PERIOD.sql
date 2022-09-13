@@ -412,7 +412,7 @@ from(
 		
 		union
 		
-		select inicio_3HP.patient_id, e.encounter_datetime data_final_3HP
+		select inicio_3HP.patient_id, fim.encounter_datetime data_final_3HP
 		from (
 			select inicio_3HP.patient_id,min(inicio_3HP.data_inicio_tpi) data_inicio_3HP 
 				from ( 
@@ -501,16 +501,22 @@ from(
 					) 
 				inicio_3HP group by inicio_3HP.patient_id
 			) inicio_3HP
-			inner join encounter e on e.patient_id = inicio_3HP.patient_id
-			inner join obs profilaxia3HP on profilaxia3HP.encounter_id = e.encounter_id		 																				
-			inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id																
-		 where e.voided=0 and e.encounter_datetime between inicio_3HP.data_inicio_3HP and (inicio_3HP.data_inicio_3HP + interval 4 month)	 			  									
-						and profilaxia3HP.voided=0 and profilaxia3HP.concept_id=23985 and profilaxia3HP.value_coded = 23954 and e.encounter_type=6 and  e.location_id=:location	
-						and estadoProfilaxia.voided =0 and estadoProfilaxia.concept_id =165308 and estadoProfilaxia.value_coded in (1256,1257) 							
-			group by inicio_3HP.patient_id
-			having count(e.encounter_id)>=3
-		) inicio_3HP group by inicio_3HP.patient_id
-)inicio_3HP
+
+			inner join 
+			(
+				select  distinct  p.patient_id,e.encounter_datetime,e.encounter_id  from patient p
+	            inner join encounter e on e.patient_id = p.patient_id
+				inner join obs profilaxia3HP on profilaxia3HP.encounter_id = e.encounter_id		 																				
+				inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id																
+			 where e.voided=0 and profilaxia3HP.voided=0 and profilaxia3HP.concept_id=23985 and profilaxia3HP.value_coded = 23954 and e.encounter_type=6 and  e.location_id=208	
+				   and estadoProfilaxia.voided =0 and estadoProfilaxia.concept_id =165308 and estadoProfilaxia.value_coded in (1256,1257) and p.voided=0	
+	        ) fim on fim.patient_id=inicio_3HP.patient_id
+	            where fim.encounter_datetime between inicio_3HP.data_inicio_3HP and (inicio_3HP.data_inicio_3HP + interval 4 month)
+	            group by inicio_3HP.patient_id
+				having count(fim.encounter_id)>=3
+				
+			) inicio_3HP group by inicio_3HP.patient_id
+	)inicio_3HP
 
 union 
 
@@ -941,9 +947,9 @@ from(
 		
 		select inicio_INH.patient_id, DTINH.data_fim_INH
 		from(
-			select inicio_INH.patient_id,min(inicio_INH.data_inicio_INH) data_inicio_INH, inicio_INH.encounter_id 
+			select inicio_INH.patient_id,min(inicio_INH.data_inicio_INH) data_inicio_INH 
 			from (
-					select p.patient_id,min(obsInicioINH.obs_datetime) data_inicio_INH, e.encounter_id 
+					select p.patient_id,min(obsInicioINH.obs_datetime) data_inicio_INH 
 					from patient p 
 						inner join encounter e on p.patient_id = e.patient_id 
 						inner join obs o on o.encounter_id = e.encounter_id 
@@ -955,7 +961,7 @@ from(
 					
 					union	
 					
-					select p.patient_id,min(seguimentoTPT.obs_datetime) data_inicio_INH,e.encounter_id	
+					select p.patient_id,min(seguimentoTPT.obs_datetime) data_inicio_INH	
 					from	patient p													 
 						inner join encounter e on p.patient_id=e.patient_id																				 
 						inner join obs o on o.encounter_id=e.encounter_id	 																			 
@@ -967,9 +973,9 @@ from(
 					
 					union
 					
-					(select inicio.patient_id, inicio.data_inicio_INH,inicio.encounter_id
+					(select inicio.patient_id, inicio.data_inicio_INH
 						from ( 
-								select p.patient_id,min(seguimentoTPT.obs_datetime) data_inicio_INH	,e.encounter_id
+								select p.patient_id,min(seguimentoTPT.obs_datetime) data_inicio_INH
 								from	patient p													 
 									inner join encounter e on p.patient_id=e.patient_id																				 
 									inner join obs o on o.encounter_id=e.encounter_id	 																			 
@@ -979,7 +985,7 @@ from(
 									and o.voided=0 and o.concept_id=23985 and o.value_coded in (656,23982) and e.encounter_type=60 and  e.location_id=:location		 
 									group by p.patient_id	 
 								union
-								select p.patient_id,min(seguimentoTPT.obs_datetime) data_inicio_INH, e.encounter_id	from	patient p													         
+								select p.patient_id,min(seguimentoTPT.obs_datetime) data_inicio_INH	from	patient p													         
 									inner join encounter e on p.patient_id=e.patient_id																				 
 									inner join obs o on o.encounter_id=e.encounter_id																				 
 									left join obs seguimentoTPT on (e.encounter_id =seguimentoTPT.encounter_id	 													
