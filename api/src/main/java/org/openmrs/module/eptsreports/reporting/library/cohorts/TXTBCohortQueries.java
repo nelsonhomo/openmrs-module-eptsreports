@@ -1112,8 +1112,7 @@ public class TXTBCohortQueries {
                 Arrays.asList(
                     this.tbMetadata.getTbGenexpertTest().getConceptId(),
                     this.tbMetadata.getCultureTest().getConceptId(),
-                    this.tbMetadata.getTbLam().getConceptId(),
-                    this.tbMetadata.getSputumForAcidFastBacilli().getConceptId()),
+                    this.tbMetadata.getTbLam().getConceptId()),
                 Arrays.asList(this.tbMetadata.getPositiveConcept().getConceptId())));
 
     final CohortDefinition tbPositiveResultsInFichaLaboratorio =
@@ -1122,7 +1121,6 @@ public class TXTBCohortQueries {
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
                 this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
                 Arrays.asList(
-                    this.tbMetadata.getSputumForAcidFastBacilli().getConceptId(),
                     this.tbMetadata.getTbGenexpertTest().getConceptId(),
                     this.tbMetadata.getCultureTest().getConceptId(),
                     this.tbMetadata.getTbLam().getConceptId()),
