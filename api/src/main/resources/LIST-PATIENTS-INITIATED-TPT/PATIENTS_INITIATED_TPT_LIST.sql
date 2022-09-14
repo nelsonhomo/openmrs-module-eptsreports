@@ -1010,18 +1010,34 @@ from
          )finalinhseguimento on finalinhseguimento.patient_id=inicioInh_TPT_INI_FR5.patient_id and finalinhseguimento.data_final_inhSeguimento>=inicioInh_TPT_INI_FR5.data_inicio_tpi 
 		 left join  
 		 ( 
+			select 	finalinh.patient_id, max(finalinh.data_final_inh) data_final_inh 																		
+			from (
 			
-			select 	p.patient_id, max(obsState.obs_datetime) data_final_inh  																		
-			from 	patient p														 			  															
-					inner join encounter e on p.patient_id=e.patient_id																				 		
-					inner join obs obs3hp on obs3hp.encounter_id=e.encounter_id		 																				
-					inner join obs obsState on obsState.encounter_id=e.encounter_id																
-			where 	e.voided=0 and p.voided=0 and obsState.obs_datetime BETWEEN :startDate and curdate()	 			  									
-					and obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=656 and e.encounter_type in (53,6,9) and  e.location_id=:location	  		
-					and obsState.voided =0 and obsState.concept_id =165308 and obsState.value_coded=1267 							
-			group by p.patient_id			
+				select 	p.patient_id, max(obsState.obs_datetime) data_final_inh  																		
+				from 	patient p														 			  															
+						inner join encounter e on p.patient_id=e.patient_id																				 		
+						inner join obs obs3hp on obs3hp.encounter_id=e.encounter_id		 																				
+						inner join obs obsState on obsState.encounter_id=e.encounter_id																
+				where 	e.voided=0 and p.voided=0 and obsState.obs_datetime BETWEEN :startDate and curdate()	 			  									
+						and obs3hp.voided=0 and obs3hp.concept_id=23985 and obs3hp.value_coded=656 and e.encounter_type=53 and  e.location_id=:location	  		
+						and obsState.voided =0 and obsState.concept_id =165308 and obsState.value_coded=1267 							
+				group by p.patient_id
+	
+			     union
+	
+			     select 	p.patient_id, max(e.encounter_datetime) data_final_inh  																		
+				from 	patient p														 			  															
+						inner join encounter e on p.patient_id=e.patient_id																				 		
+						inner join obs obsInh on obsInh.encounter_id=e.encounter_id		 																				
+						inner join obs obsInhStart on obsInhStart.encounter_id=e.encounter_id																
+				where 	e.voided=0 and p.voided=0 and e.encounter_datetime between :startDate and curdate()	 			  									
+						and obsInh.voided=0 and obsInh.concept_id=23985 and obsInh.value_coded=656 and e.encounter_type in (6,9) and  e.location_id=:location	  		
+						and obsInhStart.voided =0 and obsInhStart.concept_id =165308 and obsInhStart.value_coded=1267 							
+				group by p.patient_id	
+			)
+			finalinh group by finalinh.patient_id	
 			
-        )finalinh on finalinh.patient_id=inicioInh_TPT_INI_FR5.patient_id		 
+        )finalinh on finalinh.patient_id=inicioInh_TPT_INI_FR5.patient_id  and finalinh.data_final_inh >=inicioInh_TPT_INI_FR5.data_inicio_tpi 			 
 		left join 
 		(  
             				select patient_id,decisao from  (  select inicio_real.patient_id,  
