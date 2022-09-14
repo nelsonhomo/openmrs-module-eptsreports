@@ -11,7 +11,7 @@ from
 				seguimento.ultimo_seguimento,  
 				if(receivedTPT.encounter_id is null,'Não','Sim') recebeu_profilaxia,  
 				inicioInh_TPT_INI_FR5.data_completa_6meses, 
-				if (timestampdiff(day,inicioInh_TPT_INI_FR5.data_completa_6meses,finalinh.data_final_inh) >= 0,timestampdiff(day,inicioInh_TPT_INI_FR5.data_completa_6meses,finalinh.data_final_inh),null) diferencaFinalEsperada,
+				timestampdiff(day,inicioInh_TPT_INI_FR5.data_completa_6meses,finalinh.data_final_inh)  diferencaFinalEsperada,
 				inicio_tarv.data_inicio data_inicio_tarv,  
 				ini3hpclinica.data_inicio_3hpclinica, 
 				ini3hpResumo.data_inicio_3hpResumo, 
@@ -33,7 +33,7 @@ from
 				inicio3hp_TPT_INI_FR4.data_inicio_3HP,
 				inicio3hp_TPT_INI_FR4.expected3hpCompletion,
 				final3hp.data_final_3HP,
-				if(timestampdiff(day,inicio3hp_TPT_INI_FR4.expected3hpCompletion, final3hp.data_final_3HP)>= 0, timestampdiff(day,inicio3hp_TPT_INI_FR4.expected3hpCompletion, final3hp.data_final_3HP) ,null) expected3hpDiference
+				timestampdiff(day,tpt.inicio3hp_TPT_INI_FR4.expected3hpCompletion, final3hp.data_final_3HP) expected3hpDiference
 	from  	
 		(  
 				select inicio_tpi.patient_id, min(data_inicio_3HP) data_inicio_tpi  
@@ -1104,7 +1104,7 @@ from
             				inner join patient_program pg on p.patient_id=pg.patient_id  
             				inner join patient_state ps on pg.patient_program_id=ps.patient_program_id  
             				where pg.voided=0 and ps.voided=0 and p.voided=0 and   
-            				pg.program_id=8 and ps.state=27 and ps.end_date is null and   
+            				pg.program_id=8 and ps.state=27 and   
             				ps.start_date between :startDate and curdate() and location_id=:location  
             				) lactante_real on lactante_real.patient_id=inicio_real.patient_id  
             				where lactante_real.data_parto is not null or gravida_real.data_gravida is not null  
@@ -1115,9 +1115,9 @@ from
 		left join 
 		(  
             				select pid1.* from patient_identifier pid1  inner join  (  
-            				select patient_id,max(patient_identifier_id) id  from patient_identifier  where voided=0  
+            				select patient_id,max(patient_identifier_id) id  from patient_identifier  where voided=0  and identifier_type =2 
             				group by patient_id  ) pid2  
-            				where pid1.patient_id=pid2.patient_id and pid1.patient_identifier_id=pid2.id  
+            				where pid1.patient_id=pid2.patient_id and pid1.patient_identifier_id=pid2.id and pid1.identifier_type =2 
          ) pid on pid.patient_id=inicio_tpi.patient_id  left join  (  
             				select pn1.* from person_name pn1  inner join  (  
             				select person_id,max(person_name_id) id  from person_name  where voided=0  
