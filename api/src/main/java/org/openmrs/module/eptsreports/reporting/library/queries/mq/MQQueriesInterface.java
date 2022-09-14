@@ -335,7 +335,7 @@ public interface MQQueriesInterface {
             + ")finalTPI ";
 
     public static final String findPatientWhoStartTPI3HPDuringPeriodCategory7 =
-        " SELECT DISTINCT TPI.patient_id FROM "
+        " SELECT TPI.patient_id FROM "
             + " (  "
             + "select p.patient_id, max(obsEstado.obs_datetime) data_inicio_3HP  from patient p  "
             + "inner join encounter e on p.patient_id = e.patient_id  "
