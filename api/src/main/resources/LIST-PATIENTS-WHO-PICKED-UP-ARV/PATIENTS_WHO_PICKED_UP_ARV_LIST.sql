@@ -1,12 +1,12 @@
-                select coorte12meses_final.patient_id as patient_id,
+        select coorte12meses_final.patient_id as patient_id,
                     concat(ifnull(pn.given_name,''),' ',ifnull(pn.middle_name,''),' ',ifnull(pn.family_name,'')) as NomeCompleto, 
                     pid.identifier as NID, 
                     p.gender as gender, 
-                    round(datediff(:endDate,p.birthdate)/365) as idade_actual,
+                    floor(datediff(:endDate,p.birthdate)/365) as idade_actual,
                     coorte12meses_final.data_inicio as data_inicio,
                    if(gravida_real.data_gravida is null and lactante_real.data_parto is null, null,
                    if(gravida_real.data_gravida is null, 'Lactante', if(lactante_real.data_parto is null,
-                   'Gestante', if(max(lactante_real.data_parto)>max(gravida_real.data_gravida),'Lactante','Gestante')))) gravida_lactante,
+                   'Grávida', if(max(lactante_real.data_parto)>max(gravida_real.data_gravida),'Lactante','Grávida')))) gravida_lactante,
                 case 
              when estadoPermanencia.state = 9 OR estadoPermanencia.state = 1707 then 'Abandono' 
              when estadoPermanencia.state = 6 then 'Activo no programa' 
@@ -217,85 +217,138 @@
                 where pid1.patient_id=pid2.patient_id and pid1.patient_identifier_id=pid2.id 
             ) pid on pid.patient_id=coorte12meses_final.patient_id 
                 left join                                                                                                                                                                                                                                                   
-            (   select p.patient_id,e.encounter_datetime data_gravida from patient p                                                                                                                                                                                
+            (   select p.patient_id,e.encounter_datetime data_gravida from patient p     
+                inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                             
                     inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                             
                     inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
-                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=1982 and value_coded=1065 and e.encounter_type in (5,6)                                                                                                                               
-                    and e.encounter_datetime  between date_add(curdate(), interval -24 MONTH) and curdate() and e.location_id=:location                                                                                                                               
+                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=1982
+                and value_coded=1065 and e.encounter_type in (5,6)                                                                                                                               
+                and e.encounter_datetime  between date_add(curdate(), interval -24 MONTH) 
+                and curdate() and e.location_id=:location  
+                and pe.gender = 'F'                                                                                                                             
                 union                                                                                                                                                                                                                                               
-                select p.patient_id,e.encounter_datetime data_gravida from patient p                                                                                                                                                                                
+                select p.patient_id,e.encounter_datetime data_gravida from patient p 
+                inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                                 
                     inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                             
                     inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
-                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=1279 and  e.encounter_type in (5,6)                                                                                                                                                   
-                    and e.encounter_datetime between date_add(curdate(), interval -24 MONTH) and curdate() and e.location_id=:location                                                                                                                                
+                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=1279 
+                and  e.encounter_type in (5,6)                                                                                                                                                   
+                    and e.encounter_datetime between date_add(curdate(), interval -24 MONTH) 
+                    and curdate() and e.location_id=:location
+                    and pe.gender = 'F'                                                                                                                                
                 union                                                                                                                                                                                                                                               
-                select p.patient_id,e.encounter_datetime data_gravida from patient p                                                                                                                                                                                
+                select p.patient_id,e.encounter_datetime data_gravida from patient p  
+                inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                                
                     inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                             
                     inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
-                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=1600 and e.encounter_type in (5,6)                                                                                                                                                    
-                    and e.encounter_datetime between date_add(curdate(), interval -24 MONTH) and curdate() and e.location_id=:location                                                                                                                                
+                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=1600 
+                and e.encounter_type in (5,6)                                                                                                                                                    
+                    and e.encounter_datetime between date_add(curdate(), interval -24 MONTH) 
+                    and curdate() and e.location_id=:location  
+                    and pe.gender = 'F'                                                                                                                              
                 union                                                                                                                                                                                                                                               
-                select p.patient_id,e.encounter_datetime data_gravida from patient p                                                                                                                                                                                
+                select p.patient_id,e.encounter_datetime data_gravida from patient p 
+                inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                                 
                     inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                             
                     inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
                 where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=6334 and value_coded=6331                                                                                                                                                             
-                    and  e.encounter_type in (5,6) and e.encounter_datetime between date_add(curdate(), interval -24 MONTH) and curdate() and e.location_id=:location                                                                                                 
+                    and  e.encounter_type in (5,6) and e.encounter_datetime between date_add(curdate(), interval -24 MONTH) 
+                    and curdate() and e.location_id=:location     
+                    and pe.gender = 'F'                                                                                            
                 union                                                                                                                                                                                                                                               
-                select pp.patient_id,pp.date_enrolled data_gravida from patient_program pp                                                                                                                                                                          
-                where pp.program_id=8 and pp.voided=0 and  pp.date_enrolled between date_add(curdate(), interval -24 MONTH) and curdate() and pp.location_id=:location                                                                                                
+                select pp.patient_id,pp.date_enrolled data_gravida from patient_program pp
+                inner join person pe on pe.person_id = pp.patient_id                                                                                                                                                                            
+                where pp.program_id=8 and pp.voided=0 
+                and  pp.date_enrolled between date_add(curdate(), interval -24 MONTH) 
+                and curdate() and pp.location_id=:location  
+                and pe.gender = 'F'                                                                                              
                 union                                                                                                                                                                                                                                               
-                select p.patient_id,obsART.value_datetime data_gravida from patient p                                                                                                                                                                               
+                select p.patient_id,obsART.value_datetime data_gravida from patient p  
+                 inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                               
                     inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                             
                     inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
                     inner join obs obsART on e.encounter_id=obsART.encounter_id                                                                                                                                                                                     
-                where p.voided=0 and e.voided=0 and o.voided=0 and o.concept_id=1982 and o.value_coded=1065 and  e.encounter_type=53                                                                                                                                
-                    and obsART.value_datetime between date_add(curdate(), interval -24 MONTH) and curdate() and e.location_id=:location and  obsART.concept_id=1190 and obsART.voided=0                                                                               
+                where p.voided=0 and e.voided=0 and o.voided=0 and o.concept_id=1982 
+                and o.value_coded=1065 and  e.encounter_type=53                                                                                                                                
+                    and obsART.value_datetime between date_add(curdate(), interval -24 MONTH) 
+                    and curdate() and e.location_id=:location 
+                    and  obsART.concept_id=1190 and obsART.voided=0
+                    and pe.gender = 'F'                                                                               
                 union                                                                                                                                                                                                                                               
-                select p.patient_id,data_colheita.value_datetime data_gravida from patient p                                                                                                                                                                        
+                select p.patient_id,data_colheita.value_datetime data_gravida from patient p
+                    inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                          
                     inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                                 
                     inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                                   
                     inner join obs data_colheita on data_colheita.encounter_id = e.encounter_id                                                                                                                                                                         
-                where p.voided=0 and e.voided=0 and o.voided=0 and data_colheita.voided = 0 and o.concept_id=1982 and o.value_coded = 1065 and  e.encounter_type=51                                                                                                     
-                  and data_colheita.concept_id =23821 and data_colheita.value_datetime between date_add(curdate(), interval -24 MONTH) and curdate() and e.location_id=:location                                                                                          
+                where p.voided=0 and e.voided=0 and o.voided=0 and data_colheita.voided = 0 
+                and o.concept_id=1982 and o.value_coded = 1065 and  e.encounter_type=51                                                                                                     
+                  and data_colheita.concept_id =23821 and data_colheita.value_datetime between date_add(curdate(), interval -24 MONTH) 
+                  and curdate() and e.location_id=:location   
+                  and pe.gender = 'F'                                                                                       
             )                                                                                                                                                                                                                                                       
            gravida_real on gravida_real.patient_id=coorte12meses_final.patient_id and gravida_real.data_gravida between date_add(curdate(), interval -9 MONTH) and curdate()                                                                                
         left join                                                                                                                                                                                                                                                   
-            (   select p.patient_id,o.value_datetime data_parto from patient p                                                                                                                                                                                      
+            (   select p.patient_id,o.value_datetime data_parto from patient p 
+                inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                                       
                     inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                             
                     inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
-                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=5599 and  e.encounter_type in (5,6) and o.value_datetime between date_add(curdate(), interval -36 MONTH) and curdate() and e.location_id=:location                                      
+                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=5599 
+                and  e.encounter_type in (5,6) and o.value_datetime between date_add(curdate(), interval -36 MONTH) 
+                and curdate() and e.location_id=:location
+                and pe.gender = 'F'                                      
                 union                                                                                                                                                                                                                                               
-                select p.patient_id, e.encounter_datetime data_parto from patient p                                                                                                                                                                                 
+                select p.patient_id, e.encounter_datetime data_parto from patient p 
+                inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                                  
                     inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                             
                     inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
-                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=6332 and value_coded=1065 and  e.encounter_type=6 and e.encounter_datetime between date_add(curdate(), interval -36 MONTH) and curdate() and e.location_id=:location                    
+                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=6332 
+                and value_coded=1065 and  e.encounter_type=6 
+                and e.encounter_datetime between date_add(curdate(), interval -36 MONTH) 
+                and curdate() and e.location_id=:location  
+                and pe.gender ='F'                  
                 union                                                                                                                                                                                                                                               
-                select p.patient_id, obsART.value_datetime data_parto from patient p                                                                                                                                                                                
+                select p.patient_id, obsART.value_datetime data_parto from patient p  
+                inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                                
                     inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                             
                     inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
                     inner join obs obsART on e.encounter_id=obsART.encounter_id                                                                                                                                                                                     
-                where p.voided=0 and e.voided=0 and o.voided=0 and o.concept_id=6332 and o.value_coded=1065 and  e.encounter_type=53 and e.location_id=:location and obsART.value_datetime between date_add(curdate(), interval -36 MONTH) and curdate() and  obsART.concept_id=1190 and obsART.voided=0      
+                where p.voided=0 and e.voided=0 and o.voided=0 and o.concept_id=6332 
+                and o.value_coded=1065 and  e.encounter_type=53 
+                and e.location_id=:location and obsART.value_datetime between date_add(curdate(), interval -36 MONTH) and curdate() 
+                and  obsART.concept_id=1190 and obsART.voided=0  
+                and pe.gender ='F'    
                 union                                                                                                                                                                                                                                               
-                select p.patient_id, e.encounter_datetime data_parto from patient p                                                                                                                                                                                 
+                select p.patient_id, e.encounter_datetime data_parto from patient p 
+                inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                                  
                     inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                             
                     inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
-                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=6334 and value_coded=6332 and  e.encounter_type in (5,6) and e.encounter_datetime between date_add(curdate(), interval -36 MONTH) and curdate() and e.location_id=:location             
+                where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=6334 
+                and value_coded=6332 and  e.encounter_type in (5,6) 
+                and pe.gender = 'F'
+                and e.encounter_datetime between date_add(curdate(), interval -36 MONTH) and curdate() and e.location_id=:location             
                 union                                                                                                                                                                                                                                               
-                select pg.patient_id,ps.start_date data_parto from patient p                                                                                                                                                                                        
+                select pg.patient_id,ps.start_date data_parto from patient p    
+                    inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                                         
                     inner join patient_program pg on p.patient_id=pg.patient_id                                                                                                                                                                                     
                     inner join patient_state ps on pg.patient_program_id=ps.patient_program_id                                                                                                                                                                      
-                where pg.voided=0 and ps.voided=0 and p.voided=0 and  pg.program_id=8 and ps.state=27 and ps.end_date is null and  ps.start_date between date_add(curdate(), interval -36 MONTH) and curdate() and location_id=:location                              
+                where pg.voided=0 and ps.voided=0 and p.voided=0 and  pg.program_id=8 and ps.state=27 
+                and pe.gender = 'F'  
+                and ps.end_date is null and  ps.start_date between date_add(curdate(), interval -36 MONTH) and curdate() and location_id=:location                              
                union                                                                                                                                                                                                                                                
-             select p.patient_id,data_colheita.value_datetime data_parto from patient p                                                                                                                                                                         
+             select p.patient_id,data_colheita.value_datetime data_parto from patient p    
+                    inner join person pe on pe.person_id = p.patient_id                                                                                                                                                                      
                     inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                             
                     inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
                     inner join obs data_colheita on data_colheita.encounter_id = e.encounter_id                                                                                                                                                                     
-                where p.voided=0 and e.voided=0 and o.voided=0 and data_colheita.voided = 0 and o.concept_id=6332 and o.value_coded = 1065 and  e.encounter_type=51                                                                                                 
-                              and data_colheita.concept_id =23821 and data_colheita.value_datetime between date_add(curdate(), interval -36 MONTH) and curdate() and e.location_id=:location  
+                where p.voided=0 and e.voided =0 and o.voided=0 and data_colheita.voided = 0 
+                and o.concept_id=6332 and o.value_coded = 1065 and  e.encounter_type=51    
+                and pe.gender = 'F'                                                                                             
+                and data_colheita.concept_id =23821 and data_colheita.value_datetime 
+                between date_add(curdate(), interval -36 MONTH) and curdate() and e.location_id=:location  
                 )                                                                                                                                                                                                                                                       
-     lactante_real on lactante_real.patient_id = coorte12meses_final.patient_id                                                                                                                                       
+     lactante_real on lactante_real.patient_id = coorte12meses_final.patient_id                                                                                                                          
         and lactante_real.data_parto between date_add(curdate(), interval -18 MONTH) 
-        and curdate()  and (lactante_real.data_parto is not null or gravida_real.data_gravida is not null)
+        and curdate()  and (lactante_real.data_parto is not null or gravida_real.data_gravida is not null) 
      left join (
      select patient_id, max(data_estado) state_date, state, source from (
      select patient_id, data_estado,state, source from (
