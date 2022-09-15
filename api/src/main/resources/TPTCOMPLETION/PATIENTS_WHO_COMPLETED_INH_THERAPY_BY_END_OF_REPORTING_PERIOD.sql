@@ -107,7 +107,7 @@ from (
 			inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id
 		where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0  
 			and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded in (1256,1257)
-			and e.encounter_type in (6,9) and e.location_id=:location and estadoProfilaxia.obs_datetime <= :endDate																																		
+			and e.encounter_type in (6) and e.location_id=:location and estadoProfilaxia.obs_datetime <= :endDate																																		
 	) termino_inh  																																	
 		on inicio_inh.patient_id=termino_inh.patient_id 
 	where termino_inh.data_final_inh between (inicio_inh.data_inicio_inh + INTERVAL 1 DAY) and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH)
@@ -138,7 +138,7 @@ inner join
 		where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 and outraPrescricaoDTINH.voided=0  
 			and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded in (1256,1257)
 			and outraPrescricaoDTINH.concept_id=1719 and outraPrescricaoDTINH.value_coded=23955
-			and e.encounter_type in (6,9) and e.location_id=:location and estadoProfilaxia.obs_datetime <= :endDate			
+			and e.encounter_type in (6) and e.location_id=:location and estadoProfilaxia.obs_datetime <= :endDate			
 )
 consultasINH on inicio_inh.patient_id = consultasINH.patient_id
 where consultasINH.data_final_inh between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 5 MONTH)
@@ -202,7 +202,7 @@ where consultasSemDTINH.data_final_inh between inicio_inh.data_inicio_inh and (i
 	where p.voided = 0 and e.voided = 0 and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 and outraPrescricaoDTINH.voided=0
 		and e.encounter_type = 6 and profilaxiaINH.concept_id = 23985 and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded in (1256, 1257)
 	     and outraPrescricaoDTINH.concept_id=1719 and outraPrescricaoDTINH.value_coded=23955
-	     and e.encounter_datetime <= :endDate and e.location_id = 400   
+	     and e.encounter_datetime <= :endDate and e.location_id=:location   
     )
 consultasComDTINH on inicio_inh.patient_id = consultasComDTINH.patient_id
 where consultasComDTINH.data_final_inh between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH)

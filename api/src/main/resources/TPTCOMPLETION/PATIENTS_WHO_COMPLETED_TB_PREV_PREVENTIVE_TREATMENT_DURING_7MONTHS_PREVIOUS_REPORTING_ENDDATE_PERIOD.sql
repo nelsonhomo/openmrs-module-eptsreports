@@ -718,7 +718,7 @@ from(
 					inner join obs profilaxiaINH on profilaxiaINH.encounter_id=e.encounter_id		 																				
 					inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id=e.encounter_id																
 			where 	e.voided=0 and p.voided=0 and estadoProfilaxia.obs_datetime between (:endDate - interval 13 month) and :endDate 			  									
-					and profilaxiaINH.voided=0 and profilaxiaINH.concept_id=23985 and profilaxiaINH.value_coded in (656,23982) and e.encounter_type in (6,9) and  e.location_id=:location	  		
+					and profilaxiaINH.voided=0 and profilaxiaINH.concept_id=23985 and profilaxiaINH.value_coded in (656,23982) and e.encounter_type in (6) and  e.location_id=:location	  		
 					and estadoProfilaxia.voided =0 and estadoProfilaxia.concept_id =165308 and estadoProfilaxia.value_coded in (1256,1257)			
 			
 		) fimINH on fimINH.patient_id=inicio_INH.patient_id
