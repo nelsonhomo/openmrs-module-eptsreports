@@ -137,7 +137,7 @@ select inicio_3HP.patient_id
     where e.voided=0 and outrasPrescricoesDT3HP.voided=0                                                                                             	
     	and e.encounter_type = 6 and outrasPrescricoesDT3HP.concept_id=1719 and outrasPrescricoesDT3HP.value_coded = 165307   
     	and e.encounter_datetime between inicio_3HP.data_inicio_3HP and (inicio_3HP.data_inicio_3HP + INTERVAL 4 month) and e.location_id= :location     	
-    	group by inicio_3HP.patient_id having count(distinct e.encounter_id)>=1  
+    	group by inicio_3HP.patient_id having count(e.encounter_id)>=1  
  
 union
 
