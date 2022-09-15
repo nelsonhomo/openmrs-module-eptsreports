@@ -311,7 +311,7 @@ from(
 						and  e.location_id=:location	  		
 						and dispensaMensal.voided =0 and dispensaMensal.concept_id =23986 and dispensaMensal.value_coded=1098 							
 			group by inicio_3HP.patient_id
-			having count(distinct e.encounter_datetime)>=3
+			having count(e.encounter_id)>=3
 		
 		union
 		
@@ -508,7 +508,7 @@ from(
 						and profilaxia3HP.voided=0 and profilaxia3HP.concept_id=23985 and profilaxia3HP.value_coded = 23954 and e.encounter_type=6 and  e.location_id=:location	
 						and estadoProfilaxia.voided =0 and estadoProfilaxia.concept_id =165308 and estadoProfilaxia.value_coded in (1256,1257) 							
 			group by inicio_3HP.patient_id
-			having count(distinct e.encounter_datetime)>=3
+			having count(e.encounter_id)>=3
 		) inicio_3HP group by inicio_3HP.patient_id
 )inicio_3HP
 
@@ -712,7 +712,7 @@ from(
 		) inicio_INH
 		inner join 
 		(
-			select 	p.patient_id, estadoProfilaxia.obs_datetime data_fim_INH	 																
+			select 	p.patient_id, estadoProfilaxia.obs_datetime data_fim_INH,e.encounter_id	 																
 			from 	patient p														 			  															
 					inner join encounter e on p.patient_id=e.patient_id																				 		
 					inner join obs profilaxiaINH on profilaxiaINH.encounter_id=e.encounter_id		 																				
@@ -724,7 +724,7 @@ from(
 		) fimINH on fimINH.patient_id=inicio_INH.patient_id
 		where fimINH.data_fim_INH BETWEEN (inicio_INH.data_inicio_INH +interval 1 day) and (inicio_INH.data_inicio_INH + interval 7 month)
 		group by inicio_INH.patient_id
-		HAVING count(distinct fimINH.data_fim_INH)>=5
+		HAVING count(fimINH.encounter_id)>=5
 		
 		union
 		 
@@ -918,7 +918,7 @@ from(
 		) inicio_INH
 		inner join 
 		(
-			select p.patient_id,estadoProfilaxia.obs_datetime data_fim_INH																		
+			select p.patient_id,estadoProfilaxia.obs_datetime data_fim_INH,e.encounter_id																		
 			from	patient p														 			  															
 				inner join encounter e on p.patient_id=e.patient_id
 				inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id																			 		
@@ -931,7 +931,7 @@ from(
 		) DTINH on DTINH.patient_id=inicio_INH.patient_id
 		where DTINH.data_fim_INH BETWEEN inicio_INH.data_inicio_INH and (inicio_INH.data_inicio_INH + interval 5 month)
 		group by inicio_INH.patient_id
-		having count(distinct DTINH.data_fim_INH)>=2
+		having count(DTINH.encounter_id)>=2
 		
 		union
 		
@@ -1024,7 +1024,7 @@ from(
 		) inicio_INH
 		inner join 
 		(
-			select p.patient_id,estadoProfilaxia.obs_datetime data_fim_INH																		
+			select p.patient_id,estadoProfilaxia.obs_datetime data_fim_INH,e.encounter_id																		
 			from	patient p														 			  															
 				inner join encounter e on p.patient_id=e.patient_id
 				inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id																			 		
@@ -1036,7 +1036,7 @@ from(
 		) DTINH on DTINH.patient_id=inicio_INH.patient_id
 		where DTINH.data_fim_INH BETWEEN inicio_INH.data_inicio_INH and (inicio_INH.data_inicio_INH +interval 7 month)
 		group by inicio_INH.patient_id
-		having count(distinct DTINH.data_fim_INH)>=3
+		having count(DTINH.encounter_id)>=3
 		
 		) startAndDT
 		inner join
@@ -1143,7 +1143,7 @@ from(
 		) inicio_INH
 		inner join 
 		(
-			select 	p.patient_id, e.encounter_datetime  data_fim_INH																		
+			select 	p.patient_id, e.encounter_datetime  data_fim_INH,e.encounter_id																		
 			from 	patient p														 			  															
 					inner join encounter e on p.patient_id=e.patient_id																				 		
 					inner join obs obsInh on obsInh.encounter_id=e.encounter_id		 																				
@@ -1154,7 +1154,7 @@ from(
 		) DTINH on DTINH.patient_id=inicio_INH.patient_id
 		where DTINH.data_fim_INH BETWEEN inicio_INH.data_inicio_INH and (inicio_INH.data_inicio_INH + interval 7 month)
 		group by inicio_INH.patient_id
-		having count(distinct DTINH.data_fim_INH)>=3
+		having count(DTINH.encounter_id)>=3
 		) startAndDT
 		inner join
 		(
