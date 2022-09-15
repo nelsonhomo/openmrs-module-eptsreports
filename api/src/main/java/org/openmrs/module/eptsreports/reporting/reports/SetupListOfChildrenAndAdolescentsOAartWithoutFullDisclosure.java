@@ -1,17 +1,16 @@
 package org.openmrs.module.eptsreports.reporting.reports;
 
+import static org.openmrs.module.reporting.evaluation.parameter.Mapped.mapStraightThrough;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
-import org.openmrs.module.eptsreports.reporting.library.datasets.ListOfPatientsEligileToTPTDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.ListOfChildrenAndAdolescentsOAartWithoutFullDisclosureDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
-import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
-import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.ReportingConstants;
 import org.openmrs.module.reporting.ReportingException;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
@@ -22,23 +21,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
+public class SetupListOfChildrenAndAdolescentsOAartWithoutFullDisclosure
+    extends EptsDataExportManager {
 
-  @Autowired private GenericCohortQueries genericCohortQueries;
+  @Autowired
+  private ListOfChildrenAndAdolescentsOAartWithoutFullDisclosureDataset
+      listOfChildrenAndAdolescentsOAartWithoutFullDisclosureCohortQueries;
 
-  @Autowired private ListOfPatientsEligileToTPTDataSet listOfPatientsEligileToTPTDataSet;
+  @Autowired private SismaCodeDataSet sismaCodeDataSet;
 
-  @Autowired private DatimCodeDataSet datimCodeDataset;
-  @Autowired private SismaCodeDataSet sismaCodeDataset;
-
-  @Override
-  public String getExcelDesignUuid() {
-    return "a608e799-df5c-4183-99b4-de76f374a4e8";
-  }
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
 
   @Override
   public String getUuid() {
-    return "b60050f3-7611-481e-a820-eb1de7e6d5ae";
+    return "7edf7cfe-130b-11ed-a2bb-1fc22840416a";
   }
 
   @Override
@@ -47,13 +43,18 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
   }
 
   @Override
+  public String getExcelDesignUuid() {
+    return "a7d1c270-130b-11ed-bd9b-6b6577a8640e";
+  }
+
+  @Override
   public String getName() {
-    return "TB2: Lista de Pacientes Elegíveis ao TPT";
+    return "Lista de Crianças e Adolescentes em TARV sem Revelação Diagnóstica Total";
   }
 
   @Override
   public String getDescription() {
-    return "This report generates the aggregate numbers and lists all active patients on ART who are eligible for TPT by reporting end date.";
+    return "Lista de Crianças e Adolescentes em TARV sem Revelação Diagnóstica Total";
   }
 
   @Override
@@ -62,28 +63,27 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
     rd.setUuid(getUuid());
     rd.setName(getName());
     rd.setDescription(getDescription());
-    rd.setParameters(this.getParameters());
-    rd.addDataSetDefinition(
-        "TPTELIG",
-        Mapped.mapStraightThrough(
-            listOfPatientsEligileToTPTDataSet.constructDataset(getParameters())));
+    rd.addParameters(this.getParameters());
 
     rd.addDataSetDefinition(
-        "TPTTOTAL",
+        "DR",
         Mapped.mapStraightThrough(
-            this.listOfPatientsEligileToTPTDataSet.getTotalEligibleTPTDataset()));
+            listOfChildrenAndAdolescentsOAartWithoutFullDisclosureCohortQueries.constructDataset(
+                this.getParameters())));
+
+    rd.addDataSetDefinition(
+        "DRS",
+        mapStraightThrough(
+            listOfChildrenAndAdolescentsOAartWithoutFullDisclosureCohortQueries.getTotaSuummary()));
+
     rd.addDataSetDefinition(
         "D",
-        Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
-    rd.addDataSetDefinition(
-        "SC",
-        Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
+        Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
 
-    rd.setBaseCohortDefinition(
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "baseCohortQuery", BaseQueries.getBaseCohortQuery()),
-            "endDate=${endDate},location=${location}"));
+    rd.addDataSetDefinition(
+        "S",
+        Mapped.mapStraightThrough(this.sismaCodeDataSet.constructDataset(this.getParameters())));
+
     return rd;
   }
 
@@ -94,13 +94,13 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "List_Patients_Eligibles_TPT.xls",
-              "LISTA DE PACIENTES ELEGIVEIS AO TPT",
+              "Template_ListChildrenAdolescentARTWithoutFullDisclosure.xls",
+              "Lista de Crianças e Adolescentes em TARV sem Revelação Diagnóstica Total",
               getExcelDesignUuid(),
               null);
-
       Properties props = new Properties();
-      props.put("repeatingSections", "sheet:1,row:8,dataset:TPTELIG");
+      props.put("repeatingSections", "sheet:1,row:9,dataset:DR");
+      props.put("sortWeight", "5000");
       props.put("sortWeight", "5000");
       reportDesign.setProperties(props);
     } catch (IOException e) {

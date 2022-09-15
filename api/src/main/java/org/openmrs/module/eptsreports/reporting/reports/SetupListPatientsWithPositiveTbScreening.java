@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
-import org.openmrs.module.eptsreports.reporting.library.datasets.ListOfPatientsEligileToTPTDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.ListOfPatientsWithPositiveTbScreeningDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -22,23 +22,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
+public class SetupListPatientsWithPositiveTbScreening extends EptsDataExportManager {
 
   @Autowired private GenericCohortQueries genericCohortQueries;
 
-  @Autowired private ListOfPatientsEligileToTPTDataSet listOfPatientsEligileToTPTDataSet;
+  @Autowired
+  private ListOfPatientsWithPositiveTbScreeningDataSet listOfPatientsWithPositiveTbScreeningDataSet;
 
   @Autowired private DatimCodeDataSet datimCodeDataset;
+
   @Autowired private SismaCodeDataSet sismaCodeDataset;
 
   @Override
   public String getExcelDesignUuid() {
-    return "a608e799-df5c-4183-99b4-de76f374a4e8";
+    return "1e3a15a8-e673-45ca-8709-c8b029e0b6b3";
   }
 
   @Override
   public String getUuid() {
-    return "b60050f3-7611-481e-a820-eb1de7e6d5ae";
+    return "8b7343ba-2669-4113-b4f9-789e46555e37";
   }
 
   @Override
@@ -48,12 +50,12 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "TB2: Lista de Pacientes Elegíveis ao TPT";
+    return "TB6: Lista de Pacientes Activos em TARV que tiveram Rastreio Positivo de TB";
   }
 
   @Override
   public String getDescription() {
-    return "This report generates the aggregate numbers and lists all active patients on ART who are eligible for TPT by reporting end date.";
+    return "This report generates the aggregate numbers and lists all patients currently on ART who have a positive TB Screening during the selected reporting period.";
   }
 
   @Override
@@ -64,17 +66,19 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
     rd.setDescription(getDescription());
     rd.setParameters(this.getParameters());
     rd.addDataSetDefinition(
-        "TPTELIG",
+        "PS",
         Mapped.mapStraightThrough(
-            listOfPatientsEligileToTPTDataSet.constructDataset(getParameters())));
+            listOfPatientsWithPositiveTbScreeningDataSet.constructDataset(getParameters())));
 
     rd.addDataSetDefinition(
-        "TPTTOTAL",
+        "PS-TOTAL",
         Mapped.mapStraightThrough(
-            this.listOfPatientsEligileToTPTDataSet.getTotalEligibleTPTDataset()));
+            this.listOfPatientsWithPositiveTbScreeningDataSet
+                .getTotalPatientsWithPositiveTbScreeningDataset()));
     rd.addDataSetDefinition(
         "D",
         Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
+
     rd.addDataSetDefinition(
         "SC",
         Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
@@ -94,13 +98,13 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "List_Patients_Eligibles_TPT.xls",
-              "LISTA DE PACIENTES ELEGIVEIS AO TPT",
+              "List_Patients_With_Positive_TB_Screening.xls",
+              "LISTA DE PACIENTES COM RASTREIO POSITIVO DE TB",
               getExcelDesignUuid(),
               null);
 
       Properties props = new Properties();
-      props.put("repeatingSections", "sheet:1,row:8,dataset:TPTELIG");
+      props.put("repeatingSections", "sheet:1,row:9,dataset:PS");
       props.put("sortWeight", "5000");
       reportDesign.setProperties(props);
     } catch (IOException e) {
@@ -112,6 +116,7 @@ public class SetupListPatientsEligibleTPT extends EptsDataExportManager {
 
   public List<Parameter> getParameters() {
     List<Parameter> parameters = new ArrayList<Parameter>();
+    parameters.add(ReportingConstants.START_DATE_PARAMETER);
     parameters.add(ReportingConstants.END_DATE_PARAMETER);
     parameters.add(ReportingConstants.LOCATION_PARAMETER);
     return parameters;
