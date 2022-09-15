@@ -422,6 +422,27 @@ public class MQCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(
+      value = "finPatientsWhoCompletedINHBetween170And297DaysAfterInitiatedTreatment")
+  public CohortDefinition finPatientsWhoCompletedINHBetween170And297DaysAfterInitiatedTreatment() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientWhoStartTPIDuringPeriodCategory7");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQQueriesInterface.QUERY
+            .finPatientsWhoCompletedINHBetween170And297DaysAfterInitiatedTreatment;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientWhoCompleteTPI3HPCategory7")
   public CohortDefinition findPatientWhoCompleteTPI3HPCategory7() {
 
@@ -434,6 +455,27 @@ public class MQCohortQueries {
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
     String query = MQQueriesInterface.QUERY.findPatientWhoCompleteTPI3HPCategory7;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "finPatientsWhoCompleted3HPBetween80And190DaysAfterInitiatedTreatment")
+  public CohortDefinition finPatientsWhoCompleted3HPBetween80And190DaysAfterInitiatedTreatment() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("finPatientsWhoCompleted3HPBetween80And190DaysAfterInitiatedTreatment");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQQueriesInterface.QUERY
+            .finPatientsWhoCompleted3HPBetween80And190DaysAfterInitiatedTreatment;
 
     definition.setQuery(query);
 
