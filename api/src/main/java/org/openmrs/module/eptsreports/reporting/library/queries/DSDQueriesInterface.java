@@ -1,6 +1,6 @@
 package org.openmrs.module.eptsreports.reporting.library.queries;
 
-public interface DsdQueriesInterface {
+public interface DSDQueriesInterface {
   class QUERY {
 
     public enum DSDDispensationInterval {
@@ -365,6 +365,14 @@ public interface DsdQueriesInterface {
               + "	and mdc.concept_id=165174 and mdc.value_coded = %s and grupo.concept_id=165323  and obsEstado.concept_id=165322  and obsEstado.value_coded in(1256,1257)      	"
               + "	and grupo.obs_id=mdc.obs_group_id and grupo.obs_id=obsEstado.obs_group_id  and e.encounter_datetime = ultima_ficha.data_consulta 								";
       return String.format(sql, dsdModelType.getConceptId());
+    }
+
+    public static final String findPatientsByAgeRange() {
+
+      return "select patient.patient_id from patient                         		"
+          + "	inner join person on person.person_id = patient.patient_id		"
+          + "where patient.voided = 0 and person.voided = 0 					"
+          + "	and floor(datediff(:endDate,person.birthdate)/365) 			    ";
     }
   }
 }

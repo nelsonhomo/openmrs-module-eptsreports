@@ -6,10 +6,10 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.eptsreports.reporting.calculation.dsd.DSDPatientsWhoExperiencedIITCalculation;
 import org.openmrs.module.eptsreports.reporting.cohort.definition.BaseFghCalculationCohortDefinition;
 import org.openmrs.module.eptsreports.reporting.library.queries.BreastfeedingQueries;
-import org.openmrs.module.eptsreports.reporting.library.queries.DsdQueriesInterface;
-import org.openmrs.module.eptsreports.reporting.library.queries.DsdQueriesInterface.QUERY.DSDDispensationInterval;
-import org.openmrs.module.eptsreports.reporting.library.queries.DsdQueriesInterface.QUERY.DSDModeTypeLevel1;
-import org.openmrs.module.eptsreports.reporting.library.queries.DsdQueriesInterface.QUERY.DSDModelTypeLevel2;
+import org.openmrs.module.eptsreports.reporting.library.queries.DSDQueriesInterface;
+import org.openmrs.module.eptsreports.reporting.library.queries.DSDQueriesInterface.QUERY.DSDDispensationInterval;
+import org.openmrs.module.eptsreports.reporting.library.queries.DSDQueriesInterface.QUERY.DSDModeTypeLevel1;
+import org.openmrs.module.eptsreports.reporting.library.queries.DSDQueriesInterface.QUERY.DSDModelTypeLevel2;
 import org.openmrs.module.eptsreports.reporting.library.queries.PregnantQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TbQueries;
@@ -45,7 +45,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DT",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDDispensationInterval.QUARTERLY)),
             mappings));
 
@@ -54,7 +54,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DS",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDDispensationInterval.SEMI_ANNUAL)),
             mappings));
 
@@ -63,7 +63,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DA",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDDispensationInterval.ANNUAL)),
             mappings));
 
@@ -72,7 +72,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DD",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModeTypeLevel1.DD)),
             mappings));
 
@@ -81,7 +81,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DC",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModeTypeLevel1.DCA_APE)),
             mappings));
 
@@ -92,7 +92,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "GAAC",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModelTypeLevel2.GAAC)),
             mappings));
 
@@ -117,7 +117,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DT",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDDispensationInterval.QUARTERLY)),
             mappings));
 
@@ -142,7 +142,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DT",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDDispensationInterval.QUARTERLY)),
             mappings));
 
@@ -167,7 +167,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DS",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDDispensationInterval.SEMI_ANNUAL)),
             mappings));
 
@@ -192,7 +192,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DS",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDDispensationInterval.SEMI_ANNUAL)),
             mappings));
 
@@ -217,7 +217,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DA",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDDispensationInterval.ANNUAL)),
             mappings));
 
@@ -242,7 +242,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DA",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDDispensationInterval.ANNUAL)),
             mappings));
 
@@ -267,7 +267,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DD",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModeTypeLevel1.DD)),
             mappings));
 
@@ -292,7 +292,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DD",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModeTypeLevel1.DD)),
             mappings));
 
@@ -317,7 +317,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DC",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModeTypeLevel1.DCA_APE)),
             mappings));
 
@@ -342,7 +342,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DC",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModeTypeLevel1.DCA_APE)),
             mappings));
 
@@ -403,7 +403,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "GAAC",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModelTypeLevel2.GAAC)),
             mappings));
 
@@ -428,7 +428,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "GAAC",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModelTypeLevel2.GAAC)),
             mappings));
 
@@ -453,7 +453,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DCP",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModeTypeLevel1.DCP)),
             mappings));
 
@@ -478,7 +478,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "BM",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModeTypeLevel1.BM)),
             mappings));
 
@@ -536,7 +536,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "SARCOMA-KAPOSI",
-                DsdQueriesInterface.QUERY.findPatientsWhoHaveBeenNotifiedOfKaposiSarcoma),
+                DSDQueriesInterface.QUERY.findPatientsWhoHaveBeenNotifiedOfKaposiSarcoma),
             mappings));
 
     dataSetDefinitio.addSearch(
@@ -544,7 +544,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "ADVERSASE-REACTIONS",
-                DsdQueriesInterface.QUERY
+                DSDQueriesInterface.QUERY
                     .findPatientsWithAdverseDrugReactionsRequiringRegularMonitoringNotifiedInLast6Months),
             mappings));
 
@@ -621,7 +621,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "patientsWhoAreInTbTreatment",
-                DsdQueriesInterface.QUERY.findPatientsWhoWhereTransferredInPriorReportingPeriod),
+                DSDQueriesInterface.QUERY.findPatientsWhoWhereTransferredInPriorReportingPeriod),
             "startDate=${endDate-3m},endDate=${endDate},location=${location}"));
 
     compositionDefinition.setCompositionString("IIT-PREVIOUS-PERIOD NOT TRF-IN");
@@ -645,7 +645,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "CM",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModeTypeLevel1.CM)),
             mappings));
 
@@ -670,7 +670,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "AF",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModelTypeLevel2.AF)),
             mappings));
 
@@ -695,7 +695,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "CA",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModelTypeLevel2.CA)),
             mappings));
 
@@ -720,7 +720,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "EH",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModeTypeLevel1.EH)),
             mappings));
 
@@ -745,7 +745,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "TB",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModelTypeLevel2.TB)),
             mappings));
 
@@ -770,7 +770,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "CT",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModelTypeLevel2.CT)),
             mappings));
 
@@ -795,7 +795,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "SAAJ",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModelTypeLevel2.SAAJ)),
             mappings));
 
@@ -820,7 +820,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "SMI",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModelTypeLevel2.SMI)),
             mappings));
 
@@ -845,7 +845,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "DAH",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModelTypeLevel2.DAH)),
             mappings));
 
@@ -879,7 +879,7 @@ public class DSDCohortQueries {
         "FR",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
-                "FR", DsdQueriesInterface.QUERY.findPatientsWhoAreFastTrack),
+                "FR", DSDQueriesInterface.QUERY.findPatientsWhoAreFastTrack),
             mappings));
 
     definition.addSearch(
@@ -887,7 +887,7 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "FR",
-                DsdQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
                     DSDModelTypeLevel2.FR)),
             mappings));
 

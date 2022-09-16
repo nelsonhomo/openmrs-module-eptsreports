@@ -19,7 +19,7 @@ import org.openmrs.module.eptsreports.reporting.library.cohorts.TbPrevCohortQuer
 import org.openmrs.module.eptsreports.reporting.library.cohorts.TxNewCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.TxTbPrevCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.BreastfeedingQueries;
-import org.openmrs.module.eptsreports.reporting.library.queries.DSDQueries;
+import org.openmrs.module.eptsreports.reporting.library.queries.DSDQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.Eri2MonthsQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.ErimType;
 import org.openmrs.module.eptsreports.reporting.library.queries.PrepNewQueries;
@@ -544,7 +544,7 @@ public class EptsCommonDimension {
     dimension.setName(name);
     dimension.addParameter(new Parameter("endDate", "End Date", Date.class));
 
-    String query = DSDQueries.QUERY.findPatientsByAgeRange();
+    String query = DSDQueriesInterface.QUERY.findPatientsByAgeRange();
 
     switch (range) {
       case UNDER_TWO:
