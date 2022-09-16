@@ -1029,7 +1029,7 @@ from(
 				inner join encounter e on p.patient_id=e.patient_id
 				inner join obs regimeTPT on regimeTPT.encounter_id = e.encounter_id																			 		
 				inner join obs tipoDispensa on tipoDispensa.encounter_id=e.encounter_id
-				where regimeTPT.concept_id=23985 and regimeTPT.value_coded in(656,23982) and tipoDispensa.concept_id=23986 and tipoDispensa.value_coded=23720
+				where e.encounter_type=60 and regimeTPT.concept_id=23985 and regimeTPT.value_coded in(656,23982) and tipoDispensa.concept_id=23986 and tipoDispensa.value_coded=23720
 				and p.voided=0 and e.voided=0 and regimeTPT.voided=0 and tipoDispensa.voided=0 and e.encounter_datetime BETWEEN (:startDate - interval 6 month) and :endDate 
 
 		) DTINH on DTINH.patient_id=inicio_INH.patient_id
