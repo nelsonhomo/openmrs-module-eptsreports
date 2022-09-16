@@ -360,7 +360,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
         EptsReportUtils.map(
             this.eptsGeneralIndicator.getIndicator(
                 "patientsActiveOnArtEligibleForDsd",
-                EptsReportUtils.map(dsdCohortQueries.getDSDNotEligibleNumerator8(), mappings)),
+                EptsReportUtils.map(dsdCohortQueries.getDSDNumerator10(), mappings)),
             mappings),
         addWonaState,
         UNDER_TWO,
