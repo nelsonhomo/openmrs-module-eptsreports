@@ -1,7 +1,7 @@
 select coorte12meses_final.patient_id as patient_id,
                     concat(ifnull(pn.given_name,''),' ',ifnull(pn.middle_name,''),' ',ifnull(pn.family_name,'')) as NomeCompleto, 
                     pid.identifier as NID, 
-                    case p.gender when 'F' then 'Femenino' when 'M' then 'Masculino' else null end as gender, 
+                    case p.gender when 'F' then 'Feminino' when 'M' then 'Masculino' else null end as gender, 
                     floor(datediff(:endDate,p.birthdate)/365) as idade_actual,
                     pat.value telefone,
                     coorte12meses_final.data_inicio as data_inicio, 
