@@ -103,7 +103,7 @@ select inicio_3HP.patient_id
 				inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id
 			where p.voided = 0 and e.voided = 0  and profilaxia3HP.voided = 0 and estadoProfilaxia.voided = 0  
 				and  profilaxia3HP.concept_id = 23985  and profilaxia3HP.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1267 
-				and e.encounter_type in (6) and e.location_id=:location and estadoProfilaxia.obs_datetime <= :endDate
+				and e.encounter_type in (6,53) and e.location_id=:location and estadoProfilaxia.obs_datetime <= :endDate
             ) endTPI group by endTPI.patient_id 
         
         ) termino_3hp on inicio_3HP.patient_id=termino_3hp.patient_id 
@@ -121,7 +121,7 @@ select inicio_3HP.patient_id
 			inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id
 		where p.voided = 0 and e.voided = 0  and profilaxia3HP.voided = 0 and estadoProfilaxia.voided = 0  
 			and  profilaxia3HP.concept_id = 23985  and profilaxia3HP.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 
-			and e.encounter_type  in(6,53) and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
+			and e.encounter_type = 6 and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
 		union
 
 		select p.patient_id, e.encounter_datetime data_inicio_3HP																			
@@ -150,7 +150,7 @@ select inicio_3HP.patient_id
 			inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id
 		where p.voided = 0 and e.voided = 0  and profilaxia3HP.voided = 0 and estadoProfilaxia.voided = 0  
 			and  profilaxia3HP.concept_id = 23985  and profilaxia3HP.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 
-			and e.encounter_type  in( 6,53) and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
+			and e.encounter_type = 6 and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
 		union
 
 		select p.patient_id, e.encounter_datetime data_inicio_3HP																			
