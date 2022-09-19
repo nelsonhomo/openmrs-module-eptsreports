@@ -413,11 +413,8 @@ select coorte12meses_final.patient_id --,TIMESTAMPDIFF(YEAR,pe.birthdate,:endDat
 		where 	
 		(children.patient_id is not null or adult.patient_id is not null)
 		and (
-			(DATEDIFF (coorte12meses_final.data_usar,last_vl.last_vl_date) <=365)
+			(DATEDIFF (:endDate,last_vl.last_vl_date) <=365)
 		  	or
-		  	(last_vl.last_vl_date is null and ( DATEDIFF (coorte12meses_final.data_usar,baby_cd4.last_cd4) <=365 or DATEDIFF (coorte12meses_final.data_usar,kid_cd4.last_cd4) <=365) )	
+		  	(last_vl.last_vl_date is null and ( DATEDIFF (:endDate,baby_cd4.last_cd4) <=365 or DATEDIFF (:endDate,kid_cd4.last_cd4) <=365))	
 		 )
-		 and ( efeitos_secundarios.patient_id is null or TIMESTAMPDIFF(MONTH, efeitos_secundarios.data_efeito_secundario, :endDate) > 6 ); 	
-
-
-        																	--SELECT DATEDIFF("2022-07-22 00:00:00.0","2021-12-23 00:00:00.0");
+		 and ( efeitos_secundarios.patient_id is null or TIMESTAMPDIFF(MONTH, efeitos_secundarios.data_efeito_secundario, :endDate) > 6 ); 
