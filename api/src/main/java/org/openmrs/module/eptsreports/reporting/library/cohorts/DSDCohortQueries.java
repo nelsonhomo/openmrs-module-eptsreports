@@ -854,6 +854,26 @@ public class DSDCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "DSD- Indicator excluding pregnants And breastfeedding")
+  public CohortDefinition getDSDDenominatorExcludingPregnantsAndBreastFeeding(
+      CohortDefinition denominator) {
+    final CompositionCohortDefinition dataSetDefinitio = new CompositionCohortDefinition();
+
+    dataSetDefinitio.setName("DSD- Indicator  Exclunding pregnant and BreastFeeding");
+    dataSetDefinitio.addParameter(new Parameter("endDate", "End Date", Date.class));
+    dataSetDefinitio.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    dataSetDefinitio.addSearch("DENOMINATOR", EptsReportUtils.map(denominator, mappings));
+
+    dataSetDefinitio.addSearch(
+        "EXCLUSION", EptsReportUtils.map(this.getPregnantsAndBreastFeeding(), mappings));
+
+    dataSetDefinitio.setCompositionString("DENOMINATOR NOT EXCLUSION");
+
+    return dataSetDefinitio;
+  }
+
   @DocumentedDefinition(value = "DSDPatientsWhoExperiencedIITCalculation")
   private CohortDefinition getPatientsWhoExperiencedIITCalculation() {
     BaseFghCalculationCohortDefinition definition =
@@ -894,5 +914,34 @@ public class DSDCohortQueries {
     definition.setCompositionString("FR OR FR-MDC");
 
     return definition;
+  }
+
+  @DocumentedDefinition(value = "DSD- Pregnants And Breastfeeding")
+  private CohortDefinition getPregnantsAndBreastFeeding() {
+    final CompositionCohortDefinition dataSetDefinitio = new CompositionCohortDefinition();
+
+    dataSetDefinitio.setName("DSD- Pregnant and Breastfeeding");
+    dataSetDefinitio.addParameter(new Parameter("endDate", "End Date", Date.class));
+    dataSetDefinitio.addParameter(new Parameter("location", "location", Location.class));
+
+    dataSetDefinitio.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoArePregnantInAPeriod",
+                PregnantQueries.findPatientsWhoArePregnantInAPeriod()),
+            "startDate=${endDate-9m},endDate=${endDate},location=${location}"));
+
+    dataSetDefinitio.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreBreastfeeding",
+                BreastfeedingQueries.findPatientsWhoAreBreastfeeding()),
+            "startDate=${endDate-18m},endDate=${endDate},location=${location}"));
+
+    dataSetDefinitio.setCompositionString("PREGNANT OR BREASTFEEDING ");
+
+    return dataSetDefinitio;
   }
 }
