@@ -29,7 +29,7 @@ public class DSDCommonDimensions {
         "PREGNANT",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "patientsWhoArePregnantInAPeriod",
+                "PREGNANT",
                 DSDQueriesInterface.QUERY.findPatientsWhoArePregnantsAndBreastFeeding(
                     TypePTV.PREGNANT)),
             "endDate=${endDate},location=${location}"));
@@ -38,7 +38,7 @@ public class DSDCommonDimensions {
         "BREASTFEEDING",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "patientsWhoArePregnantInAPeriod",
+                "BREASTFEEDING",
                 DSDQueriesInterface.QUERY.findPatientsWhoArePregnantsAndBreastFeeding(
                     TypePTV.BREASTFEEDING)),
             "endDate=${endDate},location=${location}"));
