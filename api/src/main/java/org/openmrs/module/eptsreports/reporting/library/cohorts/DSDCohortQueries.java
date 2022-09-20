@@ -15,6 +15,7 @@ import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalQuer
 import org.openmrs.module.eptsreports.reporting.library.queries.TbQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.TypePTV;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
@@ -509,16 +510,18 @@ public class DSDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "patientsWhoArePregnantInAPeriod",
-                PregnantQueries.findPatientsWhoArePregnantInAPeriod()),
-            "startDate=${endDate-9m},endDate=${endDate},location=${location}"));
+                DSDQueriesInterface.QUERY.findPatientsWhoArePregnantsAndBreastFeeding(
+                    TypePTV.PREGNANT)),
+            "endDate=${endDate},location=${location}"));
 
     dataSetDefinitio.addSearch(
         "BREASTFEEDING",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "patientsWhoAreBreastfeeding",
-                BreastfeedingQueries.findPatientsWhoAreBreastfeeding()),
-            "startDate=${endDate-18m},endDate=${endDate},location=${location}"));
+                DSDQueriesInterface.QUERY.findPatientsWhoArePregnantsAndBreastFeeding(
+                    TypePTV.BREASTFEEDING)),
+            "endDate=${endDate},location=${location}"));
 
     dataSetDefinitio.addSearch(
         "TB",
