@@ -445,7 +445,7 @@ select coorte12meses_final.patient_id as patient_id
 
                     )consultasINH on inicio_inh.patient_id = consultasINH.patient_id
                     where consultasINH.encounter_datetime between (inicio_inh.data_inicio_INH + INTERVAL 1 day) and (inicio_inh.data_inicio_INH + INTERVAL 7 MONTH)
-                    group by inicio_inh.patient_id having count(distinct consultasINH.encounter_id)>=5                  
+                    group by inicio_inh.patient_id,inicio_inh.data_inicio_INH having count(distinct consultasINH.encounter_id)>=5                  
                
                 union
                
@@ -478,7 +478,7 @@ select coorte12meses_final.patient_id as patient_id
                           and obsEstado.obs_datetime <= :endDate
                     ) consultasINH on inicio_inh.patient_id = consultasINH.patient_id
                 where consultasINH.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 5 MONTH)
-                group by inicio_inh.patient_id having count(distinct consultasINH.encounter_id)>=2  
+                group by inicio_inh.patient_id,inicio_inh.data_inicio_INH having count(distinct consultasINH.encounter_id)>=2  
                
                 union
                 
@@ -518,7 +518,7 @@ select coorte12meses_final.patient_id as patient_id
                         
                         )consultasSemDTINH on inicio_inh.patient_id = consultasSemDTINH.patient_id
                     where consultasSemDTINH.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH)
-                    group by inicio_inh.patient_id having count(distinct consultasSemDTINH.encounter_id)>=3 
+                    group by inicio_inh.patient_id,inicio_inh.data_inicio_INH  having count(distinct consultasSemDTINH.encounter_id)>=3 
                   ) consultasSemDTINH
              inner join 
              (
@@ -553,7 +553,7 @@ select coorte12meses_final.patient_id as patient_id
                             )consultasComINH
                     )consultasComINH on inicio_inh.patient_id = consultasComINH.patient_id
                     where consultasComINH.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH)
-                    group by inicio_inh.patient_id having count(distinct consultasComINH.encounter_id)>=1
+                    group by inicio_inh.patient_id,inicio_inh.data_inicio_INH  having count(distinct consultasComINH.encounter_id)>=1
                 )consultasComINH on consultasComINH.patient_id=consultasSemDTINH.patient_id
                 
                 union
