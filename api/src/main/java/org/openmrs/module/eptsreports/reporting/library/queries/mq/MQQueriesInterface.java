@@ -323,14 +323,10 @@ public interface MQQueriesInterface {
             + "where   e.encounter_type in(6,9,53) and  ultimaProfilaxiaIsoniazia.concept_id=23985 and ultimaProfilaxiaIsoniazia.value_coded=656   "
             + "and obsEstado.concept_id=165308 and obsEstado.value_coded=1267   "
             + "and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and   e.location_id =:location  "
-            + "and obsEstado.obs_datetime BETWEEN :startInclusionDate AND :endInclusionDate "
+            + "and obsEstado.obs_datetime BETWEEN :startInclusionDate AND :endRevisionDate "
             + "group by p.patient_id  "
             + ") obsFimTPI on obsFimTPI.patient_id = B4_1_2.patient_id   "
-            + "left join obs obsTBActiva on obsTBActiva.person_id= B4_1_2.patient_id and obsTBActiva.voided = 0 and  obsTBActiva.concept_id = 23761 and obsTBActiva.value_coded = 1065 and  obsTBActiva.obs_datetime between B4_1_2.dataInicioTPI and (B4_1_2.dataInicioTPI + INTERVAL 9 MONTH) and obsTBActiva.location_id=:location   "
-            + "left join obs obsRastreio on obsRastreio.person_id = B4_1_2.patient_id and obsRastreio.voided = 0 and obsRastreio.concept_id = 23758 and obsRastreio.value_coded = 1065 and  obsRastreio.obs_datetime between B4_1_2.dataInicioTPI and (B4_1_2.dataInicioTPI + INTERVAL 9 MONTH) and obsRastreio.location_id=:location   "
-            + "left join obs obsTB on obsTB.person_id = B4_1_2.patient_id and obsTB.voided = 0 and  obsTB.concept_id = 1268 and obsTB.value_coded in (1256,1257,1267) and  obsTB.obs_datetime between B4_1_2.dataInicioTPI and (B4_1_2.dataInicioTPI + INTERVAL 9 MONTH) and obsTB.location_id=:location   "
-            + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 170 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 297 DAY) and   "
-            + "obsTBActiva.person_id is null and  obsRastreio.person_id is null and obsTB.person_id is null   "
+            + " WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 170 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 297 DAY) "
             + "group by B4_1_2.patient_id "
             + ")finalTPI ";
 
@@ -371,15 +367,12 @@ public interface MQQueriesInterface {
             + "where   e.encounter_type in(6,9,53) and  ultimaProfilaxiaIsoniazia.concept_id=23985 and ultimaProfilaxiaIsoniazia.value_coded=23954   "
             + "and obsEstado.concept_id=165308 and obsEstado.value_coded=1267   "
             + "and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and   e.location_id =:location "
-            + "and DATE(obsEstado.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate  "
+            + "and DATE(obsEstado.obs_datetime) BETWEEN :startInclusionDate AND :endRevisionDate  "
             + "group by p.patient_id  "
             + ") maxfimtpi   "
             + ") obsFimTPI on obsFimTPI.patient_id = B4_1_2.patient_id   "
-            + "left join obs obsTBActiva on obsTBActiva.person_id= B4_1_2.patient_id and obsTBActiva.voided = 0 and  obsTBActiva.concept_id = 23761 and obsTBActiva.value_coded = 1065 and obsTBActiva.obs_datetime between B4_1_2.dataInicioTPI and (B4_1_2.dataInicioTPI + INTERVAL 6 MONTH) and obsTBActiva.location_id =:location   "
-            + "left join obs obsRastreio on obsRastreio.person_id = B4_1_2.patient_id and obsRastreio.voided = 0 and obsRastreio.concept_id = 23758 and obsRastreio.value_coded = 1065 and obsRastreio.obs_datetime between B4_1_2.dataInicioTPI and (B4_1_2.dataInicioTPI + INTERVAL 6 MONTH) and obsRastreio.location_id =:location   "
-            + "left join obs obsTB on obsTB.person_id = B4_1_2.patient_id and obsTB.voided = 0 and obsTB.concept_id = 1268 and obsTB.value_coded in (1256,1257,1267) and obsTB.obs_datetime between B4_1_2.dataInicioTPI and (B4_1_2.dataInicioTPI + INTERVAL 6 MONTH) and obsTB.location_id =:location   "
-            + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 80 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 190 DAY) and obsTBActiva.person_id is null and obsRastreio.person_id is null and  obsTB.person_id is null  "
-            + "group by B4_1_2.patient_id ";
+            + " WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 80 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 190 DAY) "
+            + " group by B4_1_2.patient_id ";
 
     public static final String findPatientWhoStartTPI4MonthsAfterDateOfInclusionCategory7 =
         "select p.patient_id  from patient p  "
@@ -754,5 +747,59 @@ public interface MQQueriesInterface {
             + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
             + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 9 MONTH) "
             + "AND e.encounter_type = 6 AND obsTBActiva.concept_id=1268 and obsTBActiva.value_coded in (1256,1257,1267) ";
+
+    public static final String
+        finPatientsWhoCompletedINHBetween170And297DaysAfterInitiatedTreatment =
+            "select finalTPI.patient_id from ( "
+                + "SELECT B4_1_2.patient_id, MAX(dataInicioTPI) dataInicioTPI,obsFimTPI.obs_datetime  FROM ( "
+                + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI   from patient p "
+                + "inner join encounter e on p.patient_id = e.patient_id "
+                + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
+                + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
+                + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
+                + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
+                + "and e.encounter_type in (6,9,53) and e.location_id=:location "
+                + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN  :startInclusionDate and :endInclusionDate "
+                + "group by p.patient_id "
+                + ") B4_1_2 "
+                + "inner join  ( "
+                + "select p.patient_id, obsEstado.obs_datetime  from patient p "
+                + "inner join encounter e on p.patient_id = e.patient_id "
+                + "inner join obs ultimaProfilaxiaIsoniazia on ultimaProfilaxiaIsoniazia.encounter_id = e.encounter_id "
+                + "inner join obs obsEstado on obsEstado.encounter_id = e.encounter_id "
+                + "where   e.encounter_type in(6,53) and  ultimaProfilaxiaIsoniazia.concept_id=23985 and ultimaProfilaxiaIsoniazia.value_coded=656 "
+                + "and obsEstado.concept_id=165308 and obsEstado.value_coded=1267 "
+                + "and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and e.location_id=:location "
+                + ") obsFimTPI on obsFimTPI.patient_id = B4_1_2.patient_id "
+                + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 170 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 297 DAY) "
+                + "group by B4_1_2.patient_id "
+                + ")finalTPI ";
+
+    public static final String
+        finPatientsWhoCompleted3HPBetween80And190DaysAfterInitiatedTreatment =
+            "select DISTINCT B4_1_2.patient_id from ( "
+                + "SELECT patient_id, MAX(dataInicioTPI) dataInicioTPI FROM ( "
+                + "select p.patient_id, max(obsEstado.obs_datetime) dataInicioTPI  from patient p "
+                + "inner join encounter e on p.patient_id = e.patient_id "
+                + "inner join obs ultimaProfilaxiaIsoniazia on ultimaProfilaxiaIsoniazia.encounter_id = e.encounter_id "
+                + "inner join obs obsEstado on obsEstado.encounter_id = e.encounter_id "
+                + "where   e.encounter_type in(6,53) and  ultimaProfilaxiaIsoniazia.concept_id=23985 and ultimaProfilaxiaIsoniazia.value_coded=23954 "
+                + "and obsEstado.concept_id=165308 and obsEstado.value_coded=1256 "
+                + "and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and   e.location_id=:location "
+                + "and DATE(obsEstado.obs_datetime) BETWEEN :startInclusionDate and :endInclusionDate "
+                + "group by p.patient_id "
+                + ")maxdatainicio GROUP BY patient_id "
+                + ") B4_1_2 "
+                + "inner join  ( "
+                + "select p.patient_id,obsEstado.obs_datetime obs_datetime from patient p "
+                + "inner join encounter e on p.patient_id = e.patient_id "
+                + "inner join obs ultimaProfilaxiaIsoniazia on ultimaProfilaxiaIsoniazia.encounter_id = e.encounter_id "
+                + "inner join obs obsEstado on obsEstado.encounter_id = e.encounter_id "
+                + "where e.encounter_type in(6,9,53) and  ultimaProfilaxiaIsoniazia.concept_id=23985 and ultimaProfilaxiaIsoniazia.value_coded=23954 "
+                + "and obsEstado.concept_id=165308 and obsEstado.value_coded=1267 "
+                + "and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and e.location_id =:location "
+                + ") obsFimTPI on obsFimTPI.patient_id = B4_1_2.patient_id "
+                + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 80 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 190 DAY) "
+                + "group by B4_1_2.patient_id ";
   }
 }
