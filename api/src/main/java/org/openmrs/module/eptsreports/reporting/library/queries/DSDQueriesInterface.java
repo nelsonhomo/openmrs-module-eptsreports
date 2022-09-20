@@ -472,7 +472,7 @@ public interface DSDQueriesInterface {
 
       switch (typePTV) {
         case BREASTFEEDING:
-          query = query + " where decisao=1 and pe.voided=0 and pe.gender='F";
+          query = query + " where decisao=1 and pe.voided=0 and pe.gender='F ";
           break;
 
         case PREGNANT:
