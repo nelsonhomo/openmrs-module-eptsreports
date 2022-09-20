@@ -247,50 +247,85 @@ select coorte12meses_final.patient_id --,TIMESTAMPDIFF(YEAR,pe.birthdate,:endDat
 		) adult on coorte12meses_final.patient_id = adult.patient_id 
 		left join 
 		(
-			select patient_id, max(last_vl_date) last_vl_date
-			from (
-				select p.patient_id,max(e.encounter_datetime) last_vl_date
-				from patient p
-					inner join  encounter e on e.patient_id = p.patient_id
-					inner join obs cargaViralQuantitativa on cargaViralQuantitativa.encounter_id = e.encounter_id
-				where p.voided = 0 and e.voided = 0 and cargaViralQuantitativa.voided = 0
-					and e.encounter_type in(6,9,13,51) and cargaViralQuantitativa.concept_id = 856 and cargaViralQuantitativa.value_numeric <1000
-					and e.location_id = :location  and e.encounter_datetime <= :endDate
-					group by p.patient_id
+               select maxEnc.patient_id ,maxEnc.last_vl_date from (
+                     select p.patient_id,max(e.encounter_datetime) last_vl_date
+                from patient p
+                    inner join  encounter e on e.patient_id = p.patient_id
+                    inner join obs cargaViralQuantitativa on cargaViralQuantitativa.encounter_id = e.encounter_id
+                where p.voided = 0 and e.voided = 0 and cargaViralQuantitativa.voided = 0
+                    and e.encounter_type in(6,9,13,51) and (cargaViralQuantitativa.concept_id = 856 OR cargaViralQuantitativa.concept_id = 1356)
+                    and e.location_id = :location  and e.encounter_datetime <= :endDate
+                    group by p.patient_id
+                    ) maxEnc inner join (
+		
+          select vl.patient_id,vl.last_vl_date from 
+            (    
+            select p.patient_id,max(e.encounter_datetime) last_vl_date
+                from patient p
+                    inner join  encounter e on e.patient_id = p.patient_id
+                    inner join obs cargaViralQuantitativa on cargaViralQuantitativa.encounter_id = e.encounter_id
+                where p.voided = 0 and e.voided = 0 and cargaViralQuantitativa.voided = 0
+                    and e.encounter_type in(6,9,13,51) and cargaViralQuantitativa.concept_id = 856
+                    and e.location_id = :location  and e.encounter_datetime <= :endDate
+                    group by p.patient_id
+             ) vl inner join obs obsVl on obsVl.person_id=vl.patient_id  and obsVl.voided=0  and obsVl.obs_datetime=vl.last_vl_date
+               and obsVl.concept_id=856 and obsVl.value_numeric<1000 
+
 					
 				union
 				
+				
+			   select vl.patient_id,vl.last_vl_date from 
+                (    
 				select p.patient_id,max(cargaViralQuantitativa.obs_datetime) last_vl_date
 				from patient p
 					inner join  encounter e on e.patient_id = p.patient_id
 					inner join obs cargaViralQuantitativa on cargaViralQuantitativa.encounter_id = e.encounter_id
 				where p.voided = 0 and e.voided = 0 and cargaViralQuantitativa.voided = 0
-					and e.encounter_type =53 and cargaViralQuantitativa.concept_id = 856 and cargaViralQuantitativa.value_numeric <1000
+					and e.encounter_type =53 and cargaViralQuantitativa.concept_id = 856 
 					and e.location_id = :location  and cargaViralQuantitativa.obs_datetime <= :endDate
 					group by p.patient_id
+				) vl inner join obs obsVl on   obsVl.person_id=vl.patient_id and obsVl.voided=0  and obsVl.obs_datetime=vl.last_vl_date
+                   and obsVl.concept_id=856 and obsVl.value_numeric<1000 
+
 				
 				union
 				
+				
+				select vl.patient_id,vl.last_vl_date from 
+                (  
 				select p.patient_id,max(e.encounter_datetime) last_vl_date
 				from patient p
 					inner join  encounter e on e.patient_id = p.patient_id
 					inner join obs cargaViralQualitativa on cargaViralQualitativa.encounter_id = e.encounter_id
 				where p.voided = 0 and e.voided = 0 and cargaViralQualitativa.voided = 0
-					and e.encounter_type in(6,9,13,51) and cargaViralQualitativa.concept_id = 1305 and cargaViralQualitativa.value_coded in (1306, 23814, 23905, 23906, 23907 ,23908, 23904, 165331)
+					and e.encounter_type in(6,9,13,51) and cargaViralQualitativa.concept_id = 1305
 					and e.location_id = :location  and e.encounter_datetime <= :endDate
 					group by p.patient_id 
+					
+				) vl inner join obs obsVl on   obsVl.person_id=vl.patient_id and obsVl.voided=0  and obsVl.obs_datetime=vl.last_vl_date
+                    and obsVl.concept_id = 1305 and obsVl.value_coded in (1306, 23814, 23905, 23906, 23907 ,23908, 23904, 165331)
+
 				
 				union
 				
+				select vl.patient_id,vl.last_vl_date from 
+                (  
 				select p.patient_id,max(cargaViralQualitativa.obs_datetime) last_vl_date
 				from patient p
 					inner join  encounter e on e.patient_id = p.patient_id
 					inner join obs cargaViralQualitativa on cargaViralQualitativa.encounter_id = e.encounter_id
 				where p.voided = 0 and e.voided = 0 and cargaViralQualitativa.voided = 0
-					and e.encounter_type = 53 and cargaViralQualitativa.concept_id = 1305 and cargaViralQualitativa.value_coded in(23814,165331)
+					and e.encounter_type = 53 and cargaViralQualitativa.concept_id = 1305
 					and e.location_id = :location and cargaViralQualitativa.obs_datetime <= :endDate
 					group by p.patient_id
-			) last_vl group by patient_id
+					
+					) vl inner join obs obsVl on  obsVl.person_id=vl.patient_id and obsVl.voided=0  and obsVl.obs_datetime=vl.last_vl_date
+                    and obsVl.concept_id = 1305 and obsVl.value_coded in(23814,165331)
+
+			) last_vl on last_vl.patient_id = maxEnc.patient_id 
+            where last_vl.last_vl_date = maxEnc.last_vl_date 
+            
 		) last_vl on  coorte12meses_final.patient_id = last_vl.patient_id
 		left join 
 		(
