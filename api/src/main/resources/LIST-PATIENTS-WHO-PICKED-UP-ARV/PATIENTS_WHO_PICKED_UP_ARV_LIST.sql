@@ -15,7 +15,7 @@
              when estadoPermanencia.state = 7 OR estadoPermanencia.state = 1706 then 'Transferido para' 
              when estadoPermanencia.state = 29 then 'Transferido de'
              when estadoPermanencia.state = 23903 then 'Tem diagnóstico negativo'
-             when estadoPermanencia.state = 1705 then 'Reiniciar'
+             when estadoPermanencia.state = 1705 then 'Reinicio'
              end AS estado,
              estadoPermanencia.state_date,
              case 
