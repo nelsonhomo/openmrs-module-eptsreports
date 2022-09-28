@@ -168,7 +168,7 @@ select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestamp
             Select p.patient_id,max(o.obs_datetime) max_data_cv  From patient p  
             inner join encounter e on p.patient_id=e.patient_id  
             inner join obs o on e.encounter_id=o.encounter_id  
-            where  p.voided=0 and e.voided=0 and o.voided=0 and concept_id in (856,1305) and  e.encounter_type in (6,9,13,51,53) and o.obs_datetime between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location  
+            where  p.voided=0 and e.voided=0 and o.voided=0 and concept_id in (856,1305) and  e.encounter_type in (6,9,13,51,53) and date(o.obs_datetime) between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location  
             group by p.patient_id 
             )max_cv  
             left join obs o on o.person_id=max_cv.patient_id and max_cv.max_data_cv=o.obs_datetime and o.voided=0 and  
