@@ -361,7 +361,7 @@
      AND pg.voided = 0 
      AND ps.voided = 0 
      AND pg.location_id = :location
-     AND (ps.start_date IS NOT NULL AND ps.end_date IS NULL and ps.voided =0) 
+     AND (ps.start_date IS NOT NULL AND ps.voided =0) 
      AND ps.start_date <= curdate()
      union
     select  p.patient_id, 
