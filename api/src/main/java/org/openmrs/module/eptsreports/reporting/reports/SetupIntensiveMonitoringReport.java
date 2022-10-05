@@ -14,17 +14,18 @@ import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSet
 import org.openmrs.module.eptsreports.reporting.library.datasets.midatasets.MIDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.viralloadmidatasets.VLMIDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
-import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
+import org.openmrs.module.eptsreports.reporting.reports.manager.EptsPeriodIndicatorDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.ReportDesign;
+import org.openmrs.module.reporting.report.definition.PeriodIndicatorReportDefinition;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetupIntensiveMonitoringReport extends EptsDataExportManager {
+public class SetupIntensiveMonitoringReport extends EptsPeriodIndicatorDataExportManager {
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
   @Autowired MIDataSet miDataSet;
@@ -57,8 +58,11 @@ public class SetupIntensiveMonitoringReport extends EptsDataExportManager {
   }
 
   @Override
-  public ReportDefinition constructReportDefinition() {
-    ReportDefinition reportDefinition = new ReportDefinition();
+  public PeriodIndicatorReportDefinition constructReportDefinition() {
+
+    PeriodIndicatorReportDefinition reportDefinition =
+        SetupResumoMensalReport.getDefaultPeriodIndicatorReportDefinition();
+
     reportDefinition.setUuid(getUuid());
     reportDefinition.setName(getName());
     reportDefinition.setDescription(getDescription());

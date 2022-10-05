@@ -32,7 +32,6 @@ import org.openmrs.module.eptsreports.reporting.calculation.quarterly.factory.Re
 import org.openmrs.module.eptsreports.reporting.calculation.quarterly.factory.ResumoTrimestralIndicatorFactoryL;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.ResumoTrimestralCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.BaseDataSet;
-import org.openmrs.module.eptsreports.reporting.reports.SetupResumoTrimestralReport;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.common.ListMap;
@@ -59,7 +58,7 @@ public class ResumoTrimestralDataSetDefinition extends BaseDataSet {
 
     CohortIndicatorDataSetDefinition dsd = new CohortIndicatorDataSetDefinition();
     dsd.setName("Resumo Trimestral DataSet");
-    dsd.addParameters(SetupResumoTrimestralReport.getDataParameters());
+    //  dsd.addParameters(SetupResumoTrimestralReport.getDataParameters());
 
     String mappings = "year=${year},quarter=${quarter},location=${location}";
 

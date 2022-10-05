@@ -24,17 +24,18 @@ import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.calculation.quarterly.ResumoTrimestralUtil.QUARTERLIES;
 import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ResumoTrimestralDataSetDefinition;
-import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
+import org.openmrs.module.eptsreports.reporting.reports.manager.EptsPeriodIndicatorDataExportManager;
 import org.openmrs.module.reporting.ReportingConstants;
 import org.openmrs.module.reporting.ReportingException;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.report.ReportDesign;
+import org.openmrs.module.reporting.report.definition.PeriodIndicatorReportDefinition;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetupResumoTrimestralReport extends EptsDataExportManager {
+public class SetupResumoTrimestralReport extends EptsPeriodIndicatorDataExportManager {
 
   public static final String YEAR_PARAMETER = "year";
 
@@ -69,8 +70,9 @@ public class SetupResumoTrimestralReport extends EptsDataExportManager {
   }
 
   @Override
-  public ReportDefinition constructReportDefinition() {
-    ReportDefinition rd = new ReportDefinition();
+  public PeriodIndicatorReportDefinition constructReportDefinition() {
+    PeriodIndicatorReportDefinition rd =
+        SetupResumoMensalReport.getDefaultPeriodIndicatorReportDefinition();
     rd.setUuid(getUuid());
     rd.setName(getName());
     rd.setDescription(getDescription());
