@@ -1395,7 +1395,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
                 ) max_consulta  
                     left join encounter e on (e.patient_id = max_consulta.patient_id  
                     and e.encounter_datetime = max_consulta.data_seguimento and e.encounter_type in (6,9))
-                    left join obs obs_seguimento on obs_seguimento.encounter_id = e.encounter_id
+                    inner join obs obs_seguimento on obs_seguimento.encounter_id = e.encounter_id
                     and obs_seguimento.voided=0 
                     and obs_seguimento.concept_id=1410 
                     and obs_seguimento.location_id=:location
