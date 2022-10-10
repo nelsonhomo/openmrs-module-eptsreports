@@ -6,7 +6,7 @@ select coorte12meses_final.patient_id as patient_id,
                     floor(datediff(:endDate,p.birthdate)/365) as idade_actual, 
                     TPT_ELIG_FR16.decisao as gravidaLactante, 
                     TPT_ELIG_FR19.data_seguimento as data_seguimento, 
-                    TPT_ELIG_FR19.value_datetime as data_proximo_seguimento,
+                    TPT_ELIG_FR19.data_proximo_seguimento as data_proximo_seguimento,
                     DATE_FORMAT(DATE(coorte12meses_final.data_fila), '%d-%m-%Y') as LAST_FILA, 
                     DATE_FORMAT(DATE(coorte12meses_final.data_proximo_lev), '%d-%m-%Y') as NEXT_FILA
              from 
@@ -1384,22 +1384,32 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
                 where pe.voided=0 and pe.gender='F' 
             ) TPT_ELIG_FR16 on TPT_ELIG_FR16.patient_id=coorte12meses_final.patient_id 
             left join  
-            (select max_consulta.patient_id,max_consulta.data_seguimento,obs_seguimento.value_datetime 
+            (
+            select max_consulta.patient_id,max_consulta.data_seguimento,proximaConsulta.data_proximo_seguimento 
                 from  
-                (   Select  p.patient_id,max(encounter_datetime) data_seguimento
+                (   Select  p.patient_id,max(encounter_datetime) data_seguimento, e.encounter_id
                     from    patient p  
                             inner join encounter e on e.patient_id=p.patient_id 
                     where   p.voided=0 and e.voided=0 and e.encounter_type in (6,9) and  
                             e.location_id=:location and e.encounter_datetime<=curdate() 
                     group by p.patient_id 
                 ) max_consulta  
-                    left join encounter e on (e.patient_id = max_consulta.patient_id  
-                    and e.encounter_datetime = max_consulta.data_seguimento and e.encounter_type in (6,9))
-                    inner join obs obs_seguimento on obs_seguimento.encounter_id = e.encounter_id
-                    and obs_seguimento.voided=0 
-                    and obs_seguimento.concept_id=1410 
-                    and obs_seguimento.location_id=:location
-            ) TPT_ELIG_FR19 on TPT_ELIG_FR19.patient_id=coorte12meses_final.patient_id 
+                   left join 
+                   ( 
+                   select fr.patient_id,fr.encounter_datetime data_seguimento,obs_seguimento.value_datetime data_proximo_seguimento,fr.encounter_id from
+                    (
+                    select p.patient_id, max(e.encounter_datetime) encounter_datetime,e.encounter_id from patient p
+                    inner join encounter e on (p.patient_id = e.patient_id)  
+                    where e.location_id=:location and  e.encounter_datetime<=curdate()  and  e.encounter_type in (6,9)
+					group by p.patient_id 
+                    ) fr 
+                    inner join encounter e on e.patient_id=fr.patient_id
+		            inner join obs obs_seguimento on obs_seguimento.encounter_id=e.encounter_id  
+                    and  obs_seguimento.concept_id=1410 
+                    and obs_seguimento.voided=0 and  e.encounter_type in (6,9) and e.encounter_datetime=fr.encounter_datetime
+                    ) proximaConsulta on proximaConsulta.patient_id=max_consulta.patient_id
+           
+                    ) TPT_ELIG_FR19 on TPT_ELIG_FR19.patient_id=coorte12meses_final.patient_id 
             where (data_estado is null or (data_estado is not null and  data_usar_c>data_estado)) and date_add(data_usar, interval 28 day) >=:endDate  
                     and  TPT_ELIG_FR4.patient_id is null  
                     and  TPT_ELIG_FR8.patient_id is null  
