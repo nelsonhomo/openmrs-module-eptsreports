@@ -1398,10 +1398,12 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
                    ( 
                    select fr.patient_id,fr.encounter_datetime data_seguimento,obs_seguimento.value_datetime data_proximo_seguimento,fr.encounter_id from
                     (
-                    select p.patient_id, max(e.encounter_datetime) encounter_datetime,e.encounter_id from patient p
-                    inner join encounter e on (p.patient_id = e.patient_id)  
-                    where e.location_id=:location and  e.encounter_datetime<=curdate()  and  e.encounter_type in (6,9)
-					group by p.patient_id 
+                 Select  p.patient_id,max(encounter_datetime) encounter_datetime, e.encounter_id
+                    from    patient p  
+                            inner join encounter e on e.patient_id=p.patient_id 
+                    where   p.voided=0 and e.voided=0 and e.encounter_type in (6,9) and  
+                            e.location_id=:location and e.encounter_datetime<=curdate() 
+                    group by p.patient_id 
                     ) fr 
                     inner join encounter e on e.patient_id=fr.patient_id
 		            inner join obs obs_seguimento on obs_seguimento.encounter_id=e.encounter_id  
