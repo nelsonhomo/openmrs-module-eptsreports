@@ -1,4 +1,4 @@
-name: Run SonarQube with Maven
+name: Run SonarQube with Maven For OpenMRS EPTS Report module
 
 on: push
 
