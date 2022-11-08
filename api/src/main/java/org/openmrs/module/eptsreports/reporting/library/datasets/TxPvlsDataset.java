@@ -527,7 +527,7 @@ public class TxPvlsDataset extends BaseDataSet {
         new ColumnParameters("sixtyT064F", "60 - 64 female", "gender=F|age=60-64", "30");
 
     ColumnParameters above65F =
-        new ColumnParameters("above65", "65+ female", "gender=F|age=60+", "31");
+        new ColumnParameters("above65", "65+ female", "gender=F|age=65+", "31");
 
     ColumnParameters unknownF =
         new ColumnParameters("unknownF", "Unknown age female", "gender=F|age=UK", "32");
