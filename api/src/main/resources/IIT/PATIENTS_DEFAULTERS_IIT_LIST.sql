@@ -118,7 +118,7 @@
                                                       max_estado                                                                                                                                                                                                  
                                                             inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                                                                                    
                                                             inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado                                     
-                                                      where pp.program_id = 2 and ps.state in (7,8,10) and pp.voided = 0 and ps.voided = 0 and ps.start_date<= curdate() and pp.location_id = 221           
+                                                      where pp.program_id = 2 and ps.state in (7,8,10) and pp.voided = 0 and ps.voided = 0 and ps.start_date<= curdate() and pp.location_id =:location          
                                                 union                              
                                                 select      p.patient_id,                              
                                                             max(o.obs_datetime) data_estado,                              
@@ -374,7 +374,7 @@
                                      AND e.encounter_type=6                              
                                      AND o.concept_id = 1268                              
                                      AND o.value_coded=1256                              
-                                     AND e.location_id = 221 AND o.obs_datetime between (curdate() - interval 7 month) and curdate()                               
+                                     AND e.location_id =:locationAND o.obs_datetime between (curdate() - interval 7 month) and curdate()                               
                               UNION  
 
                              SELECT       p.patient_id,'S' temTB                               
@@ -384,7 +384,7 @@
                              WHERE  p.voided = 0 AND e.voided = 0 AND o.voided = 0                              
                                      AND e.encounter_type IN (6,9)                              
                                      AND o.concept_id = 1113                              
-                                     AND e.location_id = 221 AND o.value_datetime between (curdate() - interval 7 month) and curdate()                               
+                                     AND e.location_id =:locationAND o.value_datetime between (curdate() - interval 7 month) and curdate()                               
 
                               UNION      
 
@@ -396,7 +396,7 @@
                                      AND e.encounter_type=53                              
                                      AND o.concept_id = 42                              
                                      AND o.value_coded=1065                              
-                                     AND e.location_id = 221 AND o.obs_datetime between (curdate() - interval 7 month) and curdate()                               
+                                     AND e.location_id =:locationAND o.obs_datetime between (curdate() - interval 7 month) and curdate()                               
 
                               UNION   
 
@@ -405,7 +405,7 @@
                                           INNER JOIN patient_program pg ON pg.patient_id = p.patient_id                              
                              WHERE  p.voided = 0 AND pg.voided = 0                              
                                      AND pg.program_id = 5                               
-                                     AND pg.date_enrolled BETWEEN (curdate() - interval 7 month) and curdate() AND pg.location_id = 221                              
+                                     AND pg.date_enrolled BETWEEN (curdate() - interval 7 month) and curdate() AND pg.location_id =:location                             
 
                               UNION
 
@@ -417,7 +417,7 @@
                                      AND e.encounter_type=6                              
                                      AND o.concept_id = 23761                              
                                      AND o.value_coded=1065                              
-                                     AND e.location_id = 221 AND e.encounter_datetime between (curdate() - interval 7 month) and curdate()                               
+                                     AND e.location_id =:locationAND e.encounter_datetime between (curdate() - interval 7 month) and curdate()                               
 
                          ) tb on tb.patient_id=coorte12meses_final.patient_id                              
                          left join                                                                                                                                                                                                                                                                                      
