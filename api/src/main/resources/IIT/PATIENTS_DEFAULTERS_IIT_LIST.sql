@@ -374,7 +374,7 @@
                                      AND e.encounter_type=6                              
                                      AND o.concept_id = 1268                              
                                      AND o.value_coded=1256                              
-                                     AND e.location_id =:locationAND o.obs_datetime between (curdate() - interval 7 month) and curdate()                               
+                                     AND e.location_id =:location AND o.obs_datetime between (curdate() - interval 7 month) and curdate()                               
                               UNION  
 
                              SELECT       p.patient_id,'S' temTB                               
@@ -384,7 +384,7 @@
                              WHERE  p.voided = 0 AND e.voided = 0 AND o.voided = 0                              
                                      AND e.encounter_type IN (6,9)                              
                                      AND o.concept_id = 1113                              
-                                     AND e.location_id =:locationAND o.value_datetime between (curdate() - interval 7 month) and curdate()                               
+                                     AND e.location_id =:location AND o.value_datetime between (curdate() - interval 7 month) and curdate()                               
 
                               UNION      
 
@@ -396,7 +396,7 @@
                                      AND e.encounter_type=53                              
                                      AND o.concept_id = 42                              
                                      AND o.value_coded=1065                              
-                                     AND e.location_id =:locationAND o.obs_datetime between (curdate() - interval 7 month) and curdate()                               
+                                     AND e.location_id =:location AND o.obs_datetime between (curdate() - interval 7 month) and curdate()                               
 
                               UNION   
 
@@ -417,7 +417,7 @@
                                      AND e.encounter_type=6                              
                                      AND o.concept_id = 23761                              
                                      AND o.value_coded=1065                              
-                                     AND e.location_id =:locationAND e.encounter_datetime between (curdate() - interval 7 month) and curdate()                               
+                                     AND e.location_id =:location AND e.encounter_datetime between (curdate() - interval 7 month) and curdate()                               
 
                          ) tb on tb.patient_id=coorte12meses_final.patient_id                              
                          left join                                                                                                                                                                                                                                                                                      
