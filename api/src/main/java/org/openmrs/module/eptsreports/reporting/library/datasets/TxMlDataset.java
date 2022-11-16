@@ -2,7 +2,6 @@ package org.openmrs.module.eptsreports.reporting.library.datasets;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.TxMlCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.AgeDimensionCohortInterface;
@@ -394,7 +393,7 @@ public class TxMlDataset extends BaseDataSet {
     ColumnParameters unknownF =
         new ColumnParameters("unknownF", "Unknown age female", "gender=F|age=UK", "32");
 
-    ColumnParameters total = new ColumnParameters("totals", "Totals", "", "27");
+    ColumnParameters total = new ColumnParameters("totals", "Totals", "", "33");
 
     return Arrays.asList(
         under1M,
