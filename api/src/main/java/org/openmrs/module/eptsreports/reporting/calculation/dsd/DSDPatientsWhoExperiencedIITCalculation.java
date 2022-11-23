@@ -11,14 +11,9 @@ import org.openmrs.calculation.result.CalculationResultMap;
 import org.openmrs.calculation.result.SimpleResult;
 import org.openmrs.module.eptsreports.reporting.calculation.BaseFghCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.BooleanResult;
-import org.openmrs.module.eptsreports.reporting.calculation.generic.LastFilaCalculation;
-import org.openmrs.module.eptsreports.reporting.calculation.generic.LastRecepcaoLevantamentoCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.generic.TxRttNextFilaUntilEndDateCalculation;
-import org.openmrs.module.eptsreports.reporting.calculation.txml.TxMLPatientCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.txml.TxMLPatientsWhoMissedNextApointmentCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.util.processor.CalculationProcessorUtils;
-import org.openmrs.module.reporting.common.DateUtil;
-import org.openmrs.module.reporting.common.DurationUnit;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
 import org.springframework.stereotype.Component;
 
@@ -33,10 +28,8 @@ public class DSDPatientsWhoExperiencedIITCalculation extends BaseFghCalculation 
     Location location = (Location) context.getParameterValues().get("location");
     Date endDate = (Date) context.getParameterValues().get("endDate");
 
-    Date endDateMinus3Months = DateUtil.adjustDate(endDate, -3, DurationUnit.MONTHS);
-
     Map<String, Object> parameters = new HashMap<>();
-    parameters.put("endDate", endDateMinus3Months);
+    parameters.put("endDate", endDate);
     parameters.put("location", location);
 
     EvaluationContext newContext =
@@ -50,12 +43,12 @@ public class DSDPatientsWhoExperiencedIITCalculation extends BaseFghCalculation 
     Set<Integer> cohort = inicioRealResult.keySet();
 
     CalculationResultMap lastFilaCalculationResult =
-        Context.getRegisteredComponents(LastFilaCalculation.class)
+        Context.getRegisteredComponents(DSDLastFilaCalculation.class)
             .get(0)
             .evaluate(cohort, parameterValues, newContext);
 
-    LastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation =
-        Context.getRegisteredComponents(LastRecepcaoLevantamentoCalculation.class).get(0);
+    DSDLastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation =
+        Context.getRegisteredComponents(DSDLastRecepcaoLevantamentoCalculation.class).get(0);
 
     CalculationResultMap lastRecepcaoLevantamentoResult =
         lastRecepcaoLevantamentoCalculation.evaluate(cohort, parameterValues, newContext);
@@ -67,7 +60,7 @@ public class DSDPatientsWhoExperiencedIITCalculation extends BaseFghCalculation 
 
     return this.evaluateUsingCalculationRules(
         cohort,
-        endDateMinus3Months,
+        endDate,
         resultMap,
         lastFilaCalculationResult,
         nextFilaResult,
@@ -82,14 +75,14 @@ public class DSDPatientsWhoExperiencedIITCalculation extends BaseFghCalculation 
       CalculationResultMap lastFilaCalculationResult,
       CalculationResultMap nextFilaResult,
       CalculationResultMap lastRecepcaoLevantamentoResult,
-      LastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation) {
+      DSDLastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation) {
 
     for (Integer patientId : cohort) {
       Date maxNextDate =
           CalculationProcessorUtils.getMaxDate(
               patientId,
               nextFilaResult,
-              TxMLPatientCalculation.getLastRecepcaoLevantamentoPlus30(
+              this.getLastRecepcaoLevantamentoPlus30(
                   patientId, lastRecepcaoLevantamentoResult, lastRecepcaoLevantamentoCalculation));
 
       if (maxNextDate != null) {
@@ -110,6 +103,23 @@ public class DSDPatientsWhoExperiencedIITCalculation extends BaseFghCalculation 
     return resultMap;
   }
 
+  public CalculationResultMap getLastRecepcaoLevantamentoPlus30(
+      Integer patientId,
+      CalculationResultMap lastRecepcaoLevantamentoResult,
+      DSDLastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation) {
+
+    CalculationResultMap lastRecepcaoLevantamentoPlus30 = new CalculationResultMap();
+    CalculationResult maxRecepcao = lastRecepcaoLevantamentoResult.get(patientId);
+    if (maxRecepcao != null) {
+      lastRecepcaoLevantamentoPlus30.put(
+          patientId,
+          new SimpleResult(
+              CalculationProcessorUtils.adjustDaysInDate((Date) maxRecepcao.getValue(), 30),
+              lastRecepcaoLevantamentoCalculation));
+    }
+    return lastRecepcaoLevantamentoPlus30;
+  }
+
   protected void checkConsultationsOrFilaWithoutNextConsultationDate(
       Integer patientId,
       CalculationResultMap resultMap,
@@ -125,6 +135,9 @@ public class DSDPatientsWhoExperiencedIITCalculation extends BaseFghCalculation 
         && lastFilaResult != null
         && nextFilaResult == null
         && lastRecepcaoResult == null) {
+      resultMap.put(patientId, new BooleanResult(true, this));
+
+    } else if (lastFilaResult == null && lastRecepcaoResult == null) {
       resultMap.put(patientId, new BooleanResult(true, this));
     }
   }
