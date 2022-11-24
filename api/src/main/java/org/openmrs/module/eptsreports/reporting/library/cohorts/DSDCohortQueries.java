@@ -533,6 +533,13 @@ public class DSDCohortQueries {
         "IIT-PREVIOUS-PERIOD", EptsReportUtils.map(this.getPatientsOnRTTDSD(), mappings));
 
     dataSetDefinitio.addSearch(
+        "IIT-PREVIOUS-PERIOD-2",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "IIT-PREVIOUS-PERIOD-2", DSDQueriesInterface.QUERY.findPatientsAreDefaultIIT),
+            mappings));
+
+    dataSetDefinitio.addSearch(
         "SARCOMA-KAPOSI",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
@@ -550,7 +557,7 @@ public class DSDCohortQueries {
             mappings));
 
     dataSetDefinitio.setCompositionString(
-        "DENOMINATOR-1 NOT (PREGNANT OR BREASTFEEDING OR TB OR IIT-PREVIOUS-PERIOD OR SARCOMA-KAPOSI OR ADVERSASE-REACTIONS )");
+        "DENOMINATOR-1 NOT (PREGNANT OR BREASTFEEDING OR TB OR IIT-PREVIOUS-PERIOD OR IIT-PREVIOUS-PERIOD-2 OR SARCOMA-KAPOSI OR ADVERSASE-REACTIONS )");
 
     return dataSetDefinitio;
   }
