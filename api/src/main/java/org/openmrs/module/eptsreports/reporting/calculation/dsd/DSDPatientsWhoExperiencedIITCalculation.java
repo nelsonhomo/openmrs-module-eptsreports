@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.calculation.result.CalculationResult;
@@ -20,125 +21,104 @@ import org.springframework.stereotype.Component;
 @Component
 public class DSDPatientsWhoExperiencedIITCalculation extends BaseFghCalculation {
 
-  @Override
-  public CalculationResultMap evaluate(
-      Map<String, Object> parameterValues, EvaluationContext context) {
-    CalculationResultMap resultMap = new CalculationResultMap();
+	@Override
+	public CalculationResultMap evaluate(Map<String, Object> parameterValues, EvaluationContext context) {
+		CalculationResultMap resultMap = new CalculationResultMap();
 
-    Location location = (Location) context.getParameterValues().get("location");
-    Date endDate = (Date) context.getParameterValues().get("endDate");
+		Location location = (Location) context.getParameterValues().get("location");
+		Date endDate = (Date) context.getParameterValues().get("endDate");
 
-    Map<String, Object> parameters = new HashMap<>();
-    parameters.put("endDate", endDate);
-    parameters.put("location", location);
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("endDate", endDate);
+		parameters.put("location", location);
 
-    EvaluationContext newContext =
-        TxMLPatientsWhoMissedNextApointmentCalculation.getNewEvaluationContext(parameters);
+		EvaluationContext newContext = TxMLPatientsWhoMissedNextApointmentCalculation
+				.getNewEvaluationContext(parameters);
 
-    CalculationResultMap inicioRealResult =
-        Context.getRegisteredComponents(OnArtInitiatedArvDrugsMisaDefinitionCalculation.class)
-            .get(0)
-            .evaluate(parameterValues, context);
+		CalculationResultMap inicioRealResult = Context
+				.getRegisteredComponents(OnArtInitiatedArvDrugsMisaDefinitionCalculation.class).get(0)
+				.evaluate(parameterValues, context);
 
-    Set<Integer> cohort = inicioRealResult.keySet();
+		Set<Integer> cohort = inicioRealResult.keySet();
 
-    CalculationResultMap lastFilaCalculationResult =
-        Context.getRegisteredComponents(DSDLastFilaCalculation.class)
-            .get(0)
-            .evaluate(cohort, parameterValues, newContext);
+		CalculationResultMap lastFilaCalculationResult = Context.getRegisteredComponents(DSDLastFilaCalculation.class)
+				.get(0).evaluate(cohort, parameterValues, newContext);
 
-    DSDLastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation =
-        Context.getRegisteredComponents(DSDLastRecepcaoLevantamentoCalculation.class).get(0);
+		DSDLastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation = Context
+				.getRegisteredComponents(DSDLastRecepcaoLevantamentoCalculation.class).get(0);
 
-    CalculationResultMap lastRecepcaoLevantamentoResult =
-        lastRecepcaoLevantamentoCalculation.evaluate(cohort, parameterValues, newContext);
+		CalculationResultMap lastRecepcaoLevantamentoResult = lastRecepcaoLevantamentoCalculation.evaluate(cohort,
+				parameterValues, newContext);
 
-    CalculationResultMap nextFilaResult =
-        Context.getRegisteredComponents(TxRttNextFilaUntilEndDateCalculation.class)
-            .get(0)
-            .evaluate(lastFilaCalculationResult.keySet(), parameterValues, newContext);
+		DSDLastRecepcaoLevantamentoToBeIncludeCalculation DSDLastRecepcaoLevantamentoToBeIncludeCalculation = Context
+				.getRegisteredComponents(DSDLastRecepcaoLevantamentoToBeIncludeCalculation.class).get(0);
 
-    return this.evaluateUsingCalculationRules(
-        cohort,
-        endDate,
-        resultMap,
-        lastFilaCalculationResult,
-        nextFilaResult,
-        lastRecepcaoLevantamentoResult,
-        lastRecepcaoLevantamentoCalculation);
-  }
+		CalculationResultMap DSDLastRecepcaoLevantamentoToBeIncludeCalculationResult = DSDLastRecepcaoLevantamentoToBeIncludeCalculation
+				.evaluate(cohort, parameterValues, newContext);
 
-  protected CalculationResultMap evaluateUsingCalculationRules(
-      Set<Integer> cohort,
-      Date endDate,
-      CalculationResultMap resultMap,
-      CalculationResultMap lastFilaCalculationResult,
-      CalculationResultMap nextFilaResult,
-      CalculationResultMap lastRecepcaoLevantamentoResult,
-      DSDLastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation) {
+		CalculationResultMap nextFilaResult = Context
+				.getRegisteredComponents(TxRttNextFilaUntilEndDateCalculation.class).get(0)
+				.evaluate(lastFilaCalculationResult.keySet(), parameterValues, newContext);
 
-    for (Integer patientId : cohort) {
-      Date maxNextDate =
-          CalculationProcessorUtils.getMaxDate(
-              patientId,
-              nextFilaResult,
-              this.getLastRecepcaoLevantamentoPlus30(
-                  patientId, lastRecepcaoLevantamentoResult, lastRecepcaoLevantamentoCalculation));
+		return this.evaluateUsingCalculationRules(cohort, endDate, resultMap, lastFilaCalculationResult, nextFilaResult,
+				lastRecepcaoLevantamentoResult, lastRecepcaoLevantamentoCalculation,
+				DSDLastRecepcaoLevantamentoToBeIncludeCalculation);
+	}
 
-      if (maxNextDate != null) {
-        Date nextDatePlus59 = CalculationProcessorUtils.adjustDaysInDate(maxNextDate, 59);
+	protected CalculationResultMap evaluateUsingCalculationRules(Set<Integer> cohort, Date endDate,
+			CalculationResultMap resultMap, CalculationResultMap lastFilaCalculationResult,
+			CalculationResultMap nextFilaResult, CalculationResultMap lastRecepcaoLevantamentoResult,
+			DSDLastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation,
+			DSDLastRecepcaoLevantamentoToBeIncludeCalculation dsdLastRecepcaoLevantamentoToBeIncludeCalculation) {
 
-        if (nextDatePlus59.compareTo(endDate) < 0) {
-          resultMap.put(patientId, new SimpleResult(maxNextDate, this));
-        }
-      } else {
-        this.checkConsultationsOrFilaWithoutNextConsultationDate(
-            patientId,
-            resultMap,
-            lastFilaCalculationResult,
-            nextFilaResult,
-            lastRecepcaoLevantamentoResult);
-      }
-    }
-    return resultMap;
-  }
+		for (Integer patientId : cohort) {
+			Date maxNextDate = CalculationProcessorUtils.getMaxDate(patientId, nextFilaResult,
+					this.getLastRecepcaoLevantamentoPlus30(patientId, lastRecepcaoLevantamentoResult,
+							lastRecepcaoLevantamentoCalculation));
 
-  public CalculationResultMap getLastRecepcaoLevantamentoPlus30(
-      Integer patientId,
-      CalculationResultMap lastRecepcaoLevantamentoResult,
-      DSDLastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation) {
+			if (maxNextDate != null) {
+				Date nextDatePlus59 = CalculationProcessorUtils.adjustDaysInDate(maxNextDate, 59);
 
-    CalculationResultMap lastRecepcaoLevantamentoPlus30 = new CalculationResultMap();
-    CalculationResult maxRecepcao = lastRecepcaoLevantamentoResult.get(patientId);
-    if (maxRecepcao != null) {
-      lastRecepcaoLevantamentoPlus30.put(
-          patientId,
-          new SimpleResult(
-              CalculationProcessorUtils.adjustDaysInDate((Date) maxRecepcao.getValue(), 30),
-              lastRecepcaoLevantamentoCalculation));
-    }
-    return lastRecepcaoLevantamentoPlus30;
-  }
+				if (nextDatePlus59.compareTo(endDate) < 0) {
+					resultMap.put(patientId, new SimpleResult(maxNextDate, this));
+				}
+			} else {
+				this.checkConsultationsOrFilaWithoutNextConsultationDate(patientId, resultMap,
+						lastFilaCalculationResult, nextFilaResult, lastRecepcaoLevantamentoResult);
+			}
+		}
+		return resultMap;
+	}
 
-  protected void checkConsultationsOrFilaWithoutNextConsultationDate(
-      Integer patientId,
-      CalculationResultMap resultMap,
-      CalculationResultMap lastFilaCalculationResult,
-      CalculationResultMap nextFilaCalculationResult,
-      CalculationResultMap lastRecepcaoLevantamentoCalculationResult) {
+	public CalculationResultMap getLastRecepcaoLevantamentoPlus30(Integer patientId,
+			CalculationResultMap lastRecepcaoLevantamentoResult,
+			DSDLastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation) {
 
-    CalculationResult lastFilaResult = lastFilaCalculationResult.get(patientId);
-    CalculationResult nextFilaResult = nextFilaCalculationResult.get(patientId);
-    CalculationResult lastRecepcaoResult = lastRecepcaoLevantamentoCalculationResult.get(patientId);
+		CalculationResultMap lastRecepcaoLevantamentoPlus30 = new CalculationResultMap();
+		CalculationResult maxRecepcao = lastRecepcaoLevantamentoResult.get(patientId);
+		if (maxRecepcao != null) {
+			lastRecepcaoLevantamentoPlus30.put(patientId,
+					new SimpleResult(CalculationProcessorUtils.adjustDaysInDate((Date) maxRecepcao.getValue(), 30),
+							lastRecepcaoLevantamentoCalculation));
+		}
+		return lastRecepcaoLevantamentoPlus30;
+	}
 
-    if (lastFilaCalculationResult != null
-        && lastFilaResult != null
-        && nextFilaResult == null
-        && lastRecepcaoResult == null) {
-      resultMap.put(patientId, new BooleanResult(true, this));
+	protected void checkConsultationsOrFilaWithoutNextConsultationDate(Integer patientId,
+			CalculationResultMap resultMap, CalculationResultMap lastFilaCalculationResult,
+			CalculationResultMap nextFilaCalculationResult,
+			CalculationResultMap lastRecepcaoLevantamentoCalculationResult) {
 
-    } else if (lastFilaResult == null && lastRecepcaoResult == null) {
-      resultMap.put(patientId, new BooleanResult(true, this));
-    }
-  }
+		CalculationResult lastFilaResult = lastFilaCalculationResult.get(patientId);
+		CalculationResult nextFilaResult = nextFilaCalculationResult.get(patientId);
+		CalculationResult lastRecepcaoResult = lastRecepcaoLevantamentoCalculationResult.get(patientId);
+
+		if (lastFilaCalculationResult != null && lastFilaResult != null && nextFilaResult == null
+				&& lastRecepcaoResult == null) {
+			resultMap.put(patientId, new BooleanResult(true, this));
+
+		} else if (lastFilaResult == null && lastRecepcaoResult == null) {
+			resultMap.put(patientId, new BooleanResult(true, this));
+		}
+	}
 }
