@@ -133,19 +133,12 @@ public class MQCategory13P4CohortQueries {
             mappings));
 
     definition.addSearch(
-        "H-CAT11-2",
-        EptsReportUtils.map(
-            this.mqCohortQueries
-                .findPatientsOnThe1stLineOfRTWithCVOver1000CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11Numerator(),
-            mappings));
-
-    definition.addSearch(
         "H-CAT-13-3",
         EptsReportUtils.map(
             this.mqCohortQueries.findPatientsWhoHaveRequestedCV120DaysAfterCVResultByQueryH(),
             mappings));
 
-    definition.setCompositionString("(DENOMINADOR-CAT11-2 AND H-CAT11-2 AND H-CAT-13-3)");
+    definition.setCompositionString("(DENOMINADOR-CAT11-2 AND H-CAT-13-3)");
     return definition;
   }
 
