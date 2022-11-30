@@ -144,7 +144,7 @@ public interface ListOfPatientsEligileToViralLoadQueries {
             + "	) inicio_real on consultaLevantamento.patient_id=inicio_real.patient_id "
             + "	left join "
             + "	( "
-            + "			select maxCarga.patient_id,maxCarga.data_carga,o.concept_id,if(o.concept_id=856,if(o.value_numeric<=0,'Indetectavel',o.value_numeric),'Indetectavel') valor_carga "
+            + "			select maxCarga.patient_id,maxCarga.data_carga,o.concept_id,if(o.concept_id=856,o.value_numeric,'Indetectavel') valor_carga "
             + "		from "
             + "		( "
             + "			Select 	p.patient_id,max(o.obs_datetime) data_carga "
