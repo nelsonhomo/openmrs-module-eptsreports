@@ -359,7 +359,7 @@
                                                       obsColheita.concept_id=23821 and obsColheita.voided=0   and                     
                                                       e.encounter_type=51 and obsColheita.value_datetime between (curdate() - interval 9 month) and curdate() and e.location_id=:location                                       
                                                                               
-                                    ) lactante_real on lactante_real.patient_id=p.person_id                              
+                                    ) lactante_real on lactante_real.patient_id=p.person_id  and p.gender='F'                          
                               where lactante_real.data_parto is not null or gravida_real.data_gravida is not null  and p.voided=0 and p.gender='F'                         
                                             group by p.person_id                                                      
                         ) gravidaLactante                                     
