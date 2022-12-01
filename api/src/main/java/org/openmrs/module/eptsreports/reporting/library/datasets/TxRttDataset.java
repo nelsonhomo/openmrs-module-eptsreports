@@ -1,7 +1,6 @@
 /** */
 package org.openmrs.module.eptsreports.reporting.library.datasets;
 
-import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.ABOVE_FIFTY;
 import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.ABOVE_SIXTY_FIVE;
 import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.FIFTEEN_TO_NINETEEN;
 import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.FIFTY_FIVE_TO_FIFTY_NINE;
@@ -72,7 +71,6 @@ public class TxRttDataset extends BaseDataSet {
         THIRTY_FIVE_TO_THIRTY_NINE,
         FORTY_TO_FORTY_FOUR,
         FORTY_FIVE_TO_FORTY_NINE,
-        ABOVE_FIFTY,
         FIFTY_TO_FIFTY_FOUR,
         FIFTY_FIVE_TO_FIFTY_NINE,
         SIXTY_TO_SIXTY_FOUR,
@@ -128,7 +126,6 @@ public class TxRttDataset extends BaseDataSet {
         THIRTY_FIVE_TO_THIRTY_NINE,
         FORTY_TO_FORTY_FOUR,
         FORTY_FIVE_TO_FORTY_NINE,
-        ABOVE_FIFTY,
         FIFTY_TO_FIFTY_FOUR,
         FIFTY_FIVE_TO_FIFTY_NINE,
         SIXTY_TO_SIXTY_FOUR,

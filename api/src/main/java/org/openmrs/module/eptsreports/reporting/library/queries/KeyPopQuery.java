@@ -2,13 +2,13 @@ package org.openmrs.module.eptsreports.reporting.library.queries;
 
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 
-public class MisauKeyPopQuery {
+public class KeyPopQuery {
 
-  private static final String KP = "KP/KEY_POP.sql";
+  private static final String KEY_POP = "KP/KEY_POP.sql";
 
   public static final String findPatientsWhoAreKeyPop(final KeyPopType keyPopType) {
 
-    String query = EptsQuerysUtils.loadQuery(KP);
+    String query = EptsQuerysUtils.loadQuery(KEY_POP);
 
     switch (keyPopType) {
       case HOMOSEXUAL:
