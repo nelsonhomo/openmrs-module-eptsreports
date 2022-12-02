@@ -51,6 +51,9 @@ public class TxMlDataset extends BaseDataSet {
     CohortDefinition iitGreaterOrEqual6Months =
         this.txMlCohortQueries.getPatientsWhoAreIITGreaterOrEqual6Months();
 
+    CohortDefinition patientstotalIITCohortDefinitions =
+        this.txMlCohortQueries.getPatientstotalIIT();
+
     final CohortIndicator patientsWhoMissedNextApointmentIndicator =
         this.eptsGeneralIndicator.getIndicator(
             "findPatientsWhoMissedNextApointment",
@@ -64,6 +67,11 @@ public class TxMlDataset extends BaseDataSet {
     final CohortIndicator iitBetween3And5MonthsIndicator =
         this.eptsGeneralIndicator.getIndicator(
             "iitBetween3And5Months", EptsReportUtils.map(iitBetween3And5Months, mappings));
+
+    final CohortIndicator patientstotalIITIndicator =
+        this.eptsGeneralIndicator.getIndicator(
+            "patientstotalIITIndicator",
+            EptsReportUtils.map(patientstotalIITCohortDefinitions, mappings));
 
     dsd.addDimension("gender", EptsReportUtils.map(eptsCommonDimension.gender(), ""));
     dsd.addDimension(
@@ -127,6 +135,10 @@ public class TxMlDataset extends BaseDataSet {
         "Age and Gender (Totals female) ",
         EptsReportUtils.map(patientsWhoMissedNextApointmentIndicator, mappings),
         "gender=F");
+
+    dsd.addColumn(
+        "M4-TotalIIT", "Total IIT", EptsReportUtils.map(patientstotalIITIndicator, mappings), "");
+
     super.addRow(
         dsd,
         "M4",
@@ -341,16 +353,16 @@ public class TxMlDataset extends BaseDataSet {
     ColumnParameters fouty5To49M =
         new ColumnParameters("fouty5To49M", "45 - 49 male", "gender=M|age=45-49", "11");
 
-    ColumnParameters fiftyT054 =
+    ColumnParameters fiftyT054M =
         new ColumnParameters("fiftyT054", "50 - 54 male", "gender=M|age=50-54", "12");
 
-    ColumnParameters fiftyfiveT059 =
+    ColumnParameters fiftyfiveT059M =
         new ColumnParameters("fouty5To49M", "55 - 59 male", "gender=M|age=55-59", "13");
 
-    ColumnParameters sixtyT064 =
+    ColumnParameters sixtyT064M =
         new ColumnParameters("fiftyfiveT059", "60 - 64 male", "gender=M|age=60-64", "14");
 
-    ColumnParameters above65 =
+    ColumnParameters above65M =
         new ColumnParameters("above65", "65+  male", "gender=M|age=65+", "15");
     ColumnParameters unknownM =
         new ColumnParameters("unknownM", "Unknown age male", "gender=M|age=UK", "16");
@@ -420,10 +432,10 @@ public class TxMlDataset extends BaseDataSet {
         foutyTo44F,
         fouty5To49F,
         unknownF,
-        fiftyT054,
-        fiftyfiveT059,
-        sixtyT064,
-        above65,
+        fiftyT054M,
+        fiftyfiveT059M,
+        sixtyT064M,
+        above65M,
         fiftyT054F,
         fiftyfiveT059F,
         sixtyT064F,
