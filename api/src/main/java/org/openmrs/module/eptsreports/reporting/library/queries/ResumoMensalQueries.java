@@ -1393,7 +1393,8 @@ public class ResumoMensalQueries {
   public static String getNumberOfPatientsWhoHadClinicalAppointmentDuringTheReportingMonthF1(
       int encounterType) {
     String query =
-        "SELECT e.encounter_id FROM patient p JOIN encounter e ON p.patient_id=e.patient_id "
+        "SELECT e.encounter_id as patient_id FROM patient p "
+        + "JOIN encounter e ON p.patient_id=e.patient_id "
             + " WHERE e.encounter_type=%d AND e.location_id=:location "
             + " AND e.encounter_datetime BETWEEN :startDate AND :endDate AND p.voided=0 AND e.voided=0 ";
     return String.format(query, encounterType);
