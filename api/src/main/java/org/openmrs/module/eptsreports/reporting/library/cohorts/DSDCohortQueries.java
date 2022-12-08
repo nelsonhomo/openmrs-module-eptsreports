@@ -534,10 +534,7 @@ public class DSDCohortQueries {
 
     dataSetDefinitio.addSearch(
         "IIT-PREVIOUS-PERIOD-2",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "IIT-PREVIOUS-PERIOD-2", DSDQueriesInterface.QUERY.findPatientsAreDefaultIIT),
-            mappings));
+        EptsReportUtils.map(this.getPatientsWhoHaveAtLeastOneDrugPickUpOrFilaDSD(), mappings));
 
     dataSetDefinitio.addSearch(
         "SARCOMA-KAPOSI",
@@ -633,6 +630,38 @@ public class DSDCohortQueries {
             "startDate=${endDate-3m},endDate=${endDate},location=${location}"));
 
     compositionDefinition.setCompositionString("IIT-PREVIOUS-PERIOD NOT TRF-IN");
+
+    return compositionDefinition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoHaveAtLeastOneDrugPickUpOrFilaDSD")
+  public CohortDefinition getPatientsWhoHaveAtLeastOneDrugPickUpOrFilaDSD() {
+
+    final CompositionCohortDefinition compositionDefinition = new CompositionCohortDefinition();
+
+    compositionDefinition.setName(
+        "DSD - Patients who have at least one drug-pick up registered in FILA or Ficha Recepção - Levantou ARV in the last 3 months");
+    compositionDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    compositionDefinition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    compositionDefinition.addSearch(
+        "IIT-PREVIOUS-PERIOD-2",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "IIT-PREVIOUS-PERIOD-2", DSDQueriesInterface.QUERY.findPatientsAreDefaultIIT),
+            mappings));
+
+    compositionDefinition.addSearch(
+        "TRF-IN",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreInTbTreatment",
+                DSDQueriesInterface.QUERY.findPatientsWhoWhereTransferredInPriorReportingPeriod),
+            "startDate=${endDate-3m},endDate=${endDate},location=${location}"));
+
+    compositionDefinition.setCompositionString("IIT-PREVIOUS-PERIOD-2 NOT TRF-IN");
 
     return compositionDefinition;
   }
