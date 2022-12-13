@@ -21,6 +21,7 @@ import org.openmrs.Location;
 import org.openmrs.module.eptsreports.metadata.CommonMetadata;
 import org.openmrs.module.eptsreports.metadata.HivMetadata;
 import org.openmrs.module.eptsreports.reporting.library.queries.PregnantQueries;
+import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TxNewQueries;
 import org.openmrs.module.eptsreports.reporting.utils.AgeRange;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -171,7 +172,7 @@ public class TxNewCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "findPatientsWithAProgramStateMarkedAsTransferedInInAPeriod",
-                TxNewQueries.QUERY.findPatientsWithAProgramStateMarkedAsTransferedInInAPeriod),
+                ResumoMensalQueries.findPatientsWithAProgramStateMarkedAsTransferedInEndDate),
             mappings));
 
     txNewCompositionCohort.addSearch(
@@ -179,8 +180,8 @@ public class TxNewCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCard",
-                TxNewQueries.QUERY
-                    .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCard),
+                ResumoMensalQueries
+                    .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardEndDate),
             mappings));
 
     txNewCompositionCohort.setCompositionString(
