@@ -30,7 +30,7 @@ public class ResumoMensalTBCalculation extends BaseFghCalculation {
     ListMap<Integer, Object[]> obsForPatients = new ListMap<Integer, Object[]>();
     for (Object[] row : queryResult) {
 
-      Object[] obj = {row[0], row[1]};
+        Object[] obj = {row[1], row[2]};
 
       obsForPatients.putInList((Integer) row[0], obj);
     }
