@@ -165,19 +165,12 @@ public class MQCategory13P4CohortQueries {
             this.findPregnantWhoHaveRequestedCVCategory13P4Denumerator(), mappings));
 
     definition.addSearch(
-        "H-CAT11-2",
-        EptsReportUtils.map(
-            this.mqCohortQueries
-                .findPatientsOnThe1stLineOfRTWithCVOver1000CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11Numerator(),
-            mappings));
-
-    definition.addSearch(
         "H",
         EptsReportUtils.map(
             this.mqCohortQueries.findPatientsWhoHaveRequestedCV120DaysAfterCVResultByQueryH(),
             mappings));
 
-    definition.setCompositionString("(DENOMINADOR AND H-CAT11-2 AND H)");
+    definition.setCompositionString("(DENOMINADOR AND H)");
     return definition;
   }
 }

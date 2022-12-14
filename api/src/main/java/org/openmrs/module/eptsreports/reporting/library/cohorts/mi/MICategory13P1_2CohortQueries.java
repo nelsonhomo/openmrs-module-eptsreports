@@ -106,7 +106,7 @@ public class MICategory13P1_2CohortQueries {
     definition.addSearch(
         "B5E",
         EptsReportUtils.map(
-            mQCategory13Section1CohortQueries.findPatientsWithRequestCVDenominatorB5E(), mappings));
+            mQCategory13Section1CohortQueries.findPatientsWithRequestCVInTheLast12MonthsBeforeLastConsultation(), mappings));
 
     definition.addSearch(
         "C",
