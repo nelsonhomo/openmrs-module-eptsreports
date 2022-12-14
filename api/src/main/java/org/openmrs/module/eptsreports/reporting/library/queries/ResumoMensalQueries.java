@@ -1041,7 +1041,7 @@ public class ResumoMensalQueries {
             + "inner join patient on patient.patient_id = encounter.patient_id  "
             + "left  join obs on (obs.encounter_id = encounter.encounter_id and obs.voided =0 and obs.concept_id = 23761 and obs.value_coded=1065)  "
             + "where encounter.encounter_type = 6 and encounter.voided = 0 and patient.voided = 0  "
-            + "and encounter.encounter_datetime >='2022-05-21' and encounter.encounter_datetime <=:endDate "
+            + "and encounter.encounter_datetime >=:startDate and encounter.encounter_datetime <=:endDate "
             + "and encounter.location_id =:location  "
             + "order by encounter.patient_id,encounter.encounter_datetime "
             + ") tb  "
@@ -1075,7 +1075,7 @@ public class ResumoMensalQueries {
             + "inner join patient on patient.patient_id = encounter.patient_id  "
             + "left  join obs on (obs.encounter_id = encounter.encounter_id and obs.voided =0 and obs.concept_id = 23761 and obs.value_coded=1065)  "
             + "where encounter.encounter_type = 6 and encounter.voided = 0 and patient.voided = 0  "
-            + "and encounter.encounter_datetime >='2022-05-21' and encounter.encounter_datetime <=:endDate "
+            + "and encounter.encounter_datetime >=:startDate and encounter.encounter_datetime <=:endDate "
             + "and encounter.location_id =:location  "
             + "order by encounter.patient_id,encounter.encounter_datetime "
             + ") tb  "
@@ -1384,12 +1384,12 @@ public class ResumoMensalQueries {
   public static String getNumberOfPatientsWhoHadClinicalAppointmentDuringTheReportingMonthF1(
       int encounterType) {
     String query =
-        "SELECT f.patient_id as patient_id  FROM ( "
-            + "SELECT e.patient_id  FROM encounter e  "
-            + "WHERE e.encounter_type=%d AND e.location_id=:location  "
-            + "AND e.encounter_datetime BETWEEN :startDate AND :endDate AND e.voided=0  "
+        "SELECT patient_id from (  "
+            + "SELECT e.patient_id  FROM encounter e   "
+            + "WHERE e.encounter_type=6 AND e.location_id=:location   "
+            + "AND e.encounter_datetime BETWEEN :startDate AND :endDate AND e.voided=0   "
             + ")f ";
-    ;
+
     return String.format(query, encounterType);
   }
 
