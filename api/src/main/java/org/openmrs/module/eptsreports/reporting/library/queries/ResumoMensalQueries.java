@@ -1210,14 +1210,19 @@ public class ResumoMensalQueries {
               + ") tr GROUP BY tr.patient_id ";
 
   public static final String findPatientsWithAProgramStateMarkedAsTransferedInEndDate =
-      "select minState.patient_id from  ("
-          + "SELECT p.patient_id, pg.patient_program_id, MIN(ps.start_date) as minStateDate  FROM patient p  "
-          + "inner join patient_program pg on p.patient_id=pg.patient_id "
-          + "inner join patient_state ps on pg.patient_program_id=ps.patient_program_id "
-          + "WHERE pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and location_id=:location  and ps.start_date <= :endDate "
-          + "GROUP BY pg.patient_program_id) minState "
-          + "inner join patient_state ps on ps.patient_program_id=minState.patient_program_id "
-          + "where ps.start_date=minState.minStateDate and ps.state=29 and ps.voided=0 ";
+      "select final.patient_id from  ( "
+          + "select states.patient_id,states.patient_program_id,min(states.minStateDate) as minStateDate,states.program_id,states.state from  ( "
+          + "SELECT p.patient_id, pg.patient_program_id, ps.start_date as minStateDate, pg.program_id, ps.state  FROM patient p   "
+          + "inner join patient_program pg on p.patient_id=pg.patient_id  "
+          + "inner join patient_state ps on pg.patient_program_id=ps.patient_program_id  "
+          + "WHERE pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and location_id=:location  "
+          + "and ps.start_date <= :endDate "
+          + ")states "
+          + "group by states.patient_id "
+          + "order by states.minStateDate asc  "
+          + ") final "
+          + "inner join patient_state ps on ps.patient_program_id=final.patient_program_id  "
+          + "where ps.start_date=final.minStateDate and ps.state=29 and ps.voided=0 ";
 
   public static final String
       findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardEndDate =
