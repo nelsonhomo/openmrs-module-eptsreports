@@ -770,7 +770,7 @@ public interface MQQueriesInterface {
                 + "where   e.encounter_type in(6,53) and  ultimaProfilaxiaIsoniazia.concept_id=23985 and ultimaProfilaxiaIsoniazia.value_coded=656 "
                 + "and obsEstado.concept_id=165308 and obsEstado.value_coded=1267 "
                 + "and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and e.location_id=:location "
-                + "and date(obsEstado.obs_datetime) <=:endRevisionDate "
+                + "and date(obsEstado.obs_datetime) BETWEEN :startInclusionDate and :endRevisionDate "
                 + ") obsFimTPI on obsFimTPI.patient_id = B4_1_2.patient_id "
                 + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 170 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 297 DAY) "
                 + "group by B4_1_2.patient_id "
@@ -799,7 +799,7 @@ public interface MQQueriesInterface {
                 + "where e.encounter_type in(6,9,53) and  ultimaProfilaxiaIsoniazia.concept_id=23985 and ultimaProfilaxiaIsoniazia.value_coded=23954 "
                 + "and obsEstado.concept_id=165308 and obsEstado.value_coded=1267 "
                 + "and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and e.location_id =:location "
-                + "and date(obsEstado.obs_datetime) <=:endRevisionDate "
+                + "and date(obsEstado.obs_datetime) BETWEEN :startInclusionDate and :endRevisionDate "
                 + ") obsFimTPI on obsFimTPI.patient_id = B4_1_2.patient_id "
                 + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 80 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 190 DAY) "
                 + "group by B4_1_2.patient_id ";
