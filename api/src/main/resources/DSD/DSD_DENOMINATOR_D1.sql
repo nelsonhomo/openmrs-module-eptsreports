@@ -172,7 +172,7 @@ select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestamp
             and date(o.obs_datetime) between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location  
             group by p.patient_id 
             )max_cv  
-            left join obs o on o.person_id=max_cv.patient_id and max_cv.max_data_cv=o.obs_datetime and o.voided=0 and  
+            left join obs o on o.person_id=max_cv.patient_id and date(max_cv.max_data_cv)=date(o.obs_datetime) and o.voided=0 and  
             ((o.concept_id=856 and o.value_numeric<1000) or (o.concept_id=1305 )) and o.location_id=:location ) cvmenor1000 on inicio.patient_id=cvmenor1000.patient_id  
             left join ( 
             select distinct max_cd4.patient_id,o.value_numeric  from (  
