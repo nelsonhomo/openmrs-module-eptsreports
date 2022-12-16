@@ -25,7 +25,7 @@ public class MICategory13P4Dataset extends MQAbstractDataSet {
                 "CAT13P4AdultDENUMINATOR",
                 mappings),
             mappings),
-        "ageOnEndInclusionDate=15+5MONTHS");
+        "ageMiEndRevisionDate=15+");
 
     dataSetDefinition.addColumn(
         "CAT13P4AdultNUMINATOR",
@@ -38,7 +38,7 @@ public class MICategory13P4Dataset extends MQAbstractDataSet {
                 "CAT13P4AdultNUMINATOR",
                 mappings),
             mappings),
-        "ageOnEndInclusionDate=15+5MONTHS");
+        "ageMiEndRevisionDate=15+");
 
     dataSetDefinition.addColumn(
         "CAT13P4ChildrenDENUMINATOR",
@@ -50,7 +50,7 @@ public class MICategory13P4Dataset extends MQAbstractDataSet {
                 "CAT13P4ChildrenDENUMINATOR",
                 mappings),
             mappings),
-        "ageOnEndInclusionDate=2-14-5MONTHS");
+        "ageMiEndRevisionDate=2-14");
 
     dataSetDefinition.addColumn(
         "CAT13P4ChildrenNUMINATOR",
@@ -63,7 +63,7 @@ public class MICategory13P4Dataset extends MQAbstractDataSet {
                 "CAT13P4ChildrenNUMINATOR",
                 mappings),
             mappings),
-        "ageOnEndInclusionDate=2-14-5MONTHS");
+        "ageMiEndRevisionDate=2-14");
 
     dataSetDefinition.addColumn(
         "CAT13P4PregnantDENUMINATOR",
