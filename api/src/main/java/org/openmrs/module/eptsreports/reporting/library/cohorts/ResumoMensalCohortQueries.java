@@ -32,6 +32,7 @@ import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinitio
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
+import org.openmrs.module.reporting.query.encounter.definition.SqlEncounterQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -881,39 +882,29 @@ public class ResumoMensalCohortQueries {
   }
 
   @DocumentedDefinition(value = "F1")
-  public CohortDefinition getNumberOfPatientsWhoHadClinicalAppointmentDuringTheReportingMonthF1() {
-    SqlCohortDefinition cd = new SqlCohortDefinition();
+  public SqlEncounterQuery getNumberOfPatientsWhoHadClinicalAppointmentDuringTheReportingMonthF1() {
+
+    SqlEncounterQuery cd = new SqlEncounterQuery();
     cd.setName("F1: Number of patients who had clinical appointment during the reporting month");
     cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
     cd.addParameter(new Parameter("endDate", "End Date", Date.class));
     cd.addParameter(new Parameter("location", "Location", Location.class));
     cd.setQuery(
-        ResumoMensalQueries.getNumberOfPatientsWhoHadClinicalAppointmentDuringTheReportingMonthF1(
-            hivMetadata.getAdultoSeguimentoEncounterType().getEncounterTypeId()));
+        ResumoMensalQueries
+            .getNumberOfPatientsWhoHadClinicalAppointmentDuringTheReportingMonthF1());
     return cd;
   }
 
   @DocumentedDefinition(value = "F2")
-  public CohortDefinition
+  public SqlEncounterQuery
       getNumberOfPatientsWhoHadClinicalAppointmentDuringTheReportingMonthTbF2() {
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-
-    definition.setName("Tx Curr Vl");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
-
-    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-    definition.addSearch(
-        "F2",
-        EptsReportUtils.map(
-            getNumberOfPatientsWhoHadClinicalAppointmentDuringTheReportingMonthF1(), mappings));
-
-    definition.addSearch("TB1", map(findPatientWhoHaveTbSymthomsAndTbActive(), mappings));
-
-    definition.setCompositionString("F2 AND TB1");
-
-    return definition;
+    SqlEncounterQuery cd = new SqlEncounterQuery();
+    cd.setName("F1: Number of patients who had clinical appointment during the reporting month");
+    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+    cd.addParameter(new Parameter("location", "Location", Location.class));
+    cd.setQuery(ResumoMensalQueries.findPatientWhoHaveTbSymthomsF2());
+    return cd;
   }
 
   /**
@@ -932,7 +923,10 @@ public class ResumoMensalCohortQueries {
 
     cd.addSearch(
         "F3",
-        map(getNumberOfPatientsWhoHadClinicalAppointmentDuringTheReportingMonthF1(), mappings));
+        map(
+            genericCohortQueries.generalSql(
+                "F3", ResumoMensalQueries.getNumberOfPatientsWhoHadClinicalAppointmentF1()),
+            mappings));
 
     cd.addSearch(
         "Fx3",

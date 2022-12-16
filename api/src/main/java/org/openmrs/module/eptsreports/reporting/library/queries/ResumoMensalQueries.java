@@ -978,6 +978,7 @@ public class ResumoMensalQueries {
             + "GROUP BY patient_id   "
             + ")preTarv on preTarv.patient_id=INH_3HP.patient_id  "
             + "where INH_3HP.dataInicioTPI>=preTarv.initialDate  "
+            + "and preTarv.initialDate  between (:startDate - INTERVAL 1 MONTH) and :endDate "
             + "order by INH_3HP.patient_id, INH_3HP.dataInicioTPI ";
 
     return query;
@@ -1063,7 +1064,8 @@ public class ResumoMensalQueries {
             + "WHERE pg.program_id=1 AND pg.location_id=:location AND pg.voided=0 AND pg.date_enrolled<=:endDate   "
             + "GROUP BY patient_id  "
             + ") preTarv on preTarv.patient_id=tb.patient_id "
-            + "where tb.encounter_datetime >=preTarv.initialDate ";
+            + "where tb.encounter_datetime >=preTarv.initialDate "
+            + "and preTarv.initialDate  between (:startDate - INTERVAL 1 MONTH) and :endDate ";
 
     return query;
   }
@@ -1075,7 +1077,7 @@ public class ResumoMensalQueries {
             + "inner join patient on patient.patient_id = encounter.patient_id  "
             + "left  join obs on (obs.encounter_id = encounter.encounter_id and obs.voided =0 and obs.concept_id = 23761 and obs.value_coded=1065)  "
             + "where encounter.encounter_type = 6 and encounter.voided = 0 and patient.voided = 0  "
-            + "and encounter.encounter_datetime >=:startDate and encounter.encounter_datetime <=:endDate "
+            + "and encounter.encounter_datetime <=:startDate "
             + "and encounter.location_id =:location  "
             + "order by encounter.patient_id,encounter.encounter_datetime "
             + ") tb  "
@@ -1321,6 +1323,17 @@ public class ResumoMensalQueries {
     return query;
   }
 
+  public static String getNumberOfPatientsWhoHadClinicalAppointmentF1() {
+    String query =
+        "SELECT patient_id from (  "
+            + "SELECT e.patient_id  FROM encounter e   "
+            + "WHERE e.encounter_type=6 AND e.location_id=:location   "
+            + "AND e.encounter_datetime BETWEEN :startDate AND :endDate AND e.voided=0   "
+            + ")f ";
+
+    return String.format(query);
+  }
+
   /**
    * F3 exclusions
    *
@@ -1381,27 +1394,33 @@ public class ResumoMensalQueries {
    *
    * @return String
    */
-  public static String getNumberOfPatientsWhoHadClinicalAppointmentDuringTheReportingMonthF1(
-      int encounterType) {
+  public static String getNumberOfPatientsWhoHadClinicalAppointmentDuringTheReportingMonthF1() {
     String query =
-        "SELECT patient_id from (  "
-            + "SELECT e.patient_id  FROM encounter e   "
-            + "WHERE e.encounter_type=6 AND e.location_id=:location   "
-            + "AND e.encounter_datetime BETWEEN :startDate AND :endDate AND e.voided=0   "
+        "SELECT f.encounter_id  from (   "
+            + "SELECT e.encounter_id,e.patient_id  FROM encounter e    "
+            + "WHERE e.encounter_type=6 AND e.location_id=:location    "
+            + "AND e.encounter_datetime BETWEEN :startDate AND :endDate AND e.voided=0  "
+            + "order by e.patient_id, e.encounter_datetime   "
             + ")f ";
 
-    return String.format(query, encounterType);
+    return String.format(query);
   }
 
   public static String findPatientWhoHaveTbSymthomsF2() {
 
     String query =
-        "SELECT f.patient_id from   (  "
-            + "SELECT e.patient_id  FROM encounter e   "
-            + "inner join obs o on o.encounter_id=e.encounter_id "
+        "SELECT f.encounter_id from   (   "
+            + "SELECT e.encounter_id  FROM encounter e    "
+            + "inner join obs o on o.encounter_id=e.encounter_id  "
             + "where e.voided=0  AND e.encounter_type=6 and o.concept_id=23758 and o.value_coded in (1065,1066) and e.location_id=:location  "
+            + "and e.encounter_datetime between :startDate and :endDate   "
+            + ")f where f.encounter_id not in "
+            + "( "
+            + "SELECT e.encounter_id  FROM encounter e    "
+            + "inner join obs o on o.encounter_id=e.encounter_id  "
+            + "where e.voided=0  AND e.encounter_type=6 and o.concept_id=1268 and o.value_coded is not null and e.location_id=:location  "
             + "and e.encounter_datetime between :startDate and :endDate  "
-            + ")f ";
+            + ") ";
     return query;
   }
 
