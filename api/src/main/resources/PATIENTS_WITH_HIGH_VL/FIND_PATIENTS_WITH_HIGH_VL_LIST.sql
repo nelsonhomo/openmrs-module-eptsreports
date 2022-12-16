@@ -1,4 +1,3 @@
-
 select 		
 		HVL_FR40.patient_id,
 		pid.identifier as NID,
@@ -37,29 +36,29 @@ select
 		HVL_FR40.dataResultadoSegundaCV1,
 		HVL_FR40.dataPrevistaResultadoCV1, 
 		HVL_FR40.resultadoSegundaCV1,
-		HVL_FR40.mudancaLinhaCV1,
-		HVL_FR40.dataConsultaClinicaParaMudancaLinhaCV1,
-		HVL_FR40.dataPrevistaConsultaMudancaLinhaCV1, 
-		HVL_FR40.dataInicioNovaLinhaCV1,
-		HVL_FR40.dataConsultaApss0CV2,
-		HVL_FR40.dataPrevistaApss0CV2, 
-		HVL_FR40.dataConsultaApss1CV2,
-		HVL_FR40.dataPrevistaApss1CV2, 
-		HVL_FR40.dataConsultaApss2CV2,
-		HVL_FR40.dataPrevistaApss2CV2, 
-		HVL_FR40.dataConsultaApss3CV2,
-		HVL_FR40.dataPrevistaApss3CV2, 
-		HVL_FR40.dataConsultaClinicaPedidoCV2,
-		HVL_FR40.dataPrevistaConsultaClinicaPedidoCV2, 
-		HVL_FR40.dataColheitaRegistadaCV2,
-		HVL_FR40.dataPrevistaColheitaAmostraCV2,
-		HVL_FR40.dataResultadoTerceiraCV,
-		HVL_FR40.dataPrevistaResultadoTerceiraCV, 
-		HVL_FR40.resultadoTerceiraCV,
-		HVL_FR40.mudancaLinhaCV2,		
-		HVL_FR40.dataConsultaClinicaParaMudancaLinhaCV2,				
-		HVL_FR40.dataPrevistaConsultaMudancaLinhaCV2, 
-		HVL_FR40.dataInicioNovaLinhaCV2
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.mudancaLinhaCV1) mudancaLinhaCV1 ,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataConsultaClinicaParaMudancaLinhaCV1) dataConsultaClinicaParaMudancaLinhaCV1 ,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataPrevistaConsultaMudancaLinhaCV1) dataPrevistaConsultaMudancaLinhaCV1 , 
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataInicioNovaLinhaCV1) dataInicioNovaLinhaCV1 ,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataConsultaApss0CV2) dataConsultaApss0CV2 ,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataPrevistaApss0CV2) dataPrevistaApss0CV2 , 
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataConsultaApss1CV2) dataConsultaApss1CV2 ,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataPrevistaApss1CV2) dataPrevistaApss1CV2 , 
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataConsultaApss2CV2) dataConsultaApss2CV2 ,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataPrevistaApss2CV2) dataPrevistaApss2CV2 , 
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataConsultaApss3CV2) dataConsultaApss3CV2,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataPrevistaApss3CV2) dataPrevistaApss3CV2, 
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataConsultaClinicaPedidoCV2) dataConsultaClinicaPedidoCV2,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataPrevistaConsultaClinicaPedidoCV2) dataPrevistaConsultaClinicaPedidoCV2, 
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataColheitaRegistadaCV2) dataColheitaRegistadaCV2 ,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataPrevistaColheitaAmostraCV2) dataPrevistaColheitaAmostraCV2 ,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataResultadoTerceiraCV) dataResultadoTerceiraCV,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataPrevistaResultadoTerceiraCV) dataPrevistaResultadoTerceiraCV, 
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.resultadoTerceiraCV) resultadoTerceiraCV,
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.mudancaLinhaCV2) mudancaLinhaCV2 ,		
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataConsultaClinicaParaMudancaLinhaCV2) dataConsultaClinicaParaMudancaLinhaCV2,				
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataPrevistaConsultaMudancaLinhaCV2) dataPrevistaConsultaMudancaLinhaCV2, 
+		if(HVL_FR40.resultadoSegundaCV1 < 1000, 'N/A', HVL_FR40.dataInicioNovaLinhaCV2) dataInicioNovaLinhaCV2
 from
 
 (
@@ -201,12 +200,13 @@ from
 																				
 																				(		
 																						select	 	HVL_FR20.*,
+																									avalidacaoAdesao.adesao,
 																									min(consultaClinicaPedido.dataConsultaClinicaPedido) dataConsultaClinicaPedido
 																									
 																						from
 																						(
 																								select 	HVL_FR19.*,
-																										avalidacaoAdesao.adesao
+																								max(adesaoAAvaliar.dataApssAdesao) dataApssAvaliarAdesao
 																						from
 																							(
 																								select 	HVL_FR17.*,
@@ -214,7 +214,7 @@ from
 																										if(min(consultaApss3.encounter_datetime) is not null,min(consultaApss3.encounter_datetime),
 																											if(dataConsultaApss2 is not null, dataConsultaApss2,
 																												if(dataConsultaApss1 is not null,dataConsultaApss1,
-																													if(dataConsultaApss0 is not null ,dataConsultaApss0,null)))) dataApssAvaliarAdesao
+																													if(dataConsultaApss0 is not null ,dataConsultaApss0,null)))) dataMaiorApssAvaliarAdesao
 																								from
 																								(
 																									select 	HVL_FR16.*,
@@ -251,7 +251,7 @@ from
 																																		inner join obs o on o.encounter_id=e.encounter_id
 																																where 	e.voided=0 and o.voided=0 and p.voided=0 and
 																																		e.encounter_type in (18,6,9) and o.concept_id=1255 and o.value_coded=1256 and
-																																		e.encounter_datetime<=:endDate and e.location_id=:location
+																																		e.encounter_datetime<=:endDateand e.location_id=:location
 																																group by p.patient_id
 																														
 																																union
@@ -263,13 +263,13 @@ from
 																																		inner join obs o on e.encounter_id=o.encounter_id
 																																where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (18,6,9,53) and
 																																		o.concept_id=1190 and o.value_datetime is not null and
-																																		o.value_datetime<=:endDate and e.location_id=:location
+																																		o.value_datetime<=:endDateand e.location_id=:location
 																																group by p.patient_id
 																																union
 																																/*Patients enrolled in ART Program: OpenMRS Program*/
 																																select 	pg.patient_id,min(date_enrolled) data_inicio
 																																from 	patient p inner join patient_program pg on p.patient_id=pg.patient_id
-																																where 	pg.voided=0 and p.voided=0 and program_id=2 and date_enrolled<=:endDate and location_id=:location
+																																where 	pg.voided=0 and p.voided=0 and program_id=2 and date_enrolled<=:endDateand location_id=:location
 																																group by pg.patient_id
 																																
 																																union
@@ -279,7 +279,7 @@ from
 																																  SELECT 	e.patient_id, MIN(e.encounter_datetime) AS data_inicio
 																																  FROM 		patient p
 																																			inner join encounter e on p.patient_id=e.patient_id
-																																  WHERE		p.voided=0 and e.encounter_type=18 AND e.voided=0 and e.encounter_datetime<=:endDate and e.location_id=:location
+																																  WHERE		p.voided=0 and e.encounter_type=18 AND e.voided=0 and e.encounter_datetime<=:endDateand e.location_id=:location
 																																  GROUP BY 	p.patient_id
 																															 
 																																union
@@ -291,7 +291,7 @@ from
 																																		inner join obs o on e.encounter_id=o.encounter_id
 																																where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and
 																																		o.concept_id=23866 and o.value_datetime is not null and
-																																		o.value_datetime<=:endDate and e.location_id=:location
+																																		o.value_datetime<=:endDateand e.location_id=:location
 																																group by p.patient_id	
 																															) inicio_real
 																														group by patient_id
@@ -303,7 +303,7 @@ from
 																																inner join encounter e on p.patient_id=e.patient_id
 																																inner join obs o on e.encounter_id=o.encounter_id
 																														where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=53 and
-																																o.concept_id in (21187,21188) and o.obs_datetime<=:endDate and e.location_id=:location
+																																o.concept_id in (21187,21188) and o.obs_datetime<=:endDateand e.location_id=:location
 																														group by p.patient_id
 																													)segundaTerceira on  segundaTerceira.patient_id=HVL_FR4.patient_id
 																													where segundaTerceira.patient_id is null
@@ -316,7 +316,7 @@ from
 																																inner join encounter e on p.patient_id=e.patient_id
 																																inner join obs o on e.encounter_id=o.encounter_id
 																														where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=53 and
-																																o.concept_id=21187 and o.obs_datetime<=:endDate and e.location_id=:location
+																																o.concept_id=21187 and o.obs_datetime<=:endDateand e.location_id=:location
 																														group by p.patient_id
 																													) HVL_FR5
 																											) HVL_FR4_HVL_FR5
@@ -329,7 +329,7 @@ from
 																													inner join obs obsVL on obsVL.encounter_id=e.encounter_id
 																												where p.voided=0 and e.voided=0 and obsSampleCollectDate.voided=0 and obsVL.voided = 0 and e.encounter_type in (13,51) 
 																														and obsSampleCollectDate.concept_id=23821 and obsVL.concept_id=856 and obsVL.value_numeric> 1000  
-																														and e.location_id=:location and obsSampleCollectDate.value_datetime BETWEEN :startDate and :endDate 
+																														and e.location_id=:location and obsSampleCollectDate.value_datetime BETWEEN :startDate and :endDate
 																														group by p.patient_id
 																											) primeiraColheitaCV on primeiraColheitaCV.patient_id = HVL_FR4_HVL_FR5.patient_id
 																											
@@ -343,7 +343,7 @@ from
 																																inner join encounter e on p.patient_id=e.patient_id
 																																inner join obs o on e.encounter_id=o.encounter_id
 																														where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (13,51) and
-																																o.concept_id=856 and o.obs_datetime BETWEEN :startDate and :endDate and e.location_id=:location and o.value_numeric>1000
+																																o.concept_id=856 and o.obs_datetime BETWEEN :startDate and :endDateand e.location_id=:location and o.value_numeric>1000
 																														group by p.patient_id
 																													) primeiraCV
 																													inner join encounter e on e.patient_id=primeiraCV.patient_id
@@ -374,6 +374,18 @@ from
 																							) HVL_FR19
 																							left join
 																							(
+																								Select 	p.patient_id, e.encounter_datetime dataApssAdesao
+																								from 	patient p
+																										inner join encounter e on p.patient_id=e.patient_id	
+																										inner join obs o on o.encounter_id=e.encounter_id
+																								where 	e.voided=0 and o.voided=0 and p.voided=0 and
+																										e.encounter_type=35 and o.concept_id=6223 and e.location_id=:location
+																							) adesaoAAvaliar on adesaoAAvaliar.patient_id=HVL_FR19.patient_id and adesaoAAvaliar.dataApssAdesao between HVL_FR19.dataConsultaApss0  and HVL_FR19.dataMaiorApssAvaliarAdesao
+																								group by HVL_FR19.patient_id
+																							
+																						)HVL_FR20
+																						left join
+																						(
 																								Select 	p.patient_id,e.encounter_datetime dataApssAvaliarAdesao,
 																										case o.value_coded
 																											when 1383 then 'B'
@@ -385,20 +397,18 @@ from
 																										inner join obs o on o.encounter_id=e.encounter_id
 																								where 	e.voided=0 and o.voided=0 and p.voided=0 and
 																										e.encounter_type=35 and o.concept_id=6223 and e.location_id=:location
-																							) avalidacaoAdesao on avalidacaoAdesao.patient_id=HVL_FR19.patient_id and avalidacaoAdesao.dataApssAvaliarAdesao=HVL_FR19.dataApssAvaliarAdesao
-																							
-																						)HVL_FR20
-																						left join
-																						(
-																							Select 	p.patient_id, e.encounter_datetime dataConsultaClinicaPedido
-																							from 	patient p
-																									inner join encounter e on p.patient_id=e.patient_id	
-																									inner join obs o on o.encounter_id=e.encounter_id
-																							where 	e.voided=0 and o.voided=0 and p.voided=0 and
-																									e.encounter_type=6 and o.concept_id=23722 and  o.value_coded = 856 and e.location_id=:location 
-																						) consultaClinicaPedido on consultaClinicaPedido.patient_id=HVL_FR20.patient_id and 
-																							consultaClinicaPedido.dataConsultaClinicaPedido between HVL_FR20.dataConsultaApss2 and :endDate 
-																						group by HVL_FR20.patient_id
+																							) avalidacaoAdesao on avalidacaoAdesao.patient_id=HVL_FR20.patient_id and avalidacaoAdesao.dataApssAvaliarAdesao = HVL_FR20.dataApssAvaliarAdesao
+																							left join
+																							(
+																								Select 	p.patient_id, e.encounter_datetime dataConsultaClinicaPedido
+																								from 	patient p
+																										inner join encounter e on p.patient_id=e.patient_id	
+																										inner join obs o on o.encounter_id=e.encounter_id
+																								where 	e.voided=0 and o.voided=0 and p.voided=0 and
+																										e.encounter_type=6 and o.concept_id=23722 and  o.value_coded = 856 and e.location_id=:location 
+																							) consultaClinicaPedido on consultaClinicaPedido.patient_id=HVL_FR20.patient_id and 
+																								consultaClinicaPedido.dataConsultaClinicaPedido between HVL_FR20.dataConsultaApss2 and :endDate
+																							group by HVL_FR20.patient_id
 																				) HVL_FR21  
 																				left join
 																				(
@@ -409,7 +419,7 @@ from
 																						where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type in (13,51) 
 																							and o.concept_id=23821 and e.location_id=:location
 																				)	colheitaRegistada on colheitaRegistada.patient_id=HVL_FR21.patient_id 
-																					and colheitaRegistada.dataColheitaRegistada between date_add(HVL_FR21.dataConsultaApss2, interval  1 day) and :endDate 
+																					and colheitaRegistada.dataColheitaRegistada between date_add(HVL_FR21.dataConsultaApss2, interval  1 day) and :endDate
 																					group by HVL_FR21.patient_id	
 																		)HVL_FR22
 																		left join
@@ -420,7 +430,7 @@ from
 																					inner join obs o on e.encounter_id=o.encounter_id
 																			where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (13,51)  and e.location_id = :location and
 																					o.concept_id in (856,1305)
-																		) resultadoSegundaCVData on resultadoSegundaCVData.patient_id = HVL_FR22.patient_id and resultadoSegundaCVData.dataResultadoSegundaCV between HVL_FR22.dataConsultaApss3 and :endDate 
+																		) resultadoSegundaCVData on resultadoSegundaCVData.patient_id = HVL_FR22.patient_id and resultadoSegundaCVData.dataResultadoSegundaCV between HVL_FR22.dataConsultaApss3 and :endDate
 																		group by HVL_FR22.patient_id
 																) HVL_FR23
 																left join
@@ -441,9 +451,9 @@ from
 													from 	patient p
 															inner join encounter e on p.patient_id=e.patient_id
 													where 	p.voided=0 and e.voided=0 and e.encounter_type = 6 and
-															e.encounter_datetime <=:endDate and e.location_id=:location 
+															e.encounter_datetime <=:endDateand e.location_id=:location 
 												) consultaClinicaParaMudancaLinha on  consultaClinicaParaMudancaLinha.patient_id = HVL_FR25.patient_id and 
-													consultaClinicaParaMudancaLinha.dataConsultaClinicaParaMudancaLinha between HVL_FR25.dataResultadoSegundaCV and :endDate 
+													consultaClinicaParaMudancaLinha.dataConsultaClinicaParaMudancaLinha between HVL_FR25.dataResultadoSegundaCV and :endDate
 													group by HVL_FR25.patient_id
 										)HVL_FR26
 										left join 
@@ -454,8 +464,8 @@ from
 													inner join obs o on e.encounter_id=o.encounter_id
 											where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=6 and
 													o.concept_id= 21151 and o.value_coded in (21148,21149) and 
-													e.encounter_datetime <=:endDate and e.location_id=:location
-										) inicioNovaLinha on inicioNovaLinha.patient_id = HVL_FR26.patient_id and inicioNovaLinha.dataInicioNovaLinha between HVL_FR26.dataResultadoSegundaCV and :endDate  
+													e.encounter_datetime <=:endDateand e.location_id=:location
+										) inicioNovaLinha on inicioNovaLinha.patient_id = HVL_FR26.patient_id and inicioNovaLinha.dataInicioNovaLinha between HVL_FR26.dataResultadoSegundaCV and :endDate 
 										left join encounter consultaApss2CV0 on consultaApss2CV0.patient_id=HVL_FR26.patient_id and 
 													consultaApss2CV0.encounter_type=35 and consultaApss2CV0.location_id=:location and consultaApss2CV0.voided=0 and 
 													consultaApss2CV0.encounter_datetime BETWEEN HVL_FR26.dataResultadoSegundaCV and :endDate
@@ -463,17 +473,17 @@ from
 									)HVL_FR28
 									left join encounter consultaApss2CV1 on consultaApss2CV1.patient_id=HVL_FR28.patient_id and 
 													consultaApss2CV1.encounter_type=35 and consultaApss2CV1.location_id=:location and consultaApss2CV1.voided=0 and 
-													consultaApss2CV1.encounter_datetime BETWEEN HVL_FR28.dataConsultaApss2CV0 and :endDate
+													consultaApss2CV1.encounter_datetime BETWEEN  date_add(HVL_FR28.dataConsultaApss2CV0, interval  1 day) and :endDate
 									group by HVL_FR28.patient_id
 								)HVL_FR29
 								left join encounter consultaApss2CV2 on consultaApss2CV2.patient_id=HVL_FR29.patient_id and 
 													consultaApss2CV2.encounter_type=35 and consultaApss2CV2.location_id=:location and consultaApss2CV2.voided=0 and 
-													consultaApss2CV2.encounter_datetime BETWEEN HVL_FR29.dataConsultaApss2CV1 and :endDate
+													consultaApss2CV2.encounter_datetime BETWEEN  date_add(HVL_FR29.dataConsultaApss2CV1, interval  1 day) and :endDate
 									group by HVL_FR29.patient_id
 							)HVL_FR30
 							left join encounter consultaApss2CV3 on consultaApss2CV3.patient_id=HVL_FR30.patient_id and 
 													consultaApss2CV3.encounter_type=35 and consultaApss2CV3.location_id=:location and consultaApss2CV3.voided=0 and 
-													consultaApss2CV3.encounter_datetime BETWEEN HVL_FR30.dataConsultaApss2CV2 and :endDate
+													consultaApss2CV3.encounter_datetime BETWEEN date_add(HVL_FR30.dataConsultaApss2CV2, interval  1 day)  and :endDate
 									group by HVL_FR30.patient_id
 						)HVL_FR31
 						left join
@@ -485,7 +495,7 @@ from
 							where 	e.voided=0 and o.voided=0 and p.voided=0 and
 									e.encounter_type=6 and o.concept_id=23722 and  o.value_coded = 856 and e.location_id=:location 
 						) consultaClinicaPedidoCV2 on consultaClinicaPedidoCV2.patient_id=HVL_FR31.patient_id and 
-							consultaClinicaPedidoCV2.dataConsultaClinicaPedidoCV2 between HVL_FR31.dataConsultaApss2CV2 and :endDate 
+							consultaClinicaPedidoCV2.dataConsultaClinicaPedidoCV2 between HVL_FR31.dataConsultaApss2CV2 and :endDate
 						group by HVL_FR31.patient_id
 					)HVL_FR32
 					left join
@@ -497,7 +507,7 @@ from
 							where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type in (13,51) 
 								and o.concept_id=23821 and e.location_id=:location
 					)	colheitaRegistadaCV2 on colheitaRegistadaCV2.patient_id=HVL_FR32.patient_id 
-						and colheitaRegistadaCV2.dataColheitaRegistadaCV2 between date_add(HVL_FR32.dataConsultaApss2CV2, interval  1 day) and :endDate 
+						and colheitaRegistadaCV2.dataColheitaRegistadaCV2 between date_add(HVL_FR32.dataConsultaApss2CV2, interval  1 day) and :endDate
 						group by HVL_FR32.patient_id
 				)HVL_FR33
 				left join
@@ -508,7 +518,7 @@ from
 							inner join obs o on e.encounter_id=o.encounter_id
 					where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (13,51)  and e.location_id = :location and
 							o.concept_id in (856,1305)
-				) resultadoTerceiraCVData on resultadoTerceiraCVData.patient_id = HVL_FR33.patient_id and resultadoTerceiraCVData.dataResultadoTerceiraCV between HVL_FR33.dataConsultaApss2CV3 and :endDate 
+				) resultadoTerceiraCVData on resultadoTerceiraCVData.patient_id = HVL_FR33.patient_id and resultadoTerceiraCVData.dataResultadoTerceiraCV between HVL_FR33.dataConsultaApss2CV3 and :endDate
 				group by HVL_FR33.patient_id
 			)HVL_FR34
 			left join
@@ -528,9 +538,9 @@ from
 			from 	patient p
 					inner join encounter e on p.patient_id=e.patient_id
 			where 	p.voided=0 and e.voided=0 and e.encounter_type = 6 and
-					e.encounter_datetime <=:endDate and e.location_id=:location 
+					e.encounter_datetime <=:endDateand e.location_id=:location 
 		) consultaClinicaParaMudancaLinhaCV2 on  consultaClinicaParaMudancaLinhaCV2.patient_id = HVL_FR35.patient_id and 
-			consultaClinicaParaMudancaLinhaCV2.dataConsultaClinicaParaMudancaLinhaCV2 between HVL_FR35.dataResultadoTerceiraCV and :endDate 
+			consultaClinicaParaMudancaLinhaCV2.dataConsultaClinicaParaMudancaLinhaCV2 between HVL_FR35.dataResultadoTerceiraCV and :endDate
 			group by HVL_FR35.patient_id
 	)	HVL_FR36
 	left join 
@@ -541,8 +551,8 @@ from
 				inner join obs o on e.encounter_id=o.encounter_id
 		where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=6 and
 				o.concept_id= 21151 and o.value_coded in (21148,21149) and 
-				e.encounter_datetime <=:endDate and e.location_id=:location
-	) inicioNovaLinhaCV2 on inicioNovaLinhaCV2.patient_id = HVL_FR36.patient_id and inicioNovaLinhaCV2.dataInicioNovaLinhaCV2 between HVL_FR36.dataResultadoTerceiraCV and :endDate  
+				e.encounter_datetime <=:endDateand e.location_id=:location
+	) inicioNovaLinhaCV2 on inicioNovaLinhaCV2.patient_id = HVL_FR36.patient_id and inicioNovaLinhaCV2.dataInicioNovaLinhaCV2 between HVL_FR36.dataResultadoTerceiraCV and :endDate 
 		group by HVL_FR36.patient_id
 )	HVL_FR40
  inner join person p on p.person_id=HVL_FR40.patient_id          
@@ -574,7 +584,7 @@ from
   where pid1.patient_id=pid2.patient_id and pid1.patient_identifier_id=pid2.id  
   ) pid on pid.patient_id=HVL_FR40.patient_id
   left join person_attribute pat on pat.person_id=HVL_FR40.patient_id and pat.person_attribute_type_id=9 and pat.value is not null and pat.value<>'' and pat.voided=0
-  left join person_attribute pat2 on pat.person_id=HVL_FR40.patient_id and pat.person_attribute_type_id=30 and pat.value is not null and pat.value<>'' and pat.voided=0
+  left join person_attribute pat2 on pat2.person_id=HVL_FR40.patient_id and pat2.person_attribute_type_id=30 and pat2.value is not null and pat2.value<>'' and pat2.voided=0
 left join
 ( 
     SELECT tb.patient_id from

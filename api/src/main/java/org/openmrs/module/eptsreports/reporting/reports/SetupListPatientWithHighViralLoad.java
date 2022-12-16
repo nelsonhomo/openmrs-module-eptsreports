@@ -74,7 +74,6 @@ public class SetupListPatientWithHighViralLoad extends EptsDataExportManager {
     rd.addDataSetDefinition(
         "SC",
         Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
-
     rd.addDataSetDefinition(
         "PHVLCURRWEEK",
         Mapped.mapStraightThrough(
