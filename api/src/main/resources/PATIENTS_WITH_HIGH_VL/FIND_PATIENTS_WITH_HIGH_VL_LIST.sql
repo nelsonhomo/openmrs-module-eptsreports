@@ -102,7 +102,7 @@ from
 			HVL_FR40.linha,
 			HVL_FR40.valorCV,
 			HVL_FR40.dataConsultaClinica0CV1,
-			HVL_FR40.dataPrevistaConsultaClinica0CV1,
+			HVL_FR40.dataPrevistaConsultaClinica0CV1,	
 			HVL_FR40.dataConsultaApss0CV1,
 			HVL_FR40.dataPrevistaConsultaApss0CV1, 
 			HVL_FR40.dataConsultaApss1CV1,
@@ -311,7 +311,7 @@ from
 																											select HVL_FR3.*,
 																													min(consultaClinica0.encounter_datetime) dataConsultaClinica0,
 																													min(consultaApss0.encounter_datetime) dataConsultaApss0,
-																													min(primeiraColheitaCV.data_colheita)  data_colheita
+																													primeiraColheitaCV.data_colheita  data_colheita
 																											from
 																											(
 																												Select 	HVL_FR4_HVL_FR5.patient_id,
@@ -431,7 +431,7 @@ from
 																														and consultaApss0.encounter_datetime BETWEEN HVL_FR3.data_carga and :endDate
 																											left join 
 																											(
-																													select p.patient_id, obsSampleCollectDate.value_datetime data_colheita
+																													select p.patient_id, e.encounter_datetime data_resultado, obsSampleCollectDate.value_datetime data_colheita
 																													from patient p
 																														inner join encounter e on p.patient_id=e.patient_id	
 																														inner join obs obsSampleCollectDate on obsSampleCollectDate.encounter_id=e.encounter_id
@@ -439,7 +439,7 @@ from
 																													where p.voided=0 and e.voided=0 and obsSampleCollectDate.voided=0 and obsVL.voided = 0 and e.encounter_type in (13,51) 
 																															and obsSampleCollectDate.concept_id=23821 and obsVL.concept_id=856 and obsVL.value_numeric> 1000  
 																															and e.location_id=:location and obsSampleCollectDate.value_datetime <= :endDate
-																												) primeiraColheitaCV on primeiraColheitaCV.patient_id = HVL_FR3.patient_id and primeiraColheitaCV.data_colheita  BETWEEN HVL_FR3.data_carga and :endDate
+																												) primeiraColheitaCV on primeiraColheitaCV.patient_id = HVL_FR3.patient_id and primeiraColheitaCV.data_resultado  = HVL_FR3.data_carga 
 																												
 																											group by HVL_FR3.patient_id
 																											) HVL_FR15			
