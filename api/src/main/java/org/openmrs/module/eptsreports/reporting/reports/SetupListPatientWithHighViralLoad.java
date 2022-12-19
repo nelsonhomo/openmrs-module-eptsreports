@@ -48,7 +48,7 @@ public class SetupListPatientWithHighViralLoad extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "LISTA DE SEGUIMENTO DE PACIENTES COM CARGA VIRAL NÃO SUPRIMIDA";
+    return "Lista De Seguimento De Pacientes Com Carga Viral Não Suprimida";
   }
 
   @Override
@@ -71,9 +71,15 @@ public class SetupListPatientWithHighViralLoad extends EptsDataExportManager {
     rd.addDataSetDefinition(
         "D",
         Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
+
     rd.addDataSetDefinition(
         "SC",
         Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
+
+    rd.addDataSetDefinition(
+        "PHVLEvaluationDate",
+        Mapped.mapStraightThrough(
+            this.listPatientWithHighViralLoadDataSet.getEndDatePlus7Days(this.getParameters())));
 
     rd.addDataSetDefinition(
         "PHVLCURRWEEK",
@@ -103,7 +109,7 @@ public class SetupListPatientWithHighViralLoad extends EptsDataExportManager {
 
       Properties props = new Properties();
       props.put(
-          "repeatingSections", "sheet:1,row:12,dataset:PHVL | sheet:2,row:10,dataset:PHVLCURRWEEK");
+          "repeatingSections", "sheet:1,row:13,dataset:PHVL | sheet:2,row:10,dataset:PHVLCURRWEEK");
       props.put("sortWeight", "5000");
       reportDesign.setProperties(props);
     } catch (IOException e) {
