@@ -4,18 +4,21 @@ public interface MQQueriesInterface {
 
   class QUERY {
     public static final String findPatientsWhoAreNewlyEnrolledOnARTRF05 =
-        " SELECT patient_id FROM ( "
-            + " SELECT patient_id, MIN(art_start_date) art_start_date FROM ( "
-            + " SELECT p.patient_id, MIN(value_datetime) art_start_date FROM patient p "
-            + " INNER JOIN encounter e ON p.patient_id = e.patient_id "
-            + " INNER JOIN obs o ON e.encounter_id = o.encounter_id "
-            + " WHERE p.voided = 0 AND e.voided = 0 AND o.voided = 0 AND e.encounter_type = 53 "
-            + " AND o.concept_id = 1190 AND o.value_datetime is NOT NULL AND o.value_datetime <= :endInclusionDate AND e.location_id = :location "
-            + " GROUP BY p.patient_id "
-            + " ) art_start "
-            + " GROUP BY patient_id "
-            + " ) tx_new WHERE art_start_date BETWEEN :startInclusionDate AND :endInclusionDate ";
-
+        "SELECT tx_new.patient_id FROM (   "
+            + "SELECT patient_id, MIN(art_start_date) art_start_date FROM  "
+            + "( SELECT p.patient_id, o.value_datetime art_start_date FROM patient p   "
+            + "INNER JOIN encounter e ON p.patient_id = e.patient_id   "
+            + "INNER JOIN obs o ON e.encounter_id = o.encounter_id   "
+            + "WHERE p.voided = 0   "
+            + "AND e.voided = 0   "
+            + "AND o.voided = 0   "
+            + "AND e.encounter_type = 53   "
+            + "AND o.concept_id = 1190   "
+            + "AND e.location_id=:location "
+            + "AND date(o.value_datetime) <= :endRevisionDate   "
+            + ") art_start   "
+            + "GROUP BY patient_id   "
+            + ") tx_new WHERE art_start_date BETWEEN :startInclusionDate AND :endInclusionDate ";
     public static final String
         findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06 =
             "SELECT p.patient_id from patient p "
@@ -117,7 +120,7 @@ public interface MQQueriesInterface {
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs o on e.encounter_id=o.encounter_id "
             + "inner join obs obsLactante on e.encounter_id=obsLactante.encounter_id "
-            + "where 	pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsLactante.voided=0 and e.encounter_type=53 and e.location_id=:location and "
+            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsLactante.voided=0 and e.encounter_type=53 and e.location_id=:location and "
             + "o.concept_id=1190 and o.value_datetime is not null and "
             + "obsLactante.concept_id=6332 and obsLactante.value_coded=1065 and pe.gender='F' ";
 
