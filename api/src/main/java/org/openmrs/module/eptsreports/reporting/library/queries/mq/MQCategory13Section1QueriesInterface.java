@@ -100,22 +100,23 @@ public interface MQCategory13Section1QueriesInterface {
 
     public static final String
         findPatientsWithLastClinicalConsultationwhoAreInLinhaAlternativaDenominatorB3 =
-            "Select final.patient_id from ( "
-                + "Select alternativeLine.patient_id,alternativeLine.dataLinha, alternativeLine.ultimaConsulta from ( "
-                + "Select enc.patient_id,enc.encounter_datetime ultimaConsulta,max(obsLinha.obs_datetime) dataLinha from ( "
+            "Select enc.patient_id from ( "
                 + "Select p.patient_id,max(e.encounter_datetime) encounter_datetime from patient p "
                 + "inner join encounter e on p.patient_id=e.patient_id "
                 + "where p.voided=0 and e.voided=0 and e.encounter_type=6 and "
                 + "e.encounter_datetime >=:startInclusionDate and e.encounter_datetime<=:endRevisionDate  and e.location_id=:location "
                 + "group by p.patient_id "
                 + ") enc "
-                + "inner join encounter  e on e.patient_id=enc.patient_id "
+                + "inner join "
+                + "( "
+                + "Select e.patient_id,max(obsLinha.obs_datetime) dataLinha "
+                + "from patient p "
+                + "inner join encounter  e on e.patient_id=p.patient_id "
                 + "inner join obs obsLinha on obsLinha.encounter_id=e.encounter_id "
-                + "where obsLinha.concept_id=21190 and e.encounter_type=53 and obsLinha.voided=0 and e.voided=0 and obsLinha.obs_datetime<enc.encounter_datetime and e.location_id=:location "
-                + "group by enc.patient_id "
-                + ") alternativeLine "
-                + "where (TIMESTAMPDIFF(MONTH,alternativeLine.dataLinha,alternativeLine.ultimaConsulta)) >= 6 "
-                + ") final ";
+                + "where  p.voided=0 and obsLinha.concept_id=21190 and e.encounter_type=53 and obsLinha.voided=0 and e.voided=0 and  e.location_id=:location and obsLinha.obs_datetime<=:endRevisionDate "
+                + "group by p.patient_id "
+                + ")alternativeLine on alternativeLine.patient_id = enc.patient_id "
+                + "where alternativeLine.dataLinha<enc.encounter_datetime and (TIMESTAMPDIFF(MONTH,alternativeLine.dataLinha,enc.encounter_datetime)) >= 6 ";
 
     public static final String
         findPatientsWithLastClinicalConsultationwhoAreDiferentFirstLineLinhaAternativaDenominatorB3E =
