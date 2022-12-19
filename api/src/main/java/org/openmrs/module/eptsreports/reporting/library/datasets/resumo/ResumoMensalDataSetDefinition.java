@@ -406,6 +406,9 @@ public class ResumoMensalDataSetDefinition extends BaseDataSet {
         resumoMensalAandBdisaggregations.getAdolescentesColumns());
 
     // B13 indicators
+    dsd.addColumn(
+        "B13TP", "Total patients - Total Geral", getPatientsWhoAreCurrentlyEnrolledOnARTB13(), "");
+
     addRow(
         dsd,
         "B13TC",
@@ -419,9 +422,6 @@ public class ResumoMensalDataSetDefinition extends BaseDataSet {
         "Patients over 15 years - adults",
         getPatientsWhoAreCurrentlyEnrolledOnARTB13(),
         resumoMensalAandBdisaggregations.getAdultPatients());
-
-    dsd.addColumn(
-        "B13TP", "Total patients - Total Geral", getPatientsWhoAreCurrentlyEnrolledOnARTB13(), "");
 
     addRow(
         dsd,
