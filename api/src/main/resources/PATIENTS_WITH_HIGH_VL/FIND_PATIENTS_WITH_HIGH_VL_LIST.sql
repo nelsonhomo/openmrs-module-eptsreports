@@ -431,7 +431,7 @@ from
 																														and consultaApss0.encounter_datetime BETWEEN HVL_FR3.data_carga and :endDate
 																											left join 
 																											(
-																													select p.patient_id, e.encounter_datetime data_resultado, obsSampleCollectDate.value_datetime data_colheita
+																													select p.patient_id, obsVL.obs_datetime data_resultado, obsSampleCollectDate.value_datetime data_colheita
 																													from patient p
 																														inner join encounter e on p.patient_id=e.patient_id	
 																														inner join obs obsSampleCollectDate on obsSampleCollectDate.encounter_id=e.encounter_id

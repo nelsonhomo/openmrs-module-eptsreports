@@ -48,7 +48,7 @@ public class SetupListPatientWithHighViralLoad extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "LISTA DE SEGUIMENTO DE PACIENTES COM CARGA VIRAL NÃO SUPRIMIDA";
+    return "Lista De Seguimento De Pacientes Com Carga Viral Não Suprimida";
   }
 
   @Override
@@ -71,9 +71,16 @@ public class SetupListPatientWithHighViralLoad extends EptsDataExportManager {
     rd.addDataSetDefinition(
         "D",
         Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
+
     rd.addDataSetDefinition(
         "SC",
         Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
+
+    rd.addDataSetDefinition(
+        "PHVLEvaluationDate",
+        Mapped.mapStraightThrough(
+            this.listPatientWithHighViralLoadDataSet.getEndDatePlus7Days(this.getParameters())));
+
     rd.addDataSetDefinition(
         "PHVLCURRWEEK",
         Mapped.mapStraightThrough(
