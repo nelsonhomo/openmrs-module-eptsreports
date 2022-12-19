@@ -1181,7 +1181,8 @@ public class ResumoMensalQueries {
       "SELECT p.patient_id FROM	patient p "
           + "inner join patient_program pg on p.patient_id=pg.patient_id "
           + "inner join patient_state ps on pg.patient_program_id=ps.patient_program_id "
-          + "WHERE pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and pg.location_id=:location  and ps.state=29 and ps.start_date BETWEEN :startDate and :endDate ";
+          + "WHERE pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and pg.location_id=:location  and ps.state=29 "
+          + "and ps.start_date BETWEEN :startDate and :endDate ";
 
   public static final String
       findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardB2 =

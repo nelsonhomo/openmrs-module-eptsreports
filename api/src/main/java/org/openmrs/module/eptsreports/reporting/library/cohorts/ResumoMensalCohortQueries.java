@@ -198,11 +198,20 @@ public class ResumoMensalCohortQueries {
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
-        "TRANSFERED-IN",
+        "TRANSFERED-IN-1",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
                 "findPatientsWithAProgramStateMarkedAsTransferedInInAPeriod",
                 ResumoMensalQueries.findPatientsWithAProgramStateMarkedAsTransferedInInAPeriodB2),
+            mappings));
+
+    definition.addSearch(
+        "TRANSFERED-IN-2",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "findPatientsWithAProgramStateMarkedAsTransferedInInAPeriod",
+                ResumoMensalQueries
+                    .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardB2),
             mappings));
 
     definition.addSearch(
@@ -213,7 +222,7 @@ public class ResumoMensalCohortQueries {
                 ResumoMensalQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHLastMonthB12()),
             mappings));
 
-    definition.setCompositionString("TRANSFERED-IN NOT(B12)");
+    definition.setCompositionString("(TRANSFERED-IN-1 OR TRANSFERED-IN-2) NOT(B12)");
 
     return definition;
   }
