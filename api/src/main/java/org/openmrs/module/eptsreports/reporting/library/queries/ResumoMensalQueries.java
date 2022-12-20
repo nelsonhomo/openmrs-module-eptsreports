@@ -1030,7 +1030,7 @@ public class ResumoMensalQueries {
             + "and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and e.location_id=:location   "
             + " )tpt on tpt.patient_id=preTarvFinal.patient_id  "
             + "where tpt.dataInicioTPI BETWEEN preTarvFinal.initialDate and :startDate   "
-            + ")f  where f.patient_id ";
+            + ")f  ";
 
     return query;
   }
