@@ -5,12 +5,9 @@ import org.openmrs.module.eptsreports.reporting.reports.SetupMisauResumoMensalPr
 import org.openmrs.module.eptsreports.reporting.reports.SetupQualityImprovementReport;
 import org.openmrs.module.eptsreports.reporting.reports.SetupResumoMensalReport;
 import org.openmrs.module.eptsreports.reporting.reports.SetupResumoTrimestralApssReport;
-import org.openmrs.module.eptsreports.reporting.reports.SetupResumoTrimestralReport;
 
 public enum MISAUIndicatorReports {
   RESUMO_MENSAL_FICHA_MESTRA(new SetupResumoMensalReport(null).getUuid()),
-
-  RESUMO_TRIMESTRAL(new SetupResumoTrimestralReport(null).getUuid()),
 
   RESUMO_TRUMESTRAL_APSS(new SetupResumoTrimestralApssReport(null, null).getUuid()),
 
