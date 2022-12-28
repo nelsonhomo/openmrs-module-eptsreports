@@ -22,6 +22,7 @@ import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ResumoMensalDataSetDefinition;
+import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ResumoMensalEncounterDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsPeriodIndicatorDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -36,7 +37,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SetupResumoMensalReport extends EptsPeriodIndicatorDataExportManager {
 
-  private ResumoMensalDataSetDefinition resumoMensalDataSetDefinition;
+  @Autowired private ResumoMensalDataSetDefinition resumoMensalDataSetDefinition;
+  @Autowired private ResumoMensalEncounterDataSetDefinition resumoMensalEncounterDataSetDefinition;
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
 
@@ -79,6 +81,10 @@ public class SetupResumoMensalReport extends EptsPeriodIndicatorDataExportManage
     rd.addDataSetDefinition("HF", mapStraightThrough(new LocationDataSetDefinition()));
     rd.addDataSetDefinition(
         "R", mapStraightThrough(resumoMensalDataSetDefinition.constructResumoMensalDataset()));
+
+    rd.addDataSetDefinition(
+        "RE",
+        mapStraightThrough(resumoMensalEncounterDataSetDefinition.constructResumoMensalDataset()));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(
