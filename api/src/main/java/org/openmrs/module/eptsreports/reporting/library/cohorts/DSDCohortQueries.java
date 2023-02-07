@@ -26,10 +26,12 @@ public class DSDCohortQueries {
 
   private static final String FIND_DSD_DENOMINATOR_1 = "DSD/DSD_DENOMINATOR_D1.sql";
 
+  private static final String FIND_DSD_DENOMINATOR_4 = "DSD/DSD_DENOMINATOR_D4.sql";
+
   @Autowired private GenericCohortQueries genericCohorts;
 
   @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndInAtleastOneDSD")
-  public CohortDefinition getNumerator1() {
+  public CohortDefinition getDSDEligibleNumerator1() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName("DSD- Numerator 1");
@@ -96,6 +98,78 @@ public class DSDCohortQueries {
             mappings));
 
     definition.setCompositionString("D1 AND (DT OR DS OR DA OR DD OR DC OR  FR OR GAAC)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtNotEligibleForDSD")
+  public CohortDefinition getDSDNotEligibleNumerator1() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Not Eligible - Numerator 1");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("D2", EptsReportUtils.map(this.getDSDDenominator2(), mappings));
+
+    definition.addSearch(
+        "DT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DT",
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                    DSDDispensationInterval.QUARTERLY)),
+            mappings));
+
+    definition.addSearch(
+        "DS",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DS",
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                    DSDDispensationInterval.SEMI_ANNUAL)),
+            mappings));
+
+    definition.addSearch(
+        "DA",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DA",
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                    DSDDispensationInterval.ANNUAL)),
+            mappings));
+
+    definition.addSearch(
+        "DD",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DD",
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                    DSDModeTypeLevel1.DD)),
+            mappings));
+
+    definition.addSearch(
+        "DCA",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DCA",
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                    DSDModeTypeLevel1.DCA_APE)),
+            mappings));
+
+    definition.addSearch("FR", EptsReportUtils.map(this.getPatientsWhoAreFastTracked(), mappings));
+
+    definition.addSearch(
+        "GAAC",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "GAAC",
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                    DSDModelTypeLevel2.GAAC)),
+            mappings));
+
+    definition.setCompositionString("D2 AND (DT OR DS OR DA OR DD OR DCA OR  FR OR GAAC)");
 
     return definition;
   }
@@ -606,6 +680,78 @@ public class DSDCohortQueries {
     return dataSetDefinitio;
   }
 
+  @DocumentedDefinition(value = "DSD- Denominator 4")
+  public CohortDefinition getDSDDenominator4() {
+    final CompositionCohortDefinition dataSetDefinitio = new CompositionCohortDefinition();
+
+    dataSetDefinitio.setName("DSD- Denominator 4");
+    dataSetDefinitio.addParameter(new Parameter("endDate", "End Date", Date.class));
+    dataSetDefinitio.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    dataSetDefinitio.addSearch(
+        "DENOMINATOR-4",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "Finding DSD- Denominator 4 by Reporting Period",
+                EptsQuerysUtils.loadQuery(FIND_DSD_DENOMINATOR_4)),
+            mappings));
+
+    dataSetDefinitio.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoArePregnantInAPeriod",
+                DSDQueriesInterface.QUERY.findPatientsWhoArePregnantsAndBreastFeeding(
+                    TypePTV.PREGNANT)),
+            "endDate=${endDate},location=${location}"));
+
+    dataSetDefinitio.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreBreastfeeding",
+                DSDQueriesInterface.QUERY.findPatientsWhoIsBreastfeedingForAtLeast11Months),
+            mappings));
+
+    dataSetDefinitio.addSearch(
+        "TB",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "patientsWhoAreInTbTreatment",
+                TbQueries.QUERY.findPatientsWhoAreInTbTreatmentFor7MonthsPriorEndReportingPeriod),
+            mappings));
+
+    dataSetDefinitio.addSearch(
+        "IIT-PREVIOUS-PERIOD", EptsReportUtils.map(this.getPatientsOnRTTDSD(), mappings));
+
+    dataSetDefinitio.addSearch(
+        "IIT-PREVIOUS-PERIOD-2",
+        EptsReportUtils.map(this.getPatientsWhoHaveAtLeastOneDrugPickUpOrFilaDSD(), mappings));
+
+    dataSetDefinitio.addSearch(
+        "SARCOMA-KAPOSI",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "SARCOMA-KAPOSI",
+                DSDQueriesInterface.QUERY.findPatientsWhoHaveBeenNotifiedOfKaposiSarcoma),
+            mappings));
+
+    dataSetDefinitio.addSearch(
+        "ADVERSASE-REACTIONS",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "ADVERSASE-REACTIONS",
+                DSDQueriesInterface.QUERY
+                    .findPatientsWithAdverseDrugReactionsRequiringRegularMonitoringNotifiedInLast6Months),
+            mappings));
+
+    dataSetDefinitio.setCompositionString(
+        "(DENOMINATOR-4 AND BREASTFEEDING) NOT (PREGNANT OR TB OR IIT-PREVIOUS-PERIOD OR IIT-PREVIOUS-PERIOD-2 OR SARCOMA-KAPOSI OR ADVERSASE-REACTIONS)");
+
+    return dataSetDefinitio;
+  }
+
   @DocumentedDefinition(value = "PatientsOnRTTDSD")
   public CohortDefinition getPatientsOnRTTDSD() {
 
@@ -887,6 +1033,58 @@ public class DSDCohortQueries {
             mappings));
 
     definition.setCompositionString("IART AND DAH");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndEligibleForDB")
+  public CohortDefinition getDSDEligibleNumerator20() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Eligible - Numerator 20");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("IART", EptsReportUtils.map(this.getDSDDenominator4(), mappings));
+
+    definition.addSearch(
+        "DB",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DB",
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                    DSDDispensationInterval.BIMONTHLY)),
+            mappings));
+
+    definition.setCompositionString("IART AND DB");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreActiveOnArtAndNotEligibleForDB")
+  public CohortDefinition getDSDNotEligibleNumerator20() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("DSD Not Eligible - Numerator 20");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    definition.addSearch("D4", EptsReportUtils.map(this.getDSDDenominator4(), mappings));
+
+    definition.addSearch("D3", EptsReportUtils.map(this.getDSDDenominator3(), mappings));
+
+    definition.addSearch(
+        "DB",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "DB",
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                    DSDDispensationInterval.BIMONTHLY)),
+            mappings));
+
+    definition.setCompositionString("DB AND (D3 NOT D4)");
 
     return definition;
   }

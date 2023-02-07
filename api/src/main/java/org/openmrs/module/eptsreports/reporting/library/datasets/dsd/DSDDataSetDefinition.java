@@ -14,6 +14,7 @@
 package org.openmrs.module.eptsreports.reporting.library.datasets.dsd;
 
 import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.ADULT;
+import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.CHILDREN;
 import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.FIVE_TO_NINE;
 import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.TEN_TO_FOURTEEN;
 import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.TWO_TO_FOUR;
@@ -70,16 +71,68 @@ public class DSDDataSetDefinition extends BaseDataSet {
 
     boolean addWonaState = true;
 
-    this.addAgeDimensions(dsd, UNDER_TWO, TWO_TO_FOUR, FIVE_TO_NINE, TEN_TO_FOURTEEN, ADULT);
+    this.addAgeDimensions(
+        dsd, UNDER_TWO, TWO_TO_FOUR, FIVE_TO_NINE, TEN_TO_FOURTEEN, CHILDREN, ADULT);
 
     dsd.addDimension(
         "state", EptsReportUtils.map(this.dsdCommonDimensions.getDimensions(), mappings));
 
-    this.addColumns(
-        "D1",
-        "D1: Number of active patients on ART, Non-Pregnant and Non-Breastfeeding and not on TB Treatment, Eligible for DSD for Stable Patients",
+    //    this.addColumns(
+    //        "D1",
+    //        "D1: Number of active patients on ART, Non-Pregnant and Non-Breastfeeding and not on
+    // TB Treatment, Eligible for DSD for Stable Patients",
+    //        dsd,
+    //        dsdCohortQueries.getDSDDenominator1(),
+    //        !addWonaState,
+    //        mappings,
+    //        TWO_TO_FOUR,
+    //        FIVE_TO_NINE,
+    //        TEN_TO_FOURTEEN,
+    //        ADULT);
+    //
+    //    this.addColumns(
+    //        "D2",
+    //        "D2: Number of active patients on ART Not Eligible for DSD for Stable Patients Number
+    // of Patients Number of  active patients on ART (Non-pregnant and Non-Breastfeeding not on TB
+    // treatment) Not Eligible  for DSD (Unstable)",
+    //        dsd,
+    //        dsdCohortQueries.getDSDDenominator2(),
+    //        addWonaState,
+    //        mappings,
+    //        UNDER_TWO,
+    //        TWO_TO_FOUR,
+    //        FIVE_TO_NINE,
+    //        TEN_TO_FOURTEEN,
+    //        ADULT);
+    //
+    //    this.addColumns(
+    //        "D3",
+    //        "D3: Número de Pacientes Activos em TARV(Excluindo grávidas d e lactantes)",
+    //        dsd,
+    //        this.dsdCohortQueries.getDSDDenominator3(),
+    //        addWonaState,
+    //        mappings,
+    //        UNDER_TWO,
+    //        TWO_TO_FOUR,
+    //        FIVE_TO_NINE,
+    //        TEN_TO_FOURTEEN,
+    //        ADULT);
+
+    this.addBreastfeedingColumns(
+        "D4",
+        "D4: Número de Mulheres Activas em TARV, Lactantes durante pelo menos 11 meses que são elegíveis para Dispensa Bimestral ",
         dsd,
-        dsdCohortQueries.getDSDDenominator1(),
+        dsdCohortQueries.getDSDDenominator4(),
+        !addWonaState,
+        mappings,
+        CHILDREN,
+        ADULT);
+
+    this.addColumns(
+        "N1-E",
+        "N1: Número de Pacientes Activos em TARV que se encontram inscritos em pelo menos um DSD para pacientes estáveis  (GA, DT, DS, DA, FR, DCA, DD) - Elegíveis ",
+        dsd,
+        dsdCohortQueries.getDSDEligibleNumerator1(),
         !addWonaState,
         mappings,
         TWO_TO_FOUR,
@@ -88,38 +141,13 @@ public class DSDDataSetDefinition extends BaseDataSet {
         ADULT);
 
     this.addColumns(
-        "D2",
-        "D2: Number of active patients on ART Not Eligible for DSD for Stable Patients Number of Patients Number of  active patients on ART (Non-pregnant and Non-Breastfeeding not on TB treatment) Not Eligible  for DSD (Unstable)",
+        "N1-NE",
+        "N1: Número de Pacientes Activos em TARV que se encontram inscritos em pelo menos um DSD para pacientes estáveis  (GA, DT, DS, DA, FR, DCA, DD) - Não Elegíveis ",
         dsd,
-        dsdCohortQueries.getDSDDenominator2(),
+        dsdCohortQueries.getDSDNotEligibleNumerator1(),
         addWonaState,
         mappings,
         UNDER_TWO,
-        TWO_TO_FOUR,
-        FIVE_TO_NINE,
-        TEN_TO_FOURTEEN,
-        ADULT);
-
-    this.addColumns(
-        "D3",
-        "D3: Número de Pacientes Activos em TARV(Excluindo grávidas d e lactantes)",
-        dsd,
-        this.dsdCohortQueries.getDSDDenominator3(),
-        addWonaState,
-        mappings,
-        UNDER_TWO,
-        TWO_TO_FOUR,
-        FIVE_TO_NINE,
-        TEN_TO_FOURTEEN,
-        ADULT);
-
-    this.addColumns(
-        "N1",
-        "N1: N1: Número de Pacientes Não Grávidas, Não Lactantes e Não em Tratamento TB e Elegíveis a MDS que encontram-se em pelo menos um MDS para Pacietnes Estáveis (GA, DT, DS, DA, FR, DCA, DD)",
-        dsd,
-        dsdCohortQueries.getNumerator1(),
-        !addWonaState,
-        mappings,
         TWO_TO_FOUR,
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
@@ -277,7 +305,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
 
     this.addColumns(
         "N8-E",
-        "N8:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: GAAC  (GA) - Elegíveis para MDS Estáveis",
+        "N8:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: GAAC (GA) - Elegíveis para MDS Estáveis",
         dsd,
         dsdCohortQueries.getDSDEligibleNumerator8(),
         !addWonaState,
@@ -289,7 +317,7 @@ public class DSDDataSetDefinition extends BaseDataSet {
 
     this.addColumns(
         "N8-NE",
-        "N8:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: GAAC  (GA) - Não-Elegíveis para MDS Estáveis",
+        "N8:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: GAAC (GA) - Não-Elegíveis para MDS Estáveis",
         dsd,
         dsdCohortQueries.getDSDNotEligibleNumerator8(),
         addWonaState,
@@ -459,6 +487,29 @@ public class DSDDataSetDefinition extends BaseDataSet {
         TEN_TO_FOURTEEN,
         ADULT);
 
+    this.addBreastfeedingColumns(
+        "N20-E",
+        "N20: Número de pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Bimestral (DB) - Elegíveis",
+        dsd,
+        this.dsdCohortQueries.getDSDEligibleNumerator20(),
+        !addWonaState,
+        mappings,
+        CHILDREN,
+        ADULT);
+
+    this.addColumns(
+        "N20-NE",
+        "N20: Número de pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Bimestral (DB) - Não Elegíveis",
+        dsd,
+        dsdCohortQueries.getDSDNotEligibleNumerator20(),
+        addWonaState,
+        mappings,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
     return dsd;
   }
 
@@ -522,6 +573,48 @@ public class DSDDataSetDefinition extends BaseDataSet {
           columnName,
           name + " - (" + range.getName() + ")",
           indicatorExcludingPregnantsAndBreestfeeding,
+          range.getName() + "=" + range.getName());
+    }
+  }
+
+  private void addBreastfeedingColumns(
+      final String name,
+      String label,
+      final CohortIndicatorDataSetDefinition definition,
+      final CohortDefinition cohortDefinition,
+      Boolean addWomanState,
+      String mappings,
+      final AgeRange... ranges) {
+
+    Mapped<CohortIndicator> totalIndicator =
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "patientsActiveOnArtEligibleForDsd",
+                EptsReportUtils.map(cohortDefinition, mappings)),
+            mappings);
+
+    definition.addColumn(name, label, totalIndicator, "");
+
+    if (addWomanState) {
+      definition.addColumn(
+          name + "-pregnant", label + "- Pergnant", totalIndicator, "state=PREGNANT");
+      definition.addColumn(
+          name + "-breastfeeding",
+          label + "- breastfeeding",
+          totalIndicator,
+          "state=BREASTFEEDING");
+    }
+
+    label += " (Adicionando mulheres lactantes) ";
+
+    for (final AgeRange range : ranges) {
+
+      String columnName = getColumnNameByRange(name, range);
+
+      definition.addColumn(
+          columnName,
+          name + " - (" + range.getName() + ")",
+          totalIndicator,
           range.getName() + "=" + range.getName());
     }
   }
