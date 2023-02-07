@@ -77,46 +77,43 @@ public class DSDDataSetDefinition extends BaseDataSet {
     dsd.addDimension(
         "state", EptsReportUtils.map(this.dsdCommonDimensions.getDimensions(), mappings));
 
-    //    this.addColumns(
-    //        "D1",
-    //        "D1: Number of active patients on ART, Non-Pregnant and Non-Breastfeeding and not on
-    // TB Treatment, Eligible for DSD for Stable Patients",
-    //        dsd,
-    //        dsdCohortQueries.getDSDDenominator1(),
-    //        !addWonaState,
-    //        mappings,
-    //        TWO_TO_FOUR,
-    //        FIVE_TO_NINE,
-    //        TEN_TO_FOURTEEN,
-    //        ADULT);
-    //
-    //    this.addColumns(
-    //        "D2",
-    //        "D2: Number of active patients on ART Not Eligible for DSD for Stable Patients Number
-    // of Patients Number of  active patients on ART (Non-pregnant and Non-Breastfeeding not on TB
-    // treatment) Not Eligible  for DSD (Unstable)",
-    //        dsd,
-    //        dsdCohortQueries.getDSDDenominator2(),
-    //        addWonaState,
-    //        mappings,
-    //        UNDER_TWO,
-    //        TWO_TO_FOUR,
-    //        FIVE_TO_NINE,
-    //        TEN_TO_FOURTEEN,
-    //        ADULT);
-    //
-    //    this.addColumns(
-    //        "D3",
-    //        "D3: Número de Pacientes Activos em TARV(Excluindo grávidas d e lactantes)",
-    //        dsd,
-    //        this.dsdCohortQueries.getDSDDenominator3(),
-    //        addWonaState,
-    //        mappings,
-    //        UNDER_TWO,
-    //        TWO_TO_FOUR,
-    //        FIVE_TO_NINE,
-    //        TEN_TO_FOURTEEN,
-    //        ADULT);
+    this.addColumns(
+        "D1",
+        "D1: Number of active patients on ART, Non-Pregnant and Non-Breastfeeding and not on TB Treatment, Eligible for DSD for Stable Patients",
+        dsd,
+        dsdCohortQueries.getDSDDenominator1(),
+        !addWonaState,
+        mappings,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "D2",
+        "D2: Number of active patients on ART Not Eligible for DSD for Stable Patients Number of Patients Number of  active patients on ART (Non-pregnant and Non-Breastfeeding not on TB treatment) Not Eligible  for DSD (Unstable)",
+        dsd,
+        dsdCohortQueries.getDSDDenominator2(),
+        addWonaState,
+        mappings,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
+
+    this.addColumns(
+        "D3",
+        "D3: Número de Pacientes Activos em TARV(Excluindo grávidas d e lactantes)",
+        dsd,
+        this.dsdCohortQueries.getDSDDenominator3(),
+        addWonaState,
+        mappings,
+        UNDER_TWO,
+        TWO_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        ADULT);
 
     this.addBreastfeedingColumns(
         "D4",
