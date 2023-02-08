@@ -28,6 +28,8 @@ import org.springframework.stereotype.Component;
 public class TRFINCohortQueries {
 
   @Autowired private TxCurrCohortQueries txCurrCohortQueries;
+  
+  //TX_TRANSFERRED_IN/FIND_PATIENTS_WHO_ARE_TRANSFERRED_IN.sql
 
   @DocumentedDefinition(value = "patientsWhoAreTransferedIn")
   public CohortDefinition getPatiensWhoAreTransferredIn() {
