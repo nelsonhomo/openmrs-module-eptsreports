@@ -650,12 +650,6 @@ public class TXTBCohortQueries {
             this.getPulmonaryTBWithinReportingDate(),
             "startDate=${startDate-6m},endDate=${startDate-1d},location=${location}"));
 
-    definition.addSearch(
-        "transferred-out",
-        EptsReportUtils.map(
-            this.getPatientsWhoAreTransferredOut(),
-            "startDate=${startDate},endDate=${endDate},location=${location}"));
-
     CohortDefinition fichaClinicaMasterCard =
         this.genericCohortQueries.generalSql(
             "fichaClinicaMasterCard",
@@ -664,7 +658,17 @@ public class TXTBCohortQueries {
                 this.hivMetadata.getStartDrugsConcept().getConceptId(),
                 this.hivMetadata.getAdultoSeguimentoEncounterType().getId()));
 
+    CohortDefinition fichaAdultoSeguimentoAndPediatriaSeguimento =
+        this.genericCohortQueries.generalSql(
+            "adultoandpediatriaseguimento", TXTBQueries.findTBScreeningResultInvestigationBkOrRX());
+
+    CohortDefinition transferredOut =
+        this.genericCohortQueries.generalSql(
+            "transferred-out", TXTBQueries.findPatientWhoAreTransferedOut());
+
     this.addGeneralParameters(fichaClinicaMasterCard);
+    this.addGeneralParameters(fichaAdultoSeguimentoAndPediatriaSeguimento);
+    this.addGeneralParameters(transferredOut);
 
     definition.addSearch(
         "A-PREVIOUS-PERIOD",
@@ -675,6 +679,13 @@ public class TXTBCohortQueries {
     definition.addSearch(
         "ficha-clinica-master-card",
         this.map(fichaClinicaMasterCard, this.generalParameterMapping));
+
+    definition.addSearch(
+        "ficha-adulto-and-pediatria-seguimento",
+        this.map(fichaAdultoSeguimentoAndPediatriaSeguimento, this.generalParameterMapping));
+
+    definition.addSearch("transferred-out", this.map(transferredOut, this.generalParameterMapping));
+
     definition.addSearch(
         "all-tb-symptoms",
         this.map(this.getAllTBSymptomsForDemoninatorComposition(), this.generalParameterMapping));
@@ -682,9 +693,13 @@ public class TXTBCohortQueries {
         "ficha-laboratorio-results",
         this.map(this.getResultsOnFichaLaboratorio(), this.generalParameterMapping));
 
+    definition.addSearch(
+        "ficha-laboratorio-results",
+        this.map(this.getResultsOnFichaLaboratorio(), this.generalParameterMapping));
+
     definition.setCompositionString(
         "(art-list AND "
-            + " ( tb-screening OR tb-investigation OR started-tb-treatment OR in-tb-program OR other-diagnosis-fichaResumo OR ficha-clinica-master-card OR all-tb-symptoms OR ficha-laboratorio-results)) "
+            + " ( tb-screening OR tb-investigation OR started-tb-treatment OR in-tb-program OR other-diagnosis-fichaResumo OR ficha-clinica-master-card OR all-tb-symptoms OR ficha-laboratorio-results OR ficha-adulto-and-pediatria-seguimento )) "
             + " NOT ((transferred-out NOT (started-tb-treatment OR in-tb-program)) OR started-tb-treatment-previous-period OR in-tb-program-previous-period OR other-diagnosis-FichaResumo-previousPeriod OR A-PREVIOUS-PERIOD )");
 
     return definition;
