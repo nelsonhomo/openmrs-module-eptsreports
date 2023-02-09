@@ -154,7 +154,7 @@
 							and obs_fila.voided=0                                                                                                                             
 							and obs_fila.obs_datetime=ultimo_fila.data_fila                                                                                                
 							and obs_fila.concept_id=5096                                                                                                                       
-							and obs_fila.location_id=399  
+							and obs_fila.location_id=:location  
                         
                         union
                         
