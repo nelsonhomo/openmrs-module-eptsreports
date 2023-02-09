@@ -15,10 +15,10 @@
                  max_consulta.data_seguimento,                                                                                               
                  max_recepcao.data_recepcao_levantou                                                                                         
              from                                                                                                                                
-             (   Select patient_id,min(data_inicio) data_inicio                                                                              
+             (   select patient_id,min(data_inicio) data_inicio                                                                              
                  from                                                                                                                        
                      (                                                                                                                       
-                         Select  p.patient_id,min(e.encounter_datetime) data_inicio                                                          
+                         select  p.patient_id,min(e.encounter_datetime) data_inicio                                                          
                          from    patient p                                                                                                   
                                  inner join person pe on pe.person_id = p.patient_id                                                         
                                  inner join encounter e on p.patient_id=e.patient_id                                                         
@@ -29,7 +29,7 @@
                          group by p.patient_id                                                                                               
                          union                                                                                                               
           
-                         Select  p.patient_id,min(value_datetime) data_inicio                                                                
+                         select  p.patient_id,min(value_datetime) data_inicio                                                                
                          from    patient p                                                                                                   
                                  inner join person pe on pe.person_id = p.patient_id                                                         
                                  inner join encounter e on p.patient_id=e.patient_id                                                         
@@ -48,7 +48,7 @@
                          group by pg.patient_id                                                                                              
                          union                                                                                                               
             
-                           SELECT    e.patient_id, MIN(e.encounter_datetime) AS data_inicio                                                  
+                           select    e.patient_id, MIN(e.encounter_datetime) AS data_inicio                                                  
                            FROM      patient p                                                                                               
                                      inner join person pe on pe.person_id = p.patient_id                                                     
                                      inner join encounter e on p.patient_id=e.patient_id                                                     
@@ -56,7 +56,7 @@
                            GROUP BY  p.patient_id                                                                                                        
                          union                                                                                                                           
             
-                         Select  p.patient_id,min(value_datetime) data_inicio                                                                            
+                         select  p.patient_id,min(value_datetime) data_inicio                                                                            
                          from    patient p                                                                                                               
                                  inner join person pe on pe.person_id = p.patient_id                                                                     
                                  inner join encounter e on p.patient_id=e.patient_id                                                                     
@@ -135,20 +135,30 @@
                 ) allSaida
                 left join
                 (  
-                    Select patient_id, max(data_ultimo_levantamento)  data_ultimo_levantamento    
+                    select patient_id, max(data_ultimo_levantamento)  data_ultimo_levantamento    
                     from
                     (
-                        Select p.patient_id, date_add(max(encounter_datetime), interval 1 day)  data_ultimo_levantamento                                                                                                
-                        from    patient p                                                                                                                                   
-                              inner join person pe on pe.person_id = p.patient_id                                                                                         
-                              inner join encounter e on e.patient_id=p.patient_id                                                                                         
-                        where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18 and                                                                     
-                              e.location_id=:location                                                                                   
-                        group by p.patient_id   
+                        select ultimo_fila.patient_id, date_add(obs_fila.value_datetime, interval 1 day) data_ultimo_levantamento
+						from
+						(
+								select p.patient_id, max(encounter_datetime) data_fila                                                                                               
+                        		from    patient p                                                                                                                                   
+                              		inner join person pe on pe.person_id = p.patient_id                                                                                         
+                              		inner join encounter e on e.patient_id=p.patient_id                                                                                         
+                        		where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18                                                                      
+                              		and e.location_id=:location                                                                                   
+                        			group by p.patient_id 
+                        ) ultimo_fila  
+						left join                                                                                                                                          
+							obs obs_fila on obs_fila.person_id=ultimo_fila.patient_id                                                                                      
+							and obs_fila.voided=0                                                                                                                             
+							and obs_fila.obs_datetime=ultimo_fila.data_fila                                                                                                
+							and obs_fila.concept_id=5096                                                                                                                       
+							and obs_fila.location_id=399  
                         
                         union
                         
-                        Select p.patient_id, date_add(max(value_datetime), interval 31 day) data_ultimo_levantamento                                                                                     
+                        select p.patient_id, date_add(max(value_datetime), interval 31 day) data_ultimo_levantamento                                                                                     
                         from    patient p                                                                                                                                   
                               inner join person pe on pe.person_id = p.patient_id                                                                                         
                               inner join encounter e on p.patient_id=e.patient_id                                                                                         
@@ -162,7 +172,7 @@
              
               ) saida on inicio.patient_id=saida.patient_id                                                                                                      
              left join                                                                                                                                           
-              ( Select p.patient_id,max(encounter_datetime) data_fila                                                                                                
+              ( select p.patient_id,max(encounter_datetime) data_fila                                                                                                
              from    patient p                                                                                                                                   
                      inner join person pe on pe.person_id = p.patient_id                                                                                         
                      inner join encounter e on e.patient_id=p.patient_id                                                                                         
@@ -171,7 +181,7 @@
              group by p.patient_id                                                                                                                               
              ) max_fila on inicio.patient_id=max_fila.patient_id                                                                                                 
               left join                                                                                                                                          
-              (  Select  p.patient_id,max(encounter_datetime) data_seguimento                                                                                    
+              (  select  p.patient_id,max(encounter_datetime) data_seguimento                                                                                    
              from    patient p                                                                                                                                   
                      inner join person pe on pe.person_id = p.patient_id                                                                                         
                      inner join encounter e on e.patient_id=p.patient_id                                                                                         
@@ -181,7 +191,7 @@
              ) max_consulta on inicio.patient_id=max_consulta.patient_id                                                                                         
               left join                                                                                                                                          
               (                                                                                                                                                  
-             Select  p.patient_id,max(value_datetime) data_recepcao_levantou                                                                                     
+             select  p.patient_id,max(value_datetime) data_recepcao_levantou                                                                                     
              from    patient p                                                                                                                                   
                      inner join person pe on pe.person_id = p.patient_id                                                                                         
                      inner join encounter e on p.patient_id=e.patient_id                                                                                         
