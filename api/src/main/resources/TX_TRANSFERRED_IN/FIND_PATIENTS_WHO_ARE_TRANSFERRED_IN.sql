@@ -38,7 +38,7 @@ from
 								group by p.patient_id  
 					) transferido_de                                                                    
 						inner join encounter e on e.patient_id = transferido_de.patient_id                                        
-					where e.voided is false and e.encounter_type in (6, 9, 18) and e.encounter_datetime between :startDate and '2022-09-20' and e.location_id =:location  
+					where e.voided is false and e.encounter_type in (6, 9, 18) and e.encounter_datetime between :startDate and :endDate and e.location_id =:location  
 			)                                                                           
 			transferidos_de group by patient_id 
 
@@ -62,12 +62,12 @@ from
 													inner join patient_program pg on p.patient_id = pg.patient_id                                                               
 													inner join patient_state ps on pg.patient_program_id = ps.patient_program_id                                                
 											where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2                                        
-													and ps.start_date<=  date_add('2022-06-21', interval -1 day) and pg.location_id =399 
+													and ps.start_date<=  date_add(:startDate, interval -1 day) and pg.location_id =:location 
 												group by pg.patient_id                                           
 									) max_estado                                                                                                                        
 											inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
 											inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
-									where pp.program_id = 2 and ps.state = 7 and pp.voided = 0 and ps.voided = 0 and pp.location_id = 399                 
+									where pp.program_id = 2 and ps.state = 7 and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location                 
 									
 									union                                                                                                                               
              
@@ -78,7 +78,7 @@ from
 											 inner join obs  o on e.encounter_id=o.encounter_id                                                                          
 									 where   e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0                                                               
 											and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded = 1706                         
-											and o.obs_datetime<= date_add('2022-06-21', interval -1 day) and e.location_id=399                                                                        
+											and o.obs_datetime<= date_add(:startDate, interval -1 day) and e.location_id=:location                                                                        
 										group by p.patient_id                                                                                                               
 									 
 									union                                                                                                                               
@@ -91,13 +91,13 @@ from
 													inner join person pe on pe.person_id = p.patient_id                                                                     
 													inner join encounter e on p.patient_id=e.patient_id                                                                     
 													inner join obs o on o.encounter_id=e.encounter_id                                                                       
-											 where e.voided=0 and p.voided=0 and pe.voided = 0 and e.encounter_datetime<=  date_add('2022-06-21', interval -1 day)                                       
-													and e.encounter_type = 21 and  e.location_id= 399                                                                 
+											 where e.voided=0 and p.voided=0 and pe.voided = 0 and e.encounter_datetime<=  date_add(:startDate, interval -1 day)                                       
+													and e.encounter_type = 21 and  e.location_id= :location                                                                 
 												group by p.patient_id                                                                                                   
 										 ) ultimaBusca                                                                                                                   
 												inner join encounter e on e.patient_id = ultimaBusca.patient_id                                                             
 												inner join obs o on o.encounter_id = e.encounter_id                                                                         
-										where e.encounter_type = 21 and o.voided=0 and o.concept_id=2016 and o.value_coded in (1706,23863) and ultimaBusca.data_estado = e.encounter_datetime and e.location_id = 399 
+										where e.encounter_type = 21 and o.voided=0 and o.concept_id=2016 and o.value_coded in (1706,23863) and ultimaBusca.data_estado = e.encounter_datetime and e.location_id = :location 
 							) allSaida                                                                                                                                      
 								group by patient_id 
 					) allSaida
@@ -111,7 +111,7 @@ from
 										inner join person pe on pe.person_id = p.patient_id                                                                                         
 										inner join encounter e on e.patient_id=p.patient_id                                                                                         
 								where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18                                                                      
-										and e.location_id=399  and e.encounter_datetime<= '2022-09-20'                                                                                  
+										and e.location_id=:location  and e.encounter_datetime<= date_add(:startDate, interval -1 day)                                                                                  
 									group by p.patient_id 
 
 								union
@@ -121,7 +121,7 @@ from
 										inner join person pe on pe.person_id = p.patient_id                                                                                         
 										inner join encounter e on e.patient_id=p.patient_id                                                                                         
 								where p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type in (6,9)                                                                
-										and e.location_id=399  and e.encounter_datetime<= '2022-09-20'                                                                                  
+										and e.location_id=:location  and e.encounter_datetime<= date_add(:startDate, interval -1 day)                                                                                  
 									group by p.patient_id 
                
 						) last_encounter group  by patient_id
@@ -138,7 +138,7 @@ from
 						from patient p                                                                                                                                   
 								inner join person pe on pe.person_id = p.patient_id                                                                                         
 								inner join encounter e on e.patient_id=p.patient_id                                                                                         
-						where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18 and e.location_id=399                                                                                   
+						where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18 and e.location_id=:location                                                                                   
 							group by p.patient_id   
 				
 					   union
@@ -149,11 +149,11 @@ from
 								inner join encounter e on p.patient_id=e.patient_id                                                                                         
 								inner join obs o on e.encounter_id=o.encounter_id                                                                                           
 						where p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52                                                       
-								and o.concept_id=23866 and o.value_datetime is not null and e.location_id=399                                                                                      
+								and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location                                                                                      
 							group by p.patient_id
 				   ) ultimo_levantamento group by patient_id
 			) ultimo_levantamento on saida.patient_id  = ultimo_levantamento.patient_id 
-			where ultimo_levantamento.data_ultimo_levantamento is null or  ultimo_levantamento.data_ultimo_levantamento <=  date_add('2022-06-21', interval -1 day) 
+			where ultimo_levantamento.data_ultimo_levantamento is null or  ultimo_levantamento.data_ultimo_levantamento <=  date_add(:startDate, interval -1 day) 
 )all_transferidos_de
 	inner join
 	(
@@ -161,7 +161,7 @@ from
 			from patient p 
 					inner join encounter e on p.patient_id=e.patient_id 
 			where p.voided=0 and e.encounter_type in (6,9,18) and e.voided=0 
-				and e.encounter_datetime>='2022-06-21' and e.encounter_datetime<='2022-09-20' and e.location_id=399 
+				and e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location 
             
 			union 
     
@@ -170,6 +170,6 @@ from
 					inner join encounter e on p.patient_id=e.patient_id 
 					inner join obs o on e.encounter_id=o.encounter_id 
 			where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and o.concept_id=23866 
-					and o.value_datetime is not null and o.value_datetime>='2022-06-21' and o.value_datetime<='2022-09-20' and e.location_id=399 
+					and o.value_datetime is not null and o.value_datetime>=:startDate and o.value_datetime<=:endDate and e.location_id=:location 
   ) consulta_levantamento on consulta_levantamento.patient_id = all_transferidos_de.patient_id
 		group by all_transferidos_de.patient_id
