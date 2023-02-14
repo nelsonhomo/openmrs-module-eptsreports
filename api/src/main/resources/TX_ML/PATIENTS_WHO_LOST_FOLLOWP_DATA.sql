@@ -1,4 +1,4 @@
-   select patient_id                                                                                                   
+   select patient_id, data_inicio, data_usar                                                                                                  
              from                                                                                                                    
              (select inicio_fila_seg_prox.*,                                                                                 
                      GREATEST(COALESCE(data_fila,data_seguimento),COALESCE(data_seguimento,data_fila))  data_usar_c,      
@@ -81,7 +81,7 @@
                                      inner join patient_program pg on p.patient_id = pg.patient_id                                                               
                                      inner join patient_state ps on pg.patient_program_id = ps.patient_program_id                                                
                                  where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2                                        
-                                     and ps.start_date<= :endDate and pg.location_id =:location group by pg.patient_id                                           
+                                     and ps.start_date<= date_add(:startDate, interval -1 day) and pg.location_id =:location group by pg.patient_id                                           
                              ) max_estado                                                                                                                        
                                  inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
                                  inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
@@ -95,12 +95,12 @@
                                      inner join obs  o on e.encounter_id=o.encounter_id                                                                          
                              where   e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0 and                                                              
                                      e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded in (1366,1709) and                        
-                                     o.obs_datetime<=:endDate and e.location_id=:location                                                                        
+                                     o.obs_datetime<= date_add(:startDate, interval -1 day)  and e.location_id=:location                                                                        
                              group by p.patient_id                                                                                                               
                              union                                                                                                                               
                              select person_id as patient_id,death_date as data_estado                                                                            
                              from person                                                                                                                         
-                             where dead=1 and voided = 0 and death_date is not null and death_date<=:endDate                                                     
+                             where dead=1 and voided = 0 and death_date is not null and death_date<=date_add(:startDate, interval -1 day)                                                      
                              union                                                                                                                               
                              select  p.patient_id,                                                                                                               
                                      max(obsObito.obs_datetime) data_estado                                                                                      
@@ -109,7 +109,7 @@
                                      inner join encounter e on p.patient_id=e.patient_id                                                                         
                                      inner join obs obsObito on e.encounter_id=obsObito.encounter_id                                                             
                              where   e.voided=0 and p.voided=0 and pe.voided = 0 and obsObito.voided=0 and                                                       
-                                     e.encounter_type in (21,36,37) and  e.encounter_datetime<=:endDate and  e.location_id=:location and                         
+                                     e.encounter_type in (21,36,37) and  e.encounter_datetime<= date_add(:startDate, interval -1 day)  and  e.location_id=:location and                         
                                      obsObito.concept_id in (2031,23944,23945) and obsObito.value_coded=1366                                                     
                              group by p.patient_id                                                                                                               
                              
@@ -130,7 +130,7 @@
 				                                     	inner join patient_program pg on p.patient_id = pg.patient_id                                                               
 				                                     	inner join patient_state ps on pg.patient_program_id = ps.patient_program_id                                                
 				                                 where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2                                        
-				                                 		and ps.start_date<= :endDate and pg.location_id =:location group by pg.patient_id                                           
+				                                 		and ps.start_date<= date_add(:startDate, interval -1 day)  and pg.location_id =:location group by pg.patient_id                                           
 			                             		) max_estado                                                                                                                        
 			                                 		inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
 			                                 		inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
@@ -145,7 +145,7 @@
 			                                     	inner join obs  o on e.encounter_id=o.encounter_id                                                                          
 			                             		where e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0                                                               
 			                                   	and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded = 1706                         
-			                                     	and o.obs_datetime<=:endDate and e.location_id=:location                                                                        
+			                                     	and o.obs_datetime<= date_add(:startDate, interval -1 day) and e.location_id=:location                                                                        
 			                             			group by p.patient_id                                                                                                               
 			                             		
 			                             	     union                                                                                                                               
@@ -157,7 +157,7 @@
 				                                         inner join person pe on pe.person_id = p.patient_id                                                                     
 				                                         inner join encounter e on p.patient_id=e.patient_id                                                                     
 				                                         inner join obs o on o.encounter_id=e.encounter_id                                                                       
-				                                     where e.voided=0 and p.voided=0 and pe.voided = 0 and e.encounter_datetime<= :endDate                                       
+				                                     where e.voided=0 and p.voided=0 and pe.voided = 0 and e.encounter_datetime<= date_add(:startDate, interval -1 day)                                       
 				                                         and e.encounter_type = 21 and  e.location_id= :location                                                                 
 				                                         group by p.patient_id                                                                                                   
 				                                 ) ultimaBusca                                                                                                                   
@@ -256,4 +256,4 @@
              ) inicio_fila_seg_prox                                                                                                                              
              group by patient_id                                                                                                                                 
              ) coorte12meses_final                                                                                                                               
-             where (data_estado is null or (data_estado is not null and  data_usar_c>data_estado)) and date_add(data_usar, interval 28 day) >=:endDate
+             where (data_estado is null or (data_estado is not null and  data_usar_c>data_estado)) and date_add(data_usar, interval 28 day) >=:startDate  and date_add(data_usar, interval 28 day) <:endDate
