@@ -202,7 +202,7 @@
 					                        	group by p.patient_id
 				                    	) ultimo_levantamento group by patient_id
 			                		) ultimo_levantamento on saidas_por_transferencia.patient_id = ultimo_levantamento.patient_id 
-			               		where ultimo_levantamento.data_ultimo_levantamento <= :endDate
+			               		where ultimo_levantamento.data_ultimo_levantamento <= date_add(:endDate, interval -3 month)
 				                                                                                                                                                                         
                          	) allSaida                                                                                                                                      
                  				group by patient_id 

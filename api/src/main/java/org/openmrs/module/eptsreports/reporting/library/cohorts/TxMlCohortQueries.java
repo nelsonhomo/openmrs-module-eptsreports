@@ -58,14 +58,9 @@ public class TxMlCohortQueries {
     cd.addSearch(
         "missedAppointmentIITLess3Month",
         EptsReportUtils.map(this.getPatientsWhoAreIITLessThan3MonthsCalculation(), mapping));
-    cd.addSearch("dead", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mapping));
-    cd.addSearch(
-        "transferedOut", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mapping));
-    cd.addSearch(
-        "numerator", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mapping));
+    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mapping));
 
-    cd.setCompositionString(
-        "(numerator AND missedAppointmentIITLess3Month) NOT (dead OR transferedOut)");
+    cd.setCompositionString("missedAppointmentIITLess3Month AND IIT");
     return cd;
   }
 
@@ -80,14 +75,9 @@ public class TxMlCohortQueries {
     cd.addSearch(
         "missedAppointmentIITGreaterOrEqual6Month",
         EptsReportUtils.map(this.getPatientsWhoAreIITGreatherOrEqual6MonthsCalculation(), mapping));
-    cd.addSearch("dead", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mapping));
-    cd.addSearch(
-        "transferedOut", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mapping));
-    cd.addSearch(
-        "numerator", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mapping));
+    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mapping));
 
-    cd.setCompositionString(
-        "(numerator AND missedAppointmentIITGreaterOrEqual6Month) NOT (dead OR transferedOut)");
+    cd.setCompositionString("missedAppointmentIITGreaterOrEqual6Month AND IIT");
     return cd;
   }
 
@@ -103,14 +93,9 @@ public class TxMlCohortQueries {
         "missedAppointmentIITBetween3And5Months",
         EptsReportUtils.map(
             this.getPatientsWhoAreIITBetween3And5MonthsCalculationCalculation(), mapping));
-    cd.addSearch("dead", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mapping));
-    cd.addSearch(
-        "transferedOut", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mapping));
-    cd.addSearch(
-        "numerator", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mapping));
+    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mapping));
 
-    cd.setCompositionString(
-        "(numerator AND missedAppointmentIITBetween3And5Months) NOT (dead OR transferedOut)");
+    cd.setCompositionString("missedAppointmentIITBetween3And5Months AND IIT");
     return cd;
   }
 
