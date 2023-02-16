@@ -195,7 +195,7 @@ public class TxMlCohortQueries {
                     .findPatiensWhoStoppedOrRefusedTreatmentByTheEndOfReportingDate),
             mappings));
 
-    definition.setCompositionString("TXML and REFUSEDTREATMENT");
+    definition.setCompositionString("(TXML and REFUSEDTREATMENT) NOT REFUSEDTREATMENT");
     return definition;
   }
 
