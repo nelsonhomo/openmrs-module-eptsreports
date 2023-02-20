@@ -502,10 +502,16 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
         new ColumnParameters("foutyTo44M", "40 - 44 male", "gender=M|age=40-44", "10");
     ColumnParameters fouty5To49M =
         new ColumnParameters("fouty5To49M", "45 - 49 male", "gender=M|age=45-49", "11");
-    ColumnParameters above50M =
-        new ColumnParameters("above50M", "50+ male", "gender=M|age=50+", "12");
+    ColumnParameters fiftyTo54M =
+        new ColumnParameters("fiftyTo54M", "50 - 54 male", "gender=M|age=50-54", "12");
+    ColumnParameters fiftyFiveTo59M =
+        new ColumnParameters("fiftyFiveTo59M", "55 - 59 male", "gender=M|age=55-59", "13");
+    ColumnParameters sixtyTo64M =
+        new ColumnParameters("sixtyTo64M", "60 - 64 male", "gender=M|age=60-64", "14");
+    ColumnParameters above65M =
+        new ColumnParameters("above65M", "65+ male", "gender=M|age=65+", "15");
     ColumnParameters unknownM =
-        new ColumnParameters("unknownM", "Unknown age male", "gender=M|age=UK", "13");
+        new ColumnParameters("unknownM", "Unknown age male", "gender=M|age=UK", "16");
 
     // Female
     ColumnParameters under1F =
@@ -530,10 +536,16 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
         new ColumnParameters("foutyTo44F", "40 - 44 female", "gender=F|age=40-44", "23");
     ColumnParameters fouty5To49F =
         new ColumnParameters("fouty5To49F", "45 - 49 female", "gender=F|age=45-49", "24");
-    ColumnParameters above50F =
-        new ColumnParameters("above50F", "50+ female", "gender=F|age=50+", "25");
+    ColumnParameters fiftyTo54F =
+        new ColumnParameters("fiftyTo54F", "50 - 54 female", "gender=F|age=50-54", "25");
+    ColumnParameters fiftyFiveTo59F =
+        new ColumnParameters("fiftyFiveTo59F", "55 - 59 female", "gender=F|age=55-59", "26");
+    ColumnParameters sixtyTo64F =
+        new ColumnParameters("sixtyTo64F", "60 - 64 female", "gender=F|age=60-64", "27");
+    ColumnParameters above65F =
+        new ColumnParameters("above65F", "65+ female", "gender=F|age=65+", "28");
     ColumnParameters unknownF =
-        new ColumnParameters("unknownF", "Unknown age female", "gender=F|age=UK", "26");
+        new ColumnParameters("unknownF", "Unknown age female", "gender=F|age=UK", "29");
 
     return Arrays.asList(
         unknownM,
@@ -548,7 +560,10 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
         thirty5To39M,
         foutyTo44M,
         fouty5To49M,
-        above50M,
+        fiftyTo54M,
+        fiftyFiveTo59M,
+        sixtyTo64M,
+        above65M,
         unknownF,
         under1F,
         oneTo4F,
@@ -561,6 +576,9 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
         thirty5To39F,
         foutyTo44F,
         fouty5To49F,
-        above50F);
+        fiftyTo54F,
+        fiftyFiveTo59F,
+        sixtyTo64F,
+        above65F);
   }
 }
