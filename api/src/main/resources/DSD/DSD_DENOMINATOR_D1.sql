@@ -179,10 +179,10 @@ select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestamp
             Select p.patient_id,max(o.obs_datetime) max_data_cd4  From patient p  
             inner join encounter e on p.patient_id=e.patient_id  
             inner join obs o on e.encounter_id=o.encounter_id  
-            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id in (1695,5497) and  e.encounter_type in (6,9,13,53) and o.obs_datetime between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location group by p.patient_id 
+            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,9,13,53) and o.obs_datetime between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location group by p.patient_id 
             )max_cd4  
             left join obs o on o.person_id=max_cd4.patient_id and max_cd4.max_data_cd4=o.obs_datetime and o.voided=0 and  
-            o.concept_id in (1695,5497) and o.value_numeric>200 and o.location_id=:location 
+            o.concept_id = 1695 and o.value_numeric>200 and o.location_id=:location 
             ) cd4Absoluto on inicio.patient_id=cd4Absoluto.patient_id  
             left join  ( 
             select distinct max_cd4.patient_id,o.value_numeric  from ( 

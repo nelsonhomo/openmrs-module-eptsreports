@@ -195,7 +195,7 @@ public interface DSDQueriesInterface {
               + "			select ultimo_fila.patient_id, "
               + "				max(data_proximo_levantamento.value_datetime) data_consulta, "
               + "				if(datediff(max(data_proximo_levantamento.value_datetime), ultimo_fila.data_ultimo_levantamento) between 83 and 97,1, "
-              + "				if(datediff(max(data_proximo_levantamento.value_datetime), ultimo_fila.data_ultimo_levantamento) between 175 and 190,2, "
+              + "				if(datediff(max(data_proximo_levantamento.value_datetime), ultimo_fila.data_ultimo_levantamento) between 173 and 187,2, "
               + "				if(datediff(max(data_proximo_levantamento.value_datetime), ultimo_fila.data_ultimo_levantamento) between 335 and 395,3, "
               + "				if(datediff(max(data_proximo_levantamento.value_datetime), ultimo_fila.data_ultimo_levantamento) between 53 and 67,4,null)))) as tipo_dispensa, "
               + "				1 as fonte, "
