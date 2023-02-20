@@ -617,6 +617,7 @@ public class TXTBCohortQueries {
     definition.addSearch(
         "tb-screening",
         EptsReportUtils.map(this.yesOrNoInvestigationResult(), this.generalParameterMapping));
+
     definition.addSearch(
         "tb-investigation",
         EptsReportUtils.map(
@@ -666,9 +667,14 @@ public class TXTBCohortQueries {
         this.genericCohortQueries.generalSql(
             "transferred-out", TXTBQueries.findPatientWhoAreTransferedOut());
 
+    CohortDefinition tbScreeningFC =
+        this.genericCohortQueries.generalSql(
+            "tbSreeningFC", TXTBQueries.findTBScreeningFcMasterCard());
+
     this.addGeneralParameters(fichaClinicaMasterCard);
     this.addGeneralParameters(fichaAdultoSeguimentoAndPediatriaSeguimento);
     this.addGeneralParameters(transferredOut);
+    this.addGeneralParameters(tbScreeningFC);
 
     definition.addSearch(
         "A-PREVIOUS-PERIOD",
@@ -687,6 +693,9 @@ public class TXTBCohortQueries {
     definition.addSearch("transferred-out", this.map(transferredOut, this.generalParameterMapping));
 
     definition.addSearch(
+        "tb-screening-fc-master-card", this.map(tbScreeningFC, this.generalParameterMapping));
+
+    definition.addSearch(
         "all-tb-symptoms",
         this.map(this.getAllTBSymptomsForDemoninatorComposition(), this.generalParameterMapping));
     definition.addSearch(
@@ -699,7 +708,7 @@ public class TXTBCohortQueries {
 
     definition.setCompositionString(
         "(art-list AND "
-            + " ( tb-screening OR tb-investigation OR started-tb-treatment OR in-tb-program OR other-diagnosis-fichaResumo OR ficha-clinica-master-card OR all-tb-symptoms OR ficha-laboratorio-results OR ficha-adulto-and-pediatria-seguimento )) "
+            + " ( tb-screening OR tb-screening-fc-master-card OR tb-investigation OR started-tb-treatment OR in-tb-program OR other-diagnosis-fichaResumo OR ficha-clinica-master-card OR all-tb-symptoms OR ficha-laboratorio-results OR ficha-adulto-and-pediatria-seguimento )) "
             + " NOT ((transferred-out NOT (started-tb-treatment OR in-tb-program)) OR started-tb-treatment-previous-period OR in-tb-program-previous-period OR other-diagnosis-FichaResumo-previousPeriod OR A-PREVIOUS-PERIOD )");
 
     return definition;
