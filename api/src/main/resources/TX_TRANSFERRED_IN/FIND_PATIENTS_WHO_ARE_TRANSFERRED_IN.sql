@@ -142,7 +142,7 @@ from
                                     inner join person pe on pe.person_id = p.patient_id                                                                                         
                                     inner join encounter e on e.patient_id=p.patient_id                                                                                         
                                 where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18                                                                      
-                                    and e.location_id=:location                                                                                   
+                                    and e.location_id=:location and e.encounter_datetime <= date_add(:startDate, interval -1 day)                                                                                    
                                     group by p.patient_id 
                         ) ultimo_fila  
                         left join                                                                                                                                          
@@ -160,7 +160,7 @@ from
 								inner join encounter e on p.patient_id=e.patient_id                                                                                         
 								inner join obs o on e.encounter_id=o.encounter_id                                                                                           
 						where p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52                                                       
-								and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location                                                                                      
+								and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime <= date_add(:startDate, interval -1 day)                                                                                      
 							group by p.patient_id
 				   ) ultimo_levantamento group by patient_id
 			) ultimo_levantamento on saida.patient_id  = ultimo_levantamento.patient_id 
