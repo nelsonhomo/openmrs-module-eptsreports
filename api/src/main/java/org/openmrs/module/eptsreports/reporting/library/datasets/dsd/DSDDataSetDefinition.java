@@ -150,6 +150,16 @@ public class DSDDataSetDefinition extends BaseDataSet {
         TEN_TO_FOURTEEN,
         ADULT);
 
+    dsd.addColumn(
+        "N1-TOTAL",
+        "Total patients Numerator 1",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "findTotalPatientsForNumerator1",
+                EptsReportUtils.map(dsdCohortQueries.getDSDTotalNumerator1(), mappings)),
+            mappings),
+        "");
+
     this.addColumns(
         "N2-E",
         "N2: Número de Pacientes Activos em TARV que encontram-se inscritos no MDS: Dispensa Trimestral (DT) - Elegíveis para MDS Estáveis",
@@ -174,6 +184,16 @@ public class DSDDataSetDefinition extends BaseDataSet {
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
         ADULT);
+
+    dsd.addColumn(
+        "N2-TOTAL",
+        "Total patients Numerator 2",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "findTotalPatientsForNumerator2",
+                EptsReportUtils.map(dsdCohortQueries.getDSDTotalNumerator2(), mappings)),
+            mappings),
+        "");
 
     this.addColumns(
         "N3-E",
@@ -200,6 +220,16 @@ public class DSDDataSetDefinition extends BaseDataSet {
         TEN_TO_FOURTEEN,
         ADULT);
 
+    dsd.addColumn(
+        "N3-TOTAL",
+        "Total patients Numerator 3",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "findTotalPatientsForNumerator3",
+                EptsReportUtils.map(dsdCohortQueries.getDSDTotalNumerator3(), mappings)),
+            mappings),
+        "");
+
     this.addColumns(
         "N4-E",
         "N4:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Annual (DA) - Elegíveis para MDS Estáveis",
@@ -224,6 +254,16 @@ public class DSDDataSetDefinition extends BaseDataSet {
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
         ADULT);
+
+    dsd.addColumn(
+        "N4-TOTAL",
+        "Total patients Numerator 4",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "findTotalPatientsForNumerator4",
+                EptsReportUtils.map(dsdCohortQueries.getDSDTotalNumerator4(), mappings)),
+            mappings),
+        "");
 
     this.addColumns(
         "N5-E",
@@ -250,6 +290,16 @@ public class DSDDataSetDefinition extends BaseDataSet {
         TEN_TO_FOURTEEN,
         ADULT);
 
+    dsd.addColumn(
+        "N5-TOTAL",
+        "Total patients Numerator 5",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "findTotalPatientsForNumerator5",
+                EptsReportUtils.map(dsdCohortQueries.getDSDTotalNumerator5(), mappings)),
+            mappings),
+        "");
+
     this.addColumns(
         "N6-E",
         "N6:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: Dispensa Comunitaria atraves do APE (DCA) - Elegíveis para MDS Estáveis",
@@ -274,6 +324,16 @@ public class DSDDataSetDefinition extends BaseDataSet {
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
         ADULT);
+
+    dsd.addColumn(
+        "N6-TOTAL",
+        "Total patients Numerator 6",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "findTotalPatientsForNumerator6",
+                EptsReportUtils.map(dsdCohortQueries.getDSDTotalNumerator6(), mappings)),
+            mappings),
+        "");
 
     this.addColumns(
         "N7-E",
@@ -300,6 +360,16 @@ public class DSDDataSetDefinition extends BaseDataSet {
         TEN_TO_FOURTEEN,
         ADULT);
 
+    dsd.addColumn(
+        "N7-TOTAL",
+        "Total patients Numerator 7",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "findTotalPatientsForNumerator7",
+                EptsReportUtils.map(dsdCohortQueries.getDSDTotalNumerator7(), mappings)),
+            mappings),
+        "");
+
     this.addColumns(
         "N8-E",
         "N8:  Número de Pacientes activos em TARV que encontram-se inscritos no MDS: GAAC (GA) - Elegíveis para MDS Estáveis",
@@ -324,6 +394,16 @@ public class DSDDataSetDefinition extends BaseDataSet {
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
         ADULT);
+
+    dsd.addColumn(
+        "N8-TOTAL",
+        "Total patients Numerator 8",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "findTotalPatientsForNumerator8",
+                EptsReportUtils.map(dsdCohortQueries.getDSDTotalNumerator8(), mappings)),
+            mappings),
+        "");
 
     this.addColumns(
         "N9",
@@ -506,6 +586,16 @@ public class DSDDataSetDefinition extends BaseDataSet {
         FIVE_TO_NINE,
         TEN_TO_FOURTEEN,
         ADULT);
+
+    dsd.addColumn(
+        "N20-TOTAL",
+        "Total patients Numerator 20",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "findTotalPatientsForNumerator20",
+                EptsReportUtils.map(dsdCohortQueries.getDSDTotalNumerator20(), mappings)),
+            mappings),
+        "");
 
     return dsd;
   }
