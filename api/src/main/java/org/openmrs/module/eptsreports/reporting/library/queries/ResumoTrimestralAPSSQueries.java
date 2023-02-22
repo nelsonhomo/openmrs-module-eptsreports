@@ -34,7 +34,9 @@ public interface ResumoTrimestralAPSSQueries {
             + "join obs on obs.encounter_id = encounter.encounter_id "
             + "where encounter.encounter_type =35 and obs.concept_id = 23886 and obs.value_coded =1065 "
             + "and patient.voided =0 and encounter.voided = 0 and obs.voided = 0 "
-            + "and encounter.encounter_datetime >= :startDate and encounter.encounter_datetime <= :endDate and encounter.location_id =:location group by patient.patient_id ";
+            + "and encounter.encounter_datetime >= :startDate and encounter.encounter_datetime <= :endDate "
+            + "and encounter.location_id =:location "
+            + "group by patient.patient_id ";
 
     public static final String findPatientsWithSeguimentoDeAdesao =
         "select seguimentoAdesao.patient_id from   																								"
