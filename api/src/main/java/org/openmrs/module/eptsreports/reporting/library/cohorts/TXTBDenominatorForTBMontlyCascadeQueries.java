@@ -98,12 +98,6 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
             "startDate=${endDate-12m},endDate=${endDate-6m-1d},location=${location}"));
 
     definition.addSearch(
-        "transferred-out",
-        EptsReportUtils.map(
-            txtbCohortQueries.getPatientsWhoAreTransferredOut(),
-            "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
-
-    definition.addSearch(
         "A-PREVIOUS-PERIOD",
         EptsReportUtils.map(
             this.txTbNumerator(),
@@ -123,7 +117,34 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
                 this.hivMetadata.getStartDrugsConcept().getConceptId(),
                 this.hivMetadata.getAdultoSeguimentoEncounterType().getId()));
 
+    CohortDefinition fichaAdultoSeguimentoAndPediatriaSeguimento =
+        this.genericCohortQueries.generalSql(
+            "adultoandpediatriaseguimento", TXTBQueries.findTBScreeningResultInvestigationBkOrRX());
+
+    CohortDefinition transferredOut =
+        this.genericCohortQueries.generalSql(
+            "transferred-out", TXTBQueries.findPatientWhoAreTransferedOut());
+
+    CohortDefinition tbScreeningFC =
+        this.genericCohortQueries.generalSql(
+            "tbSreeningFC", TXTBQueries.findTBScreeningFcMasterCard());
+
     this.addGeneralParameters(fichaClinicaMasterCard);
+    this.addGeneralParameters(fichaAdultoSeguimentoAndPediatriaSeguimento);
+    this.addGeneralParameters(transferredOut);
+    this.addGeneralParameters(tbScreeningFC);
+
+    this.addGeneralParameters(fichaClinicaMasterCard);
+
+    definition.addSearch(
+        "ficha-adulto-and-pediatria-seguimento",
+        EptsReportUtils.map(fichaAdultoSeguimentoAndPediatriaSeguimento, generalParameterMapping));
+
+    definition.addSearch(
+        "transferred-out", EptsReportUtils.map(transferredOut, generalParameterMapping));
+
+    definition.addSearch(
+        "tb-screening-fc-master-card", EptsReportUtils.map(tbScreeningFC, generalParameterMapping));
 
     definition.addSearch(
         "ficha-clinica-master-card",
@@ -139,7 +160,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
 
     definition.setCompositionString(
         "(art-list AND "
-            + " ( tb-screening OR tb-investigation OR started-tb-treatment OR in-tb-program OR other-diagnosis-fichaResumo OR ficha-clinica-master-card OR all-tb-symptoms OR ficha-laboratorio-results)) "
+            + " ( tb-screening OR tb-screening-fc-master-card OR tb-investigation OR started-tb-treatment OR in-tb-program OR other-diagnosis-fichaResumo OR ficha-clinica-master-card OR all-tb-symptoms OR ficha-laboratorio-results OR ficha-adulto-and-pediatria-seguimento )) "
             + " NOT ((transferred-out NOT (started-tb-treatment OR in-tb-program)) OR started-tb-treatment-previous-period OR in-tb-program-previous-period OR other-diagnosis-FichaResumo-previousPeriod OR A-PREVIOUS-PERIOD )");
 
     return definition;
