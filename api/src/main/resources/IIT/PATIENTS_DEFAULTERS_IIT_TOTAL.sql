@@ -1,5 +1,4 @@
- select                             coorte12meses_final.patient_id
-                                    
+ select           coorte12meses_final.patient_id                                    
                          from                              
                          (select    inicio_fila_seg_prox.*,                              
                          GREATEST(COALESCE(data_fila,data_seguimento),COALESCE(data_seguimento,data_fila))  data_usar_c,                              
@@ -561,7 +560,7 @@
                                                 (                                                                                                                                                                                                     
                                                                                                                                                                                                                                                                                                                                                        
                                                         select      maxFila.patient_id,                                                                                                                                                     
-                                                                          maxFila.last_levantamento data_clinica,                                                                                                                     
+                                                                          max(obsNext.value_datetime) data_clinica,                                                                                                                     
                                                                           if(datediff(max(obsNext.value_datetime),maxFila.last_levantamento)<53,1,
                                                                           if(datediff(max(obsNext.value_datetime),maxFila.last_levantamento) BETWEEN 53 and 82,2,
                                                                           if(datediff(max(obsNext.value_datetime),maxFila.last_levantamento) BETWEEN 83 and 173,3,
@@ -592,8 +591,8 @@
                                                                   lastTipo.data_clinica,                                                                                                                                                        
                                                                   case obsTipo.value_coded                                                                                                                                                      
                                                                                     when 1098 then 1                                                                                                                                                  
-                                                                                    when 23720 then 2                                                                                                                                                       
-                                                                                    when 23888 then 3                                                                                                                                                 
+                                                                                    when 23720 then 3                                                                                                                                                       
+                                                                                    when 23888 then 4                                                                                                                                                 
                                                                   else null end as tipoDispensa,                                                                                                                                                
                                                                   2 as fonte,                                                                                                                                                                         
                                                                   1 as ordemMDS                                                                                                                                                                       
@@ -859,5 +858,5 @@
                                 and obs_seguimento.location_id=:location  
                         )championManAPSS on championManAPSS.patient_id=coorte12meses_final.patient_id
 
-                         where (data_estado is null or (data_estado is not null and  data_usar_c>data_estado)) and  datediff(:endDate,data_usar)>=3 and datediff(:endDate,data_usar) between 10 AND 40
+                         where (data_estado is null or (data_estado is not null and  data_usar_c>data_estado)) and  datediff(:endDate,data_usar)>=3 and datediff(:endDate,data_usar) between :minDelayDays AND :maxDelayDays
                          group by coorte12meses_final.patient_id                                                                          
