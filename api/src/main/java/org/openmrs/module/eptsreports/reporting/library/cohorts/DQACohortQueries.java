@@ -37,7 +37,8 @@ public class DQACohortQueries {
     cd.addSearch(
         "B1",
         map(
-            txNewCohortQueries.getTxNewCompositionCohort("Number of patientes who initiated TARV"),
+            txNewCohortQueries.getTxNewCompositionCohortMISAU(
+                "Number of patientes who initiated TARV"),
             mappingsB1M3));
     cd.setCompositionString("B1");
     return cd;
@@ -57,7 +58,8 @@ public class DQACohortQueries {
     cd.addSearch(
         "B1",
         map(
-            txNewCohortQueries.getTxNewCompositionCohort("Number of patientes who initiated TARV"),
+            txNewCohortQueries.getTxNewCompositionCohortMISAU(
+                "Number of patientes who initiated TARV"),
             mappingsB1M2));
     cd.setCompositionString("B1");
     return cd;
@@ -76,7 +78,8 @@ public class DQACohortQueries {
     cd.addSearch(
         "B1",
         map(
-            txNewCohortQueries.getTxNewCompositionCohort("Number of patientes who initiated TARV"),
+            txNewCohortQueries.getTxNewCompositionCohortMISAU(
+                "Number of patientes who initiated TARV"),
             mappingsB1M1));
     cd.setCompositionString("B1");
     return cd;
