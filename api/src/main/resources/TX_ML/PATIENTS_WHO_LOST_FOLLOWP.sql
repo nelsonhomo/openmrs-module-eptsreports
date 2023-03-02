@@ -295,7 +295,7 @@ from (
 																									inner join person pe on pe.person_id = p.patient_id   
 																									inner join encounter e on e.patient_id=p.patient_id   
 																							where p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18  
-																									and e.location_id=:location and e.encounter_datetime <= date_add(:enddate, interval -3 month)          
+																									and e.location_id=:location and e.encounter_datetime <= date_add(:endDate, interval -3 month)          
 																									group by p.patient_id 
 																				) ultimo_fila  
 																				left join            
@@ -311,11 +311,11 @@ from (
 																						inner join encounter e on p.patient_id=e.patient_id   
 																						inner join obs o on e.encounter_id=o.encounter_id 
 																				where p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52 
-																						and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime <= date_add(:enddate, interval -3 month) 
+																						and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime <= date_add(:endDate, interval -3 month) 
 																						group by p.patient_id
 																	) ultimo_levantamento group by patient_id
 															) ultimo_levantamento on saidas_por_transferencia.patient_id = ultimo_levantamento.patient_id 
-															where ultimo_levantamento.data_ultimo_levantamento <= date_add(:enddate, interval -3 month)
+															where ultimo_levantamento.data_ultimo_levantamento <= date_add(:endDate, interval -3 month)
 																		  
 													) allsaida        
 															group by patient_id 
@@ -326,7 +326,7 @@ from (
 														   inner join person pe on pe.person_id = p.patient_id   
 														   inner join encounter e on e.patient_id=p.patient_id   
 													where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18  
-															and e.location_id=:location and e.encounter_datetime<=:enddate          
+															and e.location_id=:location and e.encounter_datetime<=:endDate          
 															group by p.patient_id 
 											) max_fila on inicio.patient_id=max_fila.patient_id       
 											left join            
@@ -335,7 +335,7 @@ from (
 															inner join person pe on pe.person_id = p.patient_id   
 															inner join encounter e on e.patient_id=p.patient_id   
 													where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type in (6,9)          
-															and e.location_id=:location and e.encounter_datetime<=:enddate          
+															and e.location_id=:location and e.encounter_datetime<=:endDate          
 															group by p.patient_id 
 											) max_consulta on inicio.patient_id=max_consulta.patient_id   
 											left join            
@@ -346,7 +346,7 @@ from (
 															inner join obs o on e.encounter_id=o.encounter_id 
 													where   p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52 
 															and o.concept_id=23866 and o.value_datetime is not null              
-															and  o.value_datetime<=:enddate and e.location_id=:location
+															and  o.value_datetime<=:endDate and e.location_id=:location
 															group by p.patient_id 
 											) max_recepcao on inicio.patient_id=max_recepcao.patient_id  
 												group by inicio.patient_id             
@@ -368,5 +368,5 @@ from (
 					group by patient_id   
 ) coorte12meses_final 
 where ((data_estado is null or (data_estado is not null and  data_usar_c > data_estado)) and date_add(data_usar, interval 28 day) >=:startDate  and date_add(data_usar, interval 28 day) < :endDate)
-  or (data_entrada_obito is null and data_entrada_transferencia >= data_usar_c and data_entrada_transferencia <= :endDate and date_add(data_usar, interval 28 day) >=:startDate) 
-  or (data_entrada_obito >= data_usar_c and data_entrada_obito between :startDate and :endDate and date_add(data_usar, interval 28 day) >=:startDate)
+  or (data_estado is null and data_entrada_obito is null and data_entrada_transferencia >= data_usar_c and data_entrada_transferencia <= :endDate and date_add(data_usar, interval 28 day) >=:startDate) 
+  or (data_entrada_obito >= data_usar_c and data_entrada_obito between :startDate and :endDate)
