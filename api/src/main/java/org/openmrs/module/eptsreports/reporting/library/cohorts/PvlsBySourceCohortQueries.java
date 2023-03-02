@@ -55,10 +55,15 @@ public class PvlsBySourceCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    definition.setQuery(
-        TxPvlsBySourceQueriesInterface.QUERY
-            .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsTarget(
-                sourceType));
+    if (sourceType.equals(SourceType.LAB_FSR)) {
+      definition.setQuery(
+          TxPvlsBySourceQueriesInterface.QUERY
+              .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredOnLabOrFSRInTheLast12MonthsTarget);
+    } else {
+      definition.setQuery(
+          TxPvlsBySourceQueriesInterface.QUERY
+              .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredOnMasterCardInTheLast12MonthsTarget);
+    }
 
     return definition;
   }
@@ -141,10 +146,15 @@ public class PvlsBySourceCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    definition.setQuery(
-        TxPvlsBySourceQueriesInterface.QUERY
-            .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsTarget(
-                sourceType));
+    if (sourceType.equals(SourceType.LAB_FSR)) {
+      definition.setQuery(
+          TxPvlsBySourceQueriesInterface.QUERY
+              .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredOnLabOrFSRInTheLast12MonthsTarget);
+    } else {
+      definition.setQuery(
+          TxPvlsBySourceQueriesInterface.QUERY
+              .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredOnMasterCardInTheLast12MonthsTarget);
+    }
 
     return definition;
   }
