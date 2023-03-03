@@ -828,7 +828,7 @@ public class MQCohortQueries {
     definition.addParameter(new Parameter("location", "Location", Location.class));
     String query =
         MQQueriesInterface.QUERY
-            .findPatientsOnThe1stLineOfRTWithCVOver1000CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11Numerator;
+            .findPatientsOnThe1stLineOfRTWithCVOver50CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11Numerator;
 
     definition.setQuery(query);
 
@@ -895,7 +895,7 @@ public class MQCohortQueries {
 
     String query =
         MQCategory11P2QueriesInterface.QUERY
-            .findPatientsWhoHasCVBiggerThan1000AndMarkedAsPregnantInTheSameClinicalConsultation;
+            .findPatientsWhoHasCVBiggerThan50AndMarkedAsPregnantInTheSameClinicalConsultation;
 
     definition.setQuery(query);
 
@@ -919,7 +919,7 @@ public class MQCohortQueries {
 
     String query =
         MQCategory11P2QueriesInterface.QUERY
-            .findPatientsWhoHasCVBiggerThan1000AndMarkedAsBreastFeedingInTheSameClinicalConsultation;
+            .findPatientsWhoHasCVBiggerThan50AndMarkedAsBreastFeedingInTheSameClinicalConsultation;
 
     definition.setQuery(query);
 

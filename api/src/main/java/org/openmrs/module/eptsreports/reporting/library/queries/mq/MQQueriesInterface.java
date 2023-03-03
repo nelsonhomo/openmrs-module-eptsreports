@@ -44,13 +44,10 @@ public interface MQQueriesInterface {
             + "e.location_id=:location and e.encounter_type=6 "
             + "group by p.patient_id "
             + "union "
-            + "Select p.patient_id,max(o.value_datetime) encounter_datetime from patient p "
-            + "inner join encounter e on p.patient_id=e.patient_id "
-            + "inner join obs o on e.encounter_id=o.encounter_id "
-            + "inner join obs oLevantou on e.encounter_id=oLevantou.encounter_id "
-            + "where  p.voided=0 and e.voided=0 and o.voided=0 and oLevantou.voided=0 and e.encounter_type=52 and o.concept_id=23866 and "
-            + "o.value_datetime is not null and o.value_datetime<=:endRevisionDate and e.location_id=:location and "
-            + "oLevantou.concept_id=23865 and oLevantou.value_coded=1065 "
+            + "select p.patient_id,max(e.encounter_datetime) encounter_datetime from patient p "
+            + "inner join encounter e on e.patient_id=p.patient_id "
+            + "where p.voided=0 and e.voided=0 and e.encounter_datetime<=:endRevisionDate and "
+            + "e.location_id=:location and e.encounter_type=18 "
             + "group by p.patient_id "
             + ") consultaLev "
             + "group by patient_id "
@@ -495,13 +492,13 @@ public interface MQQueriesInterface {
             + ") firstLine ";
 
     public static final String
-        findPatientsOnThe1stLineOfRTWithCVOver1000CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11Numerator =
+        findPatientsOnThe1stLineOfRTWithCVOver50CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11Numerator =
             "select carga_viral.patient_id from ( "
                 + "Select p.patient_id, min(o.obs_datetime) data_carga from patient p "
                 + "inner join encounter e on p.patient_id = e.patient_id "
                 + "inner join obs o on e.encounter_id=o.encounter_id "
                 + "where p.voided = 0 and e.voided = 0 and o.voided = 0 and e.encounter_type = 6 and  o.concept_id = 856 and "
-                + "o.obs_datetime between :startInclusionDate and :endInclusionDate and e.location_id = :location and o.value_numeric >= 1000 "
+                + "o.obs_datetime between :startInclusionDate and :endInclusionDate and e.location_id = :location and o.value_numeric > 50 "
                 + "group by p.patient_id "
                 + ") carga_viral "
                 + "inner join encounter primeira_consulta on carga_viral.patient_id = primeira_consulta.patient_id and primeira_consulta.voided = 0 and primeira_consulta.encounter_type = 35 and "

@@ -22,7 +22,7 @@ public interface MQCategory11P2QueriesInterface {
             + " AND pe.voided = 0 and pe.gender = 'F' ";
 
     public static final String
-        findPatientsWhoHasCVBiggerThan1000AndMarkedAsPregnantInTheSameClinicalConsultation =
+        findPatientsWhoHasCVBiggerThan50AndMarkedAsPregnantInTheSameClinicalConsultation =
             " select primeiraCVAlta.patient_id "
                 + " from "
                 + " ( "
@@ -31,7 +31,7 @@ public interface MQCategory11P2QueriesInterface {
                 + " inner join encounter e on p.patient_id = e.patient_id "
                 + " inner join obs o on e.encounter_id=o.encounter_id "
                 + " where 	p.voided = 0 and e.voided = 0 and o.voided = 0 and e.encounter_type = 6 and  o.concept_id = 856 and "
-                + " DATE(e.encounter_datetime) between :startInclusionDate and :endInclusionDate and e.location_id = :location and o.value_numeric >= 1000 "
+                + " DATE(e.encounter_datetime) between :startInclusionDate and :endInclusionDate and e.location_id = :location and o.value_numeric > 50 "
                 + " group by p.patient_id "
                 + " ) primeiraCVAlta "
                 + " inner join encounter consultaGravida on consultaGravida.patient_id = primeiraCVAlta.patient_id "
@@ -41,7 +41,7 @@ public interface MQCategory11P2QueriesInterface {
                 + " obsGravida.voided = 0 and obsGravida.concept_id = 1982 and obsGravida.value_coded = 1065 and person.gender = 'F' ";
 
     public static final String
-        findPatientsWhoHasCVBiggerThan1000AndMarkedAsBreastFeedingInTheSameClinicalConsultation =
+        findPatientsWhoHasCVBiggerThan50AndMarkedAsBreastFeedingInTheSameClinicalConsultation =
             " select primeiraCVAlta.patient_id "
                 + " from "
                 + " ( "
@@ -50,7 +50,7 @@ public interface MQCategory11P2QueriesInterface {
                 + " inner join encounter e on p.patient_id = e.patient_id "
                 + " inner join obs o on e.encounter_id=o.encounter_id "
                 + " where 	p.voided = 0 and e.voided = 0 and o.voided = 0 and e.encounter_type = 6 and  o.concept_id = 856 and "
-                + " DATE(e.encounter_datetime) between :startInclusionDate and :endInclusionDate  and e.location_id = :location and o.value_numeric >= 1000 "
+                + " DATE(e.encounter_datetime) between :startInclusionDate and :endInclusionDate  and e.location_id = :location and o.value_numeric > 50 "
                 + " group by p.patient_id  "
                 + " ) primeiraCVAlta "
                 + " inner join encounter consultaLactante on consultaLactante.patient_id = primeiraCVAlta.patient_id "
