@@ -32,7 +32,7 @@ public class SetupQualityImprovementReport extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "Melhoria de Qualidade - 2022";
+    return "Melhoria de Qualidade - 2023";
   }
 
   @Override
