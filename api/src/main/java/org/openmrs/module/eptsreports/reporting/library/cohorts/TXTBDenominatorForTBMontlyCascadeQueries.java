@@ -83,25 +83,25 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
         "started-tb-treatment-previous-period",
         EptsReportUtils.map(
             txtbCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(),
-            "startDate=${endDate-12m},endDate=${endDate-6m-1d},location=${location}"));
+            "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
 
     definition.addSearch(
         "in-tb-program-previous-period",
         EptsReportUtils.map(
             txtbCohortQueries.getInTBProgram(),
-            "startDate=${endDate-12m},endDate=${endDate-6m-1d},location=${location}"));
+            "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
 
     definition.addSearch(
         "other-diagnosis-FichaResumo-previousPeriod",
         EptsReportUtils.map(
             txtbCohortQueries.getPulmonaryTBWithinReportingDate(),
-            "startDate=${endDate-12m},endDate=${endDate-6m-1d},location=${location}"));
+            "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
 
     definition.addSearch(
         "A-PREVIOUS-PERIOD",
         EptsReportUtils.map(
             this.txTbNumerator(),
-            "startDate=${endDate-12m},endDate=${endDate-6m-1d},location=${location}"));
+            "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
 
     definition.addSearch(
         "art-started-by-end-previous-reporting-period",
