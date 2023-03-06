@@ -1,4 +1,7 @@
- select           coorte12meses_final.patient_id                                    
+ select                             coorte12meses_final.patient_id                              
+                                    
+
+                                    
                          from                              
                          (select    inicio_fila_seg_prox.*,                              
                          GREATEST(COALESCE(data_fila,data_seguimento),COALESCE(data_seguimento,data_fila))  data_usar_c,                              
@@ -528,7 +531,7 @@
                                inner join encounter e on p.patient_id=e.patient_id                                                                                                                                                                                                  
                                inner join obs o on o.encounter_id=e.encounter_id                                                                                                                                                                                                          
                            where   p.voided=0 and e.voided=0 and o.voided=0 and                                                                                                                                                                                                           
-                               e.encounter_datetime<=curdate() and e.encounter_type=35 and e.location_id=:location                                                                                                                                                
+                               e.encounter_datetime<=curdate() and e.encounter_type=35 and e.location_id=:location and o.concept_id=6177                                                                                                                                                
                            group by p.patient_id                                                                                                                                                                                                                                                            
                          )maxConsent                                                                                                                                                                                                                                                                              
                          inner join encounter e on e.patient_id=maxConsent.patient_id                                                                                                                                                                                                     
