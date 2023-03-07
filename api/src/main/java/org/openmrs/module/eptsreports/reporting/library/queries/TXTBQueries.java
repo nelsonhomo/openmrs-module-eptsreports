@@ -5,8 +5,12 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.EncounterType;
+import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 
 public class TXTBQueries {
+
+  private static final String FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT =
+      "TRANSFERRED_OUT/FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT.sql";
 
   /**
    * Copied straight from INICIO DE TRATAMENTO ARV - NUM PERIODO: INCLUI TRANSFERIDOS DE COM DATA DE
@@ -158,86 +162,20 @@ public class TXTBQueries {
     return query;
   }
 
-  public static String findPatientWhoAreTransferedOut() {
+  public static String findTBScreeningFcMasterCard() {
     String query =
-        "select transferidopara.patient_id from  (  "
-            + "select patient_id,max(data_transferidopara) data_transferidopara from  (  "
-            + "select maxEstado.patient_id,maxEstado.data_transferidopara from  (  "
-            + "select pg.patient_id,max(ps.start_date) data_transferidopara  from patient p  "
-            + "inner join patient_program pg on p.patient_id=pg.patient_id  "
-            + "inner join patient_state ps on pg.patient_program_id=ps.patient_program_id  "
-            + "where pg.voided=0 and ps.voided=0 and p.voided=0 and  "
-            + "pg.program_id=2 and ps.start_date<=:endDate and pg.location_id=:location group by p.patient_id  "
-            + ") maxEstado  "
-            + "inner join patient_program pg2 on pg2.patient_id=maxEstado.patient_id  "
-            + "inner join patient_state ps2 on pg2.patient_program_id=ps2.patient_program_id  "
-            + "where pg2.voided=0 and ps2.voided=0 and pg2.program_id=2 and  "
-            + "ps2.start_date=maxEstado.data_transferidopara and pg2.location_id=:location and ps2.state=7  "
-            + "union "
-            + "select p.patient_id,max(e.encounter_datetime) data_transferidopara from  patient p  "
-            + "inner join encounter e on p.patient_id=e.patient_id  "
-            + "inner join obs o on o.encounter_id=e.encounter_id where  e.voided=0 and p.voided=0 and e.encounter_datetime<=:endDate  "
-            + "and e.encounter_type=21 and o.voided=0 and o.concept_id=2016 and o.value_coded in(1706,23863)  and  e.location_id=:location  "
-            + "group by p.patient_id "
-            + "union "
-            + "select p.patient_id,max(o.obs_datetime) data_transferidopara from patient p  "
-            + "inner join encounter e on p.patient_id=e.patient_id  "
-            + "inner join obs o on o.encounter_id=e.encounter_id  "
-            + "where e.voided=0 and p.voided=0 and o.obs_datetime<=:endDate and o.voided=0 and o.concept_id=6272 and o.value_coded=1706 and e.encounter_type=53  "
-            + "and  e.location_id=:location  "
-            + "group by p.patient_id  "
-            + "union  "
-            + "select p.patient_id,max(e.encounter_datetime) data_transferidopara from  patient p  "
-            + "inner join encounter e on p.patient_id=e.patient_id  "
-            + "inner join obs o on o.encounter_id=e.encounter_id where  e.voided=0 and p.voided=0 and e.encounter_datetime<=:endDate and  "
-            + "o.voided=0 and o.concept_id=6273 and o.value_coded=1706 and e.encounter_type=6 and  e.location_id=:location  "
-            + "group by p.patient_id  "
-            + "union "
-            + "select final.patient_id, final.data_proximo_levantamento as data_transferidopara from ( "
-            + "select * from ( "
-            + "select * from ( "
-            + "select fila.patient_id,fila.data_levantamento, date_add(max(obs_fila.value_datetime), INTERVAL 1 DAY) data_proximo_levantamento from  "
-            + "( "
-            + "select p.patient_id,max(e.encounter_datetime) as data_levantamento from patient p   "
-            + "inner join encounter e on p.patient_id=e.patient_id  "
-            + "where encounter_type=18 and e.encounter_datetime <=:endDate  and e.location_id=:location and e.voided=0 and p.voided=0  "
-            + "group by p.patient_id   "
-            + ")fila   "
-            + "inner join                                                                                                                                           "
-            + "obs obs_fila on obs_fila.person_id=fila.patient_id                                                                                       "
-            + "and obs_fila.voided=0  and obs_fila.obs_datetime=fila.data_levantamento                                                                                                 "
-            + "and obs_fila.concept_id=5096   and obs_fila.location_id=:location "
-            + "group by obs_fila.person_id "
-            + ") fila "
-            + "union "
-            + "select p.patient_id,max(o.value_datetime) data_levantamento, date_add(max(o.value_datetime), INTERVAL 31 DAY) data_proximo_levantamento "
-            + "from patient p  "
-            + "inner join encounter e on p.patient_id = e.patient_id   "
-            + "inner join obs o on o.encounter_id = e.encounter_id "
-            + "where  e.voided = 0  and p.voided = 0  "
-            + "and o.value_datetime <= :endDate  "
-            + "and o.voided = 0  "
-            + "and o.concept_id = 23866    "
-            + "and e.encounter_type=52  "
-            + "and e.location_id=:location   "
-            + "group by p.patient_id  "
-            + ") final where final.data_proximo_levantamento between :startDate and :endDate "
-            + ")final "
-            + ") transferido  "
-            + "group by patient_id  "
-            + ") transferidopara  "
-            + "inner join  (  "
-            + "select patient_id,max(encounter_datetime) encounter_datetime from  (  "
-            + "select p.patient_id,max(e.encounter_datetime) encounter_datetime from  patient p  "
-            + "inner join encounter e on e.patient_id=p.patient_id where  p.voided=0 and e.voided=0 and e.encounter_datetime<=:endDate and e.location_id=:location and e.encounter_type in (18,6,9)  "
-            + "group by p.patient_id  "
-            + ") consultaLev  "
-            + "group by patient_id  "
-            + ") consultaOuARV on transferidopara.patient_id=consultaOuARV.patient_id  "
-            + "where consultaOuARV.encounter_datetime<=transferidopara.data_transferidopara  "
-            + "and transferidopara.data_transferidopara between :startDate AND :endDate ";
-
+        "Select  p.patient_id  from  patient p  "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on o.encounter_id=e.encounter_id "
+            + "where   e.voided=0 and o.voided=0 and p.voided=0 "
+            + "and e.encounter_type in (6) and o.concept_id=23758 and o.value_coded in(1065,1066)  and e.location_id=:location  "
+            + "AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate ";
     return query;
+  }
+
+  public static String findPatientWhoAreTransferedOut() {
+
+    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT);
   }
 
   public static String dateObsForEncounterAndQuestionAndAnswers(
