@@ -1,7 +1,8 @@
 select patient_id, data_inicio, data_usar         
 from (
 			select inicio_fila_seg_prox.*,         
-					greatest(coalesce(data_fila,data_seguimento),coalesce(data_seguimento,data_fila))  data_usar_c,      
+					greatest(coalesce(data_fila,data_seguimento),coalesce(data_seguimento,data_fila))  data_usar_c,
+					greatest(coalesce(data_proximo_lev,data_recepcao_levantou30),coalesce(data_recepcao_levantou30,data_proximo_seguimento,data_proximo_lev)) maximo_proximo_fila_recepcao,    
 					greatest(coalesce(data_proximo_lev,data_proximo_seguimento,data_recepcao_levantou30),coalesce(data_proximo_seguimento,data_proximo_lev,data_recepcao_levantou30),coalesce(data_recepcao_levantou30,data_proximo_seguimento,data_proximo_lev)) data_usar 
              from (
 						select inicio_fila_seg.*,
@@ -368,5 +369,5 @@ from (
 					group by patient_id   
 ) coorte12meses_final 
 where ((data_estado is null or (data_estado is not null and  data_usar_c > data_estado)) and date_add(data_usar, interval 28 day) >= date_add(:startDate, interval -1 day) and date_add(data_usar, interval 28 day) < :endDate)
-  or (data_estado is null and data_entrada_obito is null and data_entrada_transferencia >= data_usar_c and data_entrada_transferencia <= :endDate and date_add(data_usar, interval 28 day) >=:startDate) 
+  or (data_estado is null and data_entrada_obito is null and data_entrada_transferencia >= data_usar_c and data_entrada_transferencia <= :endDate and date_add(maximo_proximo_fila_recepcao, interval 1 day) >=:startDate) 
   or (data_entrada_obito >= data_usar_c and data_entrada_obito between :startDate and :endDate)

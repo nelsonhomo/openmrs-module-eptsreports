@@ -24,6 +24,9 @@ public class TxMlCohortQueries {
   private static final String FIND_PATIENTS_WHO_LOST_FOLLOWP =
       "TX_ML/PATIENTS_WHO_LOST_FOLLOWP.sql";
 
+  private static final String FIND_PATIENTS_WHO_WHERE_TRANSFERRED_OUT =
+      "TX_ML/PATIENTS_WHO_WHERE_TRANSFERRED_OUT.sql";
+
   @Autowired private GenericCohortQueries genericCohorts;
 
   private String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
@@ -165,11 +168,10 @@ public class TxMlCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "Finding patients who are transferred out",
-                TXMLQueriesInterface.QUERY
-                    .findPatientsWhoWhereTransferredOutByTheEndOfReportingPeriod),
+                EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_WHERE_TRANSFERRED_OUT)),
             mappings));
 
-    definition.setCompositionString("TXML and TRANSFERREDOUT");
+    definition.setCompositionString("TRANSFERREDOUT AND TXML");
 
     return definition;
   }
