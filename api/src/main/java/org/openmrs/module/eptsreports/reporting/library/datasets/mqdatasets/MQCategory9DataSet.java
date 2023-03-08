@@ -48,7 +48,7 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
                     .findPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9Section9_2(),
                 "CAT9ADUL02TNUMERATOR",
                 mappings),
-            mappings),api/src/main/java/org/openmrs/module/eptsreports/reporting/library/datasets/mqdatasets/MQDataSet.java
+            mappings),
         "ageOnTheFirstConsultationDuringInclusionPeriod=15+");
 
     dataSetDefinition.addColumn(

@@ -492,6 +492,23 @@ public interface MQQueriesInterface {
             + ") firstLine ";
 
     public static final String
+        findPatientsOnThe1stLineOfRTWithCVOver1000CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11Numerator =
+            "select carga_viral.patient_id from ( "
+                + "Select p.patient_id, min(o.obs_datetime) data_carga from patient p "
+                + "inner join encounter e on p.patient_id = e.patient_id "
+                + "inner join obs o on e.encounter_id=o.encounter_id "
+                + "where p.voided = 0 and e.voided = 0 and o.voided = 0 and e.encounter_type = 6 and  o.concept_id = 856 and "
+                + "o.obs_datetime between :startInclusionDate and :endInclusionDate and e.location_id = :location and o.value_numeric >= 1000 "
+                + "group by p.patient_id "
+                + ") carga_viral "
+                + "inner join encounter primeira_consulta on carga_viral.patient_id = primeira_consulta.patient_id and primeira_consulta.voided = 0 and primeira_consulta.encounter_type = 35 and "
+                + "primeira_consulta.encounter_datetime=carga_viral.data_carga "
+                + "inner join encounter segunda_consulta on carga_viral.patient_id = segunda_consulta.patient_id and segunda_consulta.voided = 0 and segunda_consulta.encounter_type = 35 "
+                + "and (TIMESTAMPDIFF(DAY, carga_viral.data_carga, segunda_consulta.encounter_datetime)) between 20 and 33 "
+                + "inner join encounter terceira_consulta on carga_viral.patient_id = terceira_consulta.patient_id and terceira_consulta.voided = 0 and terceira_consulta.encounter_type = 35 "
+                + "and (TIMESTAMPDIFF(DAY, segunda_consulta.encounter_datetime, terceira_consulta.encounter_datetime)) between 20 and 33 ";
+
+    public static final String
         findPatientsOnThe1stLineOfRTWithCVOver50CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11Numerator =
             "select carga_viral.patient_id from ( "
                 + "Select p.patient_id, min(o.obs_datetime) data_carga from patient p "
