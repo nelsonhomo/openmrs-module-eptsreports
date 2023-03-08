@@ -63,29 +63,29 @@ public class MQCategory11P2CohortQueries {
 
   @DocumentedDefinition(
       value =
-          "findPatientsOnThe1stLineOfRTWithCVOver1000CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11NumeratorAdultH")
+          "findPatientsOnThe1stLineOfRTWithCVOver50CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11NumeratorAdultH")
   public CohortDefinition
-      findPatientsOnThe1stLineOfRTWithCVOver1000CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11NumeratorAdultH() {
+      findPatientsOnThe1stLineOfRTWithCVOver50CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11NumeratorAdultH() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "findPatientsOnThe1stLineOfRTWithCVOver1000CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11NumeratorAdultH");
+        "findPatientsOnThe1stLineOfRTWithCVOver50CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11NumeratorAdultH");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
     String query =
         MQQueriesInterface.QUERY
-            .findPatientsOnThe1stLineOfRTWithCVOver1000CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11Numerator;
+            .findPatientsOnThe1stLineOfRTWithCVOver50CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11Numerator;
     definition.setQuery(query);
     return definition;
   }
 
   @DocumentedDefinition(
-      value = "findPatientsWhoHasCVBiggerThan1000AndMarkedAsPregnantInTheSameClinicalConsultation")
+      value = "findPatientsWhoHasCVBiggerThan50AndMarkedAsPregnantInTheSameClinicalConsultation")
   public CohortDefinition
-      findPatientsWhoHasCVBiggerThan1000AndMarkedAsPregnantInTheSameClinicalConsultation() {
+      findPatientsWhoHasCVBiggerThan50AndMarkedAsPregnantInTheSameClinicalConsultation() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
@@ -98,7 +98,7 @@ public class MQCategory11P2CohortQueries {
 
     String query =
         MQCategory11P2QueriesInterface.QUERY
-            .findPatientsWhoHasCVBiggerThan1000AndMarkedAsPregnantInTheSameClinicalConsultation;
+            .findPatientsWhoHasCVBiggerThan50AndMarkedAsPregnantInTheSameClinicalConsultation;
 
     definition.setQuery(query);
 
@@ -107,9 +107,9 @@ public class MQCategory11P2CohortQueries {
 
   @DocumentedDefinition(
       value =
-          "findPatientsWhoHasCVBiggerThan1000AndMarkedAsBreastFeedingInTheSameClinicalConsultation")
+          "findPatientsWhoHasCVBiggerThan50AndMarkedAsBreastFeedingInTheSameClinicalConsultation")
   public CohortDefinition
-      findPatientsWhoHasCVBiggerThan1000AndMarkedAsBreastFeedingInTheSameClinicalConsultation() {
+      findPatientsWhoHasCVBiggerThan50AndMarkedAsBreastFeedingInTheSameClinicalConsultation() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
@@ -122,7 +122,7 @@ public class MQCategory11P2CohortQueries {
 
     String query =
         MQCategory11P2QueriesInterface.QUERY
-            .findPatientsWhoHasCVBiggerThan1000AndMarkedAsBreastFeedingInTheSameClinicalConsultation;
+            .findPatientsWhoHasCVBiggerThan50AndMarkedAsBreastFeedingInTheSameClinicalConsultation;
 
     definition.setQuery(query);
 
@@ -206,15 +206,14 @@ public class MQCategory11P2CohortQueries {
     definition.addSearch(
         "PREGNANT",
         EptsReportUtils.map(
-            this
-                .findPatientsWhoHasCVBiggerThan1000AndMarkedAsPregnantInTheSameClinicalConsultation(),
+            this.findPatientsWhoHasCVBiggerThan50AndMarkedAsPregnantInTheSameClinicalConsultation(),
             mappings));
 
     definition.addSearch(
         "BREASTFEEDING",
         EptsReportUtils.map(
             this
-                .findPatientsWhoHasCVBiggerThan1000AndMarkedAsBreastFeedingInTheSameClinicalConsultation(),
+                .findPatientsWhoHasCVBiggerThan50AndMarkedAsBreastFeedingInTheSameClinicalConsultation(),
             mappings));
 
     definition.addSearch(
@@ -295,7 +294,7 @@ public class MQCategory11P2CohortQueries {
         "H",
         EptsReportUtils.map(
             this
-                .findPatientsOnThe1stLineOfRTWithCVOver1000CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11NumeratorAdultH(),
+                .findPatientsOnThe1stLineOfRTWithCVOver50CopiesWhoHad3ConsecutiveMonthlyAPSSConsultationsCategory11NumeratorAdultH(),
             mappings));
 
     definition.setCompositionString("(DENOMINADOR AND H)");
