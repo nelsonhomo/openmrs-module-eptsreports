@@ -14,7 +14,6 @@
 
 package org.openmrs.module.eptsreports.reporting.library.cohorts;
 
-
 import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.metadata.HivMetadata;
