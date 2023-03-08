@@ -258,7 +258,7 @@ public interface DSDQueriesInterface {
               + "					when 23720 then 1 "
               + "					when 23888 then 2 "
               + "				  else null end as tipo_dispensa, "
-              + "				 3 as fonte, "
+              + "				 2 as fonte, "
               + "				 1 as ordem_mdc "
               + "              	from "
               + "               ( "
