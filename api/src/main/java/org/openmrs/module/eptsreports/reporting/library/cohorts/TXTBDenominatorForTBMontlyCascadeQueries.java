@@ -83,31 +83,32 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
         "started-tb-treatment-previous-period",
         EptsReportUtils.map(
             txtbCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(),
-            "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
+            "startDate=${endDate-12m+1d},endDate=${endDate-6m},location=${location}"));
 
     definition.addSearch(
         "in-tb-program-previous-period",
         EptsReportUtils.map(
             txtbCohortQueries.getInTBProgram(),
-            "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
+            "startDate=${endDate-12m+1d},endDate=${endDate-6m},location=${location}"));
 
     definition.addSearch(
         "other-diagnosis-FichaResumo-previousPeriod",
         EptsReportUtils.map(
             txtbCohortQueries.getPulmonaryTBWithinReportingDate(),
-            "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
+            "startDate=${endDate-12m+1d},endDate=${endDate-6m},location=${location}"));
 
     definition.addSearch(
         "A-PREVIOUS-PERIOD",
         EptsReportUtils.map(
-            this.txTbNumerator(),
-            "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
+            this.genericCohortQueries.generalSql(
+                "transferred-out", TXTBQueries.findPatientWhoStartTB()),
+            "endDate=${endDate},location=${location}"));
 
     definition.addSearch(
         "art-started-by-end-previous-reporting-period",
         EptsReportUtils.map(
             this.genericCohortQueries.getStartedArtBeforeDate(false),
-            "onOrBefore=${endDate-6m-1d},location=${location}"));
+            "onOrBefore=${endDate-6m},location=${location}"));
 
     CohortDefinition fichaClinicaMasterCard =
         this.genericCohortQueries.generalSql(
@@ -180,6 +181,24 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     this.addGeneralParameters(definition);
     definition.setCompositionString("denominator AND positive-screening");
     return definition;
+  }
+
+  @DocumentedDefinition(value = "txTbNumerator")
+  public CohortDefinition getNumeratorForPreviousPeriod() {
+    final String generalParameterMappingA =
+        "startDate=${endDate},endDate=${endDate},location=${location}";
+
+    final CompositionCohortDefinition cd = new CompositionCohortDefinition();
+    cd.setName("TxTB - Numerator for Previous Period");
+
+    final CohortDefinition A = this.txTbNumeratorA();
+
+    cd.addSearch("A", EptsReportUtils.map(A, generalParameterMappingA));
+
+    cd.setCompositionString("A");
+
+    this.addGeneralParameters(cd);
+    return cd;
   }
 
   @DocumentedDefinition(value = "TxTBDenominatorNegativeScreening")
@@ -681,7 +700,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
         "started-tb-treatment-previous-period",
         EptsReportUtils.map(
             txtbCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(),
-            "startDate=${endDate-12m},endDate=${endDate-6m-1d},location=${location}"));
+            "startDate=${endDate-12m+1d},endDate=${endDate-6m},location=${location}"));
 
     cd.addSearch(
         "A-PREVIOUS-PERIOD",
@@ -714,7 +733,9 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
                     this.hivMetadata.getARVPediatriaSeguimentoEncounterType().getId()),
                 true));
     final CohortDefinition ii = txtbCohortQueries.getInTBProgram();
+
     this.addGeneralParameters(i);
+
     cd.addSearch("i", EptsReportUtils.map(i, generalParameterMapping));
     cd.addSearch("ii", EptsReportUtils.map(ii, generalParameterMapping));
     cd.addSearch(
