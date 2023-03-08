@@ -1,9 +1,12 @@
 package org.openmrs.module.eptsreports.reporting.library.cohorts.mq;
 
 import java.util.Date;
+import org.openmrs.Location;
+import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory9QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
+import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,44 @@ public class MQCategory9CohortQueries {
 
   @Autowired private MQCohortQueries mQCohortQueries;
   @Autowired private MQGenericCohortQueries mQGenericCohortQueries;
+
+  @DocumentedDefinition(value = "findPatientsWhoArePregnantDuringInclusionPeriod")
+  public CohortDefinition findPatientsWhoArePregnantDuringInclusionPeriod() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsWhoArePregnantDuringInclusionPeriod");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory9QueriesInterface.QUERY.findPatientsWhoArePregnantDuringInclusionPeriod;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWhoAreBreastfeedingDuringInclusionPeriod")
+  public CohortDefinition findPatientsWhoAreBreastfeedingDuringInclusionPeriod() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsWhoAreBreastfeedingDuringInclusionPeriod");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory9QueriesInterface.QUERY.findPatientsWhoAreBreastfeedingDuringInclusionPeriod;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
 
   @DocumentedDefinition(
       value =

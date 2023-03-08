@@ -222,5 +222,54 @@ public interface GenericMQQueryIntarface {
 
       return String.format(sql, startAge);
     }
+
+    public static final String calculateAgeOnTheFirstConsultationDateBiggerThanParam(int startAge) {
+
+      final String sql =
+          "select age.patient_id from  "
+              + "( "
+              + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id   "
+              + "where p.voided=0 and e.voided=0 and e.encounter_type=6 and e.location_id=:location and   "
+              + "e.encounter_datetime between DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH),INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) "
+              + "group by p.patient_id  "
+              + ")age "
+              + "inner join person pe on pe.person_id=age.patient_id "
+              + "where  TIMESTAMPDIFF(year,pe.birthdate,age.encounter_datetime) >= %s and  birthdate IS NOT NULL ";
+      return String.format(sql, startAge);
+    }
+
+    public static final String calculateAgeOnTheFirstConsultationDateLessThanParam(int startAge) {
+
+      final String sql =
+          "select age.patient_id from  "
+              + "( "
+              + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id   "
+              + "where p.voided=0 and e.voided=0 and e.encounter_type=6 and e.location_id=:location and   "
+              + "e.encounter_datetime between DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH),INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) "
+              + "group by p.patient_id  "
+              + ")age "
+              + "inner join person pe on pe.person_id=age.patient_id "
+              + "where  TIMESTAMPDIFF(year,pe.birthdate,age.encounter_datetime) <= %s and  birthdate IS NOT NULL ";
+      return String.format(sql, startAge);
+    }
+
+    public static final String calculateAgeOnTheFirstConsultationDateLessThanParamByAgeRenge(
+        int startAge, int endAge) {
+
+      final String sql =
+          "select age.patient_id from  "
+              + "( "
+              + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id   "
+              + "where p.voided=0 and e.voided=0 and e.encounter_type=6 and e.location_id=:location and   "
+              + "e.encounter_datetime between DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH),INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) "
+              + "group by p.patient_id  "
+              + ")age "
+              + "inner join person pe on pe.person_id=age.patient_id "
+              + "where  TIMESTAMPDIFF(year,pe.birthdate,age.encounter_datetime) BETWEEN %s AND %s and  birthdate IS NOT NULL ";
+      return String.format(sql, startAge, endAge);
+    }
   }
 }
