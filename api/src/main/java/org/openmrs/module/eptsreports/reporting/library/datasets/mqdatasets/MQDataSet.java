@@ -31,6 +31,7 @@ public class MQDataSet extends BaseDataSet {
   @Autowired private MQCategory15DataSet mQCategory15DataSet;
   @Autowired private MQCategory13P4DataSet mQCategory13P4DataSet;
   @Autowired private MQCategory9DataSet mQCategory9DataSet;
+  @Autowired  private MQCategory18DataSet mqCategory18DataSet;
   @Autowired private MQCommonsDementions mQCommonsDementions;
 
   public DataSetDefinition constructTMqDatset() {
@@ -63,6 +64,7 @@ public class MQDataSet extends BaseDataSet {
     this.mQCategory13P4DataSet.constructTMqDatset(dataSetDefinition, mappings);
     this.mqCategory14DataSet.constructTMqDatset(dataSetDefinition, mappings);
     this.mQCategory15DataSet.constructTMqDatset(dataSetDefinition, mappings);
+    this.mqCategory18DataSet.constructTMqDatset(dataSetDefinition, mappings);
 
     return dataSetDefinition;
   }

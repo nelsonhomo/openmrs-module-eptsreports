@@ -184,6 +184,27 @@ public class MQAgeDimensions {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientsWhoAreNewlyEnrolledOnARTByAgeRenge")
+  public CohortDefinition findPatientsWhoAreNewlyEnrolledOnARTByAgeRengeUsingMonthEndRevisionDate(
+      int startAge, int endAge) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY
+            .findPatientsWhoAreNewlyEnrolledOnARTByAgeRengeUsingMonthEndRevisionDate(
+                startAge, endAge);
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   public CohortDefinitionDimension getDimensionForPatientsWhoAreNewlyEnrolledOnART() {
 
     final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
@@ -196,6 +217,9 @@ public class MQAgeDimensions {
 
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    final String mappingsCat18Diagnosticrevelation =
+        "startInclusionDate=${endRevisionDate-14m+1d},endInclusionDate=${endRevisionDate-11m},endRevisionDate=${endRevisionDate},location=${location}";
 
     dimension.addCohortDefinition(
         "15+", EptsReportUtils.map(this.findPatientsWhoAreNewlyEnrolledOnARTByAdult(15), mappings));
@@ -233,6 +257,18 @@ public class MQAgeDimensions {
         "0-18M",
         EptsReportUtils.map(
             this.findPatientsWhoAreNewlyEnrolledOnARTByAgeRengeUsingMonth(0, 18), mappings));
+
+    dimension.addCohortDefinition(
+        "8-9RD",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreNewlyEnrolledOnARTByAgeRengeUsingMonthEndRevisionDate(8, 9),
+            mappingsCat18Diagnosticrevelation));
+
+    dimension.addCohortDefinition(
+        "10-14RD",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreNewlyEnrolledOnARTByAgeRengeUsingMonthEndRevisionDate(10, 14),
+            mappingsCat18Diagnosticrevelation));
 
     return dimension;
   }
