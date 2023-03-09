@@ -50,30 +50,33 @@ public interface MQCategory9QueriesInterface {
             + ") ";
 
     public static final String
-        findPatientsWhithCD4OnFirstClinicalConsultationDuringInclusionDateNumeratorCategory9 =
-            "select firstClinica.patient_id  from  ( "
-                + "select p.patient_id,min(e.encounter_datetime) encounter_datetime  from  patient p "
-                + "inner join encounter e on e.patient_id=p.patient_id "
-                + "where p.voided=0 and e.voided=0 and e.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) "
-                + "and e.location_id=:location and e.encounter_type=6 "
-                + "group by p.patient_id "
-                + ") firstClinica "
-                + "inner join obs obsCD4 on obsCD4.person_id=firstClinica.patient_id "
-                + "where obsCD4.obs_datetime=firstClinica.encounter_datetime "
-                + "and obsCD4.concept_id=23722 and obsCD4.value_coded=1695  and obsCD4.voided=0 "
-                + "and obsCD4.location_id = :location ";
+        findPatientsWhithCD4OnFirstClinicalConsultationDuringInclusionDateNumeratorCategory9 = 
+                "select firstClinica.patient_id  from  (  "
+                + "select p.patient_id,min(e.encounter_datetime) encounter_datetime  from  patient p  "
+                + "inner join encounter e on e.patient_id=p.patient_id  "
+                + "where p.voided=0 and e.voided=0 and e.location_id=399 and e.encounter_type=6 and e.location_id=:location "
+                + "group by p.patient_id  "
+                + ") firstClinica  "
+                + "inner join obs obsCD4 on obsCD4.person_id=firstClinica.patient_id  "
+                + "where obsCD4.obs_datetime=firstClinica.encounter_datetime  "
+                + "and obsCD4.concept_id=23722 and obsCD4.value_coded=1695  and obsCD4.voided=0  "
+                + "and firstClinica.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH)  "
+                + "and obsCD4.location_id=:location  "
+                + "group by obsCD4.person_id  ";
+
 
     public static final String
         findPatientsWhithCD4On33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9 =
             "select firstClinica.patient_id  from  ( "
                 + "select p.patient_id,min(e.encounter_datetime) encounter_datetime  from  patient p "
                 + "inner join encounter e on e.patient_id=p.patient_id "
-                + "where p.voided=0 and e.voided=0 and e.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) "
+                + "where p.voided=0 and e.voided=0  "
                 + "and e.location_id=:location and e.encounter_type=6 "
                 + "group by p.patient_id "
                 + ") firstClinica "
                 + "inner join obs obsCD4 on obsCD4.person_id=firstClinica.patient_id "
-                + "where obsCD4.obs_datetime > firstClinica.encounter_datetime and obsCD4.obs_datetime <=  DATE_ADD(firstClinica.encounter_datetime, INTERVAL 33 DAY) "
+                + "where firstClinica.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) and "
+                + "obsCD4.obs_datetime > firstClinica.encounter_datetime and obsCD4.obs_datetime <=  DATE_ADD(firstClinica.encounter_datetime, INTERVAL 33 DAY) "
                 + "and obsCD4.concept_id=23722 and obsCD4.value_coded=1695  and obsCD4.voided=0 "
                 + "and obsCD4.location_id = :location ";
   }
