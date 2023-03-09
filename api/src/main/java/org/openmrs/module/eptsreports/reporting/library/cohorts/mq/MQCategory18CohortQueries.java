@@ -99,7 +99,7 @@ public class MQCategory18CohortQueries {
     definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
     definition.addParameter(new Parameter("location", "location", Date.class));
 
-    final String mappings = "${endRevisionDate},location=${location}";
+    final String mappings = "endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR",
