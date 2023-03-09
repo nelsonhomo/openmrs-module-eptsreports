@@ -13,7 +13,12 @@
  */
 package org.openmrs.module.eptsreports.reporting.library.queries;
 
+import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
+
 public class ResumoMensalQueries {
+
+  private static final String FIND_PRE_TARV_PATIENT_A1 = "RM/FIND_PRE_TARV_PATIENT_A1.sql";
+  private static final String FIND_PRE_TARV_PATIENT_A2 = "RM/FIND_PRE_TARV_PATIENT_A2.sql";
 
   /**
    * All patients with encounter type 53, and Pre-ART Start Date that is less than startDate
@@ -21,56 +26,7 @@ public class ResumoMensalQueries {
    * @return String
    */
   public static String getAllPatientsWithPreArtStartDateLessThanReportingStartDateA1() {
-    String query =
-        "SELECT f.patient_id from ( "
-            + "SELECT preTarv.patient_id,  "
-            + "if(preTarv.initialDate is not null, preTarv.initialDate,if(preTarv.initialDate is null  and tarvFinal.initialDate is not null,tarvFinal.initialDate,null)) as initialDate FROM ( "
-            + "SELECT p.patient_id,MIN(o.value_datetime) AS initialDate FROM patient p   "
-            + "INNER JOIN encounter e  ON e.patient_id=p.patient_id  "
-            + "INNER JOIN obs o on o.encounter_id=e.encounter_id  "
-            + "WHERE e.voided=0 AND o.voided=0 AND e.encounter_type=53 AND e.location_id=:location AND o.value_datetime IS NOT NULL AND o.concept_id=23808 AND o.value_datetime<:startDate  "
-            + "GROUP BY p.patient_id  "
-            + "UNION "
-            + "SELECT p.patient_id,min(e.encounter_datetime) AS initialDate FROM patient p   "
-            + "INNER JOIN encounter e  ON e.patient_id=p.patient_id  "
-            + "INNER JOIN obs o on o.encounter_id=e.encounter_id  "
-            + "WHERE e.voided=0 AND o.voided=0 AND e.encounter_type IN(5,7)  "
-            + "AND e.location_id=:location  AND e.encounter_datetime<:startDate  "
-            + "GROUP BY p.patient_id  "
-            + "UNION  "
-            + "SELECT pg.patient_id, min(pg.date_enrolled)  AS initialDate FROM patient p  "
-            + "INNER JOIN patient_program pg on pg.patient_id=p.patient_id  "
-            + "WHERE pg.program_id=1 AND pg.location_id=:location AND pg.voided=0 AND pg.date_enrolled<:startDate  "
-            + "GROUP BY patient_id "
-            + ")preTarv "
-            + "LEFT JOIN "
-            + "(SELECT * FROM ( "
-            + "SELECT tarv.patient_id, tarv.initialDate FROM ( "
-            + "SELECT p.patient_id,MIN(o.value_datetime) AS initialDate FROM patient p   "
-            + "INNER JOIN encounter e  ON e.patient_id=p.patient_id  "
-            + "INNER JOIN obs o on o.encounter_id=e.encounter_id  "
-            + "WHERE e.voided=0 AND o.voided=0 AND e.encounter_type=53 AND e.location_id=:location AND o.value_datetime IS NOT NULL AND o.concept_id=1190 AND o.value_datetime<:startDate  "
-            + "GROUP BY p.patient_id  "
-            + "UNION "
-            + "SELECT pg.patient_id, min(pg.date_enrolled)  AS initialDate FROM patient p  "
-            + "INNER JOIN patient_program pg on pg.patient_id=p.patient_id  "
-            + "WHERE pg.program_id=2 AND pg.location_id=:location AND pg.voided=0 AND pg.date_enrolled<:startDate  "
-            + "GROUP BY patient_id "
-            + ")tarv "
-            + "WHERE tarv.patient_id not in "
-            + "( "
-            + "SELECT p.patient_id from patient p "
-            + "INNER JOIN encounter e ON e.patient_id=p.patient_id "
-            + "WHERE e.encounter_type in(18,52) AND p.voided=0 AND e.voided=0 AND e.encounter_datetime<:startDate  "
-            + "UNION "
-            + "SELECT p.patient_id FROM patient p   "
-            + "INNER JOIN encounter e  ON e.patient_id=p.patient_id  "
-            + "INNER JOIN obs o on o.encounter_id=e.encounter_id  "
-            + "WHERE e.voided=0 AND o.voided=0 AND e.encounter_type IN(5,7)  "
-            + "AND e.location_id=:location  AND e.encounter_datetime<:startDate  "
-            + "))tarvFinal "
-            + ")tarvFinal on tarvFinal.patient_id=preTarv.patient_id "
-            + " )f ";
+    String query = EptsQuerysUtils.loadQuery(FIND_PRE_TARV_PATIENT_A1);
     return query;
   }
 
@@ -81,58 +37,7 @@ public class ResumoMensalQueries {
    * @return String
    */
   public static String getAllPatientsWithPreArtStartDateWithBoundariesA2() {
-    String query =
-        "SELECT f.patient_id from ( "
-            + "SELECT preTarv.patient_id,  "
-            + "if(preTarv.initialDate is not null, preTarv.initialDate,if(preTarv.initialDate is null  and tarvFinal.initialDate is not null,tarvFinal.initialDate,null)) as initialDate FROM ( "
-            + "SELECT p.patient_id,MIN(o.value_datetime) AS initialDate FROM patient p   "
-            + "INNER JOIN encounter e  ON e.patient_id=p.patient_id  "
-            + "INNER JOIN obs o on o.encounter_id=e.encounter_id  "
-            + "WHERE e.voided=0 AND o.voided=0 AND e.encounter_type=53 AND e.location_id=:location "
-            + "AND o.value_datetime IS NOT NULL AND o.concept_id=23808 AND o.value_datetime<=:endDate  "
-            + "GROUP BY p.patient_id  "
-            + "UNION "
-            + "SELECT p.patient_id,min(e.encounter_datetime) AS initialDate FROM patient p   "
-            + "INNER JOIN encounter e  ON e.patient_id=p.patient_id  "
-            + "INNER JOIN obs o on o.encounter_id=e.encounter_id  "
-            + "WHERE e.voided=0 AND o.voided=0 AND e.encounter_type IN(5,7)  "
-            + "AND e.location_id=:location  AND e.encounter_datetime<=:endDate  "
-            + "GROUP BY p.patient_id  "
-            + "UNION  "
-            + "SELECT pg.patient_id, min(pg.date_enrolled)  AS initialDate FROM patient p  "
-            + "INNER JOIN patient_program pg on pg.patient_id=p.patient_id  "
-            + "WHERE pg.program_id=1 AND pg.location_id=:location AND pg.voided=0 AND pg.date_enrolled<=:endDate  "
-            + "GROUP BY patient_id "
-            + ")preTarv "
-            + "LEFT JOIN "
-            + "(SELECT * FROM ( "
-            + "SELECT tarv.patient_id, tarv.initialDate FROM ( "
-            + "SELECT p.patient_id,MIN(o.value_datetime) AS initialDate FROM patient p   "
-            + "INNER JOIN encounter e  ON e.patient_id=p.patient_id  "
-            + "INNER JOIN obs o on o.encounter_id=e.encounter_id  "
-            + "WHERE e.voided=0 AND o.voided=0 AND e.encounter_type=53 AND e.location_id=:location "
-            + "AND o.value_datetime IS NOT NULL AND o.concept_id=1190 AND o.value_datetime<=:endDate  "
-            + "GROUP BY p.patient_id  "
-            + "UNION "
-            + "SELECT pg.patient_id, min(pg.date_enrolled)  AS initialDate FROM patient p  "
-            + "INNER JOIN patient_program pg on pg.patient_id=p.patient_id  "
-            + "WHERE pg.program_id=2 AND pg.location_id=:location AND pg.voided=0 AND pg.date_enrolled<:endDate  "
-            + "GROUP BY patient_id "
-            + ")tarv "
-            + "WHERE tarv.patient_id not in ( "
-            + "SELECT p.patient_id from patient p "
-            + "INNER JOIN encounter e ON e.patient_id=p.patient_id "
-            + "WHERE e.encounter_type in(18,52) AND p.voided=0 AND e.voided=0 AND e.encounter_datetime<=:endDate  "
-            + "UNION "
-            + "SELECT p.patient_id FROM patient p   "
-            + "INNER JOIN encounter e  ON e.patient_id=p.patient_id  "
-            + "INNER JOIN obs o on o.encounter_id=e.encounter_id  "
-            + "WHERE e.voided=0 AND o.voided=0 AND e.encounter_type IN(5,7)  "
-            + "AND e.location_id=:location  AND e.encounter_datetime<:endDate  "
-            + "))tarvFinal "
-            + ")tarvFinal on tarvFinal.patient_id=preTarv.patient_id "
-            + " )f  WHERE f.initialDate BETWEEN :startDate AND :endDate ";
-
+    String query = EptsQuerysUtils.loadQuery(FIND_PRE_TARV_PATIENT_A2);
     return query;
   }
 
