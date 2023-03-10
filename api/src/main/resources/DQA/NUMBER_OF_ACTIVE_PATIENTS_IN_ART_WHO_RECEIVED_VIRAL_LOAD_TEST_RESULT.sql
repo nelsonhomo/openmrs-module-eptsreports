@@ -14,9 +14,9 @@ select (@cnt := @cnt + 1) as ID,cv.patient_id,cv.data_usar,cv.DATA_INICIO_TARV,c
      
         from (
          select inicio_fila_seg_prox.*,                                                                                                          
-             GREATEST(COALESCE(data_fila,data_seguimento,data_recepcao_levantou),                                                                
-             COALESCE(data_seguimento,data_fila,data_recepcao_levantou),                                                                         
-             COALESCE(data_recepcao_levantou,data_seguimento,data_fila)) data_usar_c,                                                            
+             GREATEST(COALESCE(data_fila,data_seguimento),                                                                
+             COALESCE(data_seguimento,data_fila),                                                                         
+             COALESCE(data_seguimento,data_fila)) data_usar_c,                                                            
              GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30),COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_usar         
          from    (                                                                                                                               
              select inicio_fila_seg.*,                                                                                                           
@@ -258,9 +258,9 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
         if(max(if(L.concept_quantitativa=856,L.valor_quantitativo,null)) is null, 'N/A', max(if(L.concept_quantitativa=856,L.valor_quantitativo,null))) as CV_Quantitativa
         from (
                   select inicio_fila_seg_prox.*,                                                                                                          
-             GREATEST(COALESCE(data_fila,data_seguimento,data_recepcao_levantou),                                                                
-             COALESCE(data_seguimento,data_fila,data_recepcao_levantou),                                                                         
-             COALESCE(data_recepcao_levantou,data_seguimento,data_fila)) data_usar_c,                                                            
+             GREATEST(COALESCE(data_fila,data_seguimento),                                                                
+             COALESCE(data_seguimento,data_fila),                                                                         
+             COALESCE(data_seguimento,data_fila)) data_usar_c,                                                            
              GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30),COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_usar         
          from    (                                                                                                                               
              select inicio_fila_seg.*,                                                                                                           
@@ -495,9 +495,9 @@ SELECT pat.patient_id,enc.encounter_datetime encounter_datetime,ob.concept_id,ob
         if(max(if(L.concept_quantitativa=856,L.valor_quantitativo,null)) is null, 'N/A', max(if(L.concept_quantitativa=856,L.valor_quantitativo,null))) as CV_Quantitativa
         from (
 select inicio_fila_seg_prox.*,                                                                                                          
-             GREATEST(COALESCE(data_fila,data_seguimento,data_recepcao_levantou),                                                                
-             COALESCE(data_seguimento,data_fila,data_recepcao_levantou),                                                                         
-             COALESCE(data_recepcao_levantou,data_seguimento,data_fila)) data_usar_c,                                                            
+             GREATEST(COALESCE(data_fila,data_seguimento),                                                                
+             COALESCE(data_seguimento,data_fila),                                                                         
+             COALESCE(data_seguimento,data_fila)) data_usar_c,                                                            
              GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30),COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_usar         
          from    (                                                                                                                               
              select inicio_fila_seg.*,                                                                                                           
