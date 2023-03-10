@@ -84,14 +84,14 @@ public class MQCategory13P4CohortQueries {
         "PREGNANT",
         EptsReportUtils.map(
             this.mqCohortQueries
-                .findPatientsWhoHasCVBiggerThan1000AndMarkedAsPregnantInTheSameClinicalConsultation(),
+                .findPatientsWhoHasCVBiggerThan50AndMarkedAsPregnantInTheSameClinicalConsultation(),
             mappings));
 
     definition.addSearch(
         "BREASTFEEDING",
         EptsReportUtils.map(
             this.mqCohortQueries
-                .findPatientsWhoHasCVBiggerThan1000AndMarkedAsBreastFeedingInTheSameClinicalConsultation(),
+                .findPatientsWhoHasCVBiggerThan50AndMarkedAsBreastFeedingInTheSameClinicalConsultation(),
             mappings));
 
     definition.addSearch(
@@ -167,7 +167,8 @@ public class MQCategory13P4CohortQueries {
     definition.addSearch(
         "H",
         EptsReportUtils.map(
-            this.mqCohortQueries.findPatientsWhoHaveRequestedCV120DaysAfterCVResultByQueryH(),
+            this.mqCohortQueries
+                .findPatientsWhoHaveRequestedCV120DaysAfterCV50CopiesResultByQueryH(),
             mappings));
 
     definition.setCompositionString("(DENOMINADOR AND H)");
