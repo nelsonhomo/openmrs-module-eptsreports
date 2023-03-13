@@ -109,7 +109,10 @@ public class ResumoMensalQueries {
             + "INNER JOIN obs obsPretarv on e.encounter_id=obsPretarv.encounter_id  "
             + "INNER JOIN obs obsData on e.encounter_id=obsData.encounter_id "
             + "WHERE e.voided=0 AND o.voided=0  AND e.encounter_type=53  AND obsPretarv.voided=0  AND obsPretarv.concept_id=6300  AND obsPretarv.value_coded in(6275,6276) AND obsData.concept_id=23891 "
-            + "AND obsData.voided=0 AND e.location_id=:location   AND o.concept_id=1369  AND o.value_coded=1065  AND obsData.value_datetime< :endDate GROUP BY p.patient_id)trasferedPatients  GROUP BY trasferedPatients.patient_id ";
+            + "AND obsData.voided=0 AND e.location_id=:location   AND o.concept_id=1369  AND o.value_coded=1065  AND obsData.value_datetime<= :endDate "
+            + "GROUP BY p.patient_id "
+            + ")trasferedPatients  "
+            + "GROUP BY trasferedPatients.patient_id ";
 
     return query;
   }
