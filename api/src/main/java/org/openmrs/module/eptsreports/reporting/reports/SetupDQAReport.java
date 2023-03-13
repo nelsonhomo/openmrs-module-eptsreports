@@ -112,7 +112,7 @@ public class SetupDQAReport extends EptsDataExportManager {
               null);
       Properties props = new Properties();
       props.put("sortWeight", "5000");
-      props.put("repeatingSections", "sheet:1,row:8,dataset:DQA");
+      props.put("repeatingSections", "sheet:1,row:9,dataset:DQA");
       reportDesign.setProperties(props);
     } catch (IOException e) {
       throw new ReportingException(e.toString());
