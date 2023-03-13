@@ -1,8 +1,5 @@
 select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestampdiff(year,per.birthdate,:endDate) idade, timestampdiff(month,inicio.data_inicio,:endDate) idadeEmTarv, cd4Absoluto.value_numeric cd4Abs, cd4Percentual.value_numeric cd4Per, cvmenor1000.patient_id pidcv12meses,cvmenor1000.person_id pidcvmenor100  
             from (
-
-
-
            select patient_id ,data_inicio, data_usar                                                                                                                        
             from(                                                                                                                                   
                 select inicio_fila_seg_prox.*,                                                                                                          
@@ -196,4 +193,4 @@ select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestamp
             o.concept_id=730 and o.value_numeric>15 and o.location_id=:location 
             ) cd4Percentual on inicio.patient_id=cd4Percentual.patient_id 
             ) elegivel  
-            where (idade>=2 and idadeEmTarv>=3) and ((pidcvmenor100 is not null ) or (pidcv12meses is null and idade>=5 and cd4Abs>200) or (pidcv12meses is null and idade<=4 and (cd4Abs>750 or cd4Per>15)))
+            where (idade>=2 and idadeEmTarv>=6) and ((pidcvmenor100 is not null ) or (pidcv12meses is null and (idade>=5 and idade<=9) and cd4Abs>200) or (pidcv12meses is null and (idade>=2 and idade<=4) and (cd4Abs>750 or cd4Per>15)))
