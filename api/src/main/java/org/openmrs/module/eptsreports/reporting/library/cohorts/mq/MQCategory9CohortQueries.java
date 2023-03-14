@@ -119,6 +119,24 @@ public class MQCategory9CohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientsWhoArePregnantDuringPreviousPeriod")
+  public CohortDefinition findPatientsWhoArePregnantDuringPreviousPeriod() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsWhoArePregnantDuringPreviousPeriod");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = MQCategory9QueriesInterface.QUERY.findPatientsWhoArePregnantDuringPreviousPeriod;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(
       value = "findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1")
   public CohortDefinition
@@ -276,14 +294,9 @@ public class MQCategory9CohortQueries {
         "endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
-        "FIRST-CONSULTATION",
-        EptsReportUtils.map(
-            this.findPatientsFirstConsultationOnInclusionDate(), mappingsFirstConsultation));
-
-    definition.addSearch(
         "PREGNANT-INCLUSION-DATE",
         EptsReportUtils.map(
-            this.findPatientsWhoArePregnantDuringInclusionPeriod(), mappingsFirstConsultation));
+            this.findPatientsWhoArePregnantDuringPreviousPeriod(), mappingsFirstConsultation));
 
     definition.addSearch(
         "TRANSFERED-IN",
@@ -292,8 +305,7 @@ public class MQCategory9CohortQueries {
                 .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
             mappings));
 
-    definition.setCompositionString(
-        "(FIRST-CONSULTATION AND PREGNANT-INCLUSION-DATE) NOT TRANSFERED-IN ");
+    definition.setCompositionString("PREGNANT-INCLUSION-DATE NOT TRANSFERED-IN ");
 
     return definition;
   }

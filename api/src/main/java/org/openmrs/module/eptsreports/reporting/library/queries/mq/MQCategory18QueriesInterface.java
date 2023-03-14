@@ -32,6 +32,6 @@ public interface MQCategory18QueriesInterface {
             + "group by p.patient_id "
             + ") revelado on revelado.patient_id=tx_new.patient_id "
             + "where  (tx_new.art_start_date BETWEEN DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 14 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 11 MONTH)) and "
-            + "       (revelado.dataRevelacaoTotal BETWEEN revelado.dataRevelacaoTotal and DATE_ADD(revelado.dataRevelacaoTotal, INTERVAL 12 MONTH)) ";
+            + "       (revelado.dataRevelacaoTotal BETWEEN tx_new.art_start_date and DATE_ADD(tx_new.art_start_date, INTERVAL 12 MONTH)) ";
   }
 }
