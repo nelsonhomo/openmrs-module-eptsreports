@@ -218,9 +218,6 @@ public class MQAgeDimensions {
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
-    final String mappingsCat18Diagnosticrevelation =
-        "startInclusionDate=${endRevisionDate-14m+1d},endInclusionDate=${endRevisionDate-11m},endRevisionDate=${endRevisionDate},location=${location}";
-
     dimension.addCohortDefinition(
         "15+", EptsReportUtils.map(this.findPatientsWhoAreNewlyEnrolledOnARTByAdult(15), mappings));
 
@@ -261,14 +258,12 @@ public class MQAgeDimensions {
     dimension.addCohortDefinition(
         "8-9RD",
         EptsReportUtils.map(
-            this.findPatientsWhoAreNewlyEnrolledOnARTByAgeRengeUsingMonthEndRevisionDate(8, 9),
-            mappingsCat18Diagnosticrevelation));
+            this.calculateAgeOnTheFirstConsultationDateLessThanParamByAgeRenge(8, 9), mappings));
 
     dimension.addCohortDefinition(
         "10-14RD",
         EptsReportUtils.map(
-            this.findPatientsWhoAreNewlyEnrolledOnARTByAgeRengeUsingMonthEndRevisionDate(10, 14),
-            mappingsCat18Diagnosticrevelation));
+            this.calculateAgeOnTheFirstConsultationDateLessThanParamByAgeRenge(10, 14), mappings));
 
     return dimension;
   }
