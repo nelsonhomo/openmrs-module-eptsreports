@@ -1,6 +1,8 @@
-   select patient_id from (
-         select preTarv.patient_id, preTarv.initialDate, 1 type  FROM 
+   select f.patient_id from 
+    (
+         select preTarv.patient_id, preTarv.initialDate initialDate, 1 type  FROM 
          ( 
+			select preTarv.patient_id, min(preTarv.initialDate) initialDate, 1 type  FROM (
             SELECT p.patient_id,MIN(o.value_datetime) AS initialDate FROM patient p   
             INNER JOIN encounter e  ON e.patient_id=p.patient_id  
             INNER JOIN obs o on o.encounter_id=e.encounter_id  
@@ -19,6 +21,8 @@
             INNER JOIN patient_program pg on pg.patient_id=p.patient_id  
             WHERE pg.program_id=1 AND pg.location_id=:location AND pg.voided=0 AND pg.date_enrolled<=:endDate  
             GROUP BY patient_id 
+            )preTarv
+            group by preTarv.patient_id
             )preTarv             
 
             UNION
@@ -44,8 +48,9 @@
 
             WHERE tarvFinal.patient_id  not in 
             (
-               select preTarv.patient_id  FROM 
+               select preTarv.patient_id FROM 
             ( 
+              select preTarv.patient_id,min(preTarv.initialDate)  FROM (
                SELECT p.patient_id,MIN(o.value_datetime) AS initialDate FROM patient p   
                INNER JOIN encounter e  ON e.patient_id=p.patient_id  
                INNER JOIN obs o on o.encounter_id=e.encounter_id  
@@ -64,7 +69,10 @@
                INNER JOIN patient_program pg on pg.patient_id=p.patient_id  
                WHERE pg.program_id=1 AND pg.location_id=:location AND pg.voided=0 AND pg.date_enrolled<=:endDate  
                GROUP BY patient_id 
-               )preTarv                
+               )preTarv
+				GROUP BY preTarv.patient_id 
+               )preTarv 
+               group by patient_id
                )
             )tarvFinal
-            )f WHERE f.initialDate BETWEEN :startDate and :endDate
+            )f WHERE f.initialDate BETWEEN :startDate and :endDate 
