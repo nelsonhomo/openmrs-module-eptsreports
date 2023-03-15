@@ -1,5 +1,5 @@
     
-select (@cnt := @cnt + 1) as ID,cv.patient_id,cv.data_usar,artInitiation.data_inicio,cv.DATA_CV,cv.CV_Qualitativa,cv.CV_Quantitativa      
+select (@cnt := @cnt + 1) as ID,cv.patient_id,cv.data_usar,artInitiation.data_inicio as DATA_INICIO_TARV,cv.DATA_CV,cv.CV_Qualitativa,cv.CV_Quantitativa      
 ,pid.identifier as NID,pe.gender SEXO,round(datediff(:endDate,pe.birthdate)/365) as AGE
  from (
 

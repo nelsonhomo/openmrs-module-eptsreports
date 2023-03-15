@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.eptsreports.reporting.library.datasets.dqa;
+package org.openmrs.module.eptsreports.reporting.library.datasets.aqd;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DQAViralLoadSummuryDataset extends BaseDataSet {
+public class AQDViralLoadSummuryDataset extends BaseDataSet {
 
   @Autowired private EptsCommonDimension eptsCommonDimension;
 
@@ -48,7 +48,7 @@ public class DQAViralLoadSummuryDataset extends BaseDataSet {
     final String mappingsTxCurr = "endDate=${endDate},location=${location}";
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    dsd.setName("DQA Data Set");
+    dsd.setName("AQD Data Set");
     dsd.addParameters(this.getParameters());
 
     dsd.addDimension(

@@ -24,8 +24,8 @@ import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSetDefinition;
-import org.openmrs.module.eptsreports.reporting.library.datasets.dqa.DQAViralLoadDataset;
-import org.openmrs.module.eptsreports.reporting.library.datasets.dqa.DQAViralLoadSummuryDataset;
+import org.openmrs.module.eptsreports.reporting.library.datasets.aqd.AQDViralLoadDataset;
+import org.openmrs.module.eptsreports.reporting.library.datasets.aqd.AQDViralLoadSummuryDataset;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -39,10 +39,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetupDQAReport extends EptsDataExportManager {
+public class SetupAQDReport extends EptsDataExportManager {
 
-  @Autowired private DQAViralLoadDataset dQAViralLoadDataset;
-  @Autowired private DQAViralLoadSummuryDataset viralLoadSummuryDataset;
+  @Autowired private AQDViralLoadDataset aqdViralLoadDataset;
+  @Autowired private AQDViralLoadSummuryDataset viralLoadSummuryDataset;
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
 
@@ -74,11 +74,11 @@ public class SetupDQAReport extends EptsDataExportManager {
     rd.setUuid(getUuid());
     rd.setName(getName());
     rd.setDescription(getDescription());
-    rd.addParameters(dQAViralLoadDataset.getParameters());
+    rd.addParameters(aqdViralLoadDataset.getParameters());
     rd.addDataSetDefinition("HF", mapStraightThrough(new LocationDataSetDefinition()));
 
     rd.addDataSetDefinition(
-        "DQA", mapStraightThrough(dQAViralLoadDataset.constructDataset(getParameters())));
+        "DQA", mapStraightThrough(aqdViralLoadDataset.constructDataset(getParameters())));
 
     rd.addDataSetDefinition("DQ", mapStraightThrough(viralLoadSummuryDataset.constructDatset()));
 
@@ -106,7 +106,7 @@ public class SetupDQAReport extends EptsDataExportManager {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "DQA_Carga_Viral_MISAU.xls",
+              "AQD_Carga_Viral_MISAU.xls",
               "AQD HIV MISAU",
               getExcelDesignUuid(),
               null);
