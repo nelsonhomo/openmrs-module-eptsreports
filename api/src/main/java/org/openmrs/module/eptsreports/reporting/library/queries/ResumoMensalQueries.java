@@ -1054,7 +1054,7 @@ public class ResumoMensalQueries {
         "SELECT tb.patient_id FROM  (  "
             + "select encounter.patient_id, encounter.encounter_datetime, obs.concept_id from encounter  "
             + "inner join patient on patient.patient_id = encounter.patient_id  "
-            + "left  join obs on (obs.encounter_id = encounter.encounter_id and obs.voided =0 and obs.concept_id = 23761 and obs.value_coded=1065)  "
+            + "inner  join obs on (obs.encounter_id = encounter.encounter_id and obs.voided =0 and obs.concept_id = 23761 and obs.value_coded=1065)  "
             + "where encounter.encounter_type = 6 and encounter.voided = 0 and patient.voided = 0  "
             + "and encounter.encounter_datetime <=:startDate "
             + "and encounter.location_id =:location  "

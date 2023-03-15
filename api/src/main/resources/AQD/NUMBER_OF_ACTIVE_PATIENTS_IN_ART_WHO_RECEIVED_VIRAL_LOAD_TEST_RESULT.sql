@@ -1,6 +1,13 @@
     
-select (@cnt := @cnt + 1) as ID,cv.patient_id,cv.data_usar,artInitiation.data_inicio as DATA_INICIO_TARV,cv.DATA_CV,cv.CV_Qualitativa,cv.CV_Quantitativa      
-,pid.identifier as NID,pe.gender SEXO,round(datediff(:endDate,pe.birthdate)/365) as AGE
+select (@cnt := @cnt + 1) as ID,
+		cv.patient_id,cv.data_usar,
+		DATE_FORMAT(DATE(artInitiation.data_inicio), '%d-%m-%Y') as DATA_INICIO_TARV,
+		DATE_FORMAT(DATE(cv.DATA_CV), '%d-%m-%Y') as DATA_CV,
+		cv.CV_Qualitativa,
+		cv.CV_Quantitativa,
+		pid.identifier as NID,
+		pe.gender SEXO,
+		round(datediff(:endDate,pe.birthdate)/365) as AGE
  from (
 
     select
