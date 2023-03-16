@@ -38,7 +38,7 @@ public class TXTBCohortQueries {
   private final String codedObsParameterMapping =
       "onOrAfter=${startDate},onOrBefore=${endDate},locationList=${location}";
 
-  private Mapped<CohortDefinition> map(final CohortDefinition cd, final String parameterMappings) {
+  public Mapped<CohortDefinition> map(final CohortDefinition cd, final String parameterMappings) {
     return EptsReportUtils.map(
         cd,
         EptsReportUtils.removeMissingParameterMappingsFromCohortDefintion(cd, parameterMappings));
@@ -263,9 +263,7 @@ public class TXTBCohortQueries {
   public CohortDefinition getInTBProgram() {
     final CohortDefinition definition =
         this.genericCohortQueries.generalSql(
-            "TBPROGRAMA",
-            TXTBQueries.inTBProgramWithinReportingPeriodAtLocation(
-                this.tbMetadata.getTBProgram().getProgramId()));
+            "TBPROGRAMA", TXTBQueries.inTBProgramWithinReportingPeriodAtLocation());
     this.addGeneralParameters(definition);
     return definition;
   }
