@@ -119,6 +119,29 @@ public class MQCategory9CohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(
+      value =
+          "findPatientsWhithCD4ResultOn33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9")
+  public CohortDefinition
+      findPatientsWhithCD4ResultOn33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsWhoAreBreastfeedingDuringInclusionPeriod");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory9QueriesInterface.QUERY
+            .findPatientsWhithCD4ResultOn33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientsWhoArePregnantDuringPreviousPeriod")
   public CohortDefinition findPatientsWhoArePregnantDuringPreviousPeriod() {
 
@@ -266,7 +289,7 @@ public class MQCategory9CohortQueries {
         "CD4-33-DAYS",
         EptsReportUtils.map(
             this
-                .findPatientsWhithCD4On33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9(),
+                .findPatientsWhithCD4ResultOn33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9(),
             mappings));
 
     definition.setCompositionString("(DENOMINATOR AND CD4-33-DAYS)");
