@@ -1,4 +1,4 @@
-select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestampdiff(year,per.birthdate,:endDate) idade, timestampdiff(month,inicio.data_inicio,:endDate) idadeEmTarv, cd4Absoluto.value_numeric cd4Abs, cd4Percentual.value_numeric cd4Per, cvmenor1000.patient_id pidcv12meses,cvmenor1000.person_id pidcvmenor100  
+select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestampdiff(year,per.birthdate,:endDate) idade, timestampdiff(month,inicioMaisReal.data_inicio,:endDate) idadeEmTarv, cd4Absoluto.value_numeric cd4Abs, cd4Percentual.value_numeric cd4Per, cvmenor1000.patient_id pidcv12meses,cvmenor1000.person_id pidcvmenor100  
             from (
             select patient_id, data_inicio, data_usar                                                                                                                           
 from(                                                                                                                                    
@@ -36,7 +36,8 @@ from(
                          group by p.patient_id                                                                                           
                      )                                                                                                                   
                      inicio_real group by patient_id                                                                                     
-                 )inicio                                                                                                                 
+                 )inicio 
+
                  left join                                                                                                               
              (                                                                                                                           
                      select patient_id,max(data_estado) data_estado                                                                      
@@ -117,10 +118,65 @@ from(
  ) inicio_fila_seg_prox                                                                                                                  
      group by patient_id                                                                                                                 
 ) coorte12meses_final                                                                                                                    
- where (data_estado is null or (data_estado is not null and  data_usar_c>data_estado))                                                   
-     and date_add(data_usar, interval 60 day) >=:endDate                                                                                 
-            ) inicio  
-            inner join person per on per.person_id=inicio.patient_id and per.voided=0  
+ where (data_estado is null or (data_estado is not null and  data_usar_c>data_estado)) and date_add(data_usar, interval 60 day) >=:endDate
+ ) inicio  
+            inner join person per on per.person_id=inicio.patient_id and per.voided=0
+            left join
+            (
+
+               select patient_id,min(data_inicio) data_inicio                                                                              
+                 from                                                                                                                        
+                     (                                                                                                                       
+                         select  p.patient_id,min(e.encounter_datetime) data_inicio                                                          
+                         from    patient p                                                                                                   
+                                 inner join person pe on pe.person_id = p.patient_id                                                         
+                                 inner join encounter e on p.patient_id=e.patient_id                                                         
+                                 inner join obs o on o.encounter_id=e.encounter_id                                                           
+                         where   e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0 and                                              
+                                 e.encounter_type in (18,6,9) and o.concept_id=1255 and o.value_coded=1256 and                               
+                                 e.encounter_datetime<=:endDate and e.location_id=:location                                                  
+                         group by p.patient_id                                                                                               
+                         union                                                                                                               
+          
+                         select  p.patient_id,min(value_datetime) data_inicio                                                                
+                         from    patient p                                                                                                   
+                                 inner join person pe on pe.person_id = p.patient_id                                                         
+                                 inner join encounter e on p.patient_id=e.patient_id                                                         
+                                 inner join obs o on e.encounter_id=o.encounter_id                                                           
+                         where   p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type in (18,6,9,53) and          
+                                 o.concept_id=1190 and o.value_datetime is not null and                                                      
+                                 o.value_datetime<=:endDate and e.location_id=:location                                                      
+                         group by p.patient_id                                                                                               
+                         union                                                                                                               
+           
+                         select  pg.patient_id,min(date_enrolled) data_inicio                                                                
+                         from    patient p                                                                                                   
+                             inner join person pe on pe.person_id = p.patient_id                                                             
+                             inner join patient_program pg on p.patient_id=pg.patient_id                                                     
+                         where   pg.voided=0 and p.voided=0 and pe.voided = 0 and program_id=2 and date_enrolled<=:endDate and location_id=:location 
+                         group by pg.patient_id                                                                                              
+                         union                                                                                                               
+            
+                           select    e.patient_id, MIN(e.encounter_datetime) AS data_inicio                                                  
+                           FROM      patient p                                                                                               
+                                     inner join person pe on pe.person_id = p.patient_id                                                     
+                                     inner join encounter e on p.patient_id=e.patient_id                                                     
+                           WHERE     p.voided=0 and pe.voided = 0 and e.encounter_type=18 AND e.voided=0 and e.encounter_datetime<=:endDate and e.location_id=:location  
+                           GROUP BY  p.patient_id                                                                                                        
+                         union                                                                                                                           
+            
+                         select  p.patient_id,min(value_datetime) data_inicio                                                                            
+                         from    patient p                                                                                                               
+                                 inner join person pe on pe.person_id = p.patient_id                                                                     
+                                 inner join encounter e on p.patient_id=e.patient_id                                                                     
+                                 inner join obs o on e.encounter_id=o.encounter_id                                                                       
+                         where   p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and                                  
+                                 o.concept_id=23866 and o.value_datetime is not null and                                                                 
+                                 o.value_datetime<=:endDate and e.location_id=:location                                                                  
+                         group by p.patient_id                                                                                                           
+                     ) inicio_real
+                     group by patient_id                                                                                                                       
+            )inicioMaisReal on   inicioMaisReal.patient_id=inicio.patient_id
             left join  
             ( 
             select distinct max_cv.patient_id,o.person_id  from (  
@@ -132,23 +188,28 @@ from(
             group by p.patient_id 
             )max_cv  
             left join obs o on o.person_id=max_cv.patient_id and date(max_cv.max_data_cv)=date(o.obs_datetime) and o.voided=0 and  
-            ((o.concept_id=856 and o.value_numeric<1000) or (o.concept_id=1305 )) and o.location_id=:location ) cvmenor1000 on inicio.patient_id=cvmenor1000.patient_id  
+            ((o.concept_id=856 and o.value_numeric<1000) or (o.concept_id=1305 )) and o.location_id=:location 
+            ) cvmenor1000 on inicio.patient_id=cvmenor1000.patient_id  
             left join ( 
             select distinct max_cd4.patient_id,o.value_numeric  from (  
             Select p.patient_id,max(o.obs_datetime) max_data_cd4  From patient p  
             inner join encounter e on p.patient_id=e.patient_id  
             inner join obs o on e.encounter_id=o.encounter_id  
-            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,9,13,53) and o.obs_datetime between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location group by p.patient_id 
+            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,9,13,53) 
+            and o.obs_datetime between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location 
+            group by p.patient_id 
             )max_cd4  
             left join obs o on o.person_id=max_cd4.patient_id and max_cd4.max_data_cd4=o.obs_datetime and o.voided=0 and  
             o.concept_id = 1695 and o.value_numeric>200 and o.location_id=:location 
             ) cd4Absoluto on inicio.patient_id=cd4Absoluto.patient_id  
-            left join  ( 
+            left join  
+            ( 
             select distinct max_cd4.patient_id,o.value_numeric  from ( 
             Select p.patient_id,max(o.obs_datetime) max_data_cd4  From patient p  
             inner join encounter e on p.patient_id=e.patient_id  
             inner join obs o on e.encounter_id=o.encounter_id  
-            where   p.voided=0 and e.voided=0 and o.voided=0 and concept_id=730 and  e.encounter_type in (6,9,13) and o.obs_datetime between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location  
+            where   p.voided=0 and e.voided=0 and o.voided=0 and concept_id=730 and  e.encounter_type in (6,9,13) 
+            and o.obs_datetime between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location  
             group by p.patient_id 
             ) max_cd4  
             left join obs o on o.person_id=max_cd4.patient_id and max_cd4.max_data_cd4=o.obs_datetime and o.voided=0 and  
