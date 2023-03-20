@@ -86,7 +86,7 @@ from (
 																	) max_estado            
 																		inner join patient_program pp on pp.patient_id = max_estado.patient_id    
 																		inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
-															where pp.program_id = 2 and ps.state in (8,10) and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location   
+															where pp.program_id = 2 and ps.state in (10) and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location   
 															union 
 															select  p.patient_id,   
 																	max(o.obs_datetime) data_estado   
@@ -95,7 +95,7 @@ from (
 																	inner join encounter e on p.patient_id=e.patient_id 
 																	inner join obs  o on e.encounter_id=o.encounter_id  
 															where   e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0         
-																	and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded in (1366,1709)       
+																	and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded in (1366)       
 																	and o.obs_datetime<= :endDate  and e.location_id=:location
 																	group by p.patient_id   
 															union 
@@ -134,7 +134,7 @@ from (
 																	) max_estado            
 																		inner join patient_program pp on pp.patient_id = max_estado.patient_id    
 																		inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
-															where pp.program_id = 2 and ps.state in (8,10) and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location   
+															where pp.program_id = 2 and ps.state in (10) and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location   
 															union 
 															select  p.patient_id,   
 																	max(o.obs_datetime) data_estado   
@@ -143,7 +143,7 @@ from (
 																	inner join encounter e on p.patient_id=e.patient_id 
 																	inner join obs  o on e.encounter_id=o.encounter_id  
 															where   e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0         
-																	and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded in (1366,1709)       
+																	and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded in (1366)       
 																	and o.obs_datetime< :startDate  and e.location_id=:location
 																	group by p.patient_id   
 															union 
@@ -499,5 +499,5 @@ from (
 					group by patient_id   
 ) coorte12meses_final 
 where ((data_estado is null or (data_estado is not null and  data_usar_c > data_estado)) and date_add(data_usar, interval 28 day) >=date_add(:startDate, interval -1 day)  and date_add(data_usar, interval 28 day) < :endDate)
-  or (data_saida_transferencia is null and data_entrada_obito is null and data_entrada_transferencia <= :endDate and date_add(maximo_proximo_fila_recepcao, interval 1 day) >=:startDate) 
-  or ( data_saida_obito is null and data_entrada_obito between :startDate and :endDate)
+or ( (data_saida_transferencia is null or (data_saida_transferencia is not null and  data_usar_c > data_saida_transferencia))  and data_entrada_obito is null and data_entrada_transferencia >= data_usar_c and data_entrada_transferencia <= :endDate and date_add(maximo_proximo_fila_recepcao, interval 1 day) >=:startDate) 
+or ( (data_saida_obito is null or (data_saida_obito is not null and  data_usar_c > data_saida_obito))  and data_entrada_obito >= data_usar_c and data_entrada_obito between :startDate and :endDate)
