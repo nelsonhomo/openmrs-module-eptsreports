@@ -347,8 +347,19 @@ union
 		inner join 
 		(
 		
-		select inicio_inh.patient_id,DTINH.encounter_id from (
-		 select inicio_inh.patient_id,data_inicio_inh                                                                                                          
+ 			select patient_id, data_inicio_inh, count(data_fim_INH) from (
+			select distinct fim.patient_id,inicio_inh.data_inicio_inh,data_fim_INH from (
+			select p.patient_id,e.encounter_datetime data_fim_INH, e.encounter_id																		
+			from	patient p														 			  															
+				inner join encounter e on p.patient_id=e.patient_id
+				inner join obs regimeTPT on regimeTPT.encounter_id = e.encounter_id																			 		
+				inner join obs tipoDispensa on tipoDispensa.encounter_id=e.encounter_id
+				where regimeTPT.concept_id=23985 and regimeTPT.value_coded in(656,23982) and tipoDispensa.concept_id=23986 and tipoDispensa.value_coded=23720
+				and p.voided=0 and e.voided=0 and regimeTPT.voided=0 and tipoDispensa.voided=0 and e.encounter_datetime<=:endDate  and e.location_id=:location
+				and e.encounter_type = 60
+				)fim left join(
+
+ select distinct inicio_inh.patient_id,data_inicio_inh                                                                                     
  from                                                                                                                                                
      (  
          select p.patient_id, e.encounter_datetime data_inicio_inh                                                                                   
@@ -406,20 +417,13 @@ union
 	          on inicio.patient_id = inicioAnterior.patient_id
 	          	and inicioAnterior.data_inicio_inh between (inicio.data_inicio_inh - INTERVAL 7 MONTH) and (inicio.data_inicio_inh - INTERVAL 1 day)                                                                                     
 	            where inicioAnterior.patient_id is null                                                                                   
-      ) inicio_inh ) inicio_inh
-      inner join (
-			select p.patient_id,e.encounter_datetime data_fim_INH, e.encounter_id																		
-			from	patient p														 			  															
-				inner join encounter e on p.patient_id=e.patient_id
-				inner join obs regimeTPT on regimeTPT.encounter_id = e.encounter_id																			 		
-				inner join obs tipoDispensa on tipoDispensa.encounter_id=e.encounter_id
-				where regimeTPT.concept_id=23985 and regimeTPT.value_coded in(656,23982) and tipoDispensa.concept_id=23986 and tipoDispensa.value_coded=23720
-				and p.voided=0 and e.voided=0 and regimeTPT.voided=0 and tipoDispensa.voided=0 and e.encounter_datetime<=:endDate  and e.location_id=:location
-				and e.encounter_type = 60
-				)DTINH on DTINH.patient_id = inicio_inh.patient_id and DTINH.data_fim_INH BETWEEN date_add(inicio_inh.data_inicio_inh, interval 1 day) and (inicio_inh.data_inicio_inh + interval 5 month)
-		) DTINH on DTINH.patient_id=inicio_inh.patient_id
+      ) inicio_inh 
+      ) inicio_inh on inicio_inh.patient_id = fim.patient_id
+      where data_fim_INH BETWEEN inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 5 MONTH)
+      ) inicio_fim group by patient_id, data_inicio_inh
+      having count(data_fim_INH) >= 2 
+		) DTINH_FIM on DTINH_FIM.patient_id = inicio_inh.patient_id
 		group by inicio_inh.patient_id
-		having count(distinct DTINH.encounter_id)>=2 
 
 union               
 
