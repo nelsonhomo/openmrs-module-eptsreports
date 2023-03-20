@@ -14,17 +14,23 @@ public interface MQCategory9QueriesInterface {
 
     public static final String findPatientsWhoArePregnantDuringInclusionPeriod =
         "Select p.patient_id from patient p "
-            + "inner join encounter e on p.patient_id=e.patient_id   "
-            + "inner join obs o on e.encounter_id=o.encounter_id   "
+            + "inner join person pe on pe.person_id = p.patient_id "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on e.encounter_id=o.encounter_id "
             + "where p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and  o.concept_id=1982 "
-            + "and e.encounter_datetime BETWEEN DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) ";
+            + "and e.encounter_datetime BETWEEN DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) "
+            + "and pe.voided = 0 and pe.gender = 'F' "
+            + "group by p.patient_id ";
 
     public static final String findPatientsWhoAreBreastfeedingDuringInclusionPeriod =
         "Select p.patient_id from patient p "
-            + "inner join encounter e on p.patient_id=e.patient_id   "
-            + "inner join obs o on e.encounter_id=o.encounter_id   "
+            + "inner join person pe on pe.person_id = p.patient_id "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on e.encounter_id=o.encounter_id "
             + "where p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and  o.concept_id=6332 "
-            + "and e.encounter_datetime BETWEEN DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) ";
+            + "and e.encounter_datetime BETWEEN DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) "
+            + "and pe.gender = 'F' and pe.voided = 0 "
+            + "group by p.patient_id ";
 
     public static final String findPatientsWhoArePregnantDuringPreviousPeriod =
         "select pregnat.patient_id from (  "
