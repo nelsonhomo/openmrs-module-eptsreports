@@ -21,7 +21,7 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1(),
+                    .findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1ChildrenAdult(),
                 "CAT9ADUL01TNUMERATOR",
                 mappings),
             mappings),
@@ -71,7 +71,7 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1(),
+                    .findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1ChildrenAdult(),
                 "CAT9CHILDREN01TNUMERATOR",
                 mappings),
             mappings),
@@ -121,11 +121,11 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1(),
+                    .findPragnantWomanWhoARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1(),
                 "CAT9PREGNANT01TNUMERATOR",
                 mappings),
             mappings),
-        "");
+        "gender=F");
 
     dataSetDefinition.addColumn(
         "CAT9PREGNANT01TDENOMINATOR",
@@ -137,7 +137,7 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
                 "CAT9PREGNANT01TDENOMINATOR",
                 mappings),
             mappings),
-        "");
+        "gender=F");
 
     dataSetDefinition.addColumn(
         "CAT9PREGNANT02TNUMERATOR",
@@ -145,11 +145,11 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory9CohortQueries
-                    .findPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9Section9_2(),
+                    .findPregnantWomanPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9Section9_2(),
                 "CAT9PREGNANT02TNUMERATOR",
                 mappings),
             mappings),
-        "");
+        "gender=F");
 
     dataSetDefinition.addColumn(
         "CAT9PREGNANT02TDENOMINATOR",
@@ -161,6 +161,6 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
                 "CAT9PREGNANT02TDENOMINATOR",
                 mappings),
             mappings),
-        "");
+        "gender=F");
   }
 }
