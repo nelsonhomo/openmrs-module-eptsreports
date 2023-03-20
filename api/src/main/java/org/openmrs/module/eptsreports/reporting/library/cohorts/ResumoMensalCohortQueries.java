@@ -724,9 +724,9 @@ public class ResumoMensalCohortQueries {
     cd.addSearch(
         "A2",
         EptsReportUtils.map(
-            this.getPatientsWhoInitiatedPreTarvAtAfacilityDuringCurrentMonthA2(), mapping));
+            this.getPatientsWhoInitiatedPreTarvAtAfacilityDuringCurrentMonthA2(), mappingTPI));
 
-    cd.addSearch("C2", EptsReportUtils.map(this.getPatientsWhoMarkedINHC2(), mappingTPI));
+    cd.addSearch("C2", EptsReportUtils.map(this.getPatientsWhoMarkedINHC2(), mapping));
 
     cd.addSearch(
         "TOBEEXCLUDE",
