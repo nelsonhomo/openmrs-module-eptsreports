@@ -3,7 +3,6 @@ package org.openmrs.module.eptsreports.reporting.library.datasets.mqdatasets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.datasets.BaseDataSet;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
@@ -32,7 +31,7 @@ public class MQDataSet extends BaseDataSet {
   @Autowired private MQCategory15DataSet mQCategory15DataSet;
   @Autowired private MQCategory13P4DataSet mQCategory13P4DataSet;
   @Autowired private MQCategory9DataSet mQCategory9DataSet;
-  @Autowired  private MQCategory18DataSet mqCategory18DataSet;
+  @Autowired private MQCategory18DataSet mqCategory18DataSet;
   @Autowired private MQCommonsDementions mQCommonsDementions;
 
   public DataSetDefinition constructTMqDatset() {
