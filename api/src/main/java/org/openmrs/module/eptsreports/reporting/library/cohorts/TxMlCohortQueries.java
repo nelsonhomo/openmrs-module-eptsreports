@@ -27,6 +27,8 @@ public class TxMlCohortQueries {
   private static final String FIND_PATIENTS_WHO_WHERE_TRANSFERRED_OUT =
       "TX_ML/PATIENTS_WHO_WHERE_TRANSFERRED_OUT.sql";
 
+  private static final String FIND_PATIENTS_WHO_ARE_DEAD = "TX_ML/PATIENTS_WHO_ARE_DEAD.sql";
+
   @Autowired private GenericCohortQueries genericCohorts;
 
   private String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
@@ -143,7 +145,7 @@ public class TxMlCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "Finding patients who are marked as dead",
-                TXMLQueriesInterface.QUERY.findPatientsWhoAreDeadByTheEndOfReportingPeriod),
+                EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_DEAD)),
             mappings));
 
     definition.setCompositionString("TXML and DEAD");
