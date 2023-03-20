@@ -707,7 +707,16 @@ public class DSDCohortQueries {
                     DSDModeTypeLevel1.BM)),
             mappings));
 
-    definition.setCompositionString("IART AND BM");
+    definition.addSearch(
+        "BMDIURNA",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "BMDIURNA",
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                    DSDModeTypeLevel1.BM_DIURNA)),
+            mappings));
+
+    definition.setCompositionString("IART AND (BM OR BMDIURNA)");
 
     return definition;
   }
@@ -984,7 +993,16 @@ public class DSDCohortQueries {
                     DSDModeTypeLevel1.CM)),
             mappings));
 
-    definition.setCompositionString("IART AND CM");
+    definition.addSearch(
+        "CMNOTURNA",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "CMNOTURNA",
+                DSDQueriesInterface.QUERY.findPatientsWhoAreIncludedInDSDModel(
+                    DSDModeTypeLevel1.CM_NOTURNA)),
+            mappings));
+
+    definition.setCompositionString("IART AND (CM OR CMNOTURNA)");
 
     return definition;
   }
