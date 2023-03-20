@@ -3,6 +3,7 @@ package org.openmrs.module.eptsreports.reporting.library.datasets.mqdatasets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.datasets.BaseDataSet;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
@@ -31,7 +32,7 @@ public class MQDataSet extends BaseDataSet {
   @Autowired private MQCategory15DataSet mQCategory15DataSet;
   @Autowired private MQCategory13P4DataSet mQCategory13P4DataSet;
   @Autowired private MQCategory9DataSet mQCategory9DataSet;
-  @Autowired private MQCategory18DataSet mqCategory18DataSet;
+  @Autowired  private MQCategory18DataSet mqCategory18DataSet;
   @Autowired private MQCommonsDementions mQCommonsDementions;
 
   public DataSetDefinition constructTMqDatset() {
@@ -50,21 +51,21 @@ public class MQDataSet extends BaseDataSet {
     //    this.mQCategory4Dataset.constructTMqDatset(dataSetDefinition, mappings);
     //    this.mQCategory5DataSet.constructTMqDatset(dataSetDefinition, mappings);
     //    this.mQCategory6Dataset.constructTMqDatset(dataSetDefinition, mappings);
-    //    this.mQCategory7Dataset.constructTMqDatset(dataSetDefinition, mappings);
+    this.mQCategory7Dataset.constructTMqDatset(dataSetDefinition, mappings);
     this.mQCategory9DataSet.constructTMqDatset(dataSetDefinition, mappings);
     //    this.mQCategory10DataSet.constructTMqDatset(dataSetDefinition, mappings);
 
-    //    this.mQCategory11DataSet.constructTMqDatset(dataSetDefinition, mappings);
-    //    this.mQCategory12DataSet.constructTMqDatset(dataSetDefinition, mappings);
-    //    this.mQCategory12SectionIIDataSet.constructTMqDatset(dataSetDefinition, mappings);
-    //    this.mQCategory13DataSetSectionI.constructTMqDatset(dataSetDefinition, mappings);
-    //    this.mQCategory13DataSetSectionII.constructTMqDatset(dataSetDefinition, mappings);
-    //    this.mQCategory13P2DataSet.constructTMqDatset(dataSetDefinition, mappings);
-    //    this.mQCategory13P3DataSet.constructTMqDatset(dataSetDefinition, mappings);
-    //    this.mQCategory13P4DataSet.constructTMqDatset(dataSetDefinition, mappings);
-    //    this.mqCategory14DataSet.constructTMqDatset(dataSetDefinition, mappings);
-    //    this.mQCategory15DataSet.constructTMqDatset(dataSetDefinition, mappings);
-    //    this.mqCategory18DataSet.constructTMqDatset(dataSetDefinition, mappings);
+    this.mQCategory11DataSet.constructTMqDatset(dataSetDefinition, mappings);
+    this.mQCategory12DataSet.constructTMqDatset(dataSetDefinition, mappings);
+    this.mQCategory12SectionIIDataSet.constructTMqDatset(dataSetDefinition, mappings);
+    this.mQCategory13DataSetSectionI.constructTMqDatset(dataSetDefinition, mappings);
+    this.mQCategory13DataSetSectionII.constructTMqDatset(dataSetDefinition, mappings);
+    this.mQCategory13P2DataSet.constructTMqDatset(dataSetDefinition, mappings);
+    this.mQCategory13P3DataSet.constructTMqDatset(dataSetDefinition, mappings);
+    this.mQCategory13P4DataSet.constructTMqDatset(dataSetDefinition, mappings);
+    this.mqCategory14DataSet.constructTMqDatset(dataSetDefinition, mappings);
+    this.mQCategory15DataSet.constructTMqDatset(dataSetDefinition, mappings);
+    this.mqCategory18DataSet.constructTMqDatset(dataSetDefinition, mappings);
 
     return dataSetDefinition;
   }
