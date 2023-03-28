@@ -949,7 +949,7 @@ public class ResumoMensalQueries {
             + "inner join obs obsEstado on obsEstado.encounter_id = e.encounter_id  "
             + "where e.encounter_type=6 and e.voided=0 and p.voided =0 and  e.location_id=:location "
             + "and  ultimaProfilaxiaIsoniazia.concept_id = 23985  and ultimaProfilaxiaIsoniazia.value_coded in(656,23954)  "
-            + "and obsEstado.concept_id = 165308 and obsEstado.value_coded = 1256   "
+            + "and obsEstado.concept_id = 165308 and obsEstado.value_coded = 1256 and obsEstado.voided=0  "
             + ")f order by f.dataInicioTPI ASC "
             + "            ) INH_3HP "
             + "            inner join ( "
