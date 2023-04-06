@@ -721,11 +721,6 @@ public class ResumoMensalCohortQueries {
     cd.addParameter(new Parameter("endDate", "End Date", Date.class));
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
-    cd.addSearch(
-        "A2",
-        EptsReportUtils.map(
-            this.getPatientsWhoInitiatedPreTarvAtAfacilityDuringCurrentMonthA2(), mapping));
-
     cd.addSearch("C2", EptsReportUtils.map(this.getPatientsWhoMarkedINHC2(), mappingTPI));
 
     cd.addSearch(
@@ -735,7 +730,7 @@ public class ResumoMensalCohortQueries {
                 "TOBEEXCLUDE", ResumoMensalQueries.getPatientsWhoMarkedINHC2ToBeExclude()),
             mappingTPI));
 
-    cd.setCompositionString("(A2 AND C2) NOT (TOBEEXCLUDE)");
+    cd.setCompositionString("C2 NOT (TOBEEXCLUDE)");
     return cd;
   }
 
