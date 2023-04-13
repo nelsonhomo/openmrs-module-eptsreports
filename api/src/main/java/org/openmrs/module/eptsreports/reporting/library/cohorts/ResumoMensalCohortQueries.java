@@ -21,7 +21,6 @@ import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.eptsreports.metadata.HivMetadata;
 import org.openmrs.module.eptsreports.metadata.TbMetadata;
-import org.openmrs.module.eptsreports.reporting.calculation.resumomensal.ResumoMensalINHCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.resumomensal.ResumoMensalTBCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.resumomensal.ResumoMensalTbExclusionCalculation;
 import org.openmrs.module.eptsreports.reporting.cohort.definition.BaseFghCalculationCohortDefinition;
@@ -687,14 +686,16 @@ public class ResumoMensalCohortQueries {
   @DocumentedDefinition(value = "C2")
   public CohortDefinition getPatientsWhoMarkedINHC2() {
 
-    BaseFghCalculationCohortDefinition cd =
-        new BaseFghCalculationCohortDefinition(
-            "C2", Context.getRegisteredComponents(ResumoMensalINHCalculation.class).get(0));
-    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    cd.addParameter(new Parameter("endDate", "end Date", Date.class));
-    cd.addParameter(new Parameter("location", "Location", Location.class));
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+    definition.setName("C2");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    return cd;
+    String query = ResumoMensalQueries.getPatientsWhoMarkedINHC2();
+    definition.setQuery(query);
+
+    return definition;
   }
 
   @DocumentedDefinition(value = "C3")
