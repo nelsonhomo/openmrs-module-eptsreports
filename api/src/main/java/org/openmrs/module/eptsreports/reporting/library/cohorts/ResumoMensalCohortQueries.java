@@ -713,7 +713,6 @@ public class ResumoMensalCohortQueries {
 
   public CohortDefinition getPatientsWhoMarkedINHC2A2() {
 
-    String mapping = "startDate=${startDate-1m},endDate=${endDate},location=${location}";
     String mappingTPI = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     CompositionCohortDefinition cd = new CompositionCohortDefinition();
@@ -731,7 +730,16 @@ public class ResumoMensalCohortQueries {
                 "TOBEEXCLUDE", ResumoMensalQueries.getPatientsWhoMarkedINHC2ToBeExclude()),
             mappingTPI));
 
-    cd.setCompositionString("C2 NOT (TOBEEXCLUDE)");
+    cd.addSearch(
+        "TRASFERED",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsWhoInitiatedPreTarvByEndOfPreviousMonthA2",
+                ResumoMensalQueries
+                    .getPatientsTransferredFromAnotherHealthFacilityDuringTheCurrentStartDateEndDate()),
+            mappingTPI));
+
+    cd.setCompositionString("C2 NOT (TOBEEXCLUDE OR TRASFERED)");
     return cd;
   }
 
