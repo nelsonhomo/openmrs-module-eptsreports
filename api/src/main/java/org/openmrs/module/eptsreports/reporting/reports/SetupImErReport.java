@@ -10,8 +10,10 @@ import org.openmrs.module.eptsreports.reporting.library.datasets.Eri2MonthsDatas
 import org.openmrs.module.eptsreports.reporting.library.datasets.Eri4MonthsDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.IMR1BDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.IMR1Dataset;
+import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TxCurrDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TxNewDataset;
+import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ResumoMensalDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -40,6 +42,10 @@ public class SetupImErReport extends EptsDataExportManager {
   @Autowired private IMR1BDataset imr1BDataset;
 
   @Autowired private DatimCodeDataSet datimCodeDataSet;
+
+  @Autowired private ResumoMensalDataSetDefinition resumoMensalDataSetDefinition;
+
+  @Autowired private SismaCodeDataSet sismaCodeDataset;
 
   @Override
   public String getExcelDesignUuid() {
@@ -91,6 +97,15 @@ public class SetupImErReport extends EptsDataExportManager {
     rd.addDataSetDefinition(
         "D",
         Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
+
+    rd.addDataSetDefinition(
+        "R",
+        Mapped.mapStraightThrough(
+            this.resumoMensalDataSetDefinition.constructResumoMensalDataset()));
+
+    rd.addDataSetDefinition(
+        "SC",
+        Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(
