@@ -241,11 +241,6 @@ public class MQCategory9CohortQueries {
             this.mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
 
     definition.addSearch(
-        "BREASTFEEDING",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
-
-    definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
             this.mQCohortQueries
@@ -257,13 +252,8 @@ public class MQCategory9CohortQueries {
         EptsReportUtils.map(
             this.findPatientsWhoArePregnantDuringInclusionPeriod(), mappingsFirstConsultation));
 
-    definition.addSearch(
-        "BREASTFEEDING-INCLUSION-DATE",
-        EptsReportUtils.map(
-            this.findPatientsWhoAreBreastfeedingDuringInclusionPeriod(),
-            mappingsFirstConsultation));
     definition.setCompositionString(
-        "FIRST-CONSULTATION NOT(PREGNANT OR BREASTFEEDING OR TRANSFERED-IN OR PREGNANT-INCLUSION-DATE OR BREASTFEEDING-INCLUSION-DATE)");
+        "FIRST-CONSULTATION NOT(PREGNANT OR TRANSFERED-IN OR PREGNANT-INCLUSION-DATE)");
 
     return definition;
   }
