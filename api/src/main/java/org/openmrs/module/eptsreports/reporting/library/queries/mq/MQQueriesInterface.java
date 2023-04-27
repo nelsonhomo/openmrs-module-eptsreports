@@ -1,5 +1,7 @@
 package org.openmrs.module.eptsreports.reporting.library.queries.mq;
 
+import org.openmrs.module.eptsreports.reporting.utils.TypePTV;
+
 public interface MQQueriesInterface {
 
   class QUERY {
@@ -103,25 +105,50 @@ public interface MQQueriesInterface {
             + "consultaOuARV on obito.patient_id=consultaOuARV.patient_id "
             + "where consultaOuARV.encounter_datetime<=obito.data_obito and obito.data_obito <= :endRevisionDate ";
 
-    public static final String findPatientsWhoArePregnantInclusionDateRF08 =
-        "Select p.patient_id from person pe "
-            + "inner join patient p on pe.person_id=p.patient_id "
-            + "inner join encounter e on p.patient_id=e.patient_id "
-            + "inner join obs o on e.encounter_id=o.encounter_id "
-            + "inner join obs obsGravida on e.encounter_id=obsGravida.encounter_id "
-            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsGravida.voided=0 and e.encounter_type=53 and e.location_id=:location and "
-            + "o.concept_id=1190 and o.value_datetime is not null and "
-            + "obsGravida.concept_id=1982 and obsGravida.value_coded=1065 and pe.gender='F' ";
+    public static String getPatientsWhoArePregnantOrBreastfeeding(TypePTV typePTV) {
 
-    public static final String findPatientsWhoAreBreastfeedingInclusionDateRF09 =
-        "Select p.patient_id from person pe "
-            + "inner join patient p on pe.person_id=p.patient_id "
-            + "inner join encounter e on p.patient_id=e.patient_id "
-            + "inner join obs o on e.encounter_id=o.encounter_id "
-            + "inner join obs obsLactante on e.encounter_id=obsLactante.encounter_id "
-            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsLactante.voided=0 and e.encounter_type=53 and e.location_id=:location and "
-            + "o.concept_id=1190 and o.value_datetime is not null and "
-            + "obsLactante.concept_id=6332 and obsLactante.value_coded=1065 and pe.gender='F' ";
+      String query =
+          "select f.patient_id from ("
+              + "select f.patient_id,f.data_lactante,f.data_gravida, if(f.data_lactante is null,1, if(f.data_gravida is null,2, if(f.data_gravida>=f.data_lactante,1,2))) decisao "
+              + "from  "
+              + "( "
+              + "select p.person_id as patient_id ,gravida.data_gravida,lactante.data_lactante from person  p "
+              + "inner join ( "
+              + "Select p.patient_id,obsGravida.obs_datetime data_gravida  from person pe  "
+              + "inner join patient p on pe.person_id=p.patient_id  "
+              + "inner join encounter e on p.patient_id=e.patient_id  "
+              + "inner join obs o on e.encounter_id=o.encounter_id  "
+              + "inner join obs obsGravida on e.encounter_id=obsGravida.encounter_id  "
+              + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsGravida.voided=0 and e.encounter_type=53 and e.location_id=:location and  "
+              + "o.concept_id=1190 and o.value_datetime is not null and  "
+              + "obsGravida.concept_id=1982 and obsGravida.value_coded=1065 and pe.gender='F'  "
+              + ")gravida on gravida.patient_id=p.person_id "
+              + "left join "
+              + "( "
+              + "Select p.patient_id,obsLactante.obs_datetime data_lactante from person pe  "
+              + "inner join patient p on pe.person_id=p.patient_id  "
+              + "inner join encounter e on p.patient_id=e.patient_id  "
+              + "inner join obs o on e.encounter_id=o.encounter_id  "
+              + "inner join obs obsLactante on e.encounter_id=obsLactante.encounter_id  "
+              + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsLactante.voided=0 and e.encounter_type=53 and e.location_id=:location and  "
+              + "o.concept_id=1190 and o.value_datetime is not null and  "
+              + "obsLactante.concept_id=6332 and obsLactante.value_coded=1065 and pe.gender='F'  "
+              + ")lactante  on lactante.patient_id=gravida.patient_id "
+              + ")f "
+              + "GROUP by f.patient_id  "
+              + ")f ";
+
+      switch (typePTV) {
+        case PREGNANT:
+          query = query + "where f.decisao = 1 ";
+          break;
+
+        case BREASTFEEDING:
+          query = query + "where f.decisao = 2 ";
+          break;
+      }
+      return query;
+    }
 
     public static final String
         findPatientsWhoAreNewEnrolledOnArtByAgeUsingYearAdulyAndHaveFirstConsultInclusionPeriodCategory3FR12Numerator =

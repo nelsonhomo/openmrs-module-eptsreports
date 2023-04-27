@@ -4,6 +4,7 @@ import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory9QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.TypePTV;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
@@ -47,7 +48,8 @@ public class MQCategory9CohortQueries {
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
     String query =
-        MQCategory9QueriesInterface.QUERY.findPatientsWhoArePregnantDuringInclusionPeriod;
+        MQCategory9QueriesInterface.QUERY.getPatientsWhoArePregnantOrBreastfeeding(
+            TypePTV.PREGNANT);
 
     definition.setQuery(query);
 
@@ -66,7 +68,8 @@ public class MQCategory9CohortQueries {
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
     String query =
-        MQCategory9QueriesInterface.QUERY.findPatientsWhoAreBreastfeedingDuringInclusionPeriod;
+        MQCategory9QueriesInterface.QUERY.getPatientsWhoArePregnantOrBreastfeeding(
+            TypePTV.BREASTFEEDING);
 
     definition.setQuery(query);
 

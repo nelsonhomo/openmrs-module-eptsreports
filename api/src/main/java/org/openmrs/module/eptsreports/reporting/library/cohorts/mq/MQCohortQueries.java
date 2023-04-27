@@ -14,6 +14,7 @@ import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory13P
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory13P4QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportConstants;
+import org.openmrs.module.eptsreports.reporting.utils.TypePTV;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
@@ -111,7 +112,8 @@ public class MQCohortQueries {
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    String query = MQQueriesInterface.QUERY.findPatientsWhoArePregnantInclusionDateRF08;
+    String query =
+        MQQueriesInterface.QUERY.getPatientsWhoArePregnantOrBreastfeeding(TypePTV.PREGNANT);
 
     definition.setQuery(query);
 
@@ -129,7 +131,8 @@ public class MQCohortQueries {
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    String query = MQQueriesInterface.QUERY.findPatientsWhoAreBreastfeedingInclusionDateRF09;
+    String query =
+        MQQueriesInterface.QUERY.getPatientsWhoArePregnantOrBreastfeeding(TypePTV.BREASTFEEDING);
 
     definition.setQuery(query);
 
