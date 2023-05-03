@@ -29,7 +29,7 @@ public class MQCategory11DataSet extends MQAbstractDataSet {
                 "CAT11AdultoAPSSPPDENOMINATOR",
                 mappings),
             mappings),
-        "ageMqNewART=15+");
+        "ageMqNewART=15PlusOrBreastfeeding");
 
     dataSetDefinition.addColumn(
         "CAT11AdultoAPSSPPNUMERATOR",
@@ -42,7 +42,7 @@ public class MQCategory11DataSet extends MQAbstractDataSet {
                 "CAT11AdultoAPSSPPNUMERATOR",
                 mappings),
             mappings),
-        "ageMqNewART=15+");
+        "ageMqNewART=15PlusOrBreastfeeding");
 
     dataSetDefinition.addColumn(
         "CAT11Adulto1000CVDENOMINATOR",
@@ -77,7 +77,7 @@ public class MQCategory11DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQGenericCohortQueries
-                    .findPatientOnARTdExcludingPregantAndBreastfeedingAndTransferredInTransferredOut(),
+                    .findPatientOnARTdExcludingPregantAndBreastfeedingAndTransferredInTransferredOutChildrens(),
                 "CAT11ChildrenBiggerThen2eLess14APSSPPDENOMINATOR",
                 mappings),
             mappings),

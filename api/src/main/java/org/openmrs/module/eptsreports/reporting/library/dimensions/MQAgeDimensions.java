@@ -127,6 +127,25 @@ public class MQAgeDimensions {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientsWhoAreNewlyEnrolledOnARTByAdultOrBreastfeeding")
+  public CohortDefinition findPatientsWhoAreNewlyEnrolledOnARTByAdultOrBreastfeeding(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY
+            .findPatientsWhoAreNewlyEnrolledOnARTBiggerThanParamOrBreastfeeding(age);
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientsWhoAreNewlyEnrolledOnARTByAdulOrChildren")
   public CohortDefinition findPatientsWhoAreNewlyEnrolledOnARTChildren(int age) {
 
@@ -220,6 +239,11 @@ public class MQAgeDimensions {
 
     dimension.addCohortDefinition(
         "15+", EptsReportUtils.map(this.findPatientsWhoAreNewlyEnrolledOnARTByAdult(15), mappings));
+
+    dimension.addCohortDefinition(
+        "15PlusOrBreastfeeding",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreNewlyEnrolledOnARTByAdultOrBreastfeeding(15), mappings));
 
     dimension.addCohortDefinition(
         "15-",
