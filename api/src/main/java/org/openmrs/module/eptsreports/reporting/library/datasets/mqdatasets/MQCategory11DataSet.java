@@ -25,7 +25,7 @@ public class MQCategory11DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQGenericCohortQueries
-                    .findPatientOnARTdExcludingPregantAndBreastfeedingAndTransferredInTransferredOut(),
+                    .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(),
                 "CAT11AdultoAPSSPPDENOMINATOR",
                 mappings),
             mappings),
@@ -51,11 +51,11 @@ public class MQCategory11DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory11CohortQueries
-                    .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory11Denominator(),
+                    .findPatietsOnARTStartedExcludingPregantAndTransferredInTRANSFEREDOUTWITH1000CVCategory11Denominator(),
                 "CAT11Adulto1000CVDENOMINATOR",
                 mappings),
             mappings),
-        "ageOnCV=15+");
+        "ageOnCV=15PlusBreastfeeding");
 
     dataSetDefinition.addColumn(
         "CAT11Adulto1000CVNUMERATOR",
@@ -68,7 +68,7 @@ public class MQCategory11DataSet extends MQAbstractDataSet {
                 "CAT11Adulto1000CVNUMERATOR",
                 mappings),
             mappings),
-        "ageOnCV=15+");
+        "ageOnCV=15PlusBreastfeeding");
 
     dataSetDefinition.addColumn(
         "CAT11ChildrenBiggerThen2eLess14APSSPPDENOMINATOR",
@@ -103,7 +103,7 @@ public class MQCategory11DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQGenericCohortQueries
-                    .findPatientOnARTdExcludingPregantAndBreastfeedingAndTransferredInTransferredOut(),
+                    .findPatientOnARTdExcludingPregantAndBreastfeedingAndTransferredInTransferredOutChildrens(),
                 "CAT11Least9APSSConsultationDENOMINATOR",
                 mappings),
             mappings),

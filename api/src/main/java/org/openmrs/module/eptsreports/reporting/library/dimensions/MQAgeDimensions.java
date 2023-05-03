@@ -399,6 +399,25 @@ public class MQAgeDimensions {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPAtientWithCVOver1000CopiesBiggerThanParamOrBreastfeeding")
+  public CohortDefinition findPAtientWithCVOver1000CopiesBiggerThanParamOrBreastfeeding(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY.findPAtientWithCVOver1000CopiesBiggerThanParamOrBreastfeeding(
+            age);
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPAtientWithCVOver1000CopiesChildren")
   public CohortDefinition findPAtientWithCVOver1000CopiesChildren(int age) {
 
@@ -801,6 +820,11 @@ public class MQAgeDimensions {
 
     dimension.addCohortDefinition(
         "15+", EptsReportUtils.map(this.findPAtientWithCVOver1000CopiesAdult(15), mappings));
+
+    dimension.addCohortDefinition(
+        "15PlusBreastfeeding",
+        EptsReportUtils.map(
+            this.findPAtientWithCVOver1000CopiesBiggerThanParamOrBreastfeeding(15), mappings));
 
     dimension.addCohortDefinition(
         "15-", EptsReportUtils.map(this.findPAtientWithCVOver1000CopiesChildren(15), mappings));

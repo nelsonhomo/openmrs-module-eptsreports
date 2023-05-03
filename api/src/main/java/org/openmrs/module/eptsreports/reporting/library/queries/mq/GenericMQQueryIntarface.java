@@ -190,6 +190,44 @@ public interface GenericMQQueryIntarface {
       return String.format(sql, startAge);
     }
 
+    public static final String findPAtientWithCVOver1000CopiesBiggerThanParamOrBreastfeeding(
+        int startAge) {
+      final String sql =
+          "select carga_viral.patient_id from (  "
+              + "Select p.patient_id, min(e.encounter_datetime) data_carga from patient p  "
+              + "inner join encounter e on p.patient_id = e.patient_id  "
+              + "inner join obs o on e.encounter_id=o.encounter_id  "
+              + "where p.voided = 0 and e.voided = 0 and o.voided = 0 and e.encounter_type = 6 and  o.concept_id = 856 and  "
+              + "DATE(e.encounter_datetime) between :startInclusionDate and :endInclusionDate and e.location_id = :location and o.value_numeric >= 1000  "
+              + "group by p.patient_id  "
+              + "UNION  "
+              + "Select p.patient_id, min(o.obs_datetime) data_carga from patient p  "
+              + "inner join encounter e on p.patient_id = e.patient_id  "
+              + "inner join obs o on e.encounter_id=o.encounter_id  "
+              + "where p.voided = 0 and e.voided = 0 and o.voided = 0 and e.encounter_type = 53 and  o.concept_id = 856 and  "
+              + "DATE(o.obs_datetime) between :startInclusionDate and :endInclusionDate and e.location_id = :location and o.value_numeric >= 1000  "
+              + "group by p.patient_id  "
+              + ") carga_viral  "
+              + "inner join person on person_id = carga_viral.patient_id  "
+              + "WHERE (TIMESTAMPDIFF(year, birthdate, carga_viral.data_carga)) >= 15  AND birthdate IS NOT NULL and voided = 0  "
+              + "UNION "
+              + "select primeiraCVAlta.patient_id  from  (  "
+              + "Select p.patient_id, min(e.encounter_datetime) data_carga  "
+              + "from    patient p  "
+              + "inner join encounter e on p.patient_id = e.patient_id  "
+              + "inner join obs o on e.encounter_id=o.encounter_id  "
+              + "where   p.voided = 0 and e.voided = 0 and o.voided = 0 and e.encounter_type = 6 and  o.concept_id = 856 and  "
+              + "DATE(e.encounter_datetime) between :startInclusionDate and :endInclusionDate  and e.location_id = :location and o.value_numeric >= 1000  "
+              + "group by p.patient_id   "
+              + ") primeiraCVAlta  "
+              + "inner join encounter consultaLactante on consultaLactante.patient_id = primeiraCVAlta.patient_id  "
+              + "inner join obs obsLactante on consultaLactante.encounter_id = obsLactante.encounter_id  "
+              + "inner join person on person.person_id = primeiraCVAlta.patient_id  "
+              + "where   consultaLactante.voided = 0 and consultaLactante.encounter_type = 6 and consultaLactante.encounter_datetime = primeiraCVAlta.data_carga and consultaLactante.location_id = :location and  "
+              + "obsLactante.voided = 0 and obsLactante.concept_id = 6332 and obsLactante.value_coded = 1065 and person.gender = 'F' ";
+      return String.format(sql, startAge);
+    }
+
     public static final String findPAtientWithCVOver1000CopiesLessThanParam(int startAge) {
       final String sql =
           " select carga_viral.patient_id from ( "
