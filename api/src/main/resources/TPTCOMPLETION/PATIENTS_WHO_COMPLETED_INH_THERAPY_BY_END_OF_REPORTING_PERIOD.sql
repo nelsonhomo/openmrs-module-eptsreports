@@ -348,7 +348,7 @@ union
 		(
 		
  			select patient_id, data_inicio_inh, count(data_fim_INH) from (
-			select distinct fim.patient_id,inicio_inh.data_inicio_inh,data_fim_INH from (
+			select fim.patient_id,inicio_inh.data_inicio_inh,data_fim_INH from (
 			select p.patient_id,e.encounter_datetime data_fim_INH, e.encounter_id																		
 			from	patient p														 			  															
 				inner join encounter e on p.patient_id=e.patient_id
