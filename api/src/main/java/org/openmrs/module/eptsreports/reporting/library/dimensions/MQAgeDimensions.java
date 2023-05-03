@@ -592,6 +592,28 @@ public class MQAgeDimensions {
     return definition;
   }
 
+  @DocumentedDefinition(
+      value = "calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding")
+  public CohortDefinition calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding(
+      int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnTheFirstConsultationDateBiggerThanParam");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY
+            .calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding(age);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "calculateAgeOnTheFirstConsultationDateLessThanParam")
   public CohortDefinition calculateAgeOnTheFirstConsultationDateLessThanParam(int age) {
 
@@ -671,7 +693,8 @@ public class MQAgeDimensions {
     dimension.addCohortDefinition(
         "15+",
         EptsReportUtils.map(
-            this.calculateAgeOnTheFirstConsultationDateBiggerThanParamFC(15), mappings));
+            this.calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding(15),
+            mappings));
 
     return dimension;
   }
