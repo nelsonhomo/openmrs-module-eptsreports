@@ -1,4 +1,3 @@
- 
   select patient_id from (
  select inicio_inh.patient_id                                                                                                               
  from                                                                                                                                                
@@ -278,7 +277,7 @@ from
 	inner join obs obsLevTPI on e.encounter_id=obsLevTPI.encounter_id 
 where e.voided=0 and obsDTINH.voided=0 and obsLevTPI.voided=0 and e.encounter_type = 60      
       and obsDTINH.concept_id=23986 and obsDTINH.value_coded=1098  and obsLevTPI.concept_id=23985 and obsLevTPI.value_coded in (656,23982)  
-      and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.location_id=:location  
+      and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.encounter_datetime < :endDate and e.location_id=:location  
       group by inicio_inh.patient_id,inicio_inh.data_inicio_inh having count(distinct e.encounter_id)>=6  
 
 union
@@ -495,12 +494,12 @@ union
 			inner join obs obsLevTPI on e.encounter_id=obsLevTPI.encounter_id          
 		where e.voided=0 and obsDTINH.voided=0 and obsLevTPI.voided=0 and e.encounter_type in (60)  
 			and obsDTINH.concept_id=23986 and obsDTINH.value_coded=1098  and obsLevTPI.concept_id=23985 and obsLevTPI.value_coded in (656,23982)  
-			and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.location_id=:location  
+			and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.encounter_datetime < :endDate and e.location_id=:location  
 			group by inicio_inh.patient_id,inicio_inh.data_inicio_inh having count(distinct e.encounter_id)>=3           
 )inicio_inh
 inner join     
 (
-	 select  inicio_inh.patient_id                                                                                                               
+	 select  inicio_inh.patient_id,data_inicio_inh                                                                                                               
  	from                                                                                                                                                
      (  
          select p.patient_id, e.encounter_datetime data_inicio_inh                                                                                   
@@ -564,7 +563,7 @@ inner join
 		inner join obs obsLevTPI on e.encounter_id=obsLevTPI.encounter_id          
 	where e.voided=0 and obsDTINH.voided=0 and obsLevTPI.voided=0 and e.encounter_type in (60)  
 	  and obsDTINH.concept_id=23986 and obsDTINH.value_coded=23720  and obsLevTPI.concept_id=23985 and obsLevTPI.value_coded in (656,23982)  
-	  and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.location_id=:location  
+	  and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.encounter_datetime < :endDate and e.location_id=:location  
 	  group by inicio_inh.patient_id,inicio_inh.data_inicio_inh having count(distinct e.encounter_id)>=1 
 ) inicio_inh_dt on inicio_inh_dt.patient_id = inicio_inh.patient_id
 ) final group by patient_id  
