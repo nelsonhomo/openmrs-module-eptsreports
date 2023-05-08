@@ -31,14 +31,14 @@ public interface CxCaSCRNQueries {
             int concept, int answer) {
       String sql =
           "SELECT finalCCU.patient_id FROM  ( "
-              + "SELECT p.patient_id,min(o.obs_datetime) dataccu FROM patient p  "
+              + "SELECT p.patient_id,min(o.obs_datetime) dataccu, o.value_coded FROM patient p  "
               + "INNER JOIN encounter e on p.patient_id=e.patient_id      "
               + "INNER JOIN obs o on o.encounter_id=e.encounter_id  "
               + "WHERE e.voided=0 and o.voided=0 and p.voided=0 AND e.encounter_type=28 "
-              + "and o.concept_id=%s and o.value_coded=%s AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location "
+              + "and o.concept_id=%s and o.value_coded in (2093,664,703) AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location "
               + "GROUP BY p.patient_id  "
-              + ")finalCCU "
-              + "GROUP by finalCCU.patient_id ";
+              + ")finalCCU where finalCCU.value_coded = %s "
+              + " GROUP by finalCCU.patient_id ";
 
       return String.format(sql, concept, answer);
     }
