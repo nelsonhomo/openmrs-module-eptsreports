@@ -1536,13 +1536,6 @@ public class MQCategory15CohortQueries {
             mappings));
 
     definition.addSearch(
-        "E",
-        EptsReportUtils.map(
-            mICategory15CohortQueries
-                .findPatientsWithRegularClinicalConsultationOrRegularArtPickUpInTheLastThreeMonths(),
-            mappings));
-
-    definition.addSearch(
         "C",
         EptsReportUtils.map(
             this.findPatientsWhoArePregnant14MonthsSpecificForCategory15(), mappings));
@@ -1562,7 +1555,13 @@ public class MQCategory15CohortQueries {
         "J",
         EptsReportUtils.map(
             this.findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44(), mappings));
-    definition.setCompositionString("(A AND B1 AND E) NOT (C OR D OR F OR G OR J)");
+
+    definition.addSearch(
+        "TB",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreInTbTreatmentFor7MonthsPriorEndRevisionPeriod(), mappings));
+
+    definition.setCompositionString("(A AND B1 AND E) NOT (C OR D OR F OR G OR J OR TB)");
 
     return definition;
   }
@@ -1821,6 +1820,27 @@ public class MQCategory15CohortQueries {
     String query =
         MQCategory15QueriesInterface.QUERY
             .findPatientsWithClinicalConsultationAndARTStartDateGreaterThanThreeMonths;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWhoAreInTbTreatmentFor7MonthsPriorEndRevisionPeriod")
+  public CohortDefinition findPatientsWhoAreInTbTreatmentFor7MonthsPriorEndRevisionPeriod() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "MQ Category 15 - Get Patients in TB Treatment 7 Months Prior the End Revision Period");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory15QueriesInterface.QUERY
+            .findPatientsWhoAreInTbTreatmentFor7MonthsPriorEndRevisionPeriod;
 
     definition.setQuery(query);
 
