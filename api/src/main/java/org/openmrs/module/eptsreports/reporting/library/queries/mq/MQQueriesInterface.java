@@ -619,6 +619,44 @@ public interface MQQueriesInterface {
             + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 AND person.voided=0 "
             + "AND TIMESTAMPDIFF(year,birthdate,:endInclusionDate) >= %d AND birthdate IS NOT NULL";
 
+    public static final String findPatientsBiggerThanBreastfeeding =
+        "SELECT patient_id FROM patient "
+            + "INNER JOIN person ON patient_id = person_id "
+            + "WHERE patient.voided=0 "
+            + "AND person.voided=0 "
+            + "AND TIMESTAMPDIFF(year,birthdate,:endInclusionDate) >= %d "
+            + "AND birthdate IS NOT NULL "
+            + "union "
+            + "select f.patient_id from ( "
+            + "select f.patient_id,f.data_lactante,f.data_gravida, if(f.data_lactante is null,1, if(f.data_gravida is null,2, if(f.data_gravida>=f.data_lactante,1,2))) decisao "
+            + "from  "
+            + "( "
+            + "select p.person_id as patient_id ,gravida.data_gravida,lactante.data_lactante from person  p "
+            + "inner join ( "
+            + "Select p.patient_id,obsGravida.obs_datetime data_gravida  from person pe  "
+            + "inner join patient p on pe.person_id=p.patient_id  "
+            + "inner join encounter e on p.patient_id=e.patient_id  "
+            + "inner join obs o on e.encounter_id=o.encounter_id  "
+            + "inner join obs obsGravida on e.encounter_id=obsGravida.encounter_id  "
+            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsGravida.voided=0 and e.encounter_type=53 and e.location_id=:location and  "
+            + "o.concept_id=1190 and o.value_datetime is not null and  "
+            + "obsGravida.concept_id=1982 and obsGravida.value_coded=1065 and pe.gender='F'  "
+            + ")gravida on gravida.patient_id=p.person_id "
+            + "left join "
+            + "( "
+            + "Select p.patient_id,obsLactante.obs_datetime data_lactante from person pe  "
+            + "inner join patient p on pe.person_id=p.patient_id  "
+            + "inner join encounter e on p.patient_id=e.patient_id  "
+            + "inner join obs o on e.encounter_id=o.encounter_id  "
+            + "inner join obs obsLactante on e.encounter_id=obsLactante.encounter_id  "
+            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsLactante.voided=0 and e.encounter_type=53 and e.location_id=:location and  "
+            + "o.concept_id=1190 and o.value_datetime is not null and  "
+            + "obsLactante.concept_id=6332 and obsLactante.value_coded=1065 and pe.gender='F'  "
+            + ")lactante  on lactante.patient_id=gravida.patient_id "
+            + ")f "
+            + "GROUP by f.patient_id  "
+            + ")f where f.decisao=2 ";
+
     public static final String findPatientsLessThan =
         "SELECT patient_id FROM patient "
             + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 AND person.voided=0 "
@@ -642,6 +680,25 @@ public interface MQQueriesInterface {
                 + " ) alternativa "
                 + "INNER JOIN person ON alternativa.patient_id = person.person_id WHERE person.voided=0 "
                 + "AND TIMESTAMPDIFF(year,birthdate,alternativa.data_linha) >= %d AND birthdate IS NOT NULL";
+
+    public static final String
+        findAllPatientsWhoHaveTherapheuticLineSecondLineDuringInclusionPeriodCategory13P3B2NEWDenominatorByAgeRenge =
+            " select alternativa.patient_id "
+                + " from "
+                + " ( "
+                + " Select p.patient_id, max(obsLinha.obs_datetime) data_linha "
+                + " from patient p "
+                + " inner join encounter e on p.patient_id = e.patient_id "
+                + " inner join obs obsLinha on obsLinha.encounter_id = e.encounter_id "
+                + " left join obs obsJustificacao on obsJustificacao.encounter_id = e.encounter_id and obsJustificacao.voided = 0 and "
+                + " obsJustificacao.concept_id = 1792 "
+                + " where p.voided = 0 and e.voided = 0 and e.encounter_type = 53 and obsLinha.concept_id = 21187 and obsLinha.voided = 0 and "
+                + " obsLinha.obs_datetime BETWEEN :startInclusionDate and :endInclusionDate and e.location_id = :location and "
+                + " (obsJustificacao.value_coded is null or (obsJustificacao.value_coded is not null and obsJustificacao.value_coded <> 1982)) "
+                + " group by p.patient_id "
+                + " ) alternativa "
+                + "INNER JOIN person ON alternativa.patient_id = person.person_id WHERE person.voided=0 "
+                + "AND TIMESTAMPDIFF(year,birthdate,alternativa.data_linha) BETWEEN %d AND %d AND birthdate IS NOT NULL";
 
     public static final String
         findAllPatientsWhoHaveTherapheuticLineSecondLineDuringInclusionPeriodCategory13P3B2NEWDenominatorLessThan =

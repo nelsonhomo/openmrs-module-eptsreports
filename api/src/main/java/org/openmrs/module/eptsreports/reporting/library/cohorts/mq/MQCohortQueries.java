@@ -1313,6 +1313,50 @@ public class MQCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(
+      value = "findAllPatientsWhoDroppedOutARTInFirstThreeMonthsBeforeInitiatedTreatment")
+  public CohortDefinition
+      findAllPatientsWhoDroppedOutARTInFirstThreeMonthsBeforeInitiatedTreatment() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("Patients who dropped out ART in first three months after initiated ART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory13P2QueriesInterface.QUERY
+            .findAllPatientsWhoDroppedOutARTInFirstThreeMonthsBeforeInitiatedTreatment;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "findAllPatientsWhoDroppedOutARTInFirstSixMonthsBeforeInitiatedTreatment")
+  public CohortDefinition
+      findAllPatientsWhoDroppedOutARTInFirstSixMonthsBeforeInitiatedTreatment() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("Patients who dropped out ART in first three months after initiated ART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory13P2QueriesInterface.QUERY
+            .findAllPatientsWhoDroppedOutARTInFirstSixMonthsBeforeInitiatedTreatment;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1")
   public CohortDefinition findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1() {
 
