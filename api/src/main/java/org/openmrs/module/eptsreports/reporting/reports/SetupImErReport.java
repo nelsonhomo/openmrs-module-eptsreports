@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.B13DataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.Eri2MonthsDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.Eri4MonthsDataset;
@@ -13,7 +14,6 @@ import org.openmrs.module.eptsreports.reporting.library.datasets.IMR1Dataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TxCurrDataset;
 import org.openmrs.module.eptsreports.reporting.library.datasets.TxNewDataset;
-import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ResumoMensalDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -43,7 +43,7 @@ public class SetupImErReport extends EptsDataExportManager {
 
   @Autowired private DatimCodeDataSet datimCodeDataSet;
 
-  @Autowired private ResumoMensalDataSetDefinition resumoMensalDataSetDefinition;
+  @Autowired private B13DataSet b13DataSet;
 
   @Autowired private SismaCodeDataSet sismaCodeDataset;
 
@@ -99,9 +99,7 @@ public class SetupImErReport extends EptsDataExportManager {
         Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
 
     rd.addDataSetDefinition(
-        "R",
-        Mapped.mapStraightThrough(
-            this.resumoMensalDataSetDefinition.constructResumoMensalDataset()));
+        "R", Mapped.mapStraightThrough(this.b13DataSet.constructResumoMensalDataset()));
 
     rd.addDataSetDefinition(
         "SC",
