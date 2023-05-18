@@ -90,7 +90,7 @@ public class MQCategory11DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory11CohortQueries
-                    .findPatientsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATOR(),
+                    .findPatientsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATORChildrens(),
                 "CAT11ChildrenBiggerThen2eLess14APSSPPNUMERATOR",
                 mappings),
             mappings),

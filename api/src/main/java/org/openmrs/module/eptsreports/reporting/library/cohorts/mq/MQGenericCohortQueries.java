@@ -156,4 +156,48 @@ public class MQGenericCohortQueries {
         "START-ART-A NOT (PREGNANT OR BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)");
     return definition;
   }
+
+  @DocumentedDefinition(value = "findPatientOnARTdExcludingPregantAndTransferredInTransferredOutMI")
+  public CohortDefinition findPatientOnARTdExcludingPregantAndTransferredInTransferredOutMI() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("MQ TX_NEW");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappingsMI =
+        "startInclusionDate=${endRevisionDate-5m+1d},endInclusionDate=${endRevisionDate-4m},endRevisionDate=${endRevisionDate},location=${location}";
+
+    final String mappings =
+        "startInclusionDate=${endRevisionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "START-ART",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoAreNewlyEnrolledOnARTRF05(), mappingsMI));
+
+    definition.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
+
+    definition.addSearch(
+        "TRANSFERED-IN",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+            mappings));
+
+    definition.addSearch(
+        "TRANSFERED-OUT",
+        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+
+    definition.setCompositionString("START-ART NOT (PREGNANT OR TRANSFERED-IN OR TRANSFERED-OUT)");
+
+    return definition;
+  }
 }

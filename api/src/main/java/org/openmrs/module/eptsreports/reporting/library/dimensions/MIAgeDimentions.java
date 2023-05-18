@@ -56,6 +56,12 @@ public class MIAgeDimentions {
             mappingsMILessTwoMonths));
 
     dimension.addCohortDefinition(
+        "15PlusOrBreastfeeding",
+        EptsReportUtils.map(
+            mQAgeDimensions.findPatientsWhoAreNewlyEnrolledOnARTByAdultOrBreastfeeding(15),
+            mappingsMILessTwoMonths));
+
+    dimension.addCohortDefinition(
         "LESS_2_MONTHS_15-",
         EptsReportUtils.map(
             mQAgeDimensions.findPatientsWhoAreNewlyEnrolledOnARTChildren(15),
@@ -377,6 +383,12 @@ public class MIAgeDimentions {
         "CV_LESS_4_MONTHS_15+",
         EptsReportUtils.map(
             mQAgeDimensions.findPAtientWithCVOver1000CopiesAdult(15), mappingsMILessFourMonths));
+
+    dimension.addCohortDefinition(
+        "15PlusBreastfeeding",
+        EptsReportUtils.map(
+            mQAgeDimensions.findPAtientWithCVOver1000CopiesBiggerThanParamOrBreastfeeding(15),
+            mappingsMILessFourMonths));
 
     dimension.addCohortDefinition(
         "CV_LESS_4_MONTHS_15-",

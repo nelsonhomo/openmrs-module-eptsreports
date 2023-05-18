@@ -101,7 +101,7 @@ public class MICategory11CohortQueries {
         "DENOMINATOR",
         EptsReportUtils.map(
             this.mQGenericCohortQueries
-                .findPatientOnARTdExcludingPregantAndBreastfeedingAndTransferredInTransferredOutMICategory11(),
+                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOutMI(),
             mappings));
 
     definition.addSearch(

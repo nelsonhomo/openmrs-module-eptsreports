@@ -135,6 +135,43 @@ public class MQCategory11CohortQueries {
         "DENOMINATOR",
         EptsReportUtils.map(
             this.mQGenericCohortQueries
+                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(),
+            mappings));
+
+    definition.addSearch(
+        "G-APSS-PP",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .findPatientsOnARTWithMinimum3APSSFollowupConsultationsIntheFirst3MonthsAfterStartingARTCategory11Numerator(),
+            mappings));
+
+    definition.setCompositionString("(DENOMINATOR AND G-APSS-PP)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value =
+          "findPatientsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATORChildrens")
+  public CohortDefinition
+      findPatientsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATORChildrens() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName(
+        "findAdultsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATOR");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR",
+        EptsReportUtils.map(
+            this.mQGenericCohortQueries
                 .findPatientOnARTdExcludingPregantAndBreastfeedingAndTransferredInTransferredOutChildrens(),
             mappings));
 
