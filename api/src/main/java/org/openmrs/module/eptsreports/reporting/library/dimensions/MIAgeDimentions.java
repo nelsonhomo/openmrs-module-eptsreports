@@ -668,4 +668,30 @@ public class MIAgeDimentions {
 
     return dimension;
   }
+
+  public CohortDefinitionDimension getDimensionAgeOnTheFirstConsultation() {
+    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
+
+    dimension.setName("patientsPregnantEnrolledOnART");
+    dimension.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    dimension.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    dimension.addParameter(new Parameter("location", "Location", Location.class));
+
+    final String mappings = "endRevisionDate=${endRevisionDate-2m+1d},location=${location}";
+
+    dimension.addCohortDefinition(
+        "15-",
+        EptsReportUtils.map(
+            mQAgeDimensions.calculateAgeOnTheFirstConsultationDateLessThanParamFC(15), mappings));
+
+    dimension.addCohortDefinition(
+        "15+",
+        EptsReportUtils.map(
+            mQAgeDimensions.calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding(
+                15),
+            mappings));
+
+    return dimension;
+  }
 }
