@@ -260,6 +260,107 @@ public class MQCategory9CohortQueries {
 
   @DocumentedDefinition(
       value =
+          "findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1Childrens")
+  public CohortDefinition
+      findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1Childrens() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName(
+        "findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1");
+
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+    final String mappingsFirstConsultation =
+        "endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "FIRST-CONSULTATION",
+        EptsReportUtils.map(
+            this.findPatientsFirstConsultationOnInclusionDate(), mappingsFirstConsultation));
+
+    definition.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
+
+    definition.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
+
+    definition.addSearch(
+        "TRANSFERED-IN",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+            mappings));
+
+    definition.addSearch(
+        "PREGNANT-INCLUSION-DATE",
+        EptsReportUtils.map(
+            this.findPatientsWhoArePregnantDuringInclusionPeriod(), mappingsFirstConsultation));
+
+    definition.addSearch(
+        "BREASTFEEDING-INCLUSION-DATE",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreBreastfeedingDuringInclusionPeriod(),
+            mappingsFirstConsultation));
+    definition.setCompositionString(
+        "FIRST-CONSULTATION NOT(PREGNANT OR BREASTFEEDING OR TRANSFERED-IN OR PREGNANT-INCLUSION-DATE OR BREASTFEEDING-INCLUSION-DATE)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value =
+          "findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1Childrens")
+  public CohortDefinition
+      findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1Childrens() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName(
+        "findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1");
+
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+    final String mappingsFirstConsultation =
+        "endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR",
+        EptsReportUtils.map(
+            this
+                .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1Childrens(),
+            mappingsFirstConsultation));
+
+    definition.addSearch(
+        "CD4",
+        EptsReportUtils.map(
+            this
+                .findPatientsWhithCD4OnFirstClinicalConsultationDuringInclusionDateNumeratorCategory9(),
+            mappings));
+
+    definition.setCompositionString("(DENOMINATOR AND CD4)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value =
           "findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1ChildrenAdult")
   public CohortDefinition
       findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1ChildrenAdult() {
@@ -401,6 +502,47 @@ public class MQCategory9CohortQueries {
         "DENOMINATOR",
         EptsReportUtils.map(
             this.findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1(),
+            mappingsFirstConsultation));
+
+    definition.addSearch(
+        "CD4-33-DAYS",
+        EptsReportUtils.map(
+            this
+                .findPatientsWhithCD4ResultOn33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9(),
+            mappings));
+
+    definition.setCompositionString("(DENOMINATOR AND CD4-33-DAYS)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value =
+          "findPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9SectionChildrens")
+  public CohortDefinition
+      findPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9SectionChildrens() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName(
+        "findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1");
+
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+    final String mappingsFirstConsultation =
+        "endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR",
+        EptsReportUtils.map(
+            this
+                .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1Childrens(),
             mappingsFirstConsultation));
 
     definition.addSearch(

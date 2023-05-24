@@ -14,6 +14,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
 
   public void constructTMqDatset(
       CohortIndicatorDataSetDefinition dataSetDefinition, String mappings) {
+
     // Adultos
     dataSetDefinition.addColumn(
         "CAT9ADUL01TNUMERATOR",
@@ -71,7 +72,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1ChildrenAdult(),
+                    .findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1Childrens(),
                 "CAT9CHILDREN01TNUMERATOR",
                 mappings),
             mappings),
@@ -83,7 +84,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1(),
+                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1Childrens(),
                 "CAT9ACHILDREN01TDENOMINATOR",
                 mappings),
             mappings),
@@ -95,7 +96,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9Section9_2(),
+                    .findPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9SectionChildrens(),
                 "CAT9CHILDREN02TNUMERATOR",
                 mappings),
             mappings),
@@ -107,7 +108,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 miCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1(),
+                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1Childrens(),
                 "CAT9ACHILDREN02TDENOMINATOR",
                 mappings),
             mappings),
