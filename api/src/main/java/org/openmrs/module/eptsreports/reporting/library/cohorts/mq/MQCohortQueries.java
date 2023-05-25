@@ -2,9 +2,6 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts.mq;
 
 import java.util.Date;
 import org.openmrs.Location;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.eptsreports.reporting.cohort.definition.BaseFghCalculationCohortDefinition;
-import org.openmrs.module.eptsreports.reporting.library.quality.improvment.calculation.QualityImprovmentCategory11SectionICalculation;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.mi.MICategory12QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory11P2QueriesInterface;
@@ -13,7 +10,6 @@ import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory13P
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory13P3QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory13P4QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQQueriesInterface;
-import org.openmrs.module.eptsreports.reporting.utils.EptsReportConstants;
 import org.openmrs.module.eptsreports.reporting.utils.TypePTV;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
@@ -979,25 +975,22 @@ public class MQCohortQueries {
   @DocumentedDefinition(value = "childrenPatientsWithAtLeast9APSSConsultations")
   public CohortDefinition findChildrenPatientsWithAtLeast9APSSConsultationByInclusionPeriod() {
 
-    BaseFghCalculationCohortDefinition cd =
-        new BaseFghCalculationCohortDefinition(
-            "childrenPatientsWithAtLeast9APSSConsultations",
-            Context.getRegisteredComponents(QualityImprovmentCategory11SectionICalculation.class)
-                .get(0));
-    cd.setName("findChildrenPatientsWithAtLeast9APSSConsultationByInclusionPeriod");
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    cd.setName("childrenPatientsWithAtLeast9APSSConsultations");
+    definition.setName(
+        "findPatientsWhoAreRequestForLaboratoryInvestigationAndPregnantInclusionPeriodCAT13DenumeratorP2ByB4");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    cd.addParameter(
-        new Parameter(
-            EptsReportConstants.START_INCULSION_DATE, "Start Inclusion Date", Date.class));
-    cd.addParameter(
-        new Parameter(EptsReportConstants.END_INCLUSION_DATE, "End Inclusion Date", Date.class));
-    cd.addParameter(
-        new Parameter(EptsReportConstants.END_REVISION_DATE, "End Revision Date", Date.class));
-    cd.addParameter(new Parameter("location", "Location", Location.class));
+    String query =
+        MQQueriesInterface.QUERY
+            .findFirstPatientChildrenAPSSConsultationWithinInclusionReportingPeriod;
 
-    return cd;
+    definition.setQuery(query);
+
+    return definition;
   }
 
   @DocumentedDefinition(
