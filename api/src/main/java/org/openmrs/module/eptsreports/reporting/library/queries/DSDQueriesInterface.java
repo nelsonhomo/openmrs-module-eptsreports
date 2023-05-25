@@ -282,7 +282,7 @@ public interface DSDQueriesInterface {
               + "    				group by ultimo_tipo_dispensa.patient_id "
               + "		) todas_fontes "
               + "			order by patient_id, data_consulta desc, fonte, ordem_mdc "
-              + "	) primeira_fonte "
+              + "	) primeira_fonte group by patient_id "
               + ") dispensa "
               + "where dispensa.tipo_dispensa = %s ";
 
