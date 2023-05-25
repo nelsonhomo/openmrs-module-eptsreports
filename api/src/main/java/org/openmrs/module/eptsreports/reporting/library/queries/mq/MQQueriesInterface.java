@@ -567,7 +567,7 @@ public interface MQQueriesInterface {
                 + "and e.encounter_datetime and e.location_id=:location  "
                 + ") min_consultation on min_consultation.patient_id = tx_new.patient_id  "
                 + "where  tx_new.art_start_date between :startInclusionDate and :endInclusionDate "
-                + "and min_consultation.min_consultation_date between tx_new.art_start_date and DATE_ADD(tx_new.art_start_date, INTERVAL 99 DAY)  "
+                + "and min_consultation.min_consultation_date between DATE_ADD(tx_new.art_start_date, INTERVAL 1 DAY) and DATE_ADD(tx_new.art_start_date, INTERVAL 99 DAY)  "
                 + "GROUP BY tx_new.patient_id HAVING COUNT(min_consultation.min_consultation_date)>=3 ";
 
     public static final String
