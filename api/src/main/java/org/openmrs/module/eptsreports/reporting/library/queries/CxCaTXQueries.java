@@ -31,7 +31,7 @@ public interface CxCaTXQueries {
               + "and e.encounter_datetime between rastreioPositivo.dataRastreioPositivo and :endDate "
               + ") or "
               + "(o.concept_id=23967 and o.value_datetime between rastreioPositivo.dataRastreioPositivo and :endDate)) and "
-              + "e.location_id=:location order by tipoTratamento asc "
+              + "e.location_id=:location order by o.obs_datetime asc, tipoTratamento asc "
               + ") tratamento group by patient_id "
               + ")tratamento ";
 
