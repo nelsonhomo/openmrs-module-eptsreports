@@ -148,7 +148,7 @@ union
 
 select consultasSemDTINH.patient_id 
 from (
-select inicio_inh.patient_id 
+select inicio_inh.patient_id,data_inicio_inh 
 from(
      select p.patient_id, estadoProfilaxia.obs_datetime data_inicio_inh 
 		from patient p 
@@ -178,21 +178,7 @@ where consultasSemDTINH.data_final_inh between inicio_inh.data_inicio_inh and (i
  consultasSemDTINH
  inner join
  (
-    select inicio_inh.patient_id                                                                                                           
-    from(   
-         select p.patient_id, estadoProfilaxia.obs_datetime data_inicio_inh 
-		from patient p 
-			inner join encounter e on p.patient_id = e.patient_id 
-			inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id 
-			inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id
-		where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0  
-			and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 
-			and e.encounter_type in (6,9,53) and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
-			--group by p.patient_id,estadoProfilaxia.obs_datetime
-      )
-    inicio_inh 
-    inner join
-     (
+
      select p.patient_id, estadoProfilaxia.obs_datetime data_final_inh,e.encounter_id 
      from patient p 
      	inner join encounter e on p.patient_id = e.patient_id 
@@ -204,10 +190,9 @@ where consultasSemDTINH.data_final_inh between inicio_inh.data_inicio_inh and (i
 	     and outraPrescricaoDTINH.concept_id=1719 and outraPrescricaoDTINH.value_coded=23955
 	     and e.encounter_datetime <= :endDate and e.location_id=:location   
     )
-consultasComDTINH on inicio_inh.patient_id = consultasComDTINH.patient_id
-where consultasComDTINH.data_final_inh between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH)
-    group by inicio_inh.patient_id,inicio_inh.data_inicio_inh having count(distinct consultasComDTINH.encounter_id)>=1
-  ) consultasComDTINH on  consultasComDTINH.patient_id = consultasSemDTINH.patient_id
+consultasComDTINH on consultasSemDTINH.patient_id = consultasComDTINH.patient_id
+where consultasComDTINH.data_final_inh between consultasSemDTINH.data_inicio_inh and (consultasSemDTINH.data_inicio_inh + INTERVAL 7 MONTH)
+    group by consultasSemDTINH.patient_id,consultasSemDTINH.data_inicio_inh having count(distinct consultasComDTINH.encounter_id)>=1
   
 union
 
@@ -566,4 +551,4 @@ inner join
 	  and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.encounter_datetime < :endDate and e.location_id=:location  
 	  group by inicio_inh.patient_id,inicio_inh.data_inicio_inh having count(distinct e.encounter_id)>=1 
 ) inicio_inh_dt on inicio_inh_dt.patient_id = inicio_inh.patient_id
-) final group by patient_id  
+) final group by patient_id
