@@ -15,7 +15,7 @@ public class MQCategory13P2CohortQueries {
   @Autowired private MQCohortQueries mQCohortQueries;
 
   @DocumentedDefinition(value = "findPatientsWhoArePregnantWithCVInTARVCategory13P2Denumerator")
-  public CohortDefinition findPatientsWhoArePregnantWithCVInTARVCategory13P2Denumerator() {
+  public CohortDefinition findPatientsWhoArePregnantWithCVInTARVCategory13P2Denominator() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName("findPatientsWhoArePregnantWithCVInTARVCategory13P2Denumerator");
@@ -65,7 +65,7 @@ public class MQCategory13P2CohortQueries {
   @DocumentedDefinition(
       value = "findPatientsWhoArePregnantWithCVInFirstConsultationTARVCategory13P2Denumerator")
   public CohortDefinition
-      findPatientsWhoArePregnantWithCVInFirstConsultationTARVCategory13P2Denumerator() {
+      findPatientsWhoArePregnantWithCVInFirstConsultationTARVCategory13P2Denominator() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
@@ -102,7 +102,7 @@ public class MQCategory13P2CohortQueries {
       value =
           "findPatientsWhoArePregnantWithCVIn33DaysAfterInclusionDateTARVCategory13P2Denumerator")
   public CohortDefinition
-      findPatientsWhoArePregnantWithCVIn33DaysAfterInclusionDateTARVCategory13P2Denumerator() {
+      findPatientsWhoArePregnantWithCVIn33DaysAfterInclusionDateTARVCategory13P2Denominator() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
@@ -152,7 +152,7 @@ public class MQCategory13P2CohortQueries {
     definition.addSearch(
         "DENOMINATOR",
         EptsReportUtils.map(
-            this.findPatientsWhoArePregnantWithCVInTARVCategory13P2Denumerator(), mappings));
+            this.findPatientsWhoArePregnantWithCVInTARVCategory13P2Denominator(), mappings));
 
     definition.addSearch(
         "H",
@@ -186,7 +186,7 @@ public class MQCategory13P2CohortQueries {
     definition.addSearch(
         "DENOMINADOR",
         EptsReportUtils.map(
-            this.findPatientsWhoArePregnantWithCVInFirstConsultationTARVCategory13P2Denumerator(),
+            this.findPatientsWhoArePregnantWithCVInFirstConsultationTARVCategory13P2Denominator(),
             mappings));
 
     definition.addSearch(
