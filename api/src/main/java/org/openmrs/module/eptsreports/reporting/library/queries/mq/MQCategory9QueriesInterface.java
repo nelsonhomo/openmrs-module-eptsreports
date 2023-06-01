@@ -153,21 +153,26 @@ public interface MQCategory9QueriesInterface {
 
     public static final String
         findPregnantWomanWhithCD4ResultOn33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9 =
-            "select firstClinica.patient_id from  (    "
-                + "select * from (    "
-                + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from person pe    "
-                + "inner join patient p on pe.person_id=p.patient_id    "
-                + "inner join encounter e on p.patient_id=e.patient_id    "
-                + "inner join obs o on e.encounter_id=o.encounter_id    "
-                + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F' and "
-                + "o.concept_id=1982 and o.value_coded=1065    "
-                + "group by p.patient_id   "
-                + ")pregnat    "
-                + ") firstClinica    "
-                + "inner join obs obsCD4 on obsCD4.person_id=firstClinica.patient_id    "
-                + "where firstClinica.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH)  "
-                + "and obsCD4.concept_id in(1695,703) and obsCD4.value_numeric is not null  and obsCD4.voided=0  "
-                + "and obsCD4.obs_datetime >firstClinica.encounter_datetime and obsCD4.obs_datetime<date_add(firstClinica.encounter_datetime, interval 33 day)  "
-                + "and obsCD4.location_id=:location ";
+            "select  firstClinica.patient_id from  ( "
+                + "select * from (     "
+                + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from person pe     "
+                + "inner join patient p on pe.person_id=p.patient_id     "
+                + "inner join encounter e on p.patient_id=e.patient_id     "
+                + "inner join obs o on e.encounter_id=o.encounter_id     "
+                + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F'  and "
+                + "o.concept_id=1982 and o.value_coded=1065 "
+                + "group by p.patient_id    "
+                + ")pregnat  "
+                + ") firstClinica     "
+                + "inner join encounter e on firstClinica.patient_id=e.patient_id   "
+                + "inner join obs obsCD4 on obsCD4.encounter_id=e.encounter_id   "
+                + "where firstClinica.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH)   "
+                + "and obsCD4.concept_id in(1695,703)  "
+                + "and obsCD4.value_numeric is not null   "
+                + "and obsCD4.voided=0   "
+                + "and obsCD4.obs_datetime >=firstClinica.encounter_datetime  "
+                + "and obsCD4.obs_datetime<date_add(firstClinica.encounter_datetime, interval 33 day)   "
+                + "and obsCD4.location_id=:location "
+                + "and e.encounter_type=6 ";
   }
 }
