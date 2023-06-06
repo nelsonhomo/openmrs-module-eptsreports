@@ -193,7 +193,7 @@ public class MQCategory13P4CohortQueries {
     definition.addSearch(
         "B2",
         EptsReportUtils.map(
-            this.mqCohortQueries.findPatientWithCVOver1000CopiesCategory11B2(), mappings));
+            this.mqCohortQueries.findPatientWithCVOver1000CopiesCategory13B2(), mappings));
 
     definition.addSearch(
         "PREGNANT",

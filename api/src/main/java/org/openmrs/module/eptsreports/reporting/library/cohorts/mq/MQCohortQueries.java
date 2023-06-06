@@ -758,6 +758,24 @@ public class MQCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientWithCVOver1000CopiesCategory13B2")
+  public CohortDefinition findPatientWithCVOver1000CopiesCategory13B2() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findAdultWithCVOver1000CopiesCategory13B2");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = MQQueriesInterface.QUERY.findPatientWithCVOver1000CopiesCategory13B2;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientWithCVOver1000CopiesAndPregnatCategory11B4")
   public CohortDefinition findPatientWithCVOver1000CopiesAndPregnatCategory11B4() {
 
