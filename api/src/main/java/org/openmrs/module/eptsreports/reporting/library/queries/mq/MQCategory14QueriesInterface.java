@@ -105,7 +105,7 @@ public interface MQCategory14QueriesInterface {
             + "	and grupo.obs_id=o.obs_group_id and grupo.obs_id=obsEstado.obs_group_id "
             + "	group by p.patient_id "
             + "	)mdc on mdc.patient_id = carga_viral.patient_id "
-            + "	where mdc.data_mdc>= (carga_viral.data_carga - INTERVAL 12 MONTH) and mdc.data_mdc < carga_viral.data_carga "
+            + "	where mdc.data_mdc>= (carga_viral.data_carga - INTERVAL 12 MONTH) and mdc.data_mdc <= carga_viral.data_carga "
             + "	union "
             + "		select patient_id from( "
             + "	select carga_viral.patient_id,max(td.data_mdc) data_mdc from  ( "
