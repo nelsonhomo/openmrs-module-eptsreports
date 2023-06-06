@@ -19,6 +19,7 @@ public class ResumoMensalQueries {
 
   private static final String FIND_PRE_TARV_PATIENT_A1 = "RM/FIND_PRE_TARV_PATIENT_A1.sql";
   private static final String FIND_PRE_TARV_PATIENT_A2 = "RM/FIND_PRE_TARV_PATIENT_A2.sql";
+  private static final String FIND_PRE_TARV_INH_3HP_C2 = "RM/FIND_PRE_TARV_INH_3HP_C2.sql";
 
   /**
    * All patients with encounter type 53, and Pre-ART Start Date that is less than startDate
@@ -38,6 +39,11 @@ public class ResumoMensalQueries {
    */
   public static String getAllPatientsWithPreArtStartDateWithBoundariesA2() {
     String query = EptsQuerysUtils.loadQuery(FIND_PRE_TARV_PATIENT_A2);
+    return query;
+  }
+
+  public static String getPatientsWhoMarkedINHC2() {
+    String query = EptsQuerysUtils.loadQuery(FIND_PRE_TARV_INH_3HP_C2);
     return query;
   }
 
@@ -913,122 +919,6 @@ public class ResumoMensalQueries {
             + "group by p.patient_id )tb "
             + "inner join obs obstb on obstb.person_id=tb.patient_id "
             + "where obstb.concept_id=23758 and obstb.obs_datetime=tb.data_tb and obstb.voided=0 ";
-
-    return query;
-  }
-
-  public static String getPatientsWhoMarkedINHC2() {
-    String query =
-        "        select INH_3HP.patient_id,INH_3HP.dataInicioTPI,INH_3HP.value_coded  from "
-            + "        (  "
-            + "select * from (       "
-            + "select allEncounter.patient_id,allEncounter.encounter_datetime dataInicioTPI, obsEstado.value_coded from ( "
-            + "select allEncounter.patient_id,allEncounter.encounter_datetime,allEncounter.encounter_id  from "
-            + "( "
-            + "select p.patient_id,e.encounter_datetime, e.encounter_id  from patient p "
-            + "inner join encounter e on e.patient_id = p.patient_id "
-            + "where e.encounter_type=6 and e.voided=0 and p.voided =0 and  e.location_id=:location "
-            + ") allEncounter "
-            + "where allEncounter.encounter_id  not in  "
-            + "( "
-            + "select e.encounter_id  from patient p "
-            + "inner join encounter e on e.patient_id = p.patient_id "
-            + "inner join obs ultimaProfilaxiaIsoniazia on ultimaProfilaxiaIsoniazia.encounter_id = e.encounter_id  "
-            + "inner join obs obsEstado on obsEstado.encounter_id = e.encounter_id  "
-            + "where e.encounter_type=6 and e.voided=0 and p.voided =0  "
-            + "and  ultimaProfilaxiaIsoniazia.concept_id = 23985  and ultimaProfilaxiaIsoniazia.value_coded in(656,23954)  "
-            + "and obsEstado.concept_id = 165308 and obsEstado.value_coded = 1256 and e.location_id=:location "
-            + ")  "
-            + ") allEncounter "
-            + "left join obs o on o.encounter_id=allEncounter.encounter_id and o.concept_id=23985 and o.value_coded in(656,23954) "
-            + "left join obs obsEstado on obsEstado.encounter_id = allEncounter.encounter_id and obsEstado.concept_id=165308 and obsEstado.value_coded=1256 "
-            + "union "
-            + "select p.patient_id,e.encounter_datetime dataInicioTPI, obsEstado.value_coded  from patient p "
-            + "inner join encounter e on e.patient_id = p.patient_id "
-            + "inner join obs ultimaProfilaxiaIsoniazia on ultimaProfilaxiaIsoniazia.encounter_id = e.encounter_id  "
-            + "inner join obs obsEstado on obsEstado.encounter_id = e.encounter_id  "
-            + "where e.encounter_type=6 and e.voided=0 and p.voided =0 and  e.location_id=:location "
-            + "and  ultimaProfilaxiaIsoniazia.concept_id = 23985  and ultimaProfilaxiaIsoniazia.value_coded in(656,23954)  "
-            + "and obsEstado.concept_id = 165308 and obsEstado.value_coded = 1256   "
-            + ")f order by f.dataInicioTPI ASC "
-            + "            ) INH_3HP "
-            + "            inner join ( "
-            + "        select f.patient_id,f.initialDate from "
-            + "    ( "
-            + "         select preTarv.patient_id, preTarv.initialDate initialDate, 1 type  FROM "
-            + "         ( "
-            + "            select preTarv.patient_id, min(preTarv.initialDate) initialDate, 1 type  FROM ( "
-            + "            SELECT p.patient_id,MIN(o.value_datetime) AS initialDate FROM patient p "
-            + "            INNER JOIN encounter e  ON e.patient_id=p.patient_id "
-            + "            INNER JOIN obs o on o.encounter_id=e.encounter_id "
-            + "            WHERE e.voided=0 AND o.voided=0 AND e.encounter_type=53 AND e.location_id=:location AND o.value_datetime IS NOT NULL "
-            + "            AND o.concept_id=23808 AND o.value_datetime<=:endDate "
-            + "            GROUP BY p.patient_id "
-            + "            UNION "
-            + "            SELECT p.patient_id,min(e.encounter_datetime) AS initialDate FROM patient p "
-            + "            INNER JOIN encounter e  ON e.patient_id=p.patient_id "
-            + "            INNER JOIN obs o on o.encounter_id=e.encounter_id "
-            + "            WHERE e.voided=0 AND o.voided=0 AND e.encounter_type IN(5,7) "
-            + "            AND e.location_id=:location  AND e.encounter_datetime<=:endDate "
-            + "            GROUP BY p.patient_id "
-            + "            UNION "
-            + "            SELECT pg.patient_id, min(pg.date_enrolled)  AS initialDate FROM patient p "
-            + "            INNER JOIN patient_program pg on pg.patient_id=p.patient_id "
-            + "            WHERE pg.program_id=1 AND pg.location_id=:location AND pg.voided=0 AND pg.date_enrolled<=:endDate "
-            + "            GROUP BY patient_id "
-            + "            )preTarv "
-            + "            group by preTarv.patient_id "
-            + "            )preTarv "
-            + "            UNION "
-            + "            SELECT tarvFinal.patient_id,tarvFinal.initialDate,2 type FROM "
-            + "            ( "
-            + "            SELECT tarvFinal.patient_id,tarvFinal.initialDate FROM "
-            + "            ( "
-            + "            SELECT p.patient_id,MIN(o.value_datetime) AS initialDate FROM patient p "
-            + "            INNER JOIN encounter e  ON e.patient_id=p.patient_id "
-            + "            INNER JOIN obs o on o.encounter_id=e.encounter_id "
-            + "            WHERE e.voided=0 AND o.voided=0 AND e.encounter_type=53 AND e.location_id=:location AND o.value_datetime IS NOT NULL "
-            + "            AND o.concept_id=1190 AND o.value_datetime<=:endDate "
-            + "            GROUP BY p.patient_id "
-            + "            UNION "
-            + "            SELECT pg.patient_id, min(pg.date_enrolled)  AS initialDate FROM patient p "
-            + "            INNER JOIN patient_program pg on pg.patient_id=p.patient_id "
-            + "            WHERE pg.program_id=2 AND pg.location_id=:location AND pg.voided=0 AND pg.date_enrolled<=:endDate "
-            + "            GROUP BY patient_id "
-            + "            )tarvFinal "
-            + "            WHERE tarvFinal.patient_id  not in "
-            + "            ( "
-            + "               select preTarv.patient_id FROM "
-            + "            ( "
-            + "              select preTarv.patient_id,min(preTarv.initialDate) initialDate  FROM ( "
-            + "               SELECT p.patient_id,MIN(o.value_datetime) AS initialDate FROM patient p "
-            + "               INNER JOIN encounter e  ON e.patient_id=p.patient_id "
-            + "               INNER JOIN obs o on o.encounter_id=e.encounter_id "
-            + "               WHERE e.voided=0 AND o.voided=0 AND e.encounter_type=53 AND e.location_id=:location AND o.value_datetime IS NOT NULL "
-            + "               AND o.concept_id=23808 AND o.value_datetime<=:endDate "
-            + "               GROUP BY p.patient_id "
-            + "               UNION "
-            + "               SELECT p.patient_id,min(e.encounter_datetime) AS initialDate FROM patient p "
-            + "               INNER JOIN encounter e  ON e.patient_id=p.patient_id "
-            + "               INNER JOIN obs o on o.encounter_id=e.encounter_id "
-            + "               WHERE e.voided=0 AND o.voided=0 AND e.encounter_type IN(5,7) "
-            + "               AND e.location_id=:location  AND e.encounter_datetime<=:endDate "
-            + "               GROUP BY p.patient_id "
-            + "               UNION "
-            + "               SELECT pg.patient_id, min(pg.date_enrolled)  AS initialDate FROM patient p "
-            + "               INNER JOIN patient_program pg on pg.patient_id=p.patient_id "
-            + "               WHERE pg.program_id=1 AND pg.location_id=:location AND pg.voided=0 AND pg.date_enrolled<=:endDate "
-            + "               GROUP BY patient_id "
-            + "               )preTarv "
-            + "                GROUP BY preTarv.patient_id "
-            + "               )preTarv "
-            + "               group by patient_id "
-            + "               ) "
-            + "            )tarvFinal "
-            + "            )f WHERE f.initialDate BETWEEN  (:startDate - INTERVAL 1 MONTH) and :endDate "
-            + "            )preTarv on preTarv.patient_id=INH_3HP.patient_id "
-            + "            where INH_3HP.dataInicioTPI>=preTarv.initialDate "
-            + "            and preTarv.initialDate  between (:startDate - INTERVAL 1 MONTH) and :endDate and INH_3HP.dataInicioTPI<=:endDate ";
 
     return query;
   }
