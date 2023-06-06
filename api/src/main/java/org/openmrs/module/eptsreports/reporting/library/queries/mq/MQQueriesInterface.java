@@ -468,11 +468,11 @@ public interface MQQueriesInterface {
     public static final String findPatientWithCVOver1000CopiesCategory13B2 =
         " select patient_id from ( "
             + " select carga_viral.patient_id, min(data_carga) data_carga from ( "
-            + " Select p.patient_id, min(e.encounter_datetime) data_carga from patient p "
+            + " Select p.patient_id, min(o.obs_datetime) data_carga from patient p "
             + " inner join encounter e on p.patient_id = e.patient_id "
             + " inner join obs o on e.encounter_id=o.encounter_id "
             + " where p.voided = 0 and e.voided = 0 and o.voided = 0 and e.encounter_type in (6,53) and  o.concept_id = 856 and "
-            + " DATE(e.encounter_datetime) between :startInclusionDate and :endInclusionDate and e.location_id = :location and o.value_numeric >= 1000 "
+            + " DATE(o.obs_datetime) between :startInclusionDate and :endInclusionDate and e.location_id = :location and o.value_numeric >= 1000 "
             + " group by p.patient_id "
             + " ) carga_viral "
             + " group by carga_viral.patient_id "
