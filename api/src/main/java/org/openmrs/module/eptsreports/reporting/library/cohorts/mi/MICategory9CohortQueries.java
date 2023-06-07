@@ -1,7 +1,8 @@
-package org.openmrs.module.eptsreports.reporting.library.cohorts.mq;
+package org.openmrs.module.eptsreports.reporting.library.cohorts.mi;
 
 import java.util.Date;
 import org.openmrs.Location;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory9QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.eptsreports.reporting.utils.TypePTV;
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MQCategory9CohortQueries {
+public class MICategory9CohortQueries {
 
   @Autowired private MQCohortQueries mQCohortQueries;
 
@@ -226,9 +227,9 @@ public class MQCategory9CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${ndRevisionDate-2m+1d},endInclusionDate=${ndRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsFirstConsultation =
-        "endRevisionDate=${endRevisionDate},location=${location}";
+        "endRevisionDate=${endRevisionDate-2m+1d},location=${location}";
 
     definition.addSearch(
         "FIRST-CONSULTATION",
@@ -276,9 +277,9 @@ public class MQCategory9CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${ndRevisionDate-2m+1d},endInclusionDate=${ndRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsFirstConsultation =
-        "endRevisionDate=${endRevisionDate},location=${location}";
+        "endRevisionDate=${endRevisionDate-2m+1d},location=${location}";
 
     definition.addSearch(
         "FIRST-CONSULTATION",
@@ -336,23 +337,23 @@ public class MQCategory9CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${ndRevisionDate-2m+1d},endInclusionDate=${ndRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsFirstConsultation =
-        "endRevisionDate=${endRevisionDate},location=${location}";
+        "endRevisionDate=${endRevisionDate-2m+1d},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR",
         EptsReportUtils.map(
             this
                 .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1Childrens(),
-            mappingsFirstConsultation));
+            mappings));
 
     definition.addSearch(
         "CD4",
         EptsReportUtils.map(
             this
                 .findPatientsWhithCD4OnFirstClinicalConsultationDuringInclusionDateNumeratorCategory9(),
-            mappings));
+            mappingsFirstConsultation));
 
     definition.setCompositionString("(DENOMINATOR AND CD4)");
 
@@ -376,23 +377,24 @@ public class MQCategory9CohortQueries {
     definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
     definition.addParameter(new Parameter("location", "location", Date.class));
 
-    final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsFirstConsultation =
-        "endRevisionDate=${endRevisionDate},location=${location}";
+        "endRevisionDate=${endRevisindRevisionDate-2m+1donDate},location=${location}";
+
+    final String mappingsFirstConsultationD =
+        "endRevisionDate=${endRevisindRevisionDate-2m+1donDate},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR",
         EptsReportUtils.map(
             this.findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1(),
-            mappingsFirstConsultation));
+            mappingsFirstConsultationD));
 
     definition.addSearch(
         "CD4",
         EptsReportUtils.map(
             this
                 .findPatientsWhithCD4OnFirstClinicalConsultationDuringInclusionDateNumeratorCategory9(),
-            mappings));
+            mappingsFirstConsultation));
 
     definition.setCompositionString("(DENOMINATOR AND CD4)");
 
@@ -418,20 +420,19 @@ public class MQCategory9CohortQueries {
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsFirstConsultation =
-        "endRevisionDate=${endRevisionDate},location=${location}";
+        "endRevisionDate=${endRevisionDate-2m+1d},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR",
         EptsReportUtils.map(
-            this.findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9(),
-            mappingsFirstConsultation));
+            this.findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9(), mappings));
 
     definition.addSearch(
         "CD4",
         EptsReportUtils.map(
             this
                 .findPregnantWomanWhithCD4OnFirstClinicalConsultationDuringInclusionDateNumeratorCategory9(),
-            mappings));
+            mappingsFirstConsultation));
 
     definition.setCompositionString("(DENOMINATOR AND CD4)");
 
@@ -493,10 +494,11 @@ public class MQCategory9CohortQueries {
     definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
     definition.addParameter(new Parameter("location", "location", Date.class));
 
-    final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsFirstConsultation =
         "endRevisionDate=${endRevisionDate},location=${location}";
+
+    final String mappingsFirstConsultationN =
+        "endRevisionDate=${endRevisionDate-2m+1d},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR",
@@ -509,7 +511,7 @@ public class MQCategory9CohortQueries {
         EptsReportUtils.map(
             this
                 .findPatientsWhithCD4ResultOn33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9(),
-            mappings));
+            mappingsFirstConsultationN));
 
     definition.setCompositionString("(DENOMINATOR AND CD4-33-DAYS)");
 
@@ -534,23 +536,23 @@ public class MQCategory9CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${ndRevisionDate-2m+1d},endInclusionDate=${ndRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsFirstConsultation =
-        "endRevisionDate=${endRevisionDate},location=${location}";
+        "endRevisionDate=${endRevisionDate-2m+1d},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR",
         EptsReportUtils.map(
             this
                 .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1Childrens(),
-            mappingsFirstConsultation));
+            mappings));
 
     definition.addSearch(
         "CD4-33-DAYS",
         EptsReportUtils.map(
             this
                 .findPatientsWhithCD4ResultOn33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9(),
-            mappings));
+            mappingsFirstConsultation));
 
     definition.setCompositionString("(DENOMINATOR AND CD4-33-DAYS)");
 
@@ -575,22 +577,21 @@ public class MQCategory9CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsFirstConsultation =
-        "endRevisionDate=${endRevisionDate},location=${location}";
+        "endRevisionDate=${endRevisionDate-2m+1d},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR",
         EptsReportUtils.map(
-            this.findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9(),
-            mappingsFirstConsultation));
+            this.findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9(), mappings));
 
     definition.addSearch(
         "CD4-33-DAYS",
         EptsReportUtils.map(
             this
                 .findPregnantWomanWhithCD4ResultOn33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9(),
-            mappings));
+            mappingsFirstConsultation));
 
     definition.setCompositionString("(DENOMINATOR AND CD4-33-DAYS)");
 
@@ -612,9 +613,9 @@ public class MQCategory9CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsFirstConsultation =
-        "endRevisionDate=${endRevisionDate},location=${location}";
+        "endRevisionDate=${endRevisionDate-2m+1d},location=${location}";
 
     definition.addSearch(
         "PREGNANT-INCLUSION-DATE",

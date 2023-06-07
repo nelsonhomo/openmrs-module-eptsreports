@@ -45,7 +45,7 @@ public class MQCategory13P4DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory13P4CohortQueries
-                    .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory13Denominator(),
+                    .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory13DenominatorChildrens(),
                 "CAT13P4ChildrenDENUMINATOR",
                 mappings),
             mappings),
