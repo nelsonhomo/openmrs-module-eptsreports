@@ -277,7 +277,7 @@ public interface MQCategory13P2QueriesInterface {
                 + "and o.concept_id in (6272,6273)  "
                 + "and o.value_coded in (1707,1705)  "
                 + "and e.location_id=:location "
-                + ") abandonoReenicio   "
+                + ") abandonoReenicio on ultimaConsulta.patient_id=abandonoReenicio.patient_id "
                 + "where abandonoReenicio.data_estado between date_sub(ultimaConsulta.encounter_datetime, interval 6 MONTH) and  ultimaConsulta.encounter_datetime  ";
 
     public static final String findPatientsWhoDroppedOutARTThreeMonthsBeforeLastConsultationPeriod =
