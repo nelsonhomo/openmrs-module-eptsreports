@@ -51,7 +51,7 @@ public interface Eri2MonthsQueriesInterface {
               + "select p.patient_id, encounter_datetime "
               + "FROM patient p "
               + "INNER JOIN encounter e on p.patient_id=e.patient_id "
-              + "where p.voided=0 and e.voided=0 and  e.encounter_type in (6,9,18) AND e.encounter_datetime between (:endDate - INTERVAL 2 MONTH + INTERVAL 1 DAY) and  (:endDate +  INTERVAL 3 DAY) and e.location_id=:location "
+              + "where p.voided=0 and e.voided=0 and  e.encounter_type in (6,9,18) AND e.encounter_datetime <=  (:endDate +  INTERVAL 3 DAY) and e.location_id=:location "
               + ") lev_seg "
               + "ON lev_seg.patient_id = inicio_real.patient_id and lev_seg.encounter_datetime BETWEEN (inicio_real.data_inicio + INTERVAL 5 DAY) AND (inicio_real.data_inicio + INTERVAL 33 DAY) "
               + "LEFT JOIN ( "
