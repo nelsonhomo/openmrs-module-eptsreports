@@ -25,13 +25,21 @@
 		/> </changeSet> -->
 
 
-	<changeSet id="20230320-0730" author="guimino"
+	<changeSet id="20230620-1700-01" author="csaude"
 		runAlways="true">
 		<comment>
-			SESP Release version 3.12.0
+			SESP Release version 3.13.0
 		</comment>
 		<sqlFile
-			path="_metadata/SESPMetadataForRelease312_PlatformVersion_2x_20032023.sql" />
+			path="_metadata/SESPMetadataForRelease313_PlatformVersion_2x_20062023.sql" />
+	</changeSet>
+
+	<changeSet id="20230620-1700-02" author="csaude">
+		<comment>
+			SESP Release version 3.13.0 - Fix wrong mappings in Test Result caso Index question 
+		</comment>
+		<sqlFile
+			path="_metadata/SESPMetadataForRelease313_fix_ficha_rastreio_familiar_wrong_mappings_in_test_result_Caso_index.sql" />
 	</changeSet>
  
 </databaseChangeLog>
