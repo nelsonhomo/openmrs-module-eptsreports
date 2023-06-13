@@ -3,6 +3,7 @@ package org.openmrs.module.eptsreports.reporting.library.dimensions;
 import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.queries.mi.GenericMIQueryIntarface;
+import org.openmrs.module.eptsreports.reporting.library.queries.mq.MICategory9QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory13Section1QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -718,20 +719,62 @@ public class MIAgeDimentions {
     dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
     dimension.addParameter(new Parameter("location", "Location", Location.class));
 
-    final String mappings = "endRevisionDate=${endRevisionDate-2m+1d},location=${location}";
+    final String mappings =
+        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
 
     dimension.addCohortDefinition(
         "15-",
         EptsReportUtils.map(
-            mQAgeDimensions.calculateAgeOnTheFirstConsultationDateLessThanParamFC(15), mappings));
+            this.calculateAgeOnTheFirstConsultationDateBiggerThanParam(15), mappings));
 
     dimension.addCohortDefinition(
         "15+",
         EptsReportUtils.map(
-            mQAgeDimensions.calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding(
-                15),
+            this.calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding(15),
             mappings));
 
     return dimension;
+  }
+
+  @DocumentedDefinition(
+      value = "calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding")
+  public CohortDefinition calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding(
+      int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnTheFirstConsultationDateBiggerThanParam");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MICategory9QueriesInterface.QUERY
+            .calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding(age);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "calculateAgeOnTheFirstConsultationDateBiggerThanParam")
+  public CohortDefinition calculateAgeOnTheFirstConsultationDateBiggerThanParam(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnTheFirstConsultationDateBiggerThanParam");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MICategory9QueriesInterface.QUERY
+            .findPatientsWhoAreNewlyEnrolledOnARTTUntilRevisionDateLessThanParamFC(age);
+
+    definition.setQuery(query);
+
+    return definition;
   }
 }
