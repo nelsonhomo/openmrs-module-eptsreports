@@ -39,7 +39,7 @@
 			SESP Release version 3.13.0 - Fix wrong mappings in Test Result caso Index question 
 		</comment>
 		<sqlFile
-			path="_metadata/SESPMetadataForRelease313_fix_ficha_rastreio_familiar_wrong_mappings_in_test_result_Caso_index.sql" />
+			path="_metadata/SESPMetadataForRelease313_data_reconstruction.sql" />
 	</changeSet>
  
 </databaseChangeLog>
