@@ -182,11 +182,13 @@ public class Eri4MonthsQueries {
             + "SELECT p.patient_id,min(value_datetime) data_inicio FROM patient p "
             + "INNER JOIN encounter e on p.patient_id=e.patient_id "
             + "INNER JOIN obs o on e.encounter_id=o.encounter_id "
-            + "WHERE p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and o.concept_id=23866 and o.value_datetime is not null and o.value_datetime<=:endDate and e.location_id=:location group by p.patient_id) inicio group by patient_id "
+            + "WHERE p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and o.concept_id=23866 and o.value_datetime is not null and o.value_datetime<=:endDate and e.location_id=:location group by p.patient_id "
+            + ") inicio group by patient_id "
             + ")inicio1 "
             + "WHERE data_inicio between date_add(date_add(:endDate, interval -5 month), INTERVAL 1 DAY) and date_add(:endDate, interval -4 month) "
             + ") inicio_real "
-            + "LEFT JOIN ( "
+            + "LEFT JOIN "
+            + "( "
             + "select p.patient_id, encounter_datetime FROM patient p "
             + "INNER JOIN encounter e on p.patient_id=e.patient_id "
             + "where p.voided=0 and e.voided=0 and  e.encounter_type in (6,9,18) AND e.encounter_datetime between (:endDate - INTERVAL 5 MONTH  + INTERVAL 1 DAY) and :endDate and e.location_id=:location "
@@ -194,9 +196,12 @@ public class Eri4MonthsQueries {
             + "SELECT p.patient_id,value_datetime as encounter_datetime FROM patient p "
             + "INNER JOIN encounter e on p.patient_id=e.patient_id "
             + "inner join obs o on e.encounter_id=o.encounter_id "
-            + "where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 AND o.concept_id=23866 and o.value_datetime is not null and o.value_datetime between  (:endDate - INTERVAL 5 MONTH  + INTERVAL 1 DAY) and :endDate and e.location_id=:location) lev_seg "
-            + "ON lev_seg.patient_id = inicio_real.patient_id and lev_seg.encounter_datetime BETWEEN date_add(inicio_real.data_inicio, interval 61 day) and date_add(inicio_real.data_inicio, interval 120 day) "
-            + "LEFT JOIN ( "
+            + "where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 AND o.concept_id=23866 and o.value_datetime is not null and o.value_datetime between  (:endDate - INTERVAL 5 MONTH  + INTERVAL 1 DAY) and :endDate and e.location_id=:location "
+            + ") lev_seg "
+            + "ON lev_seg.patient_id = inicio_real.patient_id and lev_seg.encounter_datetime BETWEEN date_add(inicio_real.data_inicio, interval 61 day) and date_add(inicio_real.data_inicio, interval 120 day "
+            + ") "
+            + "LEFT JOIN "
+            + "( "
             + "SELECT patient_id,max(data_estado) data_estado,state_id FROM ( "
             + "select pg.patient_id, max(ps.start_date) data_estado, ps.state as state_id from patient p "
             + "INNER JOIN patient_program pg ON p.patient_id=pg.patient_id "
@@ -386,7 +391,9 @@ public class Eri4MonthsQueries {
         break;
 
       case LFTU:
-        query = query + "Where last_encounter is null and final_state is null and ltfu is not null";
+        query =
+            query
+                + "Where (last_encounter is null and final_state is null and ltfu is not null) OR (last_encounter is not null and ltfu is not null) ";
         break;
 
       case SPTOPPED_TREATMENT:

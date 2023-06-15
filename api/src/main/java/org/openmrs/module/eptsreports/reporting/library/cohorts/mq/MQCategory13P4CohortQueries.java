@@ -120,6 +120,40 @@ public class MQCategory13P4CohortQueries {
         "DENOMINADOR-CAT13-3",
         EptsReportUtils.map(
             this
+                .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory13Denominator(),
+            mappings));
+
+    definition.addSearch(
+        "H-CAT-13-3",
+        EptsReportUtils.map(
+            this.mqCohortQueries.findPatientsWhoHaveRequestedCV120DaysAfterCVResultByQueryH(),
+            mappings));
+
+    definition.setCompositionString("(DENOMINADOR-CAT13-3 AND H-CAT-13-3)");
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "findPatientsWhoReceivedResultMoreThan1000CVCategory13P4NumeratorChildrens")
+  public CohortDefinition
+      findPatientsWhoReceivedResultMoreThan1000CVCategory13P4NumeratorChildrens() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findPatientsWhoReceivedResultMoreThan1000CVCategory13P4Numerator");
+
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINADOR-CAT13-3",
+        EptsReportUtils.map(
+            this
                 .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory13DenominatorChildrens(),
             mappings));
 
@@ -213,8 +247,13 @@ public class MQCategory13P4CohortQueries {
         "TRANSFERED-OUT",
         EptsReportUtils.map(this.mqCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
 
+    definition.addSearch(
+        "DEAD",
+        EptsReportUtils.map(
+            mqCohortQueries.findAllPatientWhoAreDeadByEndOfRevisonPeriod(), mappings));
+
     definition.setCompositionString(
-        "(B1 AND B2) NOT (PREGNANT OR TRANSFERED-OUT OR TRANSFERED-IN)");
+        "(B1 AND B2) NOT (PREGNANT OR TRANSFERED-OUT OR TRANSFERED-IN OR DEAD)");
 
     return definition;
   }
