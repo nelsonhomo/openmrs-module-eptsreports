@@ -908,7 +908,7 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "CV", EptsReportUtils.map(this.findPatientsWhoHaveCVOverThan10000Category15(), mappings));
 
-    definition.setCompositionString("(A AND G2 AND CVP OR CVR) NOT (C OR D OR F OR CV)");
+    definition.setCompositionString("(A AND G2 AND CVP AND CVR) NOT (C OR D OR F OR CV)");
 
     return definition;
   }
@@ -1093,7 +1093,7 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "CV", EptsReportUtils.map(this.findPatientsWhoHaveCVOverThan10000Category15(), mappings));
 
-    definition.setCompositionString("(A AND G2 AND CVP OR CVR) NOT (C OR D OR F OR CV)");
+    definition.setCompositionString("(A AND G2 AND CVP AND CVR) NOT (C OR D OR F OR CV)");
 
     return definition;
   }
