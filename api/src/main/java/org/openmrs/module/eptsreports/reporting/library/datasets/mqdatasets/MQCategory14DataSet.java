@@ -212,7 +212,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT14_DSD_INDICATOR_NUMERATOR",
-        "15.16: % de utentes inscritos em MDS (para pacientes estáveis) com supressão viral Denominador",
+        "15.16: % de utentes inscritos em MDS (para pacientes estáveis) com supressão viral Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueryCategory14
