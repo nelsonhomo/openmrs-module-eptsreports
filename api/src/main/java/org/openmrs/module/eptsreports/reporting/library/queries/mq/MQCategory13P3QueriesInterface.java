@@ -223,16 +223,18 @@ public interface MQCategory13P3QueriesInterface {
             + " union "
             + " Select person_id, death_date from person p where p.dead = 1 and DATE(p.death_date) <= :endRevisionDate) transferido "
             + " group by patient_id) obito "
-            + " inner join ( "
+            + " inner join "
+            + "( "
             + " select patient_id, max(encounter_datetime) encounter_datetime from ( "
             + " select p.patient_id, max(e.encounter_datetime) encounter_datetime from patient p "
             + " inner join encounter e on e.patient_id = p.patient_id "
             + " where p.voided = 0 and e.voided = 0 and e.encounter_type in (18,6,9)  and DATE(e.encounter_datetime) <= :endRevisionDate and e.location_id = :location "
             + " group by p.patient_id "
             + ") consultaLev "
-            + " group by patient_id ) "
+            + " group by patient_id "
+            + ") "
             + " consultaOuARV on obito.patient_id = consultaOuARV.patient_id "
-            + " where consultaOuARV.encounter_datetime < obito.data_obito and DATE(obito.data_obito) <= :endRevisionDate ";
+            + " where consultaOuARV.encounter_datetime <= obito.data_obito and DATE(obito.data_obito) <= :endRevisionDate ";
 
     public static final String
         findAllPatientsWhoHaveClinicalConsultationWithViralChargeBetweenSixAndNineMonthsAfterARTStartDateCategory13_3_J_Numerator =
@@ -367,11 +369,10 @@ public interface MQCategory13P3QueriesInterface {
                 + "group by p.patient_id "
                 + ")maxEnc "
                 + "inner join ( "
-                + "select p.patient_id, max(o.obs_datetime) data_estado from patient p "
+                + "select p.patient_id, o.obs_datetime data_estado from patient p "
                 + "inner join encounter e on p.patient_id=e.patient_id "
                 + "inner join obs  o on e.encounter_id=o.encounter_id "
                 + "where e.voided=0 and o.voided=0 and p.voided=0 and  e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded in (1707,1705) and e.location_id=:location "
-                + "group by p.patient_id "
                 + ")abandono on abandono.patient_id = maxEnc.patient_id "
                 + "where abandono.data_estado between date_sub(maxEnc.encounter_datetime, interval 6 MONTH) and maxEnc.encounter_datetime ";
 

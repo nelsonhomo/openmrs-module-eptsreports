@@ -88,7 +88,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT14_MG_INDICATOR_DENOMINATOR",
-        "14.13:Mulher Gravida em TARV com supressão viral Denominador",
+        "14.7: % de MG em TARV com supressão viral (CV<1000 Cps/ml) Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueryCategory14.getPregnantDenominatorCategory14Indicator(),
@@ -99,7 +99,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT14_ML_INDICATOR_DENOMINATOR",
-        "14.7: Mulher Lactante em TARV com supressão viral Denominador",
+        "14.8: % de ML em TARV com supressão viral (CV<1000 Cps/ml) Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueryCategory14.getBreastfeedingDenominatorCategory14Indicator(),
@@ -190,7 +190,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT14_MG_INDICATOR_NUMERATOR",
-        "14.13:Mulher Gravida em TARV com supressão viral Numerator",
+        "14.7: % de MG em TARV com supressão viral (CV<1000 Cps/ml) Numerator",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueryCategory14.getPregnantNumeratorCategory14Indicator(),
@@ -201,7 +201,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT14_ML_INDICATOR_NUMERATOR",
-        "14.4: Mulher Lactante em TARV com supressão viral Numerator",
+        "14.8: % de ML em TARV com supressão viral (CV<1000 Cps/ml) Numerator",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueryCategory14.getBreastfeedingNumeratorCategory14Indicator(),
@@ -212,7 +212,7 @@ public class MQCategory14DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT14_DSD_INDICATOR_NUMERATOR",
-        "15.16: % de utentes inscritos em MDS (para pacientes estáveis) com supressão viral Denominador",
+        "15.16: % de utentes inscritos em MDS (para pacientes estáveis) com supressão viral Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mqCohortQueryCategory14

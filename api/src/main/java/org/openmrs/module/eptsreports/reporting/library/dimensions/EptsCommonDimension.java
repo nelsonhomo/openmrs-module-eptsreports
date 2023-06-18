@@ -566,7 +566,7 @@ public class EptsCommonDimension {
         query +=
             " >= "
                 + range.getMin()
-                + " and floor(datediff(:endDate,person.birthdate)/365) < "
+                + " and (TIMESTAMPDIFF(year,birthdate,:endDate)) < "
                 + range.getMax();
         break;
 

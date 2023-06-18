@@ -32,7 +32,7 @@ public class MICategory11DataSet extends MQAbstractDataSet {
                 "CAT11AdultoAPSSPPDENOMINATOR",
                 mappings),
             mappings),
-        "ageMiNewART=15PlusOrBreastfeeding");
+        "ageMiNewART=15PlusOrBreastfeeding5MonthsA4Months");
 
     dataSetDefinition.addColumn(
         "CAT11AdultoAPSSPPNUMERATOR",
@@ -45,7 +45,7 @@ public class MICategory11DataSet extends MQAbstractDataSet {
                 "CAT11AdultoAPSSPPNUMERATOR",
                 mappings),
             mappings),
-        "ageMiNewART=15PlusOrBreastfeeding");
+        "ageMiNewART=15PlusOrBreastfeeding5MonthsA4Months");
 
     dataSetDefinition.addColumn(
         "CAT11Adulto1000CVDENOMINATOR",
@@ -79,8 +79,8 @@ public class MICategory11DataSet extends MQAbstractDataSet {
             + " adesão na ficha de APSS/PP nos primeiros 99 dias de TARV Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
-                this.mQGenericCohortQueries
-                    .findPatientOnARTdExcludingPregantAndBreastfeedingAndTransferredInTransferredOutChildrens(),
+                this.miCategory11CohortQueries
+                    .findPatientOnARTdExcludingPregantAndBreastfeedingAndTransferredInTransferredOutChildrensMI(),
                 "CAT11ChildrenBiggerThen2eLess14APSSPPDENOMINATOR",
                 mappings),
             mappings),
@@ -92,7 +92,7 @@ public class MICategory11DataSet extends MQAbstractDataSet {
             + "adesão na ficha de APSS/PP nos primeiros 99 dias de TARV Numerador ",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
-                this.mQCategory11CohortQueries
+                this.miCategory11CohortQueries
                     .findPatientsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATORChildrens(),
                 "CAT11ChildrenBiggerThen2eLess14APSSPPNUMERATOR",
                 mappings),

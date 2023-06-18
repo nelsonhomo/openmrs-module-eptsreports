@@ -1694,4 +1694,22 @@ public class MQCohortQueries {
 
     return definition;
   }
+
+  @DocumentedDefinition(value = "findAllPatientWhoAreDeadByEndOfRevisonPeriod")
+  public CohortDefinition findAllPatientWhoAreDeadByEndOfRevisonPeriod() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = MQQueriesInterface.QUERY.findAllPatientWhoAreDeadByEndOfRevisonPeriod;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
 }
