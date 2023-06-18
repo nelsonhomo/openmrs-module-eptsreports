@@ -577,7 +577,7 @@ public interface DSDQueriesInterface {
       return "select patient.patient_id from patient                         		"
           + "	inner join person on person.person_id = patient.patient_id		"
           + "where patient.voided = 0 and person.voided = 0 					"
-          + "	and floor(datediff(:endDate,person.birthdate)/365) 			    ";
+          + "	and (TIMESTAMPDIFF(year,birthdate,:endDate)) 			    ";
     }
 
     public static String findPatientsWhoArePregnantsAndBreastFeeding(TypePTV typePTV) {
