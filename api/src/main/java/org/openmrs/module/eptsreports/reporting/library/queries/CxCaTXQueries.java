@@ -26,7 +26,7 @@ public interface CxCaTXQueries {
               + ") rastreioPositivo "
               + "inner join encounter e on e.patient_id=rastreioPositivo.patient_id "
               + "inner join obs o on e.encounter_id=o.encounter_id "
-              + "where e.voided=0 and e.voided=0 and e.encounter_type=28 and ( "
+              + "where e.voided=0 and o.voided=0 and e.encounter_type=28 and ( "
               + "(o.concept_id = 2117 and o.value_coded = 1065 "
               + "and e.encounter_datetime between rastreioPositivo.dataRastreioPositivo and :endDate "
               + ") or "
