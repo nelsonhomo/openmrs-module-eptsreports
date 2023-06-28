@@ -435,8 +435,15 @@ public class TPTCompletationCohortQueries {
             tXTBCohortQueries.getSputumForAcidFastBacilliWithinReportingDate(),
             generalParameterMapping));
 
-    cd.setCompositionString("A OR B OR C OR D OR E OR F OR G OR H OR I");
+    cd.addSearch(
+        "INICIOTB",
+        EptsReportUtils.map(
+            tXTBCohortQueries.findPatientsWhoInitiatedTBTreatment(), generalParameterMapping));
+
+    cd.setCompositionString("A OR B OR C OR D OR E OR F OR G OR H OR I OR INICIOTB");
+
     this.addGeneralParameters(cd);
+
     return cd;
   }
 
