@@ -318,7 +318,8 @@ public class TPTCompletationCohortQueries {
 
     cd.setName("TxTB - Numerator Previous Period");
     final CohortDefinition A = this.generateTxTBNumerator(previousPeriodParameters);
-    cd.addSearch("A-PREVIOUS-PERIOD", EptsReportUtils.map(A, previousPeriodParameters));
+    cd.addSearch(
+        "A-PREVIOUS-PERIOD", EptsReportUtils.map(A, "endDate=${endDate},location=${location}"));
 
     cd.addSearch(
         "started-tb-treatment-previous-period",
