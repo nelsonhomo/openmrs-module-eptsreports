@@ -90,7 +90,8 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
         EptsReportUtils.map(this.montlyCascadeReportDimensions.getNegativeTestResults(), mappings));
 
     this.addSection1And2(dataSetDefinition, mappings);
-    this.addSection3(dataSetDefinition, mappings);
+    this.addSection3(
+        dataSetDefinition, "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}");
     this.addSEction4(dataSetDefinition, mappings);
     this.addSection5(dataSetDefinition, mappings);
     this.addSection6(dataSetDefinition, mappings);
@@ -159,7 +160,7 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
   private void addSection3(CohortIndicatorDataSetDefinition dataSetDefinition, String mappings) {
 
     CohortIndicator txTBDenominatorPreviousPeriod =
-        this.getIndicator(this.txTBDenominatorForMontlyCascadeQuery.getTxTBDenominator());
+        this.getIndicator(this.txtbCohortQueries.getDenominator(), mappings);
 
     dataSetDefinition.addColumn(
         "TC-TB",
@@ -313,8 +314,8 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
     CohortIndicator positiveResults =
         this.getIndicator(
             this.txtbCohortQueries.getPositiveResultCohortDefinition(
-                txTBDenominatorForMontlyCascadeQuery.getTxTBDenominator(),
-                "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
+                txtbCohortQueries.getDenominator(),
+                "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}"));
 
     dataSetDefinition.addColumn(
         "TBD-PR",
@@ -532,6 +533,11 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
 
   private CohortIndicator getIndicator(CohortDefinition cohortDefinition) {
     String mappings = "endDate=${endDate},location=${location}";
+    return this.eptsGeneralIndicator.getIndicator(
+        "" + cohortDefinition, EptsReportUtils.map(cohortDefinition, mappings));
+  }
+
+  private CohortIndicator getIndicator(CohortDefinition cohortDefinition, String mappings) {
     return this.eptsGeneralIndicator.getIndicator(
         "" + cohortDefinition, EptsReportUtils.map(cohortDefinition, mappings));
   }
