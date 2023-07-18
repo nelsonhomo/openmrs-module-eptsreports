@@ -61,7 +61,7 @@ public class SetupQualityImprovementReport extends EptsDataExportManager {
     reportDefinition.setDescription(getDescription());
     reportDefinition.setParameters(getParameters());
     reportDefinition.addDataSetDefinition(
-            "HF", mapStraightThrough(new LocationDataSetDefinition()));
+        "HF", mapStraightThrough(new LocationDataSetDefinition()));
 
     reportDefinition.addDataSetDefinition(
         "MQ", Mapped.mapStraightThrough(mqDataSet.constructTMqDatset()));
