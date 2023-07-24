@@ -42,130 +42,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
   @Autowired private TxCurrCohortQueries txCurrCohortQueries;
 
   private String generalParameterMapping =
-      "startDate=${endDate-6m},endDate=${endDate},location=${location}";
-
-  @DocumentedDefinition(value = "TxTBDenominatorForPreviuosPeriod")
-  public CohortDefinition getTxTBDenominator() {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-
-    definition.setName("TxTB - Denominator Previous Period");
-    this.addGeneralParameters(definition);
-
-    definition.addSearch(
-        "art-list",
-        EptsReportUtils.map(
-            this.genericCohortQueries.getStartedArtBeforeDate(false),
-            "onOrBefore=${endDate},location=${location}"));
-    definition.addSearch(
-        "tb-screening",
-        EptsReportUtils.map(
-            txtbCohortQueries.yesOrNoInvestigationResult(), generalParameterMapping));
-    definition.addSearch(
-        "tb-investigation",
-        EptsReportUtils.map(
-            txtbCohortQueries.positiveInvestigationResultComposition(), generalParameterMapping));
-    definition.addSearch(
-        "started-tb-treatment",
-        EptsReportUtils.map(
-            txtbCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(),
-            generalParameterMapping));
-    definition.addSearch(
-        "in-tb-program",
-        EptsReportUtils.map(txtbCohortQueries.getInTBProgram(), generalParameterMapping));
-
-    definition.addSearch(
-        "other-diagnosis-fichaResumo",
-        EptsReportUtils.map(
-            txtbCohortQueries.getPulmonaryTBWithinReportingDate(), this.generalParameterMapping));
-
-    definition.addSearch(
-        "started-tb-treatment-previous-period",
-        EptsReportUtils.map(
-            txtbCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(),
-            "startDate=${endDate-12m+1d},endDate=${endDate-6m},location=${location}"));
-
-    definition.addSearch(
-        "in-tb-program-previous-period",
-        EptsReportUtils.map(
-            txtbCohortQueries.getInTBProgram(),
-            "startDate=${endDate-12m+1d},endDate=${endDate-6m},location=${location}"));
-
-    definition.addSearch(
-        "other-diagnosis-FichaResumo-previousPeriod",
-        EptsReportUtils.map(
-            txtbCohortQueries.getPulmonaryTBWithinReportingDate(),
-            "startDate=${endDate-12m+1d},endDate=${endDate-6m},location=${location}"));
-
-    definition.addSearch(
-        "A-PREVIOUS-PERIOD",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "transferred-out", TXTBQueries.findPatientWhoStartTB()),
-            "endDate=${endDate},location=${location}"));
-
-    definition.addSearch(
-        "art-started-by-end-previous-reporting-period",
-        EptsReportUtils.map(
-            this.genericCohortQueries.getStartedArtBeforeDate(false),
-            "onOrBefore=${endDate-6m},location=${location}"));
-
-    CohortDefinition fichaClinicaMasterCard =
-        this.genericCohortQueries.generalSql(
-            "fichaClinicaMasterCard",
-            TXTBQueries.dateObsByObsValueDateTimeClausule(
-                this.tbMetadata.getTBTreatmentPlanConcept().getConceptId(),
-                this.hivMetadata.getStartDrugsConcept().getConceptId(),
-                this.hivMetadata.getAdultoSeguimentoEncounterType().getId()));
-
-    CohortDefinition fichaAdultoSeguimentoAndPediatriaSeguimento =
-        this.genericCohortQueries.generalSql(
-            "adultoandpediatriaseguimento", TXTBQueries.findTBScreeningResultInvestigationBkOrRX());
-
-    CohortDefinition transferredOut =
-        this.genericCohortQueries.generalSql(
-            "transferred-out", TXTBQueries.findPatientWhoAreTransferedOut());
-
-    CohortDefinition tbScreeningFC =
-        this.genericCohortQueries.generalSql(
-            "tbSreeningFC", TXTBQueries.findTBScreeningFcMasterCard());
-
-    this.addGeneralParameters(fichaClinicaMasterCard);
-    this.addGeneralParameters(fichaAdultoSeguimentoAndPediatriaSeguimento);
-    this.addGeneralParameters(transferredOut);
-    this.addGeneralParameters(tbScreeningFC);
-
-    this.addGeneralParameters(fichaClinicaMasterCard);
-
-    definition.addSearch(
-        "ficha-adulto-and-pediatria-seguimento",
-        EptsReportUtils.map(fichaAdultoSeguimentoAndPediatriaSeguimento, generalParameterMapping));
-
-    definition.addSearch(
-        "transferred-out", EptsReportUtils.map(transferredOut, generalParameterMapping));
-
-    definition.addSearch(
-        "tb-screening-fc-master-card", EptsReportUtils.map(tbScreeningFC, generalParameterMapping));
-
-    definition.addSearch(
-        "ficha-clinica-master-card",
-        EptsReportUtils.map(fichaClinicaMasterCard, generalParameterMapping));
-
-    definition.addSearch(
-        "all-tb-symptoms",
-        EptsReportUtils.map(getAllTBSymptomsForDemoninatorComposition(), generalParameterMapping));
-
-    definition.addSearch(
-        "ficha-laboratorio-results",
-        EptsReportUtils.map(getResultsOnFichaLaboratorio(), generalParameterMapping));
-
-    definition.setCompositionString(
-        "(art-list AND "
-            + " ( tb-screening OR tb-screening-fc-master-card OR tb-investigation OR started-tb-treatment OR in-tb-program OR other-diagnosis-fichaResumo OR ficha-clinica-master-card OR all-tb-symptoms OR ficha-laboratorio-results OR ficha-adulto-and-pediatria-seguimento )) "
-            + " NOT ((transferred-out NOT (started-tb-treatment OR in-tb-program)) OR started-tb-treatment-previous-period OR in-tb-program-previous-period OR other-diagnosis-FichaResumo-previousPeriod OR A-PREVIOUS-PERIOD )");
-
-    return definition;
-  }
+      "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}";
 
   @DocumentedDefinition(value = "TxTBDenominatorPositiveScreening")
   public CohortDefinition getTxTBDenominatorAndPositiveScreening() {
@@ -173,7 +50,8 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
 
     definition.setName("TxTB - Denominator Positive Screening");
     definition.addSearch(
-        "denominator", EptsReportUtils.map(this.getTxTBDenominator(), generalParameterMapping));
+        "denominator",
+        EptsReportUtils.map(this.txtbCohortQueries.getDenominator(), generalParameterMapping));
 
     definition.addSearch(
         "positive-screening",
@@ -207,7 +85,8 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     definition.setName("TxTB - Denominator  Negative Screening");
 
     definition.addSearch(
-        "denominator", EptsReportUtils.map(this.getTxTBDenominator(), generalParameterMapping));
+        "denominator",
+        EptsReportUtils.map(this.txtbCohortQueries.getDenominator(), generalParameterMapping));
 
     definition.addSearch(
         "positive-screening",
@@ -257,7 +136,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
 
     definition.addSearch(
         "DENOMINATOR",
-        EptsReportUtils.map(this.getTxTBDenominator(), this.generalParameterMapping));
+        EptsReportUtils.map(this.txtbCohortQueries.getDenominator(), this.generalParameterMapping));
 
     definition.setCompositionString(
         "(application-for-laboratory-research OR tb-genexpert-culture-lam-bk-test OR lab-results) AND DENOMINATOR");
@@ -795,7 +674,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
         "posetiveResults",
         EptsReportUtils.map(
             txtbCohortQueries.getPositiveResultCohortDefinition(
-                getTxTBDenominator(), generalParameterMapping),
+                this.txtbCohortQueries.getDenominator(), generalParameterMapping),
             generalParameterMapping));
     definition.addSearch(
         "txtbNumerator", EptsReportUtils.map(this.txTbNumerator(), generalParameterMapping));
@@ -811,7 +690,8 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     this.addGeneralParameters(definition);
 
     definition.addSearch(
-        "txtbDenominator", EptsReportUtils.map(this.getTxTBDenominator(), generalParameterMapping));
+        "txtbDenominator",
+        EptsReportUtils.map(this.txtbCohortQueries.getDenominator(), generalParameterMapping));
     definition.addSearch(
         "txtbNumerator", EptsReportUtils.map(this.txTbNumerator(), generalParameterMapping));
 
@@ -884,13 +764,13 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
         EptsReportUtils.map(tbNegativeResultsInFichaLaboratorio, this.generalParameterMapping));
     cd.addSearch(
         "DENOMINATOR",
-        EptsReportUtils.map(this.getTxTBDenominator(), this.generalParameterMapping));
+        EptsReportUtils.map(this.txtbCohortQueries.getDenominator(), this.generalParameterMapping));
 
     cd.addSearch(
         "positive-results",
         EptsReportUtils.map(
             txtbCohortQueries.getPositiveResultCohortDefinition(
-                getTxTBDenominator(), generalParameterMapping),
+                this.txtbCohortQueries.getDenominator(), generalParameterMapping),
             this.generalParameterMapping));
 
     cd.setCompositionString(
