@@ -1143,4 +1143,12 @@ public class TXTBCohortQueries {
 
     return cd;
   }
+
+  public CohortDefinition findPatientsWhoInitiatedTBTreatment() {
+    final CohortDefinition definition =
+        this.genericCohortQueries.generalSql(
+            "INICIOTB", TXTBQueries.findPatientsWhoInitiatedTBTreatment());
+    this.addGeneralParameters(definition);
+    return definition;
+  }
 }

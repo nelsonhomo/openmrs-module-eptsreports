@@ -318,7 +318,8 @@ public class TPTCompletationCohortQueries {
 
     cd.setName("TxTB - Numerator Previous Period");
     final CohortDefinition A = this.generateTxTBNumerator(previousPeriodParameters);
-    cd.addSearch("A-PREVIOUS-PERIOD", EptsReportUtils.map(A, previousPeriodParameters));
+    cd.addSearch(
+        "A-PREVIOUS-PERIOD", EptsReportUtils.map(A, "endDate=${endDate},location=${location}"));
 
     cd.addSearch(
         "started-tb-treatment-previous-period",
@@ -435,8 +436,15 @@ public class TPTCompletationCohortQueries {
             tXTBCohortQueries.getSputumForAcidFastBacilliWithinReportingDate(),
             generalParameterMapping));
 
-    cd.setCompositionString("A OR B OR C OR D OR E OR F OR G OR H OR I");
+    cd.addSearch(
+        "INICIOTB",
+        EptsReportUtils.map(
+            tXTBCohortQueries.findPatientsWhoInitiatedTBTreatment(), generalParameterMapping));
+
+    cd.setCompositionString("A OR B OR C OR D OR E OR F OR G OR H OR I OR INICIOTB");
+
     this.addGeneralParameters(cd);
+
     return cd;
   }
 
