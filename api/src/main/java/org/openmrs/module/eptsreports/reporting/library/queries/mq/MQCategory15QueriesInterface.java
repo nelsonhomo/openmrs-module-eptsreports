@@ -54,15 +54,21 @@ public interface MQCategory15QueriesInterface {
     public static final String
         findPatientsFromFichaClinicaForGivenConceptsDenominadorCategoria15ARF5 =
             "select patient_id from ( "
-                + "select p.patient_id,max(e.encounter_datetime) data_mdc from patient p "
+                + "select mdcs.patient_id, max(data_mdc) data_mdc from ( "
+                + "select p.patient_id,e.encounter_datetime data_mdc, e.encounter_id,  o.obs_id from patient p "
                 + "join encounter e on p.patient_id=e.patient_id "
+                + "join obs o on o.encounter_id=e.encounter_id "
+                + "where  e.encounter_type in(6) and e.location_id=:location and o.concept_id=165174 and o.value_coded in(23724,23730,165179,165315,23888,23729,165314) and o.voided=0 "
+                + "and DATE(e.encounter_datetime) between (:endRevisionDate - INTERVAL 26 MONTH + INTERVAL  1 DAY) and (:endRevisionDate - INTERVAL 24 MONTH) "
+                + ")mdcs "
+                + "inner join encounter e on (mdcs.patient_id=e.patient_id and mdcs.data_mdc = e.encounter_datetime) "
                 + "join obs grupo on grupo.encounter_id=e.encounter_id "
                 + "join obs o on o.encounter_id=e.encounter_id "
                 + "join obs obsEstado on obsEstado.encounter_id=e.encounter_id "
-                + "where  e.encounter_type in(6) and e.location_id=:location and o.concept_id=165174 and o.value_coded in(23724,23730,165179,165315,23888,23729,165314) and o.voided=0 "
-                + "and grupo.concept_id=165323  and grupo.voided=0 and obsEstado.concept_id=165322  and obsEstado.value_coded =1256  and obsEstado.voided=0  and grupo.voided=0 "
-                + "and DATE(e.encounter_datetime) between (:endRevisionDate - INTERVAL 26 MONTH + INTERVAL  1 DAY) and (:endRevisionDate - INTERVAL 24 MONTH)  and e.location_id=:location "
-                + "group by p.patient_id "
+                + "where  e.encounter_type = 6 and e.location_id=:location and e.voided =0 and o.concept_id=165174 and o.value_coded in(23724,23730,165179,165315,23888,23729,165314) and o.voided=0 "
+                + "and grupo.concept_id=165323 and grupo.voided=0 and obsEstado.concept_id=165322  and obsEstado.value_coded = 1256  and obsEstado.voided=0  and grupo.voided=0 "
+                + "and grupo.obs_id=o.obs_group_id and grupo.obs_id=obsEstado.obs_group_id "
+                + "group by mdcs.patient_id "
                 + "union "
                 + "select max_tipo_despensa.patient_id,max_tipo_despensa.data_mdc from   ( "
                 + "select max_tl.patient_id, max_tl.data_mdc from   ( "
@@ -753,7 +759,7 @@ public interface MQCategory15QueriesInterface {
             + "select p.patient_id, max(e.encounter_datetime) data_ultima_consulta FROM patient p "
             + "INNER JOIN encounter e on p.patient_id=e.patient_id "
             + "where p.voided=0 and e.voided=0 and  e.encounter_type = 6 "
-            + "and e.encounter_datetime  between  (:endRevisionDate- INTERVAL 12 MONTH + INTERVAL  1 DAY) and :endRevisionDateand e.location_id=:location "
+            + "and e.encounter_datetime  between  (:endRevisionDate- INTERVAL 12 MONTH + INTERVAL  1 DAY) and :endRevisionDate and e.location_id=:location "
             + "group by patient_id "
             + ")maxEnc "
             + "inner join ( "
@@ -768,7 +774,7 @@ public interface MQCategory15QueriesInterface {
             + "select clinica.patient_id,clinica.data_consulta,obs_proxima.value_datetime data_proxima_consulta  from  ( "
             + "Select p.patient_id,encounter_datetime data_consulta  from  patient p "
             + "inner join encounter e on e.patient_id=p.patient_id "
-            + "where  p.voided=0 and e.voided=0 and e.encounter_type=6 and e.encounter_datetime<= :endRevisionDateand e.location_id=:location "
+            + "where  p.voided=0 and e.voided=0 and e.encounter_type=6 and e.encounter_datetime<= :endRevisionDate and e.location_id=:location "
             + ")clinica "
             + "inner join  obs obs_proxima on obs_proxima.person_id=clinica.patient_id "
             + "and obs_proxima.voided=0  and obs_proxima.obs_datetime=clinica.data_consulta "
@@ -1157,7 +1163,7 @@ public interface MQCategory15QueriesInterface {
             + "		inner join obs o on o.encounter_id=e.encounter_id "
             + "		where e.encounter_type=13 and o.concept_id in(856,1305) and p.voided=0 and e.voided=0 and o.voided=0 and e.location_id=:location "
             + "		) cvLab on f.patient_id=cvLab.patient_id "
-            + "		 where cvLab.encounter_datetime between f.encounter_datetime_pedido_2 and :endRevisionDate ";
+            + "		 where cvLab.encounter_datetime > f.encounter_datetime_pedido_2 and cvLab.encounter_datetime <= :endRevisionDate ";
 
     public static final String findPatientsWithRequestOnLabFormCategory15OverThan1000 =
         "select f.patient_id from ( "
