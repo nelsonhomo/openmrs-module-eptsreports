@@ -49,7 +49,7 @@ public interface EC5DuplicateFichaResumoQueries {
             + "FROM patient p inner join encounter e on p.patient_id=e.patient_id "
             + "where p.voided=0 and e.voided=0 and e.encounter_type=52 "
             + ")qualquer on qualquer.patient_id=primeira.patient_id "
-            + "where qualquer.encounter_datetime_qualquer=primeira.encounter_datetime_primeira  "
+            + "where date(qualquer.encounter_datetime_qualquer)=date(primeira.encounter_datetime_primeira)  "
             + "and primeira.location_id_primeira=qualquer.location_id_qualquer "
             + "and primeira.encounter_id_primeira<>qualquer.encounter_id_qualquer "
             + "group by primeira.encounter_datetime_primeira,qualquer.encounter_datetime_qualquer  "
