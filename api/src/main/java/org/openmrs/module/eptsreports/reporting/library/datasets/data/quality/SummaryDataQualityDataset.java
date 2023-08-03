@@ -58,7 +58,7 @@ public class SummaryDataQualityDataset extends BaseDataSet {
     final CohortDefinition summaryCohortQueryEC23 = summaryCohortQuery.getEC23Total();
     final CohortDefinition summaryCohortQueryEC24 = summaryCohortQuery.getEC24Total();
     final CohortDefinition summaryCohortQueryEC25 = summaryCohortQuery.getEC25Total();
-    final CohortDefinition summaryCohortQueryEC26 = summaryCohortQuery.getEC25Total();
+    final CohortDefinition summaryCohortQueryEC26 = summaryCohortQuery.getEC26Total();
 
     dsd.addColumn(
         "EC1",

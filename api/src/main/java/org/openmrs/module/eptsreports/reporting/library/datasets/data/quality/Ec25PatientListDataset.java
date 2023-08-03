@@ -13,7 +13,7 @@ public class Ec25PatientListDataset {
   public DataSetDefinition ec25PatientListDatset(List<Parameter> parameterList) {
 
     SqlDataSetDefinition sqlDataSetDefinition = new SqlDataSetDefinition();
-    sqlDataSetDefinition.setName("EC26");
+    sqlDataSetDefinition.setName("EC25");
     sqlDataSetDefinition.addParameters(parameterList);
     sqlDataSetDefinition.setSqlQuery(EC25Queries.getEc25CombinedQuery());
 

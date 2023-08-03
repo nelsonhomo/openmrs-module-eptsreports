@@ -91,6 +91,12 @@ public class SetupDataQualityDuplicateFichaResumoReport extends EptsDataExportMa
     rd.addParameters(this.getDataParameters());
 
     rd.addDataSetDefinition(
+        "SD",
+        Mapped.mapStraightThrough(
+            summaryDataQualityDuplicateFichaResumoDataset.constructSummaryDataQualityDatset(
+                this.getDataParameters())));
+
+    rd.addDataSetDefinition(
         "ECD1",
         Mapped.mapStraightThrough(
             eC1PatientListDuplicateFichaResumoDataset
@@ -119,12 +125,6 @@ public class SetupDataQualityDuplicateFichaResumoReport extends EptsDataExportMa
         Mapped.mapStraightThrough(
             ec5PatientListDuplicateFichaResumoDataset
                 .ec5PatientWithDuplicatedFichaResumoListDataset(this.getDataParameters())));
-
-    rd.addDataSetDefinition(
-        "SD",
-        Mapped.mapStraightThrough(
-            summaryDataQualityDuplicateFichaResumoDataset.constructSummaryDataQualityDatset(
-                this.getDataParameters())));
 
     rd.addDataSetDefinition(
         "D",

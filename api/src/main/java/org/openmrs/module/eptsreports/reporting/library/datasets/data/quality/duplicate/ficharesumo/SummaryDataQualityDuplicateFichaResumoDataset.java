@@ -88,16 +88,6 @@ public class SummaryDataQualityDuplicateFichaResumoDataset extends BaseDataSet {
         EptsReportUtils.map(
             this.eptsGeneralIndicator.getIndicator(
                 "summaryCohortQueryEC3Indicator",
-                EptsReportUtils.map(summaryCohortQueryEC3, mappings)),
-            mappings),
-        "");
-
-    dsd.addColumn(
-        "EC4D-TOTAL",
-        "EC4D: The patient has more than one Fila registered in SESP on the same date and at the same Health Facility. ",
-        EptsReportUtils.map(
-            this.eptsGeneralIndicator.getIndicator(
-                "summaryCohortQueryEC4Indicator",
                 EptsReportUtils.map(summaryCohortQueryEC4, mappings)),
             mappings),
         "");
