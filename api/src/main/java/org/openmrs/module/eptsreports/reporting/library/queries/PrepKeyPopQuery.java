@@ -194,6 +194,19 @@ public class PrepKeyPopQuery {
             + "inner join person pe on pe.person_id=maxkp.patient_id "
             + "where o.concept_id=165196 and o.voided=0  and e.encounter_type=80 and e.voided=0 and e.location_id=:location and pe.voided=0 "
             + "AND o.value_coded=165287 "
+            + "UNION "
+            + "select maxkp.patient_id, o.value_coded,o.obs_datetime,1 ordemSource,13 ordemKp from ( "
+            + "Select p.patient_id,max(e.encounter_datetime) maxkpdate from patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on e.encounter_id=o.encounter_id "
+            + "where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=23703 and  e.encounter_type=80 and e.encounter_datetime<=:endDate and  e.location_id=:location "
+            + "group by p.patient_id "
+            + ") maxkp "
+            + "inner join encounter e on e.patient_id=maxkp.patient_id and maxkp.maxkpdate=e.encounter_datetime "
+            + "inner join obs o on o.encounter_id=e.encounter_id and maxkp.maxkpdate=o.obs_datetime "
+            + "inner join person pe on pe.person_id=maxkp.patient_id "
+            + "where o.concept_id=23703 and o.voided=0  and e.encounter_type=80 and e.voided=0 and e.location_id=:location and pe.voided=0 "
+            + "AND o.value_coded=5622 "
             + ") allkpsource "
             + "order by patient_id,obs_datetime desc,ordemSource,ordemKp "
             + ") allkpsorcetakefirst "
@@ -247,6 +260,10 @@ public class PrepKeyPopQuery {
 
       case YOUTHS:
         query = query + "where value_coded=165287 ";
+        break;
+
+      case OTHER:
+        query = query + "where value_coded=5622 ";
         break;
     }
 
