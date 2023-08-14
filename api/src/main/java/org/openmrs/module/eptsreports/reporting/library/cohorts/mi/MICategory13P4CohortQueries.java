@@ -294,6 +294,39 @@ public class MICategory13P4CohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientsWhoReceivedResultMoreThan1000CVCategory13P3Numerator")
+  public CohortDefinition findPatientsWhoReceivedResultMoreThan1000CVCategory13P3Numerator() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findPatientsWhoReceivedResultMoreThan1000CVCategory13P3Numerator");
+
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${endRevisionDate-5m+1d},endInclusionDate=${endRevisionDate-4m},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINADOR-CAT13-3",
+        EptsReportUtils.map(
+            this
+                .findPatietsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTWITH1000CVCategory11DenominatorAdult(),
+            mappings));
+
+    definition.addSearch(
+        "H-CAT-13-3",
+        EptsReportUtils.map(
+            this.mqCohortQueries.findPatientsWhoHaveRequestedCV120DaysAfterCVResultByQueryH(),
+            mappings));
+
+    definition.setCompositionString("(DENOMINADOR-CAT13-3 AND H-CAT-13-3)");
+
+    return definition;
+  }
+
   @DocumentedDefinition(
       value = "findPatientsWhoPregnantReceivedResultMoreThan1000CVCategory13P4Numerator")
   public CohortDefinition
@@ -322,7 +355,8 @@ public class MICategory13P4CohortQueries {
     definition.addSearch(
         "H",
         EptsReportUtils.map(
-            this.mqCohortQueries.findPatientsWhoHaveRequestedCV120DaysAfterCVResultByQueryH(),
+            this.mqCohortQueries
+                .findPatientsWhoHaveRequestedCV120DaysAfterCV50CopiesResultByQueryH(),
             mappingsMI));
 
     definition.setCompositionString("(DENOMINADOR AND H)");
