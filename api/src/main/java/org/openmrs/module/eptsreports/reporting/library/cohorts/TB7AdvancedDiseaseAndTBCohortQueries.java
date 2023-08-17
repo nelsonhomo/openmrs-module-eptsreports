@@ -6,6 +6,7 @@ import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.LevelOfPositivity;
 import org.openmrs.module.eptsreports.reporting.utils.TypePTV;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -26,6 +27,14 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
   private static final String DEAD_CURR_DATE = "TB7/DEAD_CURR_DATE.sql";
   private static final String CD4_CURR_DATE = "TB7/CD4_CURR_DATE.sql";
   private static final String TB_LAM_CURR_DATE = "TB7/TB_LAM_CURR_DATE.sql";
+  private static final String TB_LAM_POSITIVE_OR_NEGATIVE = "TB7/TB_LAM_POSITIVE_OR_NEGATIVE.sql";
+  private static final String TB_LAM_LEVEL_OF_POSITIVITY = "TB7/TB_LAM_LEVEL_OF_POSITIVITY.sql";
+  private static final String GENEXPERT = "TB7/GENEXPERT_CURR_DATE.sql";
+  private static final String GENEXPERT_POSITIVE = "TB7/GENEXPERT_POSITIVE.sql";
+  private static final String TB = "TB7/TB_CUUR_DATE.sql";
+
+  private static int TB_LAM_POSITIVE = 703;
+  private static int TB_LAM_NEGATIVE = 664;
 
   @Autowired private GenericCohortQueries genericCohortQueries;
   @Autowired private TxNewCohortQueries txNewCohortQueries;
@@ -40,6 +49,32 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
 
       case BREASTFEEDING:
         query = query + "where final.decisao = 2 ";
+        break;
+    }
+    return query;
+  }
+
+  public static String findLevelOfPosotivity(LevelOfPositivity levelOfPositivity) {
+    String query = EptsQuerysUtils.loadQuery(TB_LAM_LEVEL_OF_POSITIVITY);
+
+    switch (levelOfPositivity) {
+      case Grade_1:
+        query = query + "where f.value_coded = 165186 ";
+        break;
+
+      case Grade_2:
+        query = query + "where f.value_coded = 165187 ";
+        break;
+
+      case Grade_3:
+        query = query + "where f.value_coded = 165188 ";
+        break;
+      case Grade_4:
+        query = query + "where f.value_coded = 165348 ";
+        break;
+
+      case Blank:
+        query = query + "where f.value_coded is null ";
         break;
     }
     return query;
@@ -87,6 +122,31 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
 
   public static String findPatientWhoHaveCd4UntilCurrentDate() {
     String query = EptsQuerysUtils.loadQuery(CD4_CURR_DATE);
+    return query;
+  }
+
+  public static String findPatientWhoHaveTBLamPositiveOrNegative() {
+    String query = EptsQuerysUtils.loadQuery(TB_LAM_POSITIVE_OR_NEGATIVE);
+    return query;
+  }
+
+  public static String findPatientWhoHaveTBLamLevelOfPositivity() {
+    String query = EptsQuerysUtils.loadQuery(TB_LAM_LEVEL_OF_POSITIVITY);
+    return query;
+  }
+
+  public static String findPatientWhoHaveGenexpert() {
+    String query = EptsQuerysUtils.loadQuery(GENEXPERT);
+    return query;
+  }
+
+  public static String findPatientWhoHavePositiveGenexpert() {
+    String query = EptsQuerysUtils.loadQuery(GENEXPERT_POSITIVE);
+    return query;
+  }
+
+  public static String findPatientWhoHavePositiveGenexpertTb() {
+    String query = EptsQuerysUtils.loadQuery(TB);
     return query;
   }
 
@@ -311,6 +371,243 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
             mappings));
 
     definition.setCompositionString("ELEGIBLE3 NOT TBLAM");
+    return definition;
+  }
+
+  public CohortDefinition
+      getNumberOfClientsWithoutCD4CountButWithTBLAMResultsDuringTheInclusionPeriodIncludingClientsWhoWereNotEligibleForCD4() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
+    definition.addSearch(
+        "TBLAM" + "",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("TBLAM", findPatientWhoHaveTbLamResul1()),
+            mappings));
+
+    definition.addSearch(
+        "CD4" + "",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("CD4", findPatientWhoHaveCd4Result()), mappings));
+
+    definition.addSearch(
+        "TROUT" + "",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("TROUT", findPatientWhoAreTransferedOut()),
+            mappings));
+
+    definition.addSearch(
+        "DEAD" + "",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("DEAD", findPatientWhoAreDead()), mappings));
+
+    definition.setCompositionString("TBLAM NOT(CD4 OR TROUT OR DEAD)");
+
+    return definition;
+  }
+
+  public CohortDefinition getNumberOfClientsWithTBLAMResultsByReportGenerationDate() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate-2m},location=${location}";
+
+    definition.addSearch(
+        "TBLAM" + "",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "TBLAM", findPatientWhoHaveTbLamResulUntilCurrentDate()),
+            mappings));
+
+    definition.addSearch(
+        "TROUT" + "",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("TROUT", findPatientWhoAreTransferedOut()),
+            mappings));
+
+    definition.addSearch(
+        "DEAD" + "",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("DEAD", findPatientWhoAreDead()), mappings));
+
+    definition.setCompositionString("TBLAM NOT(TROUT OR DEAD)");
+
+    return definition;
+  }
+
+  public CohortDefinition getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "TBLAM", map(this.getNumberOfClientsWithTBLAMResultsByReportGenerationDate(), mappingsDen));
+
+    definition.addSearch(
+        "POSITIVE",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "POSITIVE",
+                String.format(findPatientWhoHaveTBLamPositiveOrNegative(), TB_LAM_POSITIVE)),
+            mappings));
+
+    definition.setCompositionString("TBLAM AND POSITIVE");
+
+    return definition;
+  }
+
+  public CohortDefinition getNumberOfClientsWithNegativeTBLAMResultsByReportGenerationDate() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "TBLAM", map(this.getNumberOfClientsWithTBLAMResultsByReportGenerationDate(), mappingsDen));
+
+    definition.addSearch(
+        "NEGATIVE",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "NEGATIVE",
+                String.format(findPatientWhoHaveTBLamPositiveOrNegative(), TB_LAM_NEGATIVE)),
+            mappings));
+
+    definition.setCompositionString("TBLAM AND NEGATIVE");
+
+    return definition;
+  }
+
+  public CohortDefinition getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
+      LevelOfPositivity levelOfPositivity) {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "TBLAMPOSITIVE",
+        map(this.getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(), mappingsDen));
+
+    definition.addSearch(
+        "GRADE",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("GRADE", findLevelOfPosotivity(levelOfPositivity)),
+            mappings));
+
+    definition.setCompositionString("TBLAMPOSITIVE AND GRADE");
+
+    return definition;
+  }
+
+  public CohortDefinition getClientsWithoutPositiveTBLAMButNotTestedWithGeneXpert() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "TBLAMPOSITIVE",
+        map(this.getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(), mappingsDen));
+
+    definition.addSearch(
+        "GENEXPERT",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("GENEXPERT", findPatientWhoHaveGenexpert()),
+            mappings));
+
+    definition.setCompositionString("TBLAMPOSITIVE NOT GENEXPERT");
+
+    return definition;
+  }
+
+  public CohortDefinition getClientsWithPositiveTBLAMButNotTestedWithGeneXpert() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "TBLAMPOSITIVE",
+        map(this.getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(), mappingsDen));
+
+    definition.addSearch(
+        "GENEXPERT",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("GENEXPERT", findPatientWhoHaveGenexpert()),
+            mappings));
+
+    definition.setCompositionString("TBLAMPOSITIVE AND GENEXPERT");
+
+    return definition;
+  }
+
+  public CohortDefinition getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTB() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "TBLAMPOSITIVE",
+        map(this.getClientsWithPositiveTBLAMButNotTestedWithGeneXpert(), mappingsDen));
+
+    definition.addSearch(
+        "GENEXPERTPOSITIVE",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "GENEXPERTPOSITIVE", findPatientWhoHavePositiveGenexpert()),
+            mappings));
+
+    definition.addSearch(
+        "TB",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("TB", findPatientWhoHavePositiveGenexpertTb()),
+            mappings));
+
+    definition.setCompositionString("TBLAMPOSITIVE AND GENEXPERTPOSITIVE AND TB");
+
     return definition;
   }
 }

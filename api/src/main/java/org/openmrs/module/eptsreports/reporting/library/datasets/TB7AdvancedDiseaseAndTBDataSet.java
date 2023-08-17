@@ -7,6 +7,7 @@ import org.openmrs.module.eptsreports.reporting.library.dimensions.AgeDimensionC
 import org.openmrs.module.eptsreports.reporting.library.dimensions.EptsCommonDimension;
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.LevelOfPositivity;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
@@ -79,6 +80,52 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
         this.tb7AdvancedDiseaseAndTBCohortQueries
             .getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3WithoutTBLam();
 
+    final CohortDefinition patienWithoutCD4CountButWithTBLAMResults =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithoutCD4CountButWithTBLAMResultsDuringTheInclusionPeriodIncludingClientsWhoWereNotEligibleForCD4();
+
+    final CohortDefinition numberOfClientsWithTBLAMResultsByReportGenerationDate =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithTBLAMResultsByReportGenerationDate();
+
+    final CohortDefinition numberOfClientsWithPositiveTBLAMResultsByReportGenerationDate =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate();
+
+    final CohortDefinition numberOfClientsWithNegativeTBLAMResultsByReportGenerationDate =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithNegativeTBLAMResultsByReportGenerationDate();
+
+    final CohortDefinition numberOfClientsWithPositiveTBLAMResultsGrade4ByReportGenerationDate =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
+                LevelOfPositivity.Grade_4);
+    final CohortDefinition numberOfClientsWithPositiveTBLAMResultsGrade3ByReportGenerationDate =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
+                LevelOfPositivity.Grade_3);
+    final CohortDefinition numberOfClientsWithPositiveTBLAMResultsGrade2ByReportGenerationDate =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
+                LevelOfPositivity.Grade_2);
+
+    final CohortDefinition numberOfClientsWithPositiveTBLAMResultsGrade1ByReportGenerationDate =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
+                LevelOfPositivity.Grade_1);
+
+    final CohortDefinition clientsWithoutPositiveTBLAMButNotTestedWithGeneXpert =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getClientsWithoutPositiveTBLAMButNotTestedWithGeneXpert();
+
+    final CohortDefinition clientsWithPositiveTBLAMButNotTestedWithGeneXpert =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getClientsWithPositiveTBLAMButNotTestedWithGeneXpert();
+
+    final CohortDefinition clientsWithPositiveTBLAMWithGeneXpertAndTb =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTB();
+
     final CohortIndicator tb7Indicator1 =
         this.eptsGeneralIndicator.getIndicator(
             "TB7", EptsReportUtils.map(tb7CohortIndicator, mappings));
@@ -110,6 +157,71 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
     final CohortIndicator tb7Indicator3WithoutCd4WithoutTbLamTotal =
         this.eptsGeneralIndicator.getIndicator(
             "TB7", EptsReportUtils.map(tb7CohortIndicator3WithoutCd4WithoutTbLamTotal, mappings));
+
+    final CohortIndicator tb7IndicatorpatienWithoutCD4CountButWithTBLAMResults =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7", EptsReportUtils.map(patienWithoutCD4CountButWithTBLAMResults, mappings));
+
+    final CohortIndicator tb7IndicatorNumberOfClientsWithTBLAMResultsByReportGenerationDate =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7",
+            EptsReportUtils.map(numberOfClientsWithTBLAMResultsByReportGenerationDate, mappings));
+
+    final CohortIndicator
+        tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    numberOfClientsWithPositiveTBLAMResultsByReportGenerationDate, mappings));
+
+    final CohortIndicator
+        tb7IndicatorNumberOfClientsWithNegativeTBLAMResultsByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    numberOfClientsWithNegativeTBLAMResultsByReportGenerationDate, mappings));
+
+    final CohortIndicator
+        tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade4ByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    numberOfClientsWithPositiveTBLAMResultsGrade4ByReportGenerationDate, mappings));
+
+    final CohortIndicator
+        tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade3ByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    numberOfClientsWithPositiveTBLAMResultsGrade3ByReportGenerationDate, mappings));
+
+    final CohortIndicator
+        tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade2ByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    numberOfClientsWithPositiveTBLAMResultsGrade2ByReportGenerationDate, mappings));
+
+    final CohortIndicator
+        tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade1ByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    numberOfClientsWithPositiveTBLAMResultsGrade1ByReportGenerationDate, mappings));
+
+    final CohortIndicator tb7IndicatorclientsWithoutPositiveTBLAMButNotTestedWithGeneXpert =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7",
+            EptsReportUtils.map(clientsWithoutPositiveTBLAMButNotTestedWithGeneXpert, mappings));
+
+    final CohortIndicator tb7IndicatorclientsWithPositiveTBLAMButNotTestedWithGeneXpert =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7",
+            EptsReportUtils.map(clientsWithPositiveTBLAMButNotTestedWithGeneXpert, mappings));
+
+    final CohortIndicator tb7IndicatorClientsWithPositiveTBLAMWithGeneXpertAndTb =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7", EptsReportUtils.map(clientsWithPositiveTBLAMWithGeneXpertAndTb, mappings));
 
     dataSetDefinition.addColumn("TI1", "TI1", EptsReportUtils.map(tb7Indicator1, mappings), "");
 
@@ -202,7 +314,7 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "CDNRL2",
-        "Number of clients with CD4 count during inclusion period showing severe immunodepression  "
+        "Number of clients without CD4 count during inclusion period showing severe immunodepression  "
             + "(CD4 count < 200/mm3  for patients > =5 , <500/mm3 for children 1-4, <750/mm3 for children under 12 months) ",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
@@ -214,6 +326,99 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
                     mappings)),
             mappings),
         getColumns());
+
+    dataSetDefinition.addColumn(
+        "TBLAM1T",
+        "TBLAM1T",
+        EptsReportUtils.map(tb7IndicatorpatienWithoutCD4CountButWithTBLAMResults, mappings),
+        "");
+
+    addRow(
+        dataSetDefinition,
+        "TBLAM1",
+        "Number of clients without CD4 count but with TB LAM results during the inclusion period (including clients who were not eligible for CD4) ",
+        EptsReportUtils.map(
+            eptsGeneralIndicator.getIndicator(
+                "Number of clients without CD4 count but with TB LAM results during the inclusion period (including clients who were not eligible for CD4) ",
+                EptsReportUtils.map(
+                    tb7AdvancedDiseaseAndTBCohortQueries
+                        .getNumberOfClientsWithoutCD4CountButWithTBLAMResultsDuringTheInclusionPeriodIncludingClientsWhoWereNotEligibleForCD4(),
+                    mappings)),
+            mappings),
+        getColumns());
+
+    dataSetDefinition.addColumn(
+        "TBLAM2T",
+        "TBLAM2T",
+        EptsReportUtils.map(
+            tb7IndicatorNumberOfClientsWithTBLAMResultsByReportGenerationDate, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP2T",
+        "TBLAMP2T",
+        EptsReportUtils.map(
+            tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMN2T",
+        "TBLAMN2T",
+        EptsReportUtils.map(
+            tb7IndicatorNumberOfClientsWithNegativeTBLAMResultsByReportGenerationDate, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP2L4T",
+        "TBLAMP2L4T",
+        EptsReportUtils.map(
+            tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade4ByReportGenerationDate,
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP2L3T",
+        "TBLAMP2L3T",
+        EptsReportUtils.map(
+            tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade3ByReportGenerationDate,
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP2L2T",
+        "TBLAMP2L2T",
+        EptsReportUtils.map(
+            tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade2ByReportGenerationDate,
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP2L1T",
+        "TBLAMP2L1T",
+        EptsReportUtils.map(
+            tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade1ByReportGenerationDate,
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP3T",
+        "TBLAMP3T",
+        EptsReportUtils.map(
+            tb7IndicatorclientsWithoutPositiveTBLAMButNotTestedWithGeneXpert, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP4T",
+        "TBLAMP4T",
+        EptsReportUtils.map(
+            tb7IndicatorclientsWithPositiveTBLAMButNotTestedWithGeneXpert, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP5T",
+        "TBLAMP5T",
+        EptsReportUtils.map(tb7IndicatorClientsWithPositiveTBLAMWithGeneXpertAndTb, mappings),
+        "");
 
     return dataSetDefinition;
   }
