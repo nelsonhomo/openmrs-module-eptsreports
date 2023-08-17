@@ -62,9 +62,22 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
     final CohortDefinition tb7CohortIndicator3TbLam =
         this.tb7AdvancedDiseaseAndTBCohortQueries
             .getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicator3WithTBLam();
+
     final CohortDefinition tb7CohortIndicator3WithoutTbLam =
         this.tb7AdvancedDiseaseAndTBCohortQueries
             .getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicator3WithoutTBLam();
+
+    final CohortDefinition tb7CohortIndicator3WithoutCd4WithTbLam =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3();
+
+    final CohortDefinition tb7CohortIndicator3WithoutCd4WithTbLamTotal =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3WithTBLam();
+
+    final CohortDefinition tb7CohortIndicator3WithoutCd4WithoutTbLamTotal =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3WithoutTBLam();
 
     final CohortIndicator tb7Indicator1 =
         this.eptsGeneralIndicator.getIndicator(
@@ -85,6 +98,18 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
     final CohortIndicator tb7Indicator3WithoutTbLam =
         this.eptsGeneralIndicator.getIndicator(
             "TB7", EptsReportUtils.map(tb7CohortIndicator3WithoutTbLam, mappings));
+
+    final CohortIndicator tb7Indicator3WithoutCd4WithTbLam =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7", EptsReportUtils.map(tb7CohortIndicator3WithoutCd4WithTbLam, mappings));
+
+    final CohortIndicator tb7Indicator3WithoutCd4WithTbLamTotal =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7", EptsReportUtils.map(tb7CohortIndicator3WithoutCd4WithTbLamTotal, mappings));
+
+    final CohortIndicator tb7Indicator3WithoutCd4WithoutTbLamTotal =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7", EptsReportUtils.map(tb7CohortIndicator3WithoutCd4WithoutTbLamTotal, mappings));
 
     dataSetDefinition.addColumn("TI1", "TI1", EptsReportUtils.map(tb7Indicator1, mappings), "");
 
@@ -152,6 +177,40 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
                 EptsReportUtils.map(
                     tb7AdvancedDiseaseAndTBCohortQueries
                         .getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicator3WithoutTBLam(),
+                    mappings)),
+            mappings),
+        getColumns());
+
+    dataSetDefinition.addColumn(
+        "TINCD4TBLAM3",
+        "TINCD4TBLAM3",
+        EptsReportUtils.map(tb7Indicator3WithoutCd4WithTbLam, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TINOTCD4TBLAM",
+        "TINOTCD4TBLAM",
+        EptsReportUtils.map(tb7Indicator3WithoutCd4WithTbLamTotal, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TINOTCD4NOTTBLAM",
+        "TINOTCD4NOTTBLAM",
+        EptsReportUtils.map(tb7Indicator3WithoutCd4WithoutTbLamTotal, mappings),
+        "");
+
+    addRow(
+        dataSetDefinition,
+        "CDNRL2",
+        "Number of clients with CD4 count during inclusion period showing severe immunodepression  "
+            + "(CD4 count < 200/mm3  for patients > =5 , <500/mm3 for children 1-4, <750/mm3 for children under 12 months) ",
+        EptsReportUtils.map(
+            eptsGeneralIndicator.getIndicator(
+                "Number of clients with CD4 count during inclusion period showing severe immunodepression  "
+                    + "(CD4 count < 200/mm3  for patients > =5 , <500/mm3 for children 1-4, <750/mm3 for children under 12 months) ",
+                EptsReportUtils.map(
+                    tb7AdvancedDiseaseAndTBCohortQueries
+                        .getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3WithTBLam(),
                     mappings)),
             mappings),
         getColumns());

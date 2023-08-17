@@ -22,6 +22,10 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
   private static final String CD4_RESULT = "TB7/CD4_RESULT.sql";
   private static final String CD4_RESULT_2 = "TB7/CD4_RESULT_2.sql";
   private static final String TB_LAM_1 = "TB7/TB_LAM_1.sql";
+  private static final String TR_OUT_CURR_DATE = "TB7/TR_OUT_CURR_DATE.sql";
+  private static final String DEAD_CURR_DATE = "TB7/DEAD_CURR_DATE.sql";
+  private static final String CD4_CURR_DATE = "TB7/CD4_CURR_DATE.sql";
+  private static final String TB_LAM_CURR_DATE = "TB7/TB_LAM_CURR_DATE.sql";
 
   @Autowired private GenericCohortQueries genericCohortQueries;
   @Autowired private TxNewCohortQueries txNewCohortQueries;
@@ -63,6 +67,26 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
 
   public static String findPatientWhoHaveTbLamResul1() {
     String query = EptsQuerysUtils.loadQuery(TB_LAM_1);
+    return query;
+  }
+
+  public static String findPatientWhoHaveTbLamResulUntilCurrentDate() {
+    String query = EptsQuerysUtils.loadQuery(TB_LAM_CURR_DATE);
+    return query;
+  }
+
+  public static String findPatientWhoAreTransferedOut() {
+    String query = EptsQuerysUtils.loadQuery(TR_OUT_CURR_DATE);
+    return query;
+  }
+
+  public static String findPatientWhoAreDead() {
+    String query = EptsQuerysUtils.loadQuery(DEAD_CURR_DATE);
+    return query;
+  }
+
+  public static String findPatientWhoHaveCd4UntilCurrentDate() {
+    String query = EptsQuerysUtils.loadQuery(CD4_CURR_DATE);
     return query;
   }
 
@@ -176,7 +200,8 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "TBLAM",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql("CD4RESULT", findPatientWhoHaveTbLamResul1()),
+            this.genericCohortQueries.generalSql(
+                "TBLAM", findPatientWhoHaveTbLamResulUntilCurrentDate()),
             mappings));
 
     definition.setCompositionString("ELEGIBLE3 AND TBLAM");
@@ -202,7 +227,87 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "TBLAM",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql("CD4RESULT", findPatientWhoHaveTbLamResul1()),
+            this.genericCohortQueries.generalSql(
+                "TBLAM", findPatientWhoHaveTbLamResulUntilCurrentDate()),
+            mappings));
+
+    definition.setCompositionString("ELEGIBLE3 NOT TBLAM");
+    return definition;
+  }
+
+  public CohortDefinition getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "ELEGIBLE2",
+        map(this.getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicator2(), mappingsDen));
+
+    definition.addSearch(
+        "CD4RESULT",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("CD4RESULT", findPatientWhoHaveCd4Result2()),
+            mappings));
+
+    definition.setCompositionString("ELEGIBLE2 NOT CD4RESULT");
+    return definition;
+  }
+
+  public CohortDefinition
+      getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3WithTBLam() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "ELEGIBLE3",
+        map(this.getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3(), mappingsDen));
+
+    definition.addSearch(
+        "TBLAM",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "TBLAM", findPatientWhoHaveTbLamResulUntilCurrentDate()),
+            mappings));
+
+    definition.setCompositionString("ELEGIBLE3 AND TBLAM");
+    return definition;
+  }
+
+  public CohortDefinition
+      getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3WithoutTBLam() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "ELEGIBLE3",
+        map(this.getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3(), mappingsDen));
+
+    definition.addSearch(
+        "TBLAM",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "TBLAM", findPatientWhoHaveTbLamResulUntilCurrentDate()),
             mappings));
 
     definition.setCompositionString("ELEGIBLE3 NOT TBLAM");
