@@ -114,6 +114,11 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
             .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
                 LevelOfPositivity.Grade_1);
 
+    final CohortDefinition numberOfClientsWithPositiveTBLAMResultsGradeBlankByReportGenerationDate =
+        this.tb7AdvancedDiseaseAndTBCohortQueries
+            .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
+                LevelOfPositivity.Blank);
+
     final CohortDefinition clientsWithoutPositiveTBLAMButNotTestedWithGeneXpert =
         this.tb7AdvancedDiseaseAndTBCohortQueries
             .getClientsWithoutPositiveTBLAMButNotTestedWithGeneXpert();
@@ -125,6 +130,33 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
     final CohortDefinition clientsWithPositiveTBLAMWithGeneXpertAndTb =
         this.tb7AdvancedDiseaseAndTBCohortQueries
             .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTB();
+    final CohortDefinition
+        clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade4ByReportGenerationDate =
+            this.tb7AdvancedDiseaseAndTBCohortQueries
+                .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeDesagregation(
+                    LevelOfPositivity.Grade_4);
+    final CohortDefinition
+        clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade3ByReportGenerationDate =
+            this.tb7AdvancedDiseaseAndTBCohortQueries
+                .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeDesagregation(
+                    LevelOfPositivity.Grade_3);
+    final CohortDefinition
+        clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade2ByReportGenerationDate =
+            this.tb7AdvancedDiseaseAndTBCohortQueries
+                .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeDesagregation(
+                    LevelOfPositivity.Grade_2);
+
+    final CohortDefinition
+        clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade1ByReportGenerationDate =
+            this.tb7AdvancedDiseaseAndTBCohortQueries
+                .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeDesagregation(
+                    LevelOfPositivity.Grade_1);
+
+    final CohortDefinition
+        clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGradeBlankByReportGenerationDate =
+            this.tb7AdvancedDiseaseAndTBCohortQueries
+                .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeDesagregation(
+                    LevelOfPositivity.Blank);
 
     final CohortIndicator tb7Indicator1 =
         this.eptsGeneralIndicator.getIndicator(
@@ -222,6 +254,54 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
     final CohortIndicator tb7IndicatorClientsWithPositiveTBLAMWithGeneXpertAndTb =
         this.eptsGeneralIndicator.getIndicator(
             "TB7", EptsReportUtils.map(clientsWithPositiveTBLAMWithGeneXpertAndTb, mappings));
+
+    final CohortIndicator
+        tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGradeBlankByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    numberOfClientsWithPositiveTBLAMResultsGradeBlankByReportGenerationDate,
+                    mappings));
+
+    final CohortIndicator
+        tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade4ByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade4ByReportGenerationDate,
+                    mappings));
+
+    final CohortIndicator
+        tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade3ByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade3ByReportGenerationDate,
+                    mappings));
+
+    final CohortIndicator
+        tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade2ByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade2ByReportGenerationDate,
+                    mappings));
+
+    final CohortIndicator
+        tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade1ByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade1ByReportGenerationDate,
+                    mappings));
+
+    final CohortIndicator
+        tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGradeBlankByReportGenerationDate =
+            this.eptsGeneralIndicator.getIndicator(
+                "TB7",
+                EptsReportUtils.map(
+                    clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGradeBlankByReportGenerationDate,
+                    mappings));
 
     dataSetDefinition.addColumn("TI1", "TI1", EptsReportUtils.map(tb7Indicator1, mappings), "");
 
@@ -399,6 +479,13 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
             tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade1ByReportGenerationDate,
             mappings),
         "");
+    dataSetDefinition.addColumn(
+        "TBLAMP2LBT",
+        "TBLAMP2LBT",
+        EptsReportUtils.map(
+            tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGradeBlankByReportGenerationDate,
+            mappings),
+        "");
 
     dataSetDefinition.addColumn(
         "TBLAMP3T",
@@ -418,6 +505,50 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
         "TBLAMP5T",
         "TBLAMP5T",
         EptsReportUtils.map(tb7IndicatorClientsWithPositiveTBLAMWithGeneXpertAndTb, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP6T",
+        "TBLAMP6T",
+        EptsReportUtils.map(tb7IndicatorClientsWithPositiveTBLAMWithGeneXpertAndTb, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP7T",
+        "TBLAMP7T",
+        EptsReportUtils.map(
+            tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade4ByReportGenerationDate,
+            mappings),
+        "");
+    dataSetDefinition.addColumn(
+        "TBLAMP8T",
+        "TBLAMP8T",
+        EptsReportUtils.map(
+            tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade3ByReportGenerationDate,
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP9T",
+        "TBLAMP9T",
+        EptsReportUtils.map(
+            tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade2ByReportGenerationDate,
+            mappings),
+        "");
+    dataSetDefinition.addColumn(
+        "TBLAMP10T",
+        "TBLAMP10T",
+        EptsReportUtils.map(
+            tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade1ByReportGenerationDate,
+            mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TBLAMP11T",
+        "TBLAMP11T",
+        EptsReportUtils.map(
+            tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGradeBlankByReportGenerationDate,
+            mappings),
         "");
 
     return dataSetDefinition;

@@ -610,4 +610,32 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
 
     return definition;
   }
+
+  public CohortDefinition
+      getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeDesagregation(
+          LevelOfPositivity levelOfPositivity) {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR",
+        map(this.getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTB(), mappingsDen));
+
+    definition.addSearch(
+        "GRADE",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("GRADE", findLevelOfPosotivity(levelOfPositivity)),
+            mappings));
+
+    definition.setCompositionString("DENOMINATOR AND GRADE");
+
+    return definition;
+  }
 }
