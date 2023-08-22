@@ -158,16 +158,12 @@ public class MICategory7CohortQueries {
     definition.addSearch(
         "END-TPI-INH-G",
         EptsReportUtils.map(
-            this.mQCohortQueries
-                .finPatientsWhoCompletedINHBetween170And297DaysAfterInitiatedTreatment(),
-            mappingsMI));
+            this.mQCohortQueries.findPatientWhoCompleteTPIINHCategory7(), mappingsMI));
 
     definition.addSearch(
         "END-TPI-3HP-G",
         EptsReportUtils.map(
-            this.mQCohortQueries
-                .finPatientsWhoCompleted3HPBetween80And190DaysAfterInitiatedTreatment(),
-            mappingsMI));
+            this.mQCohortQueries.findPatientWhoCompleteTPI3HPCategory7(), mappingsMI));
 
     definition.setCompositionString("RF25-DENOMINATOR AND (END-TPI-INH-G OR END-TPI-3HP-G)");
 
