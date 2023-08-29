@@ -80,7 +80,7 @@ public class PrepKeyPopQuery {
             + "and pe.voided=0 "
             + "AND o.value_coded=1901 "
             + "union "
-            + "select maxkp.patient_id, o.value_coded,o.obs_datetime,2 ordemSource,3 ordemKp from ( "
+            + "select maxkp.patient_id, o.value_coded,o.obs_datetime,1 ordemSource,3 ordemKp from ( "
             + "Select p.patient_id,max(e.encounter_datetime) maxkpdate from patient p "
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs o on e.encounter_id=o.encounter_id "
