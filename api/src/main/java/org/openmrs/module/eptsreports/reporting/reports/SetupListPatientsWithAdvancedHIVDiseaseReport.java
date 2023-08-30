@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
-import org.openmrs.module.eptsreports.reporting.library.datasets.ListOfPatientsEligileToTPTDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.ListOfPatientsWithDAHDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -26,19 +26,19 @@ public class SetupListPatientsWithAdvancedHIVDiseaseReport extends EptsDataExpor
 
   @Autowired private GenericCohortQueries genericCohortQueries;
 
-  @Autowired private ListOfPatientsEligileToTPTDataSet listOfPatientsEligileToTPTDataSet;
+  @Autowired private ListOfPatientsWithDAHDataSet listOfPatientsWithDAHDataSet;
 
   @Autowired private DatimCodeDataSet datimCodeDataset;
   @Autowired private SismaCodeDataSet sismaCodeDataset;
 
   @Override
   public String getExcelDesignUuid() {
-    return "a608e799-df5c-4183-99b4-de76f374a4e8";
+    return "37529b40-5585-4496-9192-6717f037d294";
   }
 
   @Override
   public String getUuid() {
-    return "b60050f3-7611-481e-a820-eb1de7e6d5ae";
+    return "35b22b9f-9f32-4447-9dcf-b13eae7fc681";
   }
 
   @Override
@@ -48,12 +48,12 @@ public class SetupListPatientsWithAdvancedHIVDiseaseReport extends EptsDataExpor
 
   @Override
   public String getName() {
-    return "TB2: Lista de Pacientes Elegíveis ao TPT";
+    return "Lista de Utentes em Doença Avançada por HIV (DAH)";
   }
 
   @Override
   public String getDescription() {
-    return "This report generates the aggregate numbers and lists all active patients on ART who are eligible for TPT by reporting end date.";
+    return "Este relatório gera o número agregado e a lista de utentes com Doença Avançada por HIV e utentes com critérios de Doença Avançada por HIV durante o período de avaliação.";
   }
 
   @Override
@@ -64,14 +64,13 @@ public class SetupListPatientsWithAdvancedHIVDiseaseReport extends EptsDataExpor
     rd.setDescription(getDescription());
     rd.setParameters(this.getParameters());
     rd.addDataSetDefinition(
-        "TPTELIG",
-        Mapped.mapStraightThrough(
-            listOfPatientsEligileToTPTDataSet.constructDataset(getParameters())));
+        "DAH",
+        Mapped.mapStraightThrough(listOfPatientsWithDAHDataSet.constructDataset(getParameters())));
 
     rd.addDataSetDefinition(
-        "TPTTOTAL",
+        "DAHTOTAL",
         Mapped.mapStraightThrough(
-            this.listOfPatientsEligileToTPTDataSet.getTotalEligibleTPTDataset()));
+            this.listOfPatientsWithDAHDataSet.getTotalOfPatietsWithDAHDataset()));
     rd.addDataSetDefinition(
         "D",
         Mapped.mapStraightThrough(this.datimCodeDataset.constructDataset(this.getParameters())));
@@ -94,13 +93,13 @@ public class SetupListPatientsWithAdvancedHIVDiseaseReport extends EptsDataExpor
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "List_Patients_Eligibles_TPT.xls",
-              "LISTA DE PACIENTES ELEGIVEIS AO TPT",
+              "List_Patients_In_DAH.xls",
+              "Lista de Utentes em Doença Avançada por HIV",
               getExcelDesignUuid(),
               null);
 
       Properties props = new Properties();
-      props.put("repeatingSections", "sheet:1,row:9,dataset:TPTELIG");
+      props.put("repeatingSections", "sheet:1,row:10,dataset:DAH");
       props.put("sortWeight", "5000");
       reportDesign.setProperties(props);
     } catch (IOException e) {
@@ -112,6 +111,7 @@ public class SetupListPatientsWithAdvancedHIVDiseaseReport extends EptsDataExpor
 
   public List<Parameter> getParameters() {
     List<Parameter> parameters = new ArrayList<Parameter>();
+    parameters.add(ReportingConstants.START_DATE_PARAMETER);
     parameters.add(ReportingConstants.END_DATE_PARAMETER);
     parameters.add(ReportingConstants.LOCATION_PARAMETER);
     return parameters;
