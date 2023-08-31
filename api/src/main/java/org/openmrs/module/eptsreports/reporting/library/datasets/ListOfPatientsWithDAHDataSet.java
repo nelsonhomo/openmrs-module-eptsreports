@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
+import org.openmrs.module.eptsreports.reporting.library.queries.ListOfPatientsWithDAHQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -56,6 +57,27 @@ public class ListOfPatientsWithDAHDataSet extends BaseDataSet {
     return dataSetDefinition;
   }
 
+  public DataSetDefinition getTotalOfPatietsiNmdsOfDAHDataset() {
+    final CohortIndicatorDataSetDefinition dataSetDefinition =
+        new CohortIndicatorDataSetDefinition();
+
+    dataSetDefinition.setName("Patients in MDS of DAH Total");
+    dataSetDefinition.addParameters(this.getParameters());
+
+    final String mappings = "startDate=${startDate},location=${location}";
+    final CohortDefinition dahTotal = this.findPatientsInMDSOfDAHTotal();
+    dataSetDefinition.addColumn(
+        "TOTALINMDSOFDAH",
+        "Total de Pacientes em MDS de DAH",
+        EptsReportUtils.map(
+            this.eptsGeneralIndicator.getIndicator(
+                "mdsdahTotal", EptsReportUtils.map(dahTotal, mappings)),
+            mappings),
+        "");
+
+    return dataSetDefinition;
+  }
+
   @DocumentedDefinition(value = "findPatientsWithDAHTotal")
   private CohortDefinition findPatientsWithDAHTotal() {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
@@ -66,6 +88,19 @@ public class ListOfPatientsWithDAHDataSet extends BaseDataSet {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.setQuery(EptsQuerysUtils.loadQuery(FIND_PATIENTS_WITH_DAH_TOTAL));
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsInMDSOfDAHTotal")
+  private CohortDefinition findPatientsInMDSOfDAHTotal() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsInMDSOfDAHTotal");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.setQuery(ListOfPatientsWithDAHQueries.QUERY.findPatientsInMDSOfDAHTotal);
 
     return definition;
   }
