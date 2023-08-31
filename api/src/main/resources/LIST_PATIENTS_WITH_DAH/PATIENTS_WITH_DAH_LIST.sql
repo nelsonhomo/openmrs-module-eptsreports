@@ -24,11 +24,14 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
      DATE_FORMAT(cd4EligibilidadeMDSDAH.max_data_cd4, '%d-%m-%Y') AS max_data_cd4,
      cd4EligibilidadeMDSDAH.value_numeric,
      IF(ISNULL(estadiamentoClinico.encounter_datetime), 'N/A', DATE_FORMAT(estadiamentoClinico.encounter_datetime, '%d-%m-%Y')) AS data_registo_estadiamento,
-     IF(estadiamentoClinico.tipoEstadio=3, 'Estadio III', 'Estadio IV') AS tipo_estadio,
-     estadiamentoClinico.motivoEstadio,
+     case 
+     	when estadiamentoClinico.tipoEstadio=3 then 'Estadio III'
+     	when estadiamentoClinico.tipoEstadio=4 then 'Estadio IV'
+     	when ISNULL(estadiamentoClinico.tipoEstadio) then 'N/A'
+     	end as tipo_estadio,
       @motivoIndice := 1 + LENGTH(estadiamentoClinico.motivoEstadio) - LENGTH(REPLACE(estadiamentoClinico.motivoEstadio, ',', '')) AS motivoIndice,
-      SUBSTRING_INDEX(estadiamentoClinico.motivoEstadio, ',', 1) AS motivoEstadio1,
-      IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(estadiamentoClinico.motivoEstadio, ',', 2), ',', -1), '') AS motivoEstadio2,
+      IF(ISNULL(SUBSTRING_INDEX(estadiamentoClinico.motivoEstadio, ',', 1)), 'N/A', SUBSTRING_INDEX(estadiamentoClinico.motivoEstadio, ',', 1)) AS motivoEstadio1,
+      IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(estadiamentoClinico.motivoEstadio, ',', 2), ',', -1), '') = '', 'N/A', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(estadiamentoClinico.motivoEstadio, ',', 2), ',', -1), '')) AS motivoEstadio2,
       maxCD4.value_numeric lastCd4Result,
       DATE_FORMAT(maxCD4.max_data_cd4, '%d-%m-%Y') AS ultimoDataCd4,
       penultimoCd4.value_numeric penultimoResultadoCd4,
@@ -234,6 +237,7 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
 		left join
 		(
 		select abandono.patient_id, 1 as RespostaEstadoPermanencia from (
+		select patient_id, data_proximo_levantamento from (
 		select patient_id, max(data_proximo_levantamento) data_proximo_levantamento from (
 		select p.patient_id,max(o.value_datetime) data_levantamento, date_add(max(o.value_datetime), INTERVAL 30 day)  data_proximo_levantamento  from patient p  
 		inner join encounter e on p.patient_id = e.patient_id   
@@ -252,8 +256,8 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
 		)fila   
 		inner join obs obs_fila on obs_fila.person_id=fila.patient_id   
 		where obs_fila.voided=0 and obs_fila.concept_id=5096 and fila.data_levantamento=obs_fila.obs_datetime 
-		) abandono where DATE_ADD(abandono.data_proximo_levantamento, INTERVAL 60 DAY) < :endDate
-		group by patient_id
+		) abandono group by patient_id		
+		)abandono where DATE_ADD(abandono.data_proximo_levantamento, INTERVAL 60 DAY) < :endDate		
 		) abandono 
 			left join(
 		select p.patient_id from patient p 
@@ -377,7 +381,6 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
  where consultaOuARV.encounter_datetime <= obito.data_obito )
  obito on obito.patient_id = abandono.patient_id
 	where transferidoPara.patient_id is null and suspenso.patient_id is null and obito.patient_id is null
-
 	union
 	  select obito.patient_id, 2 as RespostaEstadoPermanencia from ( 
  select patient_id, max(data_obito) data_obito from ( 
@@ -572,7 +575,154 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
 			consultaOuARV on obito.patient_id = consultaOuARV.patient_id 
 			where consultaOuARV.encounter_datetime <= obito.data_obito
 		)obito on obito.patient_id = activo.patient_id
-		where transferidoPara.patient_id is null or suspenso.patient_id is null or obito.patient_id is null
+		left join (
+				select abandono.patient_id, 1 as RespostaEstadoPermanencia from (
+		select patient_id, data_proximo_levantamento from (
+		select patient_id, max(data_proximo_levantamento) data_proximo_levantamento from (
+		select p.patient_id,max(o.value_datetime) data_levantamento, date_add(max(o.value_datetime), INTERVAL 30 day)  data_proximo_levantamento  from patient p  
+		inner join encounter e on p.patient_id = e.patient_id   
+		inner join obs o on o.encounter_id = e.encounter_id   
+		inner join obs obsLevantou on obsLevantou.encounter_id=e.encounter_id  
+		where  e.voided = 0 and p.voided = 0 and o.value_datetime <=:endDate and o.voided = 0  
+		and obsLevantou.voided=0 and obsLevantou.concept_id=23865 and obsLevantou.value_coded = 1065  
+		and o.concept_id = 23866 and e.encounter_type=52 and e.location_id=:location   
+		group by p.patient_id  
+		union
+		select fila.patient_id, fila.data_levantamento,obs_fila.value_datetime data_proximo_levantamento from (    
+		select p.patient_id,max(e.encounter_datetime) as data_levantamento from patient p   
+		inner join encounter e on p.patient_id=e.patient_id   
+		where encounter_type=18 and e.encounter_datetime <=:endDate and e.location_id=:location and e.voided=0 and p.voided=0   
+		group by p.patient_id   
+		)fila   
+		inner join obs obs_fila on obs_fila.person_id=fila.patient_id   
+		where obs_fila.voided=0 and obs_fila.concept_id=5096 and fila.data_levantamento=obs_fila.obs_datetime 
+		) abandono group by patient_id		
+		)abandono where DATE_ADD(abandono.data_proximo_levantamento, INTERVAL 60 DAY) < :endDate		
+		) abandono 
+			left join(
+		select p.patient_id from patient p 
+	inner join encounter e on p.patient_id=e.patient_id 
+	where e.voided=0 and p.voided=0 and  e.encounter_type =90 
+	and e.encounter_datetime < :startDate and e.location_id=:location
+	union
+	select transferidopara.patient_id  from ( 
+	select patient_id,max(data_transferidopara) data_transferidopara from ( 
+	select maxEstado.patient_id,maxEstado.data_transferidopara from ( 
+	select pg.patient_id,max(ps.start_date) data_transferidopara 
+	from patient p 
+	inner join patient_program pg on p.patient_id=pg.patient_id 
+	inner join patient_state ps on pg.patient_program_id=ps.patient_program_id 
+	where pg.voided=0 and ps.voided=0 and p.voided=0 and 
+	pg.program_id=2 and ps.start_date<=:endDate and pg.location_id=:location group by p.patient_id 
+	) maxEstado 
+	inner join patient_program pg2 on pg2.patient_id=maxEstado.patient_id 
+	inner join patient_state ps2 on pg2.patient_program_id=ps2.patient_program_id 
+	where pg2.voided=0 and ps2.voided=0 and pg2.program_id=2 and 
+	ps2.start_date=maxEstado.data_transferidopara and pg2.location_id=:location and ps2.state=7 
+	union 
+	select p.patient_id,max(o.obs_datetime) data_transferidopara from patient p 
+	inner join encounter e on p.patient_id=e.patient_id 
+	inner join obs o on o.encounter_id=e.encounter_id 
+	where e.voided=0 and p.voided=0 and o.obs_datetime<=:endDate and o.voided=0 and o.concept_id=6272 and o.value_coded=1706 and e.encounter_type=53 
+	and  e.location_id=:location group by p.patient_id 
+	union 
+	select p.patient_id,max(e.encounter_datetime) data_transferidopara from  patient p 
+	inner join encounter e on p.patient_id=e.patient_id 
+	inner join obs o on o.encounter_id=e.encounter_id where  e.voided=0 and p.voided=0 and e.encounter_datetime<=:endDate and 
+	o.voided=0 and o.concept_id=6273 and o.value_coded=1706 and e.encounter_type=6 and  e.location_id=:location group by p.patient_id 
+	) transferido group by patient_id 
+	) transferidopara 
+	inner join( 
+	select patient_id,max(encounter_datetime) encounter_datetime from 
+	( 
+	select p.patient_id,max(e.encounter_datetime) encounter_datetime from  patient p 
+	inner join encounter e on e.patient_id=p.patient_id where  p.voided=0 and e.voided=0 and e.encounter_datetime<=:endDate and e.location_id=:location and e.encounter_type in (18,6) 
+	group by p.patient_id 
+	) consultaLev group by patient_id 
+	) consultaOuARV on transferidopara.patient_id=consultaOuARV.patient_id 
+	where consultaOuARV.encounter_datetime<=transferidopara.data_transferidopara
+	) transferidoPara on transferidoPara.patient_id = abandono.patient_id 
+	left join(
+		select suspenso1.patient_id, consultaOuARV.encounter_datetime, data_suspencao  from ( 
+		select patient_id,max(data_suspencao) data_suspencao from ( 
+		select maxEstado.patient_id,maxEstado.data_suspencao from( 
+		select pg.patient_id,max(ps.start_date) data_suspencao from patient p 
+		inner join patient_program pg on p.patient_id=pg.patient_id 
+		inner join patient_state ps on pg.patient_program_id=ps.patient_program_id 
+		where pg.voided=0 and ps.voided=0 and p.voided=0 and 
+		pg.program_id=2 and ps.start_date<=:endDate and pg.location_id=:location 
+		group by p.patient_id )maxEstado 
+		inner join patient_program pg2 on pg2.patient_id=maxEstado.patient_id 
+		inner join patient_state ps2 on pg2.patient_program_id=ps2.patient_program_id where pg2.voided=0 and ps2.voided=0 and pg2.program_id=2 and 
+		ps2.start_date=maxEstado.data_suspencao and pg2.location_id=:location and ps2.state=8 
+		union 
+		select p.patient_id,max(o.obs_datetime) data_suspencao from  patient p 
+		inner join encounter e on p.patient_id=e.patient_id 
+		inner join obs o on o.encounter_id=e.encounter_id 
+		where e.voided=0 and p.voided=0 and o.obs_datetime<=:endDate and o.voided=0 and o.concept_id=6272 
+		and o.value_coded=1709 and e.encounter_type=53 and  e.location_id=:location group by p.patient_id 
+		union 
+		select  p.patient_id,max(e.encounter_datetime) data_suspencao from  patient p 
+		inner join encounter e on p.patient_id=e.patient_id 
+		inner join obs o on o.encounter_id=e.encounter_id 
+		where  e.voided=0 and p.voided=0 and e.encounter_datetime<=:endDate and o.voided=0 and o.concept_id=6273 
+		and o.value_coded=1709 and e.encounter_type=6 and  e.location_id=:location group by p.patient_id ) suspenso group by patient_id) suspenso1 
+		inner join 
+		( 
+		select patient_id,max(encounter_datetime) encounter_datetime from 
+		( 
+		select p.patient_id,max(e.encounter_datetime) encounter_datetime from  patient p 
+		inner join encounter e on e.patient_id=p.patient_id where p.voided=0 and e.voided=0 and e.encounter_datetime<=:endDate and  
+		e.location_id=:location and e.encounter_type=18 group by p.patient_id 
+		) consultaLev group by patient_id) consultaOuARV on suspenso1.patient_id=consultaOuARV.patient_id 
+		where consultaOuARV.encounter_datetime<=suspenso1.data_suspencao
+	)suspenso on suspenso.patient_id = abandono.patient_id 
+	left join (
+	  select obito.patient_id from ( 
+ select patient_id, max(data_obito) data_obito from ( 
+ select maxEstado.patient_id,maxEstado.data_obito from ( 
+ select pg.patient_id, max(ps.start_date) data_obito from patient p 
+ inner join patient_program pg on p.patient_id = pg.patient_id 
+ inner join patient_state ps on pg.patient_program_id = ps.patient_program_id 
+ where pg.voided = 0 and ps.voided = 0 and p.voided = 0 and 
+ pg.program_id = 2 and DATE(ps.start_date) <= :endDate and pg.location_id =:location 
+ group by p.patient_id ) maxEstado 
+ inner join patient_program pg2 on pg2.patient_id = maxEstado.patient_id 
+ inner join patient_state ps2 on pg2.patient_program_id = ps2.patient_program_id 
+ where pg2.voided = 0 and ps2.voided = 0 and pg2.program_id = 2 and 
+ ps2.start_date = maxEstado.data_obito and pg2.location_id =:location and ps2.state = 10 
+ UNION 
+ select p.patient_id, max(o.obs_datetime) data_obito from patient p 
+ inner join encounter e on p.patient_id = e.patient_id 
+ inner join obs o on o.encounter_id = e.encounter_id 
+ where e.voided = 0 and p.voided = 0 and DATE(o.obs_datetime) <= :endDate and 
+ o.voided = 0 and o.concept_id = 6272 and o.value_coded = 1366 and e.encounter_type = 53 and  e.location_id =:location 
+ group by p.patient_id 
+ union 
+ select p.patient_id, max(e.encounter_datetime) data_obito from patient p 
+ inner join encounter e on p.patient_id = e.patient_id 
+ inner join obs o on o.encounter_id = e.encounter_id where e.voided = 0 and p.voided = 0 and DATE(e.encounter_datetime) <= :endDate 
+ and o.voided = 0 and o.concept_id = 6273 and o.value_coded = 1366 and e.encounter_type = 6 and  e.location_id =:location 
+ group by p.patient_id 
+ union 
+ Select person_id, death_date from person p where p.dead = 1 and DATE(p.death_date) <= :endDate) transferido 
+ group by patient_id) obito 
+ inner join 
+( 
+ select patient_id, max(encounter_datetime) encounter_datetime from ( 
+ select p.patient_id, max(e.encounter_datetime) encounter_datetime from patient p 
+ inner join encounter e on e.patient_id = p.patient_id 
+ where p.voided = 0 and e.voided = 0 and e.encounter_type in (18,6,9)  and DATE(e.encounter_datetime) <= :endDate and e.location_id =:location 
+ group by p.patient_id 
+) consultaLev 
+ group by patient_id 
+) 
+ consultaOuARV on obito.patient_id = consultaOuARV.patient_id 
+ where consultaOuARV.encounter_datetime <= obito.data_obito )
+ obito on obito.patient_id = abandono.patient_id
+	where transferidoPara.patient_id is null and suspenso.patient_id is null and obito.patient_id is null
+		)abandono on abandono.patient_id = activo.patient_id
+		where transferidoPara.patient_id is null or suspenso.patient_id is null or obito.patient_id is null or abandono.patient_id is null
 	)estadoPermanencia on estadoPermanencia.patient_id = inicioDAH.patient_id
 	left join(
 			select  p.patient_id,max(e.encounter_datetime) data_suspencao, o.value_coded from  patient p 
@@ -753,10 +903,10 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
                                     when
                                        165331 
                                     then
-                                       'MENOR QUE' 
+                                       CONCAT('MENOR QUE', ' ',obs.comments)
                                     else
                                        null 
-                                 end), obs.value_numeric) AS resultadoCV from ( 
+                                 end), obs.value_numeric) AS resultadoCV , obs.comments from ( 
 			Select p.patient_id,max(o.obs_datetime) data_carga from patient p 
 			inner join encounter e on p.patient_id=e.patient_id 
 			inner join obs o on e.encounter_id=o.encounter_id 
@@ -806,7 +956,7 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
                                     when
                                        165331 
                                     then
-                                       'MENOR QUE' 
+                                        CONCAT('MENOR QUE', ' ',o.comments)
                                  end), o.value_numeric) AS resultadoCV, data_carga 
                                  from (select ultima_carga.patient_id,ultima_carga.data_carga,obs.value_numeric valor_carga,obs.concept_id,obs.value_coded from ( 
 				Select p.patient_id,max(o.obs_datetime) data_carga from patient p 
@@ -821,7 +971,7 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
 	inner join obs o on o.encounter_id = e.encounter_id
 	where  ((o.concept_id=856 and o.value_numeric is not null) 
      or (o.concept_id=1305 and o.value_coded in (1306,23814,23905,23906,23907,23908,23904,165331)))  and e.location_id =:location and o.voided = 0 and e.voided = 0 and e.encounter_type in (6,51,13) 
-	and date(o.obs_datetime) < ultimaCV.data_carga order by date(o.obs_datetime) desc
+	and date(o.obs_datetime) < date(ultimaCV.data_carga) order by date(o.obs_datetime) desc
 	) penultimaCV group by penultimaCV.patient_id
 	)penultimaCV on penultimaCV.patient_id = inicioDAH.patient_id
 	left join(
