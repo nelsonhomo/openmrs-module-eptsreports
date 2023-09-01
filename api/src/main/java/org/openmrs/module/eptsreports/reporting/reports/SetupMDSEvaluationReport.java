@@ -6,12 +6,12 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
-import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.ListMDSEvaluationReportDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.reporting.ReportingConstants;
 import org.openmrs.module.reporting.ReportingException;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
@@ -25,6 +25,7 @@ public class SetupMDSEvaluationReport extends EptsDataExportManager {
 
   @Autowired private GenericCohortQueries genericCohortQueries;
   @Autowired private ListMDSEvaluationReportDataSet mdsEvaluationReportSetDataSet;
+
   public static final String YEAR_PARAMETER = "year";
 
   public String getExcelDesignUuid() {
@@ -80,7 +81,7 @@ public class SetupMDSEvaluationReport extends EptsDataExportManager {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "MDS.xls",
+              "MDSV2.xls",
               "Relatório de Avaliação de MDS",
               getExcelDesignUuid(),
               null);
@@ -132,9 +133,7 @@ public class SetupMDSEvaluationReport extends EptsDataExportManager {
   public List<Parameter> getParameters() {
     List<Parameter> parameters = new ArrayList<Parameter>();
     parameters.add(getYearConfigurableParameter());
-    parameters.add(
-        new Parameter(
-            "location", "reporting.parameter.locationList", Location.class, List.class, null));
+    parameters.add(ReportingConstants.LOCATION_PARAMETER);
     return parameters;
   }
 }
