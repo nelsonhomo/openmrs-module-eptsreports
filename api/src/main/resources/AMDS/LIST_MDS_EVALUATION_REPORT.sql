@@ -75,11 +75,12 @@
          primeiroMds24Meses.DATA_INICIO_MDS4_24_MESES DATA_INICIO_MDS4_24_MESES,
          primeiroMds24Meses.DATA_INICIO_MDS5_24_MESES DATA_INICIO_MDS5_24_MESES,
 
-         -- primeiroMds24Meses.FIM_MDS1_24_MESES FIM_MDS1_24_MESES,
-         -- primeiroMds24Meses.FIM_MDS2_24_MESES FIM_MDS2_24_MESES,
-         -- primeiroMds24Meses.FIM_MDS3_24_MESES FIM_MDS3_24_MESES,
-         -- primeiroMds24Meses.FIM_MDS4_24_MESES FIM_MDS4_24_MESES,
-         -- primeiroMds24Meses.FIM_MDS5_24_MESES FIM_MDS5_24_MESES,
+         primeiroMds24Meses.FIM_MDS1_24_MESES FIM_MDS1_24_MESES,
+         primeiroMds24Meses.FIM_MDS2_24_MESES FIM_MDS2_24_MESES,
+         primeiroMds24Meses.FIM_MDS3_24_MESES FIM_MDS3_24_MESES,
+         primeiroMds24Meses.FIM_MDS4_24_MESES FIM_MDS4_24_MESES,
+         primeiroMds24Meses.FIM_MDS5_24_MESES FIM_MDS5_24_MESES,
+
          primeiroMds24Meses.DATA_FIM_MDS1_24_MESES DATA_FIM_MDS1_24_MESES,
          primeiroMds24Meses.DATA_FIM_MDS2_24_MESES DATA_FIM_MDS2_24_MESES,
          primeiroMds24Meses.DATA_FIM_MDS3_24_MESES DATA_FIM_MDS3_24_MESES,
