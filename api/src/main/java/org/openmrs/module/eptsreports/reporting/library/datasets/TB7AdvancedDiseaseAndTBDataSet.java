@@ -565,14 +565,12 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
     ColumnParameters unknownF =
         new ColumnParameters("unknownF", "Unknown age", "gender=F|age=UK", "07");
 
-    ColumnParameters a7 = new ColumnParameters("<1", "<1", "gender=M|age=<1", "08");
-    ColumnParameters a8 = new ColumnParameters("1-4", "1-4 years female", "gender=M|age=1-4", "09");
-    ColumnParameters a9 = new ColumnParameters("5-9", "5-9 years female", "gender=M|age=5-9", "10");
-    ColumnParameters a10 =
-        new ColumnParameters("10-14", "10-14 female", "gender=M|age=10-14", "11");
-    ColumnParameters a11 =
-        new ColumnParameters("15-19", "15-19 female", "gender=M|age=15-19", "12");
-    ColumnParameters a12 = new ColumnParameters("20+", "20+ female", "gender=M|age=20+", "13");
+    ColumnParameters a7 = new ColumnParameters("<1", "<1 male", "gender=M|age=<1", "08");
+    ColumnParameters a8 = new ColumnParameters("1-4", "1-4 years male", "gender=M|age=1-4", "09");
+    ColumnParameters a9 = new ColumnParameters("5-9", "5-9 years male", "gender=M|age=5-9", "10");
+    ColumnParameters a10 = new ColumnParameters("10-14", "10-14 male", "gender=M|age=10-14", "11");
+    ColumnParameters a11 = new ColumnParameters("15-19", "15-19 male", "gender=M|age=15-19", "12");
+    ColumnParameters a12 = new ColumnParameters("20+", "20+ male", "gender=M|age=20+", "13");
     ColumnParameters unknownM =
         new ColumnParameters("unknownF", "Unknown age", "gender=M|age=UK", "14");
 

@@ -183,7 +183,19 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
             this.genericCohortQueries.generalSql("REINITIATEDART", findPatientWhoReinitiatedART()),
             mappings));
 
-    definition.setCompositionString("TXNEW OR PREGNANT OR HIGHVIRALLOAD OR REINITIATEDART");
+    definition.addSearch(
+        "TROUT" + "",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("TROUT", findPatientWhoAreTransferedOut()),
+            mappings));
+
+    definition.addSearch(
+        "DEAD" + "",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("DEAD", findPatientWhoAreDead()), mappings));
+
+    definition.setCompositionString(
+        "(TXNEW OR PREGNANT OR HIGHVIRALLOAD OR REINITIATEDART) NOT (TROUT OR DEAD)");
 
     return definition;
   }
@@ -250,7 +262,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+    final String mappings = "endDate=${endDate-2m},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
@@ -277,7 +289,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+    final String mappings = "endDate=${endDate-2m},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
@@ -329,7 +341,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+    final String mappings = "endDate=${endDate-2m},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(

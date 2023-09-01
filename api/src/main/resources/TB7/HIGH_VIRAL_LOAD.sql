@@ -1,17 +1,19 @@
-select primeiraCarga.patient_id from 
+		select primeiraCarga.patient_id from 
               (
-              select cargaAnterior.patient_id,cargaAnterior.data_carga_anterior, cargaAnterior.encounter_id,o.value_numeric,if(o.value_numeric>1000,1,null) decisao
+              select cargaAnterior.patient_id,cargaAnterior.data_carga_anterior,o.value_numeric,if(o.value_numeric>1000,1,null) decisao
                from
                (
 				select p.patient_id,max(date(e.encounter_datetime)) data_carga_anterior,e.encounter_id 
                   from patient p
                 inner join encounter e on e.patient_id=p.patient_id
                 where e.voided=0 and e.encounter_type in (13,51)
-                and  e.location_id=:location and e.encounter_datetime<:startDate
+                and  e.location_id=:location and date(e.encounter_datetime)<:startDate
                 group by p.patient_id
                 )cargaAnterior
-                inner join obs o on o.encounter_id=cargaAnterior.encounter_id and date(o.obs_datetime)=date(cargaAnterior.data_carga_anterior)
-                where o.concept_id=856 and o.voided=0 
+		inner join encounter e on cargaAnterior.patient_id=e.patient_id 
+		inner join obs o on o.encounter_id=e.encounter_id 
+		where date(o.obs_datetime)=cargaAnterior.data_carga_anterior and 
+				o.concept_id = 856 and e.encounter_type in (13,51) and e.location_id=:location 
                 ) cargaAnterior
                 inner join
 				(
@@ -22,7 +24,7 @@ select primeiraCarga.patient_id from
                 where p.voided=0 and e.voided=0 and o.voided=0 
                 and e.encounter_type in (13,51) 
                 and  o.concept_id in (856) 
-                and  date(o.obs_datetime) between :startDate and:endDate 
+                and  date(o.obs_datetime) between :startDate and :endDate 
                 and e.location_id=:location 
                 and o.value_numeric>1000
                 group by p.patient_id 
