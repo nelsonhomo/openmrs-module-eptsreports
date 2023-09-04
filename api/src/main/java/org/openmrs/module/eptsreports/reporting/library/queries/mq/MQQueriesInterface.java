@@ -56,7 +56,7 @@ public interface MQQueriesInterface {
             + ") consultaLev "
             + "group by patient_id "
             + ") consultaOuARV on saida.patient_id=consultaOuARV.patient_id "
-            + "where consultaOuARV.encounter_datetime < saida.data_estado and saida.data_estado <= :endRevisionDate ";
+            + "where consultaOuARV.encounter_datetime <= saida.data_estado and saida.data_estado <= :endRevisionDate ";
 
     public static final String getPatientsWhoDiedEndRevisioDate =
         "select obito.patient_id from ( "
