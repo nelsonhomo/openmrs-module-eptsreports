@@ -54,13 +54,6 @@ public class MICategory13P4CohortQueries {
             mappings));
 
     definition.addSearch(
-        "BREASTFEEDING-B5",
-        EptsReportUtils.map(
-            this.mQCohortQueries
-                .findPatientsWhoHasCVBiggerThan1000AndMarkedAsBreastFeedingInTheSameClinicalConsultation(),
-            mappings));
-
-    definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
             this.mQCohortQueries
@@ -77,7 +70,7 @@ public class MICategory13P4CohortQueries {
             mQCohortQueries.findAllPatientWhoAreDeadByEndOfRevisonPeriod(), mappings));
 
     definition.setCompositionString(
-        "(B1 AND B2) NOT (PREGNANT-B4 OR BREASTFEEDING-B5 OR TRANSFERED-IN OR TRANSFERED-OUT OR DEAD)");
+        "(B1 AND B2) NOT (PREGNANT-B4 OR TRANSFERED-IN OR TRANSFERED-OUT OR DEAD)");
 
     return definition;
   }
