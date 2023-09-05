@@ -4,6 +4,7 @@ import static org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils.map
 
 import java.util.Date;
 import org.openmrs.Location;
+import org.openmrs.module.eptsreports.reporting.library.queries.TxNewQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.eptsreports.reporting.utils.LevelOfPositivity;
@@ -162,7 +163,12 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
 
     definition.addSearch(
-        "TXNEW", map(txNewCohortQueries.getTxNewCompositionCohort("TX NEW"), mappings));
+        "TXNEW",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "findPatientsWhoAreNewlyEnrolledOnART",
+                TxNewQueries.QUERY.findPatientsWhoAreNewlyEnrolledOnART),
+            mappings));
 
     definition.addSearch(
         "PREGNANT",
