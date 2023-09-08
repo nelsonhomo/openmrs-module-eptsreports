@@ -268,7 +268,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
@@ -295,7 +295,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
@@ -347,7 +347,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
@@ -438,10 +438,10 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
 
     definition.addSearch(
-        "TBLAM" + "",
+        "TBLAM",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
                 "TBLAM", findPatientWhoHaveTbLamResulUntilCurrentDate()),
@@ -471,7 +471,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
@@ -498,7 +498,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
@@ -526,7 +526,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
@@ -552,7 +552,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
@@ -570,7 +570,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     return definition;
   }
 
-  public CohortDefinition getClientsWithPositiveTBLAMButNotTestedWithGeneXpert() {
+  public CohortDefinition getClientsWithPositiveTBLAMAndAlsoTestedWithGeneXpert() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("TB7");
@@ -578,7 +578,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
@@ -596,7 +596,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     return definition;
   }
 
-  public CohortDefinition getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTB() {
+  public CohortDefinition getClientsWithPositiveTBLAMButNotTestedWithGeneXpert() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("TB7");
@@ -604,12 +604,38 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
         "TBLAMPOSITIVE",
-        map(this.getClientsWithPositiveTBLAMButNotTestedWithGeneXpert(), mappingsDen));
+        map(this.getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(), mappingsDen));
+
+    definition.addSearch(
+        "GENEXPERT",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql("GENEXPERT", findPatientWhoHaveGenexpert()),
+            mappings));
+
+    definition.setCompositionString("TBLAMPOSITIVE NOT GENEXPERT");
+
+    return definition;
+  }
+
+  public CohortDefinition getClientsWithPositiveTBLAMAndGeneXpertPositiveforTB() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "TBLAMPOSITIVE",
+        map(this.getClientsWithPositiveTBLAMAndAlsoTestedWithGeneXpert(), mappingsDen));
 
     definition.addSearch(
         "GENEXPERTPOSITIVE",
@@ -618,13 +644,37 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
                 "GENEXPERTPOSITIVE", findPatientWhoHavePositiveGenexpert()),
             mappings));
 
+    definition.setCompositionString("TBLAMPOSITIVE AND GENEXPERTPOSITIVE");
+
+    return definition;
+  }
+
+  public CohortDefinition getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTB() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
+    final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "TBLAMPOSITIVE",
+        map(this.getClientsWithPositiveTBLAMAndAlsoTestedWithGeneXpert(), mappingsDen));
+
+    definition.addSearch(
+        "TBLAMNOTGENEXPERT",
+        map(this.getClientsWithPositiveTBLAMButNotTestedWithGeneXpert(), mappingsDen));
+
     definition.addSearch(
         "TB",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql("TB", findPatientWhoHavePositiveGenexpertTb()),
             mappings));
 
-    definition.setCompositionString("TBLAMPOSITIVE AND GENEXPERTPOSITIVE AND TB");
+    definition.setCompositionString("(TBLAMPOSITIVE OR TBLAMNOTGENEXPERT) AND TB");
 
     return definition;
   }
@@ -639,7 +689,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "endDate=${endDate-2m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
