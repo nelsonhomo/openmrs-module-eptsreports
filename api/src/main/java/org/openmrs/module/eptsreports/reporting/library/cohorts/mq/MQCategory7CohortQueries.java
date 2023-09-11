@@ -145,6 +145,23 @@ public class MQCategory7CohortQueries {
             this.mQCohortQueries.findPatientsWhoAreNewlyEnrolledOnARTRF05(), mappings));
 
     definition.addSearch(
+        "TB-ACTIVE-CAT7-RF11",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsDiagnosedWithActiveTBDuringDuringPeriodCategory7(),
+            mappings));
+
+    definition.addSearch(
+        "TB-SCREENING-CAT7-RF11",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWithPositiveTBScreeningInDurindPeriodCategory7(),
+            mappings));
+
+    definition.addSearch(
+        "TB-TREATMENT-CAT7-RF11",
+        EptsReportUtils.map(
+            this.mQCohortQueries.finPatientHaveTBTreatmentDuringPeriodCategory7(), mappings));
+
+    definition.addSearch(
         "TB-ACTIVE-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries
@@ -215,7 +232,7 @@ public class MQCategory7CohortQueries {
             mappings));
 
     definition.setCompositionString(
-        "(START-ART AND (START-TPI-INH OR START-TPI-3HP)) "
+        "((START-ART NOT (TB-ACTIVE-CAT7-RF11 OR TB-SCREENING-CAT7-RF11 OR TB-TREATMENT-CAT7-RF11)) AND (START-TPI-INH OR START-TPI-3HP)) "
             + "NOT (TB-ACTIVE-CAT7  "
             + "OR TB-SCREENING-CAT7 "
             + "OR TB-TREATMENT-CAT7 "

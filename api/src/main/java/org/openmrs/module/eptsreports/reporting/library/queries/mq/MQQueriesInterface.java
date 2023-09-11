@@ -100,34 +100,34 @@ public interface MQQueriesInterface {
     public static String getPatientsWhoArePregnantOrBreastfeeding(TypePTV typePTV) {
 
       String query =
-          "select f.patient_id from ("
+          "select f.patient_id from ( "
               + "select f.patient_id,f.data_lactante,f.data_gravida, if(f.data_lactante is null,1, if(f.data_gravida is null,2, if(f.data_gravida>=f.data_lactante,1,2))) decisao "
-              + "from  "
+              + "from "
               + "( "
               + "select p.person_id as patient_id ,gravida.data_gravida,lactante.data_lactante from person  p "
-              + "inner join ( "
-              + "Select p.patient_id,obsGravida.obs_datetime data_gravida  from person pe  "
-              + "inner join patient p on pe.person_id=p.patient_id  "
-              + "inner join encounter e on p.patient_id=e.patient_id  "
-              + "inner join obs o on e.encounter_id=o.encounter_id  "
-              + "inner join obs obsGravida on e.encounter_id=obsGravida.encounter_id  "
-              + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsGravida.voided=0 and e.encounter_type=53 and e.location_id=:location and  "
-              + "o.concept_id=1190 and o.value_datetime is not null and  "
-              + "obsGravida.concept_id=1982 and obsGravida.value_coded=1065 and pe.gender='F'  "
+              + "left join ( "
+              + "Select p.patient_id,obsGravida.obs_datetime data_gravida  from person pe "
+              + "inner join patient p on pe.person_id=p.patient_id "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs o on e.encounter_id=o.encounter_id "
+              + "inner join obs obsGravida on e.encounter_id=obsGravida.encounter_id "
+              + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsGravida.voided=0 and e.encounter_type=53 and e.location_id=:location and "
+              + "o.concept_id=1190 and o.value_datetime is not null and "
+              + "obsGravida.concept_id=1982 and obsGravida.value_coded=1065 and pe.gender='F' "
               + ")gravida on gravida.patient_id=p.person_id "
               + "left join "
               + "( "
-              + "Select p.patient_id,obsLactante.obs_datetime data_lactante from person pe  "
-              + "inner join patient p on pe.person_id=p.patient_id  "
-              + "inner join encounter e on p.patient_id=e.patient_id  "
-              + "inner join obs o on e.encounter_id=o.encounter_id  "
-              + "inner join obs obsLactante on e.encounter_id=obsLactante.encounter_id  "
-              + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsLactante.voided=0 and e.encounter_type=53 and e.location_id=:location and  "
-              + "o.concept_id=1190 and o.value_datetime is not null and  "
-              + "obsLactante.concept_id=6332 and obsLactante.value_coded=1065 and pe.gender='F'  "
-              + ")lactante  on lactante.patient_id=gravida.patient_id "
-              + ")f "
-              + "GROUP by f.patient_id  "
+              + "Select p.patient_id,obsLactante.obs_datetime data_lactante from person pe "
+              + "inner join patient p on pe.person_id=p.patient_id "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs o on e.encounter_id=o.encounter_id "
+              + "inner join obs obsLactante on e.encounter_id=obsLactante.encounter_id "
+              + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsLactante.voided=0 and e.encounter_type=53 and e.location_id=:location and "
+              + "o.concept_id=1190 and o.value_datetime is not null and "
+              + "obsLactante.concept_id=6332 and obsLactante.value_coded=1065 and pe.gender='F' "
+              + ")lactante  on lactante.patient_id=p.person_id "
+              + ")f where (f.data_lactante is not null or f.data_gravida is not null) "
+              + "GROUP by f.patient_id "
               + ")f ";
 
       switch (typePTV) {
@@ -962,5 +962,25 @@ public interface MQQueriesInterface {
             + " group by patient_id ) "
             + " consultaOuARV on obito.patient_id = consultaOuARV.patient_id "
             + " where consultaOuARV.encounter_datetime <= obito.data_obito and DATE(obito.data_obito) <= :endRevisionDate ";
+
+    public static final String findPatientsWhoArePregnant =
+        "Select p.patient_id from person pe "
+            + "inner join patient p on pe.person_id=p.patient_id "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on e.encounter_id=o.encounter_id "
+            + "inner join obs obsGravida on e.encounter_id=obsGravida.encounter_id "
+            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsGravida.voided=0 and e.encounter_type=53 and e.location_id=:location and "
+            + "o.concept_id=1190 and o.value_datetime is not null and "
+            + "obsGravida.concept_id=1982 and obsGravida.value_coded=1065 and pe.gender='F' ";
+
+    public static final String findPatientsWhoAreBreastfeeding =
+        "Select p.patient_id from person pe "
+            + "inner join patient p on pe.person_id=p.patient_id "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on e.encounter_id=o.encounter_id "
+            + "inner join obs obsGravida on e.encounter_id=obsGravida.encounter_id "
+            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsGravida.voided=0 and e.encounter_type=53 and e.location_id=:location and "
+            + "o.concept_id=1190 and o.value_datetime is not null and "
+            + "obsGravida.concept_id=1982 and obsGravida.value_coded=1065 and pe.gender='F' ";
   }
 }
