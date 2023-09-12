@@ -39,7 +39,6 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
   private static int TB_LAM_NEGATIVE = 664;
 
   @Autowired private GenericCohortQueries genericCohortQueries;
-  @Autowired private TxNewCohortQueries txNewCohortQueries;
 
   public static String findPregnantOrBreatfeeding(TypePTV typePTV) {
     String query = EptsQuerysUtils.loadQuery(PREGNANT_OR_BREASTEFEEDING);
@@ -345,6 +344,33 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
   }
 
   public CohortDefinition
+      getumberOfClientsWithCD4CountDuringInclusionPeriodWithoutSevereImmunodepression() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "WITHTBLAM",
+        map(
+            this.getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3WithTBLam(),
+            mappings));
+
+    definition.addSearch(
+        "WITHOUTTBLAM",
+        map(
+            this.getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3WithoutTBLam(),
+            mappings));
+
+    definition.setCompositionString("WITHTBLAM OR WITHOUTTBLAM");
+    return definition;
+  }
+
+  public CohortDefinition
       getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3WithTBLam() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -380,7 +406,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
     final String mappingsDen = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(

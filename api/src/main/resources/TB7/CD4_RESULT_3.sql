@@ -10,7 +10,7 @@ inner join obs o on o.encounter_id=e.encounter_id
 )f 
 
 inner join person pe on pe.person_id=f.patient_id
-WHERE       (TIMESTAMPDIFF(year,pe.birthdate,:endDate)>5 and f.value_numeric>=200 ) 
-        OR  ((TIMESTAMPDIFF(year,pe.birthdate,:endDate) between 1 and 5) and f.value_numeric>=500 )
+WHERE    (TIMESTAMPDIFF(year,pe.birthdate,:endDate)>=5 and f.value_numeric>=200 ) 
+        OR  ((TIMESTAMPDIFF(year,pe.birthdate,:endDate) >= 1 and TIMESTAMPDIFF(year,pe.birthdate,:endDate) < 5) and f.value_numeric>=500 )
         OR  (TIMESTAMPDIFF(year,pe.birthdate,:endDate)<1 and f.value_numeric>=750 )
 GROUP BY f.patient_id

@@ -70,7 +70,7 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
 
     final CohortDefinition tb7CohortIndicator3WithoutCd4WithTbLam =
         this.tb7AdvancedDiseaseAndTBCohortQueries
-            .getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3();
+            .getumberOfClientsWithCD4CountDuringInclusionPeriodWithoutSevereImmunodepression();
 
     final CohortDefinition tb7CohortIndicator3WithoutCd4WithTbLamTotal =
         this.tb7AdvancedDiseaseAndTBCohortQueries
