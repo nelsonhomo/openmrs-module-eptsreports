@@ -421,12 +421,10 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "CDNRL2",
-        "Number of clients without CD4 count during inclusion period showing severe immunodepression  "
-            + "(CD4 count < 200/mm3  for patients > =5 , <500/mm3 for children 1-4, <750/mm3 for children under 12 months) ",
+        "Number of clients with CD4 count during inclusion period without severe immunodepression  (CD4 count > = 200/mm3 for patients >5, > = 500 for children 1-5, > =750/mm3 for children <12 months)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
-                "Number of clients with CD4 count during inclusion period showing severe immunodepression  "
-                    + "(CD4 count < 200/mm3  for patients > =5 , <500/mm3 for children 1-4, <750/mm3 for children under 12 months) ",
+                "Number of clients with CD4 count during inclusion period without severe immunodepression  (CD4 count > = 200/mm3 for patients >5, > = 500 for children 1-5, > =750/mm3 for children <12 months)",
                 EptsReportUtils.map(
                     tb7AdvancedDiseaseAndTBCohortQueries
                         .getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3WithTBLam(),

@@ -23,6 +23,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
   private static final String REINITIATED_ART = "TB7/REINITIATED_ART.sql";
   private static final String CD4_RESULT = "TB7/CD4_RESULT.sql";
   private static final String CD4_RESULT_2 = "TB7/CD4_RESULT_2.sql";
+  private static final String CD4_RESULT_3 = "TB7/CD4_RESULT_3.sql";
   private static final String TB_LAM_1 = "TB7/TB_LAM_1.sql";
   private static final String TR_OUT_CURR_DATE = "TB7/TR_OUT_CURR_DATE.sql";
   private static final String DEAD_CURR_DATE = "TB7/DEAD_CURR_DATE.sql";
@@ -98,6 +99,11 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
 
   public static String findPatientWhoHaveCd4Result2() {
     String query = EptsQuerysUtils.loadQuery(CD4_RESULT_2);
+    return query;
+  }
+
+  public static String findPatientWhoHaveCd4Result3() {
+    String query = EptsQuerysUtils.loadQuery(CD4_RESULT_3);
     return query;
   }
 
@@ -331,10 +337,10 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "CD4RESULT",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql("CD4RESULT", findPatientWhoHaveCd4Result2()),
+            this.genericCohortQueries.generalSql("CD4RESULT", findPatientWhoHaveCd4Result3()),
             mappings));
 
-    definition.setCompositionString("ELEGIBLE2 NOT CD4RESULT");
+    definition.setCompositionString("ELEGIBLE2 AND CD4RESULT");
     return definition;
   }
 
@@ -448,17 +454,17 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
             mappings));
 
     definition.addSearch(
-        "TROUT" + "",
+        "TROUT",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql("TROUT", findPatientWhoAreTransferedOut()),
             mappings));
 
     definition.addSearch(
-        "DEAD" + "",
+        "DEAD",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql("DEAD", findPatientWhoAreDead()), mappings));
 
-    definition.setCompositionString("TBLAM NOT(TROUT OR DEAD)");
+    definition.setCompositionString("TBLAM NOT (TROUT OR DEAD)");
 
     return definition;
   }
