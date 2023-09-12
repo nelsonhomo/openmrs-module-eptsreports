@@ -416,7 +416,7 @@ from
 																																	inner join encounter e on p.patient_id=e.patient_id
 																																	inner join obs o on e.encounter_id=o.encounter_id
 																															where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (13,51) and
-																																	o.concept_id=856 and o.obs_datetime BETWEEN '2022-12-20' and :endDateand e.location_id=:location and o.value_numeric>1000
+																																	o.concept_id=856 and o.obs_datetime BETWEEN :startDate and :endDateand e.location_id=:location and o.value_numeric>1000
 																															group by p.patient_id
 																														) primeiraCV
 																														inner join encounter e on e.patient_id=primeiraCV.patient_id
@@ -777,7 +777,7 @@ from (
 																				inner join patient_program pg on p.patient_id = pg.patient_id         
 																				inner join patient_state ps on pg.patient_program_id = ps.patient_program_id            
 																		where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2    
-																				and ps.start_date< '2022-12-20' and pg.location_id =:location 
+																				and ps.start_date< :startDate and pg.location_id =:location 
 																				group by pg.patient_id       
 																	) max_estado            
 																		inner join patient_program pp on pp.patient_id = max_estado.patient_id    
@@ -792,12 +792,12 @@ from (
 																	inner join obs  o on e.encounter_id=o.encounter_id  
 															where   e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0         
 																	and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded in (1366)       
-																	and o.obs_datetime< '2022-12-20'  and e.location_id=:location
+																	and o.obs_datetime< :startDate  and e.location_id=:location
 																	group by p.patient_id   
 															union 
 															select person_id as patient_id,death_date as data_estado    
 															from person             
-															where dead=1 and voided = 0 and death_date is not null and death_date< '2022-12-20'
+															where dead=1 and voided = 0 and death_date is not null and death_date< :startDate
 															union 
 															select  p.patient_id,   
 																	max(obsobito.obs_datetime) data_estado
@@ -806,7 +806,7 @@ from (
 																	inner join encounter e on p.patient_id=e.patient_id 
 																	inner join obs obsobito on e.encounter_id=obsobito.encounter_id       
 															where   e.voided=0 and p.voided=0 and pe.voided = 0 and obsobito.voided=0  
-																	and e.encounter_type in (21,36,37) and  e.encounter_datetime< '2022-12-20' and  e.location_id=:location        
+																	and e.encounter_type in (21,36,37) and  e.encounter_datetime< :startDate and  e.location_id=:location        
 																	and obsobito.concept_id in (2031,23944,23945) and obsobito.value_coded=1366   
 																	group by p.patient_id   
 													) allsaida        
@@ -906,7 +906,7 @@ from (
 																								inner join patient_program pg on p.patient_id = pg.patient_id         
 																								inner join patient_state ps on pg.patient_program_id = ps.patient_program_id            
 																						where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2    
-																								and ps.start_date< '2022-12-20'  and pg.location_id =:location group by pg.patient_id       
+																								and ps.start_date< :startDate  and pg.location_id =:location group by pg.patient_id       
 																					 ) max_estado            
 																					inner join patient_program pp on pp.patient_id = max_estado.patient_id    
 																					inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
@@ -919,7 +919,7 @@ from (
 																					inner join obs  o on e.encounter_id=o.encounter_id  
 																			where e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0         
 																					and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded = 1706       
-																					and o.obs_datetime<'2022-12-20' and e.location_id=:location
+																					and o.obs_datetime<:startDate and e.location_id=:location
 																					group by p.patient_id   
 																			union 
 																			select ultimabusca.patient_id, ultimabusca.data_estado      
@@ -929,7 +929,7 @@ from (
 																								inner join person pe on pe.person_id = p.patient_id 
 																								inner join encounter e on p.patient_id=e.patient_id 
 																								inner join obs o on o.encounter_id=e.encounter_id   
-																						where e.voided=0 and p.voided=0 and pe.voided = 0 and e.encounter_datetime< '2022-12-20'  
+																						where e.voided=0 and p.voided=0 and pe.voided = 0 and e.encounter_datetime< :startDate  
 																								and e.encounter_type = 21 and  e.location_id=:location           
 																								group by p.patient_id         
 																					) ultimabusca       
@@ -950,7 +950,7 @@ from (
 																							inner join person pe on pe.person_id = p.patient_id   
 																							inner join encounter e on e.patient_id=p.patient_id   
 																					where p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18  
-																							and e.location_id=:location and e.encounter_datetime < '2022-12-20'          
+																							and e.location_id=:location and e.encounter_datetime < :startDate          
 																							group by p.patient_id 
 																		) ultimo_fila  
 																		left join            
@@ -966,11 +966,11 @@ from (
 																				inner join encounter e on p.patient_id=e.patient_id   
 																				inner join obs o on e.encounter_id=o.encounter_id 
 																		where p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52 
-																				and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime < '2022-12-20'
+																				and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime < :startDate
 																				group by p.patient_id
 															) ultimo_levantamento group by patient_id
 													) ultimo_levantamento on saidas_por_transferencia.patient_id = ultimo_levantamento.patient_id 
-													where ultimo_levantamento.data_ultimo_levantamento < '2022-12-20'
+													where ultimo_levantamento.data_ultimo_levantamento < :startDate
 											) saidas_por_transferencia on inicio.patient_id = saidas_por_transferencia.patient_id 
 											left join    
 											( 
@@ -985,7 +985,7 @@ from (
 																				inner join patient_program pg on p.patient_id = pg.patient_id         
 																				inner join patient_state ps on pg.patient_program_id = ps.patient_program_id            
 																		where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2    
-																				and ps.start_date<= date_add('2022-12-20', interval -1 day) and pg.location_id =:location 
+																				and ps.start_date<= date_add(:startDate, interval -1 day) and pg.location_id =:location 
 																				group by pg.patient_id       
 																	) max_estado            
 																		inner join patient_program pp on pp.patient_id = max_estado.patient_id    
@@ -1000,12 +1000,12 @@ from (
 																	inner join obs  o on e.encounter_id=o.encounter_id  
 															where   e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0         
 																	and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded in (1366,1709)       
-																	and o.obs_datetime<= date_add('2022-12-20', interval -1 day)  and e.location_id=:location
+																	and o.obs_datetime<= date_add(:startDate, interval -1 day)  and e.location_id=:location
 																	group by p.patient_id   
 															union 
 															select person_id as patient_id,death_date as data_estado    
 															from person             
-															where dead=1 and voided = 0 and death_date is not null and death_date<=date_add('2022-12-20', interval -1 day)
+															where dead=1 and voided = 0 and death_date is not null and death_date<=date_add(:startDate, interval -1 day)
 															union 
 															select  p.patient_id,   
 																	max(obsobito.obs_datetime) data_estado
@@ -1014,7 +1014,7 @@ from (
 																	inner join encounter e on p.patient_id=e.patient_id 
 																	inner join obs obsobito on e.encounter_id=obsobito.encounter_id       
 															where   e.voided=0 and p.voided=0 and pe.voided = 0 and obsobito.voided=0  
-																	and e.encounter_type in (21,36,37) and  e.encounter_datetime<= date_add('2022-12-20', interval -1 day)  and  e.location_id=:location        
+																	and e.encounter_type in (21,36,37) and  e.encounter_datetime<= date_add(:startDate, interval -1 day)  and  e.location_id=:location        
 																	and obsobito.concept_id in (2031,23944,23945) and obsobito.value_coded=1366   
 																	group by p.patient_id   
 															union
@@ -1030,7 +1030,7 @@ from (
 																										inner join patient_program pg on p.patient_id = pg.patient_id         
 																										inner join patient_state ps on pg.patient_program_id = ps.patient_program_id            
 																								where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2    
-																										and ps.start_date<= date_add('2022-12-20', interval -1 day)  and pg.location_id =:location group by pg.patient_id       
+																										and ps.start_date<= date_add(:startDate, interval -1 day)  and pg.location_id =:location group by pg.patient_id       
 																							 ) max_estado            
 																							inner join patient_program pp on pp.patient_id = max_estado.patient_id    
 																							inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
@@ -1043,7 +1043,7 @@ from (
 																							inner join obs  o on e.encounter_id=o.encounter_id  
 																					where e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0         
 																							and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded = 1706       
-																							and o.obs_datetime<= date_add('2022-12-20', interval -1 day) and e.location_id=:location
+																							and o.obs_datetime<= date_add(:startDate, interval -1 day) and e.location_id=:location
 																							group by p.patient_id   
 																					union 
 																					select ultimabusca.patient_id, ultimabusca.data_estado      
@@ -1053,7 +1053,7 @@ from (
 																										inner join person pe on pe.person_id = p.patient_id 
 																										inner join encounter e on p.patient_id=e.patient_id 
 																										inner join obs o on o.encounter_id=e.encounter_id   
-																								where e.voided=0 and p.voided=0 and pe.voided = 0 and e.encounter_datetime<= date_add('2022-12-20', interval -1 day)   
+																								where e.voided=0 and p.voided=0 and pe.voided = 0 and e.encounter_datetime<= date_add(:startDate, interval -1 day)   
 																										and e.encounter_type = 21 and  e.location_id=:location           
 																										group by p.patient_id         
 																							) ultimabusca       
@@ -1146,9 +1146,9 @@ from (
 			) inicio_fila_seg_prox
 					group by patient_id   
 ) coorte12meses_final 
-where ((data_estado is null or (data_estado is not null and  data_usar_c > data_estado)) and date_add(data_usar, interval 28 day) >=date_add('2022-12-20', interval -1 day)  and date_add(data_usar, interval 28 day) < :endDate)
-or ( (data_saida_transferencia is null or (data_saida_transferencia is not null and  data_usar_c > data_saida_transferencia))  and data_entrada_obito is null and data_entrada_transferencia >= data_usar_c and data_entrada_transferencia <= :endDate and date_add(maximo_proximo_fila_recepcao, interval 1 day) >='2022-12-20') 
-or ( (data_saida_obito is null or (data_saida_obito is not null and  data_usar_c > data_saida_obito))  and data_entrada_obito >= data_usar_c and data_entrada_obito between '2022-12-20' and :endDate)
+where ((data_estado is null or (data_estado is not null and  data_usar_c > data_estado)) and date_add(data_usar, interval 28 day) >=date_add(:startDate, interval -1 day)  and date_add(data_usar, interval 28 day) < :endDate)
+or ( (data_saida_transferencia is null or (data_saida_transferencia is not null and  data_usar_c > data_saida_transferencia))  and data_entrada_obito is null and data_entrada_transferencia >= data_usar_c and data_entrada_transferencia <= :endDate and date_add(maximo_proximo_fila_recepcao, interval 1 day) >=:startDate) 
+or ( (data_saida_obito is null or (data_saida_obito is not null and  data_usar_c > data_saida_obito))  and data_entrada_obito >= data_usar_c and data_entrada_obito between :startDate and :endDate)
 )iit
 
 union
