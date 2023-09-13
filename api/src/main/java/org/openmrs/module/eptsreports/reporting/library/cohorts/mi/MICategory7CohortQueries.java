@@ -110,7 +110,7 @@ public class MICategory7CohortQueries {
     definition.addSearch(
         "BREASTFEEDING",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
+            this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
 
     definition.setCompositionString(
         "(START-ART-A AND (START-TPI-INH-B4 OR START-TPI-3HP-B4)) "
@@ -202,6 +202,11 @@ public class MICategory7CohortQueries {
             this.mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
 
     definition.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
+
+    definition.addSearch(
         "START-ART-A",
         EptsReportUtils.map(
             this.mQCohortQueries.findPatientsWhoAreNewlyEnrolledOnARTRF05(), mappingsMI));
@@ -262,7 +267,7 @@ public class MICategory7CohortQueries {
             mappingsMI));
 
     definition.setCompositionString(
-        "(PREGNANT AND START-ART-A AND START-TPI-INH-B4) NOT (TB-ACTIVE-CAT7-B1 OR TB-SCREENING-CAT7-B2 OR TB-TREATMENT-CAT7-B3 OR TRANSFERED-IN OR TRANSFERED-OUT OR A OR B OR C)");
+        "(PREGNANT AND START-ART-A AND START-TPI-INH-B4) NOT (TB-ACTIVE-CAT7-B1 OR TB-SCREENING-CAT7-B2 OR TB-TREATMENT-CAT7-B3 OR TRANSFERED-IN OR TRANSFERED-OUT OR A OR B OR C OR BREASTFEEDING)");
 
     return definition;
   }
@@ -371,7 +376,7 @@ public class MICategory7CohortQueries {
     definition.addSearch(
         "BREASTFEEDING",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
+            this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
 
     definition.setCompositionString(
         "START-ART-A NOT (TB-ACTIVE-CAT7-B1 OR TB-SCREENING-CAT7-B2 OR TB-TREATMENT-CAT7-B3 OR TRANSFERED-IN OR TRANSFERED-OUT OR PREGNANT OR BREASTFEEDING)");
@@ -487,7 +492,7 @@ public class MICategory7CohortQueries {
     definition.addSearch(
         "BREASTFEEDING",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
+            this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
 
     definition.setCompositionString(
         "(PREGNANT AND START-ART-A)  NOT (TB-ACTIVE-CAT7-B1 OR TB-SCREENING-CAT7-B2 OR TB-TREATMENT-CAT7-B3 OR TRANSFERED-IN OR TRANSFERED-OUT OR BREASTFEEDING)");
