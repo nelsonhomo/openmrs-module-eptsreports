@@ -11,73 +11,73 @@ select
 			HVL_FR41.celula, 
 			HVL_FR41.TB,
 			HVL_FR41.gravida_lactante,
-			HVL_FR41.data_inicio,
-			HVL_FR41.data_colheita,
-			HVL_FR41.data_carga,
+			DATE_FORMAT(HVL_FR41.data_inicio,'%d/%m/%Y') data_inicio,
+			DATE_FORMAT(HVL_FR41.data_colheita,'%d/%m/%Y') data_colheita,
+			DATE_FORMAT(HVL_FR41.data_carga,'%d/%m/%Y') data_carga,
 			HVL_FR41.linha,
 			HVL_FR41.valorCV,
-			HVL_FR41.dataConsultaClinica0CV1,
-			HVL_FR41.dataPrevistaConsultaClinica0CV1,
-			HVL_FR41.dataConsultaApss0CV1,
-			HVL_FR41.dataPrevistaConsultaApss0CV1, 
-			HVL_FR41.dataConsultaApss1CV1,
+			DATE_FORMAT(HVL_FR41.dataConsultaClinica0CV1,'%d/%m/%Y') dataConsultaClinica0CV1,
+			DATE_FORMAT(HVL_FR41.dataPrevistaConsultaClinica0CV1,'%d/%m/%Y') dataPrevistaConsultaClinica0CV1,
+			DATE_FORMAT(HVL_FR41.dataConsultaApss0CV1,'%d/%m/%Y') dataConsultaApss0CV1,
+			DATE_FORMAT(HVL_FR41.dataPrevistaConsultaApss0CV1,'%d/%m/%Y') dataPrevistaConsultaApss0CV1, 
+			DATE_FORMAT(HVL_FR41.dataConsultaApss1CV1,'%d/%m/%Y') dataConsultaApss1CV1,
 			HVL_FR41.previstaConsultaApss1CV1, 
-			HVL_FR41.dataConsultaApss2CV1,
-			HVL_FR41.previstaConsultaApss2CV1, 		
-			HVL_FR41.dataConsultaApss3CV1, 	
+			DATE_FORMAT(HVL_FR41.dataConsultaApss2CV1,'%d/%m/%Y') dataConsultaApss2CV1,
+			DATE_FORMAT(HVL_FR41.previstaConsultaApss2CV1,'%d/%m/%Y') previstaConsultaApss2CV1, 		
+			DATE_FORMAT(HVL_FR41.dataConsultaApss3CV1,'%d/%m/%Y') dataConsultaApss3CV1, 	
 			HVL_FR41.previstaConsultaApss3CV1, 
 			HVL_FR41.adesao,
-			HVL_FR41.dataConsultaClinicaPedidoCV1,
-			HVL_FR41.dataPrevistaConsultaClinicaPedidoCV1, 
-			HVL_FR41.dataColheitaRegistadaCV1,
-			HVL_FR41.dataPrevistaColheitaAmostraCV1, 
-			HVL_FR41.dataResultadoSegundaCV1,
-			HVL_FR41.dataPrevistaResultadoCV1, 
+			DATE_FORMAT(HVL_FR41.dataConsultaClinicaPedidoCV1,'%d/%m/%Y') dataConsultaClinicaPedidoCV1,
+			DATE_FORMAT(HVL_FR41.dataPrevistaConsultaClinicaPedidoCV1,'%d/%m/%Y') dataPrevistaConsultaClinicaPedidoCV1, 
+			DATE_FORMAT(HVL_FR41.dataColheitaRegistadaCV1,'%d/%m/%Y') dataColheitaRegistadaCV1,
+			DATE_FORMAT(HVL_FR41.dataPrevistaColheitaAmostraCV1,'%d/%m/%Y') dataPrevistaColheitaAmostraCV1, 
+			DATE_FORMAT(HVL_FR41.dataResultadoSegundaCV1,'%d/%m/%Y') dataResultadoSegundaCV1,
+			DATE_FORMAT(HVL_FR41.dataPrevistaResultadoCV1,'%d/%m/%Y') dataPrevistaResultadoCV1, 
 			HVL_FR41.resultadoSegundaCV1,
 			HVL_FR41.mudancaLinhaCV1,
-			HVL_FR41.dataConsultaClinicaParaMudancaLinhaCV1 ,
-			HVL_FR41.dataPrevistaConsultaMudancaLinhaCV1 , 
-			HVL_FR41.dataInicioNovaLinhaCV1 ,
+			DATE_FORMAT(HVL_FR41.dataConsultaClinicaParaMudancaLinhaCV1,'%d/%m/%Y') dataConsultaClinicaParaMudancaLinhaCV1 ,
+			DATE_FORMAT(HVL_FR41.dataPrevistaConsultaMudancaLinhaCV1,'%d/%m/%Y') dataPrevistaConsultaMudancaLinhaCV1, 
+			DATE_FORMAT(HVL_FR41.dataInicioNovaLinhaCV1,'%d/%m/%Y') dataInicioNovaLinhaCV1,
 			HVL_FR41.type_patient,
 			
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataConsultaApss0CV2, 'N/A') dataConsultaApss0CV2 ,
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataConsultaApss0CV2,'%d/%m/%Y'), 'N/A') dataConsultaApss0CV2 ,
 
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataPrevistaApss0CV2, 'N/A') dataPrevistaApss0CV2 ,	
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataPrevistaApss0CV2,'%d/%m/%Y'), 'N/A') dataPrevistaApss0CV2 ,	
 
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataConsultaApss1CV2, 'N/A') dataConsultaApss1CV2 ,				
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataConsultaApss1CV2,'%d/%m/%Y'), 'N/A') dataConsultaApss1CV2 ,				
 			
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataPrevistaApss1CV2, 'N/A') dataPrevistaApss1CV2 ,	
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataPrevistaApss1CV2,'%d/%m/%Y'), 'N/A') dataPrevistaApss1CV2 ,	
 
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataConsultaApss2CV2, 'N/A') dataConsultaApss2CV2 ,		
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataConsultaApss2CV2,'%d/%m/%Y'), 'N/A') dataConsultaApss2CV2 ,		
 
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataPrevistaApss2CV2, 'N/A') dataPrevistaApss2CV2 ,	
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataPrevistaApss2CV2,'%d/%m/%Y'), 'N/A') dataPrevistaApss2CV2 ,	
 
 
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataConsultaApss3CV2, 'N/A') dataConsultaApss3CV2 ,	
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataConsultaApss3CV2,'%d/%m/%Y'), 'N/A') dataConsultaApss3CV2 ,	
 
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataPrevistaApss3CV2, 'N/A') dataPrevistaApss3CV2 ,	
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataPrevistaApss3CV2,'%d/%m/%Y'), 'N/A') dataPrevistaApss3CV2 ,	
 			
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataConsultaClinicaPedidoCV2, 'N/A') dataConsultaClinicaPedidoCV2 ,	
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataConsultaClinicaPedidoCV2,'%d/%m/%Y'), 'N/A') dataConsultaClinicaPedidoCV2 ,	
 			
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataPrevistaConsultaClinicaPedidoCV2, 'N/A') dataPrevistaConsultaClinicaPedidoCV2 ,
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataPrevistaConsultaClinicaPedidoCV2,'%d/%m/%Y'), 'N/A') dataPrevistaConsultaClinicaPedidoCV2 ,
 
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataColheitaRegistadaCV2, 'N/A') dataColheitaRegistadaCV2 ,	
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataColheitaRegistadaCV2,'%d/%m/%Y'), 'N/A') dataColheitaRegistadaCV2 ,	
 
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataPrevistaColheitaAmostraCV2, 'N/A') dataPrevistaColheitaAmostraCV2 ,	
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataPrevistaColheitaAmostraCV2,'%d/%m/%Y'), 'N/A') dataPrevistaColheitaAmostraCV2 ,	
 
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataResultadoTerceiraCV, 'N/A') dataResultadoTerceiraCV ,		
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataResultadoTerceiraCV,'%d/%m/%Y'), 'N/A') dataResultadoTerceiraCV ,		
 
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataPrevistaResultadoTerceiraCV, 'N/A') dataPrevistaResultadoTerceiraCV ,		
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataPrevistaResultadoTerceiraCV,'%d/%m/%Y'), 'N/A') dataPrevistaResultadoTerceiraCV ,		
 			
 			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.resultadoTerceiraCV, 'N/A') resultadoTerceiraCV ,
 			
 			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.mudancaLinhaCV2, 'N/A') mudancaLinhaCV2 ,
 			
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataConsultaClinicaParaMudancaLinhaCV2, 'N/A') dataConsultaClinicaParaMudancaLinhaCV2 ,
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataConsultaClinicaParaMudancaLinhaCV2,'%d/%m/%Y'), 'N/A') dataConsultaClinicaParaMudancaLinhaCV2 ,
 			
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataPrevistaConsultaMudancaLinhaCV2, 'N/A') dataPrevistaConsultaMudancaLinhaCV2 ,
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataPrevistaConsultaMudancaLinhaCV2,'%d/%m/%Y'), 'N/A') dataPrevistaConsultaMudancaLinhaCV2 ,
 			
-			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', HVL_FR41.dataInicioNovaLinhaCV2, 'N/A') dataInicioNovaLinhaCV2 
+			if(HVL_FR41.dataInicioNovaLinhaCV1 = 'N/A', DATE_FORMAT(HVL_FR41.dataInicioNovaLinhaCV2,'%d/%m/%Y'), 'N/A') dataInicioNovaLinhaCV2 
 
 from
 
@@ -87,7 +87,7 @@ from
 			pid.identifier as NID,
 			 concat(ifnull(pn.given_name,''),' ',ifnull(pn.middle_name,''),' ',ifnull(pn.family_name,'')) as NAME,
 			 p.gender as GENDER, 
-			 floor(datediff(:endDate,birthdate)/365) AGE,
+			 (TIMESTAMPDIFF(year,birthdate,:endDate)) AGE, 
 			 pat.value as telefone, 
 			 pat2.value as telefoneAlternativo, 
 			 pad3.address6 as 'localidade',
@@ -109,7 +109,7 @@ from
 			HVL_FR40.dataConsultaApss1CV1,
 			HVL_FR40.previstaConsultaApss1CV1, 
 			HVL_FR40.dataConsultaApss2CV1,
-			HVL_FR40.previstaConsultaApss2CV1, 		
+			DATE(HVL_FR40.previstaConsultaApss2CV1) previstaConsultaApss2CV1, 		
 			HVL_FR40.dataConsultaApss3CV1, 	
 			HVL_FR40.previstaConsultaApss3CV1, 
 			HVL_FR40.adesao,
@@ -307,11 +307,11 @@ from
 																										from
 																										(
 																											select 	HVL_FR15.*,
-																													min(consultaApss1.encounter_datetime) dataConsultaApss1
+																													if(min(consultaApss1.encounter_datetime) is not null,min(consultaApss1.encounter_datetime),'N/A') dataConsultaApss1
 																											from
 																											(
 																											select HVL_FR3.*,
-																													min(consultaClinica0.encounter_datetime) dataConsultaClinica0,
+																													if(min(consultaClinica0.encounter_datetime)is not null,min(consultaClinica0.encounter_datetime),'N/A') dataConsultaClinica0,
 																													min(consultaApss0.encounter_datetime) dataConsultaApss0,
 																													primeiraColheitaCV.data_colheita  data_colheita
 																											from
