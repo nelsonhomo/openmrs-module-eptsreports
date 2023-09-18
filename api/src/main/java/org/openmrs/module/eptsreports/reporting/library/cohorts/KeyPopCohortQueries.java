@@ -108,7 +108,9 @@ public class KeyPopCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappingsEndDate = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappingsEndDate =
+        "startDate=${startDate-12m},endDate=${endDate-12m},location=${location}";
+    final String mappings = "endDate=${endDate},location=${location}";
 
     definition.addSearch(
         "B1",
@@ -120,8 +122,7 @@ public class KeyPopCohortQueries {
     definition.addSearch(
         "TX-CURR",
         EptsReportUtils.map(
-            resumoMensalCohortQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHB13(),
-            mappingsEndDate));
+            resumoMensalCohortQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHB13(), mappings));
 
     definition.setCompositionString("(B1 AND TX-CURR)");
 
