@@ -40,8 +40,8 @@ select
 			DATE_FORMAT(HVL_FR41.dataInicioNovaLinhaCV1,'%d/%m/%Y') dataInicioNovaLinhaCV1,
 		   case 
 	       when HVL_FR41.type_patient = 1 then 'OBITO'
-	       when HVL_FR41.type_patient  = 2 then 'ABANDONO'
-	       when HVL_FR41.type_patient  = 3 then 'TRANSFERIDO PARA'
+	       when HVL_FR41.type_patient  = 2 then 'TRANSFERIDO PARA'
+	       when HVL_FR41.type_patient  = 3 then 'ABANDONO'
 	       when  HVL_FR41.type_patient  = 4 then 'SUSPENSO'
 	       when ISNULL(HVL_FR41.type_patient) then null
 	       end as type_patient,
@@ -652,7 +652,7 @@ from
 select final.patient_id, final.type_patient
 
  from (
-select iit.patient_id, 2 type_patient from (
+select iit.patient_id, 3 type_patient from (
 select patient_id         
 from (
 			select inicio_fila_seg_prox.*,         
@@ -1667,7 +1667,7 @@ where  ( (data_saida_obito is null or (data_saida_obito is not null and  data_us
 
 union
 
-select trOut.patient_id, 3 type_patient from 
+select trOut.patient_id, 2 type_patient from 
 (
 select patient_id         
 from (
