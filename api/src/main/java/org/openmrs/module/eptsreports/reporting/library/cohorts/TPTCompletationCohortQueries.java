@@ -111,12 +111,16 @@ public class TPTCompletationCohortQueries {
     dsd.addParameter(new Parameter("endDate", "End Date", Date.class));
     dsd.addParameter(new Parameter("location", "location", Location.class));
     final String mappings = "endDate=${endDate},location=${location}";
+    String generalParameterMapping =
+        "startDate=${endDate-1095d},endDate=${endDate},location=${location}";
 
     dsd.addSearch(
         "TPT-NO-COMPLETION",
         EptsReportUtils.map(this.findTxCurrWithoutTPTCompletation(), mappings));
 
-    dsd.addSearch("TB-NUMERATOR", EptsReportUtils.map(this.getTxTBNumerator(), mappings));
+    dsd.addSearch(
+        "TB-NUMERATOR",
+        EptsReportUtils.map(tXTBCohortQueries.txTbNumerator(), generalParameterMapping));
 
     dsd.setCompositionString("TPT-NO-COMPLETION AND TB-NUMERATOR");
 
@@ -279,7 +283,7 @@ public class TPTCompletationCohortQueries {
     String generalParameterMapping =
         "startDate=${endDate-1095d},endDate=${endDate},location=${location}";
     String previousPeriodParameters =
-        "startDate=${endDate-6m-1095d},endDate=${endDate-1095d-1d},location=${location}";
+        "startDate=${endDate-6m+1d-1095d},endDate=${endDate-1095d-1d},location=${location}";
 
     cd.setName("TxTB - Numerator");
     final CohortDefinition A = this.generateTxTBNumerator(generalParameterMapping);
