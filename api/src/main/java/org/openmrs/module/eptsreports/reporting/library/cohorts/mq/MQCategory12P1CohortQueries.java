@@ -46,7 +46,7 @@ public class MQCategory12P1CohortQueries {
     definition.addSearch(
         "BREASTFEEDING",
         EptsReportUtils.map(
-            this.mqCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
+            this.mqCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
 
     definition.addSearch(
         "TRANSFERED-IN",

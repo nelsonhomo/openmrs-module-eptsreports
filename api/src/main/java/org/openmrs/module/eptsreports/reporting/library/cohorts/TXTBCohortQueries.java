@@ -1107,7 +1107,9 @@ public class TXTBCohortQueries {
             TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
                 this.hivMetadata.getMisauLaboratorioEncounterType().getEncounterTypeId(),
                 Arrays.asList(
+                    this.tbMetadata.getSputumForAcidFastBacilli().getConceptId(),
                     this.tbMetadata.getTbGenexpertTest().getConceptId(),
+                    this.tbMetadata.getXpertMtb().getConceptId(),
                     this.tbMetadata.getCultureTest().getConceptId(),
                     this.tbMetadata.getTbLam().getConceptId()),
                 Arrays.asList(this.tbMetadata.getPositiveConcept().getConceptId())));
@@ -1142,5 +1144,13 @@ public class TXTBCohortQueries {
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
     return cd;
+  }
+
+  public CohortDefinition findPatientsWhoInitiatedTBTreatment() {
+    final CohortDefinition definition =
+        this.genericCohortQueries.generalSql(
+            "INICIOTB", TXTBQueries.findPatientsWhoInitiatedTBTreatment());
+    this.addGeneralParameters(definition);
+    return definition;
   }
 }

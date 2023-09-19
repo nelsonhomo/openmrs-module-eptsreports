@@ -90,12 +90,14 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
         EptsReportUtils.map(this.montlyCascadeReportDimensions.getNegativeTestResults(), mappings));
 
     this.addSection1And2(dataSetDefinition, mappings);
-    this.addSection3(dataSetDefinition, mappings);
+    this.addSection3(
+        dataSetDefinition, "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}");
     this.addSEction4(dataSetDefinition, mappings);
     this.addSection5(dataSetDefinition, mappings);
     this.addSection6(dataSetDefinition, mappings);
     this.addSection7(dataSetDefinition, mappings);
-    this.addSection8(dataSetDefinition, mappings);
+    this.addSection8(
+        dataSetDefinition, "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}");
     return dataSetDefinition;
   }
 
@@ -159,7 +161,7 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
   private void addSection3(CohortIndicatorDataSetDefinition dataSetDefinition, String mappings) {
 
     CohortIndicator txTBDenominatorPreviousPeriod =
-        this.getIndicator(this.txTBDenominatorForMontlyCascadeQuery.getTxTBDenominator());
+        this.getIndicator(this.txtbCohortQueries.getDenominator(), mappings);
 
     dataSetDefinition.addColumn(
         "TC-TB",
@@ -313,8 +315,8 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
     CohortIndicator positiveResults =
         this.getIndicator(
             this.txtbCohortQueries.getPositiveResultCohortDefinition(
-                txTBDenominatorForMontlyCascadeQuery.getTxTBDenominator(),
-                "startDate=${endDate-6m},endDate=${endDate},location=${location}"));
+                txtbCohortQueries.getDenominator(),
+                "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}"));
 
     dataSetDefinition.addColumn(
         "TBD-PR",
@@ -326,25 +328,25 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
         "TBD-PR-baciloscopia",
         "6a.Screened patients with positive TB testing result - Baciloscopia",
         EptsReportUtils.map(positiveResults, mappings),
-        "diagnostictest=baciloscopia|posetiveTestResult=positiveBaciloscopia");
+        "posetiveTestResult=positiveBaciloscopia");
 
     dataSetDefinition.addColumn(
         "TBD-PR-mWRD",
         " 6a.Screened patients with positive TB testing result - mWRD MTB/RIF",
         EptsReportUtils.map(positiveResults, mappings),
-        "diagnostictest=genexpert|posetiveTestResult=positiveGenexpert");
+        "posetiveTestResult=positiveGenexpert");
 
     dataSetDefinition.addColumn(
         "TBD-PR-tblam",
         " 6a.Screened patients with positive TB testing result - TB LAM",
         EptsReportUtils.map(positiveResults, mappings),
-        "diagnostictest=tblam|posetiveTestResult=positiveTblam");
+        "posetiveTestResult=positiveTblam");
 
     dataSetDefinition.addColumn(
         "TBD-PR-other",
         "6a.Screened patients with positive TB testing result - Additional test other",
         EptsReportUtils.map(positiveResults, mappings),
-        "diagnostictest=additonalDiagnostic|posetiveTestResult=positiveAdditonalDiagnostic");
+        "posetiveTestResult=positiveAdditonalDiagnostic");
 
     CohortIndicator negativeResults =
         this.getIndicator(
@@ -360,25 +362,25 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
         "TBD-NR-baciloscopia",
         "6b.Screened patients with negative TB testing result - Baciloscopia",
         EptsReportUtils.map(negativeResults, mappings),
-        "diagnostictest=baciloscopia|negativeTestResult=negativeBaciloscopia");
+        "negativeTestResult=negativeBaciloscopia");
 
     dataSetDefinition.addColumn(
         "TBD-NR-mWRD",
         " 6b.Screened patients with negative TB testing result - mWRD MTB/RIF",
         EptsReportUtils.map(negativeResults, mappings),
-        "diagnostictest=genexpert|negativeTestResult=negativeGenexpert");
+        "negativeTestResult=negativeGenexpert");
 
     dataSetDefinition.addColumn(
         "TBD-NR-tblam",
         "6b.Screened patients with negative TB testing result - TB LAM",
         EptsReportUtils.map(negativeResults, mappings),
-        "diagnostictest=tblam|negativeTestResult=negativeTblam");
+        "negativeTestResult=negativeTblam");
 
     dataSetDefinition.addColumn(
         "TBD-NR-other",
         "6b.Screened patients with negative TB testing result - Additional test other",
         EptsReportUtils.map(negativeResults, mappings),
-        "diagnostictest=additonalDiagnostic|negativeTestResult=negativeAdditonalDiagnostic");
+        "negativeTestResult=negativeAdditonalDiagnostic");
   }
 
   private void addSection7(CohortIndicatorDataSetDefinition dataSetDefinition, String mappings) {
@@ -420,8 +422,9 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
   private void addSection8(CohortIndicatorDataSetDefinition dataSetDefinition, String mappings) {
 
     CohortIndicator screenedAndStartedTB =
-        this.getIndicator(
-            this.txTBDenominatorForMontlyCascadeQuery.getScreenedPatientsWhoStartedTBTreatment());
+        eptsGeneralIndicator.getIndicator(
+            "patientsNewOnARTNumerator",
+            EptsReportUtils.map(txtbCohortQueries.txTbNumerator(), mappings));
 
     dataSetDefinition.addColumn(
         "TBD-SSTB",
@@ -532,6 +535,11 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
 
   private CohortIndicator getIndicator(CohortDefinition cohortDefinition) {
     String mappings = "endDate=${endDate},location=${location}";
+    return this.eptsGeneralIndicator.getIndicator(
+        "" + cohortDefinition, EptsReportUtils.map(cohortDefinition, mappings));
+  }
+
+  private CohortIndicator getIndicator(CohortDefinition cohortDefinition, String mappings) {
     return this.eptsGeneralIndicator.getIndicator(
         "" + cohortDefinition, EptsReportUtils.map(cohortDefinition, mappings));
   }

@@ -41,6 +41,11 @@ public class MQGenericCohortQueries {
             this.mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
 
     definition.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
+
+    definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
             this.mQCohortQueries
@@ -51,7 +56,8 @@ public class MQGenericCohortQueries {
         "TRANSFERED-OUT",
         EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
 
-    definition.setCompositionString("START-ART NOT (PREGNANT OR TRANSFERED-IN OR TRANSFERED-OUT)");
+    definition.setCompositionString(
+        "START-ART NOT (PREGNANT OR BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)");
 
     return definition;
   }
