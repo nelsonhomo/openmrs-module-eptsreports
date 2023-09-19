@@ -47,7 +47,7 @@
             DATE_FORMAT(DATE(primeiroMds12Meses.DATA_FIM_MDS3),'%d-%m-%Y') DATA_FIM_MDS3_12_MESES,
             DATE_FORMAT(DATE(primeiroMds12Meses.DATA_FIM_MDS4),'%d-%m-%Y') DATA_FIM_MDS4_12_MESES,
             DATE_FORMAT(DATE( primeiroMds12Meses.DATA_FIM_MDS5),'%d-%m-%Y') DATA_FIM_MDS5_12_MESES,
-           if(tbSinthoms.data_tb_sinthoms is null or tbSinthoms.data_tb_sinthoms='', 'N/A', 'Sim') mdc_Simtomas_tb_12_meses,
+           if(tbSinthoms.mdc_simtomas_tb_12_meses is null, 'Não', 'Sim') mdc_Simtomas_tb_12_meses,
            if(pbImc.consultas_pb_imc is null or pbImc.consultas_pb_imc='', 'N/A', 'Sim') mds_consultas_pb_imc_12_meses,
            todasConsultasFichaClinica.total_fc total_consultas_fc_12_meses,
            todasConsultasFichaApss.total_apss total_consultas_apss_12_meses,
@@ -64,7 +64,7 @@
            -- resultadoCVPrimeiro24Meses.data_primeiro_resultado_cv_24_meses,
            resultadoCVPrimeiro24Meses.resultado_cv_24_meses resultado_cv_24_meses ,
            primeiroCd424Meses.primeiro_resultado_cd4_24_meses,
-           if(adesaoApss24Meses.adesao is not null,'Sim','Não') nivel_adesao,
+           if(adesaoApss24Meses.adesao is not null,'Sim','Não') nivel_adesao_apss_24_meses,
            gravidaLactante24Meses.gravida_lactante_24_meses gravida_lactante_24_meses,
            if(tb24Meses.data_tb_24_meses is null or tb24Meses.data_tb_24_meses='' ,'Não','Sim') tb_24_meses,
            -- tb24Meses.tb_24_meses tb_24_meses,
@@ -797,9 +797,9 @@
           
           left join
             (
-             select tbSinthoms.patient_id,tbSinthoms.data_tb_sinthoms,mds.art_start_date,mds.data_registo_primeiro_mdc  from 
+             select tbSinthoms.patient_id,tbSinthoms.mdc_simtomas_tb_12_meses mdc_simtomas_tb_12_meses,mds.art_start_date,mds.data_registo_primeiro_mdc  from 
              (
-             select p.patient_id,e.encounter_datetime as data_tb_sinthoms  from patient p 
+             select p.patient_id,e.encounter_datetime as mdc_simtomas_tb_12_meses  from patient p 
               inner join encounter e on p.patient_id=e.patient_id 
               inner join obs o on o.encounter_id=e.encounter_id 
               where e.encounter_type in(6) and o.concept_id=23758  and e.location_id=:location and o.value_coded in(1065,1066) 
@@ -868,7 +868,7 @@
               group by primeiroMdc.patient_id
              )mds
              )mds on tbSinthoms.patient_id=mds.patient_id
-              WHERE  tbSinthoms.data_tb_sinthoms BETWEEN mds.data_registo_primeiro_mdc  and date_add(mds.art_start_date, interval 12 month)
+              WHERE  tbSinthoms.mdc_simtomas_tb_12_meses BETWEEN mds.data_registo_primeiro_mdc  and date_add(mds.art_start_date, interval 12 month)
             )tbSinthoms on tbSinthoms.patient_id=coorteFinal.patient_id  and coorteFinal.tipo_coorte=12 
           
           
@@ -1506,7 +1506,7 @@
               )primeiroMdc
 
               )primeiroMdc on primeiroMdc.patient_id=tx_new.patient_id
-              WHERE art_start_date BETWEEN  date_sub(date(concat(:year,'-12','-21')), interval 24 MONTH) and  date_sub(date(concat(:year,'-06','-20')), interval 12 MONTH)
+              WHERE art_start_date BETWEEN  date_sub(date(concat(:year,'-12','-21')), interval 36 MONTH) and  date_sub(date(concat(:year,'-06','-20')), interval 24 MONTH)
               and primeiroMdc.data_registo_primeiro_mdc BETWEEN date_add(tx_new.art_start_date, interval 12 month) and date_add(tx_new.art_start_date, interval 24 month)  
               group by primeiroMdc.patient_id
        )primeiroMdc24Meses on primeiroMdc24Meses.patient_id=coorteFinal.patient_id and coorteFinal.tipo_coorte=24
