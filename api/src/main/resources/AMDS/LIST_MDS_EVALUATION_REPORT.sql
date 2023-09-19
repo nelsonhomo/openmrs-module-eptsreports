@@ -95,7 +95,7 @@
            DATE_FORMAT(DATE(primeiroMds24Meses.DATA_FIM_MDS4_24_MESES),'%d-%m-%Y') DATA_FIM_MDS4_24_MESES,
            DATE_FORMAT(DATE(primeiroMds24Meses.DATA_FIM_MDS5_24_MESES),'%d-%m-%Y') DATA_FIM_MDS5_24_MESES,
           
-           if(tbSinthoms24Meses.data_tb_sinthoms24_meses is not null, 'Sim', 'Não') mdc_Simtomas_tb_24_meses,
+           if(tbSinthoms24Meses.mdc_simtomas_tb_24_meses is not null,'Sim','Não') mdc_simtomas_tb_24_meses,
            if(pbImc24Meses.consultas_pb_imc_24_meses is not null, 'Não', 'Sim') mds_consultas_pb_imc_24_meses,
            todasConsultasFichaClinica24Meses.total_fc_24_meses total_consultas_fc_24_meses,
            todasConsultasFichaApss24Meses.total_apss_24_meses  total_consultas_apss_24_meses,
@@ -1713,13 +1713,13 @@
             left join
 
             (
-             select p.patient_id,e.encounter_datetime as data_tb_sinthoms24_meses  from patient p 
+             select p.patient_id,e.encounter_datetime as mdc_simtomas_tb_24_meses  from patient p 
               inner join encounter e on p.patient_id=e.patient_id 
               inner join obs o on o.encounter_id=e.encounter_id 
               where e.encounter_type in(6) and o.concept_id=23758  and e.location_id=:location and o.value_coded in(1065,1066) 
               and e.voided=0 and p.voided=0 and o.voided=0 
             )tbSinthoms24Meses on tbSinthoms24Meses.patient_id=coorteFinal.patient_id  and coorteFinal.tipo_coorte=24 
-            and tbSinthoms24Meses.data_tb_sinthoms24_meses BETWEEN date_add(coorteFinal.art_start_date, interval 12 month)  and date_add(coorteFinal.art_start_date, interval 24 month)
+            and tbSinthoms24Meses.mdc_simtomas_tb_24_meses BETWEEN date_add(coorteFinal.art_start_date, interval 12 month)  and date_add(coorteFinal.art_start_date, interval 24 month)
             
             -- Recordar de remover esse trecho ja esta nos 12 meses
             -- left join
