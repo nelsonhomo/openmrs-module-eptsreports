@@ -112,8 +112,25 @@ public class MICategory7CohortQueries {
         EptsReportUtils.map(
             this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
 
+    definition.addSearch(
+        "TB-ACTIVE-CAT7-RF11",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsDiagnosedWithActiveTBDuringDuringPeriodCategory7(),
+            mappingsMI));
+
+    definition.addSearch(
+        "TB-SCREENING-CAT7-RF11",
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWithPositiveTBScreeningInDurindPeriodCategory7(),
+            mappingsMI));
+
+    definition.addSearch(
+        "TB-TREATMENT-CAT7-RF11",
+        EptsReportUtils.map(
+            this.mQCohortQueries.finPatientHaveTBTreatmentDuringPeriodCategory7(), mappingsMI));
+
     definition.setCompositionString(
-        "(START-ART-A AND (START-TPI-INH-B4 OR START-TPI-3HP-B4)) "
+        "((START-ART-A NOT (TB-ACTIVE-CAT7-RF11 OR TB-SCREENING-CAT7-RF11 OR TB-TREATMENT-CAT7-RF11)) AND (START-TPI-INH-B4 OR START-TPI-3HP-B4)) "
             + "NOT (TB-ACTIVE-CAT7-B1 "
             + "OR TB-SCREENING-CAT7-B2 "
             + "OR TB-TREATMENT-CAT7-B3 "

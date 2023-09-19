@@ -207,7 +207,7 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
         left join ( 
          select distinct min_estado.patient_id, min_estado.data_estado dataTransferido from ( 
              select  pg.patient_id, 
-                     min(ps.start_date) data_estado 
+                     min(ps.start_date) data_estado, pg.program_id, ps.state
              from    patient p 
                  inner join person pe on pe.person_id = p.patient_id 
                  inner join patient_program pg on p.patient_id = pg.patient_id 
@@ -217,7 +217,7 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
          ) min_estado 
              inner join patient_program pp on pp.patient_id = min_estado.patient_id 
              inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = min_estado.data_estado 
-         where pp.program_id in (1,2) and ps.state = 29 and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location 
+         where (pp.program_id=1 and ps.state=28) or (pp.program_id=2 and ps.state=29) and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location 
         union 
         SELECT p.patient_id,MIN(obsData.value_datetime) AS initialDate  FROM patient p 
         INNER JOIN encounter e  ON e.patient_id=p.patient_id 
@@ -869,13 +869,15 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
     group by patient_id 
     )penultimoCd4 on penultimoCd4.patient_id = inicioDAH.patient_id 
     left join ( 
+    select patient_id, max(data_carga) data_carga, resultadoCV, comments from (
+    select patient_id, data_carga, resultadoCV, comments from (
     select ultima_carga.patient_id,ultima_carga.data_carga, IF(ISNULL(obs.value_numeric), IF(ISNULL(obs.value_coded), 'N/A', 
  case 
                                     obs.value_coded 
                                     when 
-                                       1306 
+                                       1306
                                     then 
-                                       'NIVEL BAIXO DE DETECÇÃO' 
+                                       'Nivel baixo de detecção' 
                                     when 
                                        1304 
                                     then 
@@ -911,24 +913,79 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
                                     else 
                                        null 
                                  end), obs.value_numeric) AS resultadoCV , obs.comments from ( 
-            Select p.patient_id,max(o.obs_datetime) data_carga from patient p 
+            Select p.patient_id,max(o.obs_datetime) data_carga, e.encounter_type from patient p 
             inner join encounter e on p.patient_id=e.patient_id 
             inner join obs o on e.encounter_id=o.encounter_id 
-            where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (13,6,9,53,51) 
+            where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (13,6,9,53) 
             and  o.concept_id in (856,1305) and  date(o.obs_datetime) <= :endDate and e.location_id=:location group by p.patient_id) ultima_carga 
             inner join obs on obs.person_id=ultima_carga.patient_id and date(obs.obs_datetime)=date(ultima_carga.data_carga) 
             where obs.voided=0 and ((obs.concept_id=856 and obs.value_numeric is not null) 
             or (obs.concept_id=1305 and obs.value_coded in (1306,23814,23905,23906,23907,23908,23904,165331)))  and obs.location_id=:location 
+            union
+                select ultima_carga.patient_id,ultima_carga.data_carga, IF(ISNULL(obs.value_numeric), IF(ISNULL(obs.value_coded), 'N/A', 
+ case 
+                                    obs.value_coded 
+                                    when 
+                                       1306
+                                    then 
+                                       'Nivel de detecção baixo' 
+                                    when 
+                                       1304 
+                                    then 
+                                       'MA QUALIDADE DA AMOSTRA' 
+                                    when 
+                                       23814 
+                                    then 
+                                       'Indetectável' 
+                                    when 
+                                       23905 
+                                    then 
+                                       'MENOR QUE 10 COPIAS/ML' 
+                                    when 
+                                       23906 
+                                    then 
+                                       'MENOR QUE 20 COPIAS/ML' 
+                                    when 
+                                       23907 
+                                    then 
+                                       'MENOR QUE 40 COPIAS/ML' 
+                                    when 
+                                       23908 
+                                    then 
+                                       'MENOR QUE 400 COPIAS/ML' 
+                                    when 
+                                       23904 
+                                    then 
+                                       'MENOR QUE 839 COPIAS/ML' 
+                                    when 
+                                       165331 
+                                    then 
+                                       CONCAT('MENOR QUE', ' ',obs.comments) 
+                                    else 
+                                       null 
+                                 end), obs.value_numeric) AS resultadoCV , obs.comments from ( 
+            Select p.patient_id,max(o.obs_datetime) data_carga, e.encounter_type from patient p 
+            inner join encounter e on p.patient_id=e.patient_id 
+            inner join obs o on e.encounter_id=o.encounter_id 
+            where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type = 51 
+            and  o.concept_id in (856,1305) and  date(o.obs_datetime) <= :endDate and e.location_id=:location group by p.patient_id) ultima_carga 
+            inner join obs on obs.person_id=ultima_carga.patient_id and date(obs.obs_datetime)=date(ultima_carga.data_carga) 
+            where obs.voided=0 and ((obs.concept_id=856 and obs.value_numeric is not null) 
+            or (obs.concept_id=1305 and obs.value_coded in (1306,23814,23905,23906,23907,23908,23904,165331)))  and obs.location_id=:location 
+            ) ultimaCV order by ultimaCV.data_carga desc
+            ) ultimaCV group by ultimaCV.patient_id
     )ultimaCV on ultimaCV.patient_id = inicioDAH.patient_id 
     left join( 
-    select patient_id,penultimaDataCarga, resultadoCV from ( 
+    select patient_id,max(penultimaDataCarga) penultimaDataCarga, resultadoCV from ( 
+    select patient_id, penultimaDataCarga, resultadoCV from (
+    select * from (
     select e.patient_id, date(o.obs_datetime) penultimaDataCarga,IF(ISNULL(o.value_numeric), IF(ISNULL(o.value_coded), 'N/A', 
  case 
                                     o.value_coded 
                                     when 
                                        1306 
                                     then 
-                                       'NIVEL BAIXO DE DETECÇÃO' 
+                                       'Nivel baixo de detecção' 
                                     when 
                                        1304 
                                     then 
@@ -974,8 +1031,65 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
     ) ultimaCV inner join encounter e on e.patient_id = ultimaCV.patient_id 
     inner join obs o on o.encounter_id = e.encounter_id 
     where  ((o.concept_id=856 and o.value_numeric is not null) 
-     or (o.concept_id=1305 and o.value_coded in (1306,23814,23905,23906,23907,23908,23904,165331)))  and e.location_id =:location and o.voided = 0 and e.voided = 0 and e.encounter_type in (6,51,13) 
+     or (o.concept_id=1305 and o.value_coded in (1306,23814,23905,23906,23907,23908,23904,165331)))  and e.location_id =:location and o.voided = 0 and e.voided = 0 and e.encounter_type in (13,6,9,53) 
     and date(o.obs_datetime) < date(ultimaCV.data_carga) order by date(o.obs_datetime) desc 
+    ) primeira
+    union
+    select e.patient_id, date(o.obs_datetime) penultimaDataCarga,IF(ISNULL(o.value_numeric), IF(ISNULL(o.value_coded), 'N/A', 
+                      case 
+                                    o.value_coded 
+                                    when 
+                                       1306 
+                                    then 
+                                       'Nivel de detecção baixo' 
+                                    when 
+                                       1304 
+                                    then 
+                                       'MA QUALIDADE DA AMOSTRA' 
+                                    when 
+                                       23814 
+                                    then 
+                                       'Indetectável' 
+                                    when 
+                                       23905 
+                                    then 
+                                       'MENOR QUE 10 COPIAS/ML' 
+                                    when 
+                                       23906 
+                                    then 
+                                       'MENOR QUE 20 COPIAS/ML' 
+                                    when 
+                                       23907 
+                                    then 
+                                       'MENOR QUE 40 COPIAS/ML' 
+                                    when 
+                                       23908 
+                                    then 
+                                       'MENOR QUE 400 COPIAS/ML' 
+                                    when 
+                                       23904 
+                                    then 
+                                       'MENOR QUE 839 COPIAS/ML' 
+                                    when 
+                                       165331 
+                                    then 
+                                        CONCAT('MENOR QUE', ' ',o.comments) 
+                                 end), o.value_numeric) AS resultadoCV, data_carga 
+                                 from (select ultima_carga.patient_id,ultima_carga.data_carga,obs.value_numeric valor_carga,obs.concept_id,obs.value_coded from ( 
+                Select p.patient_id,max(o.obs_datetime) data_carga from patient p 
+                inner join encounter e on p.patient_id=e.patient_id 
+                inner join obs o on e.encounter_id=o.encounter_id 
+                where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (13,6,9,53,51) 
+                and  o.concept_id in (856,1305) and  date(o.obs_datetime) <= :endDate and e.location_id=:location group by p.patient_id) ultima_carga 
+                inner join obs on obs.person_id=ultima_carga.patient_id and date(obs.obs_datetime)=date(ultima_carga.data_carga) 
+                where obs.voided=0 and ((obs.concept_id=856 and obs.value_numeric is not null) 
+                or (obs.concept_id=1305 and obs.value_coded in (1306,23814,23905,23906,23907,23908,23904,165331)))  and obs.location_id=:location 
+    ) ultimaCV inner join encounter e on e.patient_id = ultimaCV.patient_id 
+    inner join obs o on o.encounter_id = e.encounter_id 
+    where  ((o.concept_id=856 and o.value_numeric is not null) 
+     or (o.concept_id=1305 and o.value_coded in (1306,23814,23905,23906,23907,23908,23904,165331)))  and e.location_id =:location and o.voided = 0 and e.voided = 0 and e.encounter_type = 51
+    and date(o.obs_datetime) < date(ultimaCV.data_carga) order by date(penultimaDataCarga) desc 
+    ) penultimaCV order by penultimaCV.penultimaDataCarga desc
     ) penultimaCV group by penultimaCV.patient_id 
     )penultimaCV on penultimaCV.patient_id = inicioDAH.patient_id 
     left join( 
