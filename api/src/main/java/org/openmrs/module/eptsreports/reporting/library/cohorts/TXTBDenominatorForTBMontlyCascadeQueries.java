@@ -61,24 +61,6 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     return definition;
   }
 
-  @DocumentedDefinition(value = "txTbNumerator")
-  public CohortDefinition getNumeratorForPreviousPeriod() {
-    final String generalParameterMappingA =
-        "startDate=${endDate},endDate=${endDate},location=${location}";
-
-    final CompositionCohortDefinition cd = new CompositionCohortDefinition();
-    cd.setName("TxTB - Numerator for Previous Period");
-
-    final CohortDefinition A = this.txTbNumeratorA();
-
-    cd.addSearch("A", EptsReportUtils.map(A, generalParameterMappingA));
-
-    cd.setCompositionString("A");
-
-    this.addGeneralParameters(cd);
-    return cd;
-  }
-
   @DocumentedDefinition(value = "TxTBDenominatorNegativeScreening")
   public CohortDefinition getTxTBDenominatorAndNegativeScreening() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -154,7 +136,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
         "A",
         EptsReportUtils.map(
             txtbCohortQueries.codedYesTbScreening(),
-            "onOrAfter=${endDate-6},onOrBefore=${endDate},locationList=${location}"));
+            "onOrAfter=${endDate-6m+1d},onOrBefore=${endDate},locationList=${location}"));
     cd.addSearch(
         "B",
         EptsReportUtils.map(
@@ -324,7 +306,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
         "started-on-period",
         EptsReportUtils.map(
             this.genericCohortQueries.getStartedArtOnPeriod(false, true),
-            "onOrAfter=${endDate-6m},onOrBefore=${endDate},location=${location}"));
+            "onOrAfter=${endDate-6m+1d},onOrBefore=${endDate},location=${location}"));
     definition.setCompositionString("started-on-period");
     return definition;
   }
@@ -579,7 +561,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
         "started-tb-treatment-previous-period",
         EptsReportUtils.map(
             txtbCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(),
-            "startDate=${endDate-12m+1d},endDate=${endDate-6m},location=${location}"));
+            "startDate=${endDate-12m+1d},endDate=${endDate-6m+1d},location=${location}"));
 
     cd.addSearch(
         "A-PREVIOUS-PERIOD",
@@ -683,22 +665,6 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     return definition;
   }
 
-  @DocumentedDefinition(value = "screenedPatientsWhoStartedTBTreatment")
-  public CohortDefinition getScreenedPatientsWhoStartedTBTreatment() {
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("TxTB - Screened Patients Who Started TB Treatment");
-    this.addGeneralParameters(definition);
-
-    definition.addSearch(
-        "txtbDenominator",
-        EptsReportUtils.map(this.txtbCohortQueries.getDenominator(), generalParameterMapping));
-    definition.addSearch(
-        "txtbNumerator", EptsReportUtils.map(this.txTbNumerator(), generalParameterMapping));
-
-    definition.setCompositionString("txtbDenominator AND txtbNumerator");
-    return definition;
-  }
-
   @DocumentedDefinition(value = "ScreenedPatientsWhoStartedTBTreatmentAndTXCurr")
   public CohortDefinition getScreenedPatientsWhoStartedTBTreatmentAndTXCurr() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -706,9 +672,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     this.addGeneralParameters(definition);
 
     definition.addSearch(
-        "txTB",
-        EptsReportUtils.map(
-            this.getScreenedPatientsWhoStartedTBTreatment(), generalParameterMapping));
+        "txTB", EptsReportUtils.map(txtbCohortQueries.txTbNumerator(), generalParameterMapping));
     definition.addSearch(
         "txCurr",
         EptsReportUtils.map(
@@ -747,6 +711,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
                 Arrays.asList(
                     this.tbMetadata.getSputumForAcidFastBacilli().getConceptId(),
                     this.tbMetadata.getTbGenexpertTest().getConceptId(),
+                    this.tbMetadata.getXpertMtb().getConceptId(),
                     this.tbMetadata.getCultureTest().getConceptId(),
                     this.tbMetadata.getTbLam().getConceptId()),
                 Arrays.asList(
