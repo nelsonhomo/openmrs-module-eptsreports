@@ -73,7 +73,7 @@ public class SetupTB7AdvancedDiseaseAndTBCascadeReport extends EptsDataExportMan
         Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
 
     reportDefinition.addDataSetDefinition(
-        "S",
+        "SC",
         Mapped.mapStraightThrough(this.sismaCodeDataSet.constructDataset(this.getParameters())));
 
     reportDefinition.setBaseCohortDefinition(
