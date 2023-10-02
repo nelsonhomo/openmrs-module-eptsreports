@@ -32,6 +32,8 @@ public class TXTBCohortQueries {
 
   @Autowired private GenericCohortQueries genericCohortQueries;
 
+  @Autowired private TXTBDenominatorForTBMontlyCascadeQueries denominatorForTBMontlyCascadeQueries;
+
   private final String generalParameterMapping =
       "startDate=${startDate},endDate=${endDate},location=${location}";
 
@@ -1127,6 +1129,27 @@ public class TXTBCohortQueries {
 
     cd.setCompositionString(
         "(tb-positive-result-ficha-clinica OR tb-positive-result-laboratorio) AND DENOMINATOR");
+
+    return cd;
+  }
+
+  @DocumentedDefinition(value = "get Positive Results for TB4")
+  public CohortDefinition getPositiveResultsForTXTBMontlyCascadeCohortDefinition(
+      CohortDefinition denominator, String generalParameterMapping) {
+
+    final CompositionCohortDefinition cd = new CompositionCohortDefinition();
+    this.addGeneralParameters(cd);
+    cd.setName("TxTB - Positive Results");
+
+    cd.addSearch("DENOMINATOR", EptsReportUtils.map(denominator, generalParameterMapping));
+
+    cd.addSearch(
+        "all-positive-test-results",
+        EptsReportUtils.map(
+            this.denominatorForTBMontlyCascadeQueries.getAllPositiveTestResults(),
+            generalParameterMapping));
+
+    cd.setCompositionString("DENOMINATOR AND all-positive-test-results");
 
     return cd;
   }
