@@ -424,9 +424,7 @@ public class TXTBCohortQueries {
         "iv",
         this.map(this.getTuberculosisTreatmentPlanWithinReportingDate(), generalParameterMapping));
 
-    final CohortDefinition artList = this.artList();
-    cd.addSearch("artList", this.map(artList, generalParameterMapping));
-    cd.setCompositionString("(i OR ii OR iii OR iv) AND artList");
+    cd.setCompositionString("(i OR ii OR iii OR iv)");
     this.addGeneralParameters(cd);
     return cd;
   }
@@ -608,11 +606,6 @@ public class TXTBCohortQueries {
     this.addGeneralParameters(definition);
     definition.setName("TxTB - Denominator");
     definition.addSearch(
-        "art-list",
-        EptsReportUtils.map(
-            this.genericCohortQueries.getStartedArtBeforeDate(false),
-            "onOrBefore=${endDate},location=${location}"));
-    definition.addSearch(
         "tb-screening",
         EptsReportUtils.map(this.yesOrNoInvestigationResult(), this.generalParameterMapping));
 
@@ -705,8 +698,7 @@ public class TXTBCohortQueries {
         this.map(this.getResultsOnFichaLaboratorio(), this.generalParameterMapping));
 
     definition.setCompositionString(
-        "(art-list AND "
-            + " ( tb-screening OR tb-screening-fc-master-card OR tb-investigation OR started-tb-treatment OR in-tb-program OR other-diagnosis-fichaResumo OR ficha-clinica-master-card OR all-tb-symptoms OR ficha-laboratorio-results OR ficha-adulto-and-pediatria-seguimento )) "
+        " ( tb-screening OR tb-screening-fc-master-card OR tb-investigation OR started-tb-treatment OR in-tb-program OR other-diagnosis-fichaResumo OR ficha-clinica-master-card OR all-tb-symptoms OR ficha-laboratorio-results OR ficha-adulto-and-pediatria-seguimento ) "
             + " NOT ((transferred-out NOT (started-tb-treatment OR in-tb-program)) OR started-tb-treatment-previous-period OR in-tb-program-previous-period OR other-diagnosis-FichaResumo-previousPeriod OR A-PREVIOUS-PERIOD )");
 
     return definition;
