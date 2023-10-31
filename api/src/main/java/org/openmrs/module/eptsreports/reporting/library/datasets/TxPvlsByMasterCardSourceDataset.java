@@ -63,180 +63,100 @@ public class TxPvlsByMasterCardSourceDataset extends BaseDataSet {
         EptsReportUtils.map(
             eptsCommonDimension.age(ageDimensionCohort), "effectiveDate=${endDate}"));
 
-    dataSetDefinition.addColumn(
-        "PVLSTOTAL-S2",
-        "Total patients with Viral load - Denominator (MAstercard Source)",
+    final CohortIndicator pvlsByMasterCardDenominator =
+        this.eptsGeneralIndicator.getIndicator(
+            "rotine",
+            EptsReportUtils.map(
+                pvlsBySourceCohortQueries
+                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsBySource(
+                        SourceType.MASTERCARD),
+                mappings));
+
+    addRow(
+        dataSetDefinition,
+        "DENOMINATOR-S2",
+        "Adults & Children Denominator (Mastercard Source)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
-                "patients with viral load",
+                "viral load results adults and children",
                 EptsReportUtils.map(
                     this.pvlsBySourceCohortQueries
                         .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsBySource(
                             SourceType.MASTERCARD),
                     mappings)),
             mappings),
-        "");
-
-    addRow(
-        dataSetDefinition,
-        "DR-S2",
-        "Adults & Children Denominator Routine (Mastercard Source)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "viral load results on routine adults and children",
-                EptsReportUtils.map(
-                    this.pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsRotine(
-                            SourceType.MASTERCARD),
-                    mappings)),
-            mappings),
-        getAdultChildrenColumns());
-
-    addRow(
-        dataSetDefinition,
-        "DT-S2",
-        "Adults & Children Denominator Target (Mastercard Source)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "viral load results on Target adults and children (Mastercard Source)",
-                EptsReportUtils.map(
-                    this.pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsTarget(
-                            SourceType.MASTERCARD),
-                    mappings)),
-            mappings),
         getAdultChildrenColumns());
 
     dataSetDefinition.addColumn(
-        "DPREGROTINE-S2",
-        "Pregant routine (Mastercard Source)",
+        "PREGNANT-DEN",
+        "Pregant Denominator (Mastercard Source)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
-                "Pregant routine (Mastercard Card)",
+                "Pregant (Mastercard Card)",
                 EptsReportUtils.map(
                     pvlsBySourceCohortQueries
-                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsRotine(
+                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(
                             SourceType.MASTERCARD, WomanState.PREGNANT),
                     mappings)),
             mappings),
         "");
 
     dataSetDefinition.addColumn(
-        "DPREGTARGET-S2",
-        "pregnant target (Mastercard Source)",
+        "BREASTFEEDING-DEN",
+        "Breastfeeding (Mastercard Source)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
-                "Pregant Target (Mastercard Card)",
+                "Breastfeeding denominator (Mastercaard Source)",
                 EptsReportUtils.map(
                     pvlsBySourceCohortQueries
-                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsTarget(
-                            SourceType.MASTERCARD, WomanState.PREGNANT),
-                    mappings)),
-            mappings),
-        "");
-
-    dataSetDefinition.addColumn(
-        "DBREASROTINE-S2",
-        "Breastfeeding routine (Mastercard Source)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Breastfeeding routine (Mastercaard Source)",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsRotine(
+                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(
                             SourceType.MASTERCARD, WomanState.BREASTFEEDING),
                     mappings)),
             mappings),
         "");
 
-    dataSetDefinition.addColumn(
-        "DBREASTARGET-S2",
-        "Breastfeeding Target (Mastercard Source)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Breastfeeding Target",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsTarget(
-                            SourceType.MASTERCARD, WomanState.BREASTFEEDING),
-                    mappings)),
-            mappings),
-        "");
+    //// NUMERATOR
 
-    dataSetDefinition.addColumn(
-        "NRTOTAL-S2",
-        "Total patients with Viral load - numerator (Mastercard Source)",
+    final CohortIndicator pvlsByMasterCardNumerator =
+        this.eptsGeneralIndicator.getIndicator(
+            "rotine",
+            EptsReportUtils.map(
+                pvlsBySourceCohortQueries
+                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(
+                        SourceType.MASTERCARD),
+                mappings));
+
+    addRow(
+        dataSetDefinition,
+        "NUMERATOR-S2",
+        "Adults & Children Numerator (Mastercard Source)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
-                "patients with viral load",
+                "viral load results adults and children",
                 EptsReportUtils.map(
                     this.pvlsBySourceCohortQueries
                         .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(
                             SourceType.MASTERCARD),
                     mappings)),
             mappings),
-        "");
-
-    addRow(
-        dataSetDefinition,
-        "NR-S2",
-        "Adults & Children Numerator Routine (Mastercard Source)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "viral load results on routine adults and children",
-                EptsReportUtils.map(
-                    this.pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsRotine(
-                            SourceType.MASTERCARD),
-                    mappings)),
-            mappings),
-        getAdultChildrenColumns());
-
-    addRow(
-        dataSetDefinition,
-        "NT-S2",
-        "Adults & Children Numerator target (Mastercard Source)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "viral load results on routine adults and children",
-                EptsReportUtils.map(
-                    this.pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsTarget(
-                            SourceType.MASTERCARD),
-                    mappings)),
-            mappings),
         getAdultChildrenColumns());
 
     dataSetDefinition.addColumn(
-        "NPREGROTINE-S2",
-        "Pregant routine (Mastercard Source)",
+        "PREGNANT-NUM-S2",
+        "Pregant (Mastercard Source)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Pregant routine",
                 EptsReportUtils.map(
                     pvlsBySourceCohortQueries
-                        .findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsWithVlMoreThan1000Rotine(
+                        .findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsWithVlMoreThan1000(
                             SourceType.MASTERCARD, WomanState.PREGNANT),
                     mappings)),
             mappings),
         "");
 
     dataSetDefinition.addColumn(
-        "NPREGTARGET-S2",
-        "Pregant routine (Mastercard Source)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Pregant routine",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsWithVlMoreThan1000Target(
-                            SourceType.MASTERCARD, WomanState.PREGNANT),
-                    mappings)),
-            mappings),
-        "");
-
-    dataSetDefinition.addColumn(
-        "NBREASROTINE-S2",
+        "BREASTFEEDING-NUM-S2",
         "Breastfeeding routine (Mastercard Source)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
@@ -245,80 +165,6 @@ public class TxPvlsByMasterCardSourceDataset extends BaseDataSet {
                     pvlsBySourceCohortQueries
                         .findPregnantBreatsFeedingWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsWithVlMoreThan1000Rotine(
                             SourceType.MASTERCARD, WomanState.BREASTFEEDING),
-                    mappings)),
-            mappings),
-        "");
-
-    dataSetDefinition.addColumn(
-        "NBREASTARGET-S2",
-        "Breastfeeding target (Mastercard Source)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Breastfeeding routine",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPregnantBreatsFeedingWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsWithVlMoreThan1000Target(
-                            SourceType.MASTERCARD, WomanState.BREASTFEEDING),
-                    mappings)),
-            mappings),
-        "");
-
-    // Add SubTotal Denominator
-
-    dataSetDefinition.addColumn(
-        "DRSUBTOTAL-S2",
-        "Rotine Sub Total (Mastercard Source)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Rotine Sub Total",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsRotine(
-                            SourceType.MASTERCARD),
-                    mappings)),
-            mappings),
-        "");
-
-    dataSetDefinition.addColumn(
-        "DTSUBTOTAL-S2",
-        "Target Sub Total (Mastercard Source)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Target Sub Total",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsTarget(
-                            SourceType.MASTERCARD),
-                    mappings)),
-            mappings),
-        "");
-
-    // Add SubTotal Numerator
-
-    dataSetDefinition.addColumn(
-        "NRSUBTOTAL-S2",
-        "Rotine Numerator Sub Total (Mastercard Source) ",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Rotine Numerator Sub Total",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsRotine(
-                            SourceType.MASTERCARD),
-                    mappings)),
-            mappings),
-        "");
-
-    dataSetDefinition.addColumn(
-        "NTSUBTOTAL-S2",
-        "Target Numerator Sub Total (Mastercard Source)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Target Numerator Sub Total",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsTarget(
-                            SourceType.MASTERCARD),
                     mappings)),
             mappings),
         "");
@@ -343,138 +189,102 @@ public class TxPvlsByMasterCardSourceDataset extends BaseDataSet {
 
     // Key population collumn denominator
 
-    final CohortIndicator rotineDenominator =
-        this.eptsGeneralIndicator.getIndicator(
-            "rotine",
-            EptsReportUtils.map(
-                pvlsBySourceCohortQueries
-                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsRotine(
-                        SourceType.MASTERCARD),
-                mappings));
-
-    final CohortIndicator targetDenominator =
-        this.eptsGeneralIndicator.getIndicator(
-            "target",
-            EptsReportUtils.map(
-                pvlsBySourceCohortQueries
-                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsTarget(
-                        SourceType.MASTERCARD),
-                mappings));
-
     dataSetDefinition.addColumn(
         "DRMSM-S2",
         "Homosexual (MasterCard Source)",
-        EptsReportUtils.map(rotineDenominator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "DTMSM-S2",
         "Homosexual (Mastercard Source)",
-        EptsReportUtils.map(targetDenominator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "DRPWID-S2",
         "Drugs User (Mastercard Source) ",
-        EptsReportUtils.map(rotineDenominator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "drug-user=drug-user");
 
     dataSetDefinition.addColumn(
         "DTPWID-S2",
         "Drugs User (Mastercard Source)",
-        EptsReportUtils.map(targetDenominator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "drug-user=drug-user");
 
     dataSetDefinition.addColumn(
         "DRPRI-S2",
         "Prisioners (Mastercard Source)",
-        EptsReportUtils.map(rotineDenominator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "prisioner=prisioner");
 
     dataSetDefinition.addColumn(
         "DTPRI-S2",
         "Prisioners (Mastercard Source)",
-        EptsReportUtils.map(targetDenominator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "prisioner=prisioner");
 
     dataSetDefinition.addColumn(
         "DRFSW-S2",
         "Sex Worker (Mastercard Source)",
-        EptsReportUtils.map(rotineDenominator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "gender=F|sex-worker=sex-worker");
 
     dataSetDefinition.addColumn(
         "DTFSW-S2",
         "Sex Worker (Mastercard Source)",
-        EptsReportUtils.map(targetDenominator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "gender=F|sex-worker=sex-worker");
 
     // Key population collumn Numerator
 
-    final CohortIndicator rotineNumerator =
-        this.eptsGeneralIndicator.getIndicator(
-            "rotine",
-            EptsReportUtils.map(
-                pvlsBySourceCohortQueries
-                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsRotine(
-                        SourceType.MASTERCARD),
-                mappings));
-
-    final CohortIndicator targetNumerator =
-        this.eptsGeneralIndicator.getIndicator(
-            "target",
-            EptsReportUtils.map(
-                pvlsBySourceCohortQueries
-                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsTarget(
-                        SourceType.MASTERCARD),
-                mappings));
-
     dataSetDefinition.addColumn(
         "NRPWID-S2",
         "Drugs User (Mastercard Source)",
-        EptsReportUtils.map(rotineNumerator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "drug-user=drug-user");
 
     dataSetDefinition.addColumn(
         "NTPWID-S2",
         "Drugs User (Mastercard Source)",
-        EptsReportUtils.map(targetNumerator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "drug-user=drug-user");
 
     dataSetDefinition.addColumn(
         "NRMSM-S2",
         "Homosexual (Mastercard Source)",
-        EptsReportUtils.map(rotineNumerator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "NTMSM-S2",
         "Homosexual (Mastercard Source)",
-        EptsReportUtils.map(targetNumerator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "NRFSW-S2",
         "Sex Worker (Mastercard Source)",
-        EptsReportUtils.map(rotineNumerator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "gender=F|sex-worker=sex-worker");
 
     dataSetDefinition.addColumn(
         "NTFSW-S2",
         "Sex Worker (Mastercard Source)",
-        EptsReportUtils.map(targetNumerator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "gender=F|sex-worker=sex-worker");
 
     dataSetDefinition.addColumn(
         "NRPRI-S2",
         "Prisioners (Mastercard Source)",
-        EptsReportUtils.map(rotineNumerator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "prisioner=prisioner");
 
     dataSetDefinition.addColumn(
         "NTPRI-S2",
         "Prisioners (Mastercard Source)",
-        EptsReportUtils.map(targetNumerator, mappings),
+        EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "prisioner=prisioner");
 
     return dataSetDefinition;
