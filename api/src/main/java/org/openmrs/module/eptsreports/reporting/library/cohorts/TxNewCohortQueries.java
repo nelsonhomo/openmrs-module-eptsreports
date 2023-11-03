@@ -24,6 +24,7 @@ import org.openmrs.module.eptsreports.reporting.library.queries.PregnantQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TxNewQueries;
 import org.openmrs.module.eptsreports.reporting.utils.AgeRange;
+import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.BaseObsCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -46,6 +47,15 @@ public class TxNewCohortQueries {
   @Autowired private GenericCohortQueries genericCohorts;
 
   @Autowired private BreastFeedingCohortQueries breastFeedingCohortQueries;
+
+  private static final String FIND_PATIENTS_WHO_ARE_NEWLY_ENROLLED_ON_ART =
+      "TX_NEW/PATIENTS_WHO_ARE_NEWLY_ENROLLED_ON_ART.sql";
+
+  private static final String FIND_PATIENTS_WITH_CD4_LESS_THAN_200 =
+      "TX_NEW/PATIENTS_WITH_CD4_LESS_THAN_200.sql";
+
+  private static final String FIND_PATIENTS_WITH_CD4_GREATER_OR_EQUAL_200 =
+      "TX_NEW/PATIENTS_WITH_CD4_GREATER_OR_EQUAL_200.sql";
 
   /**
    * PATIENTS WITH UPDATED DATE OF DEPARTURE IN THE ART SERVICE Are patients with date of delivery
@@ -123,7 +133,7 @@ public class TxNewCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "findPatientsWhoAreNewlyEnrolledOnART",
-                TxNewQueries.QUERY.findPatientsWhoAreNewlyEnrolledOnART),
+                EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_NEWLY_ENROLLED_ON_ART)),
             mappings));
 
     txNewCompositionCohort.addSearch(
@@ -145,6 +155,114 @@ public class TxNewCohortQueries {
 
     txNewCompositionCohort.setCompositionString(
         "START-ART NOT (TRANSFERED-IN OR TRANSFERED-IN-AND-IN-ART-MASTER-CARD)");
+
+    return txNewCompositionCohort;
+  }
+
+  public CohortDefinition findPatientsWithCD4LessThan200() {
+    final CompositionCohortDefinition txNewCompositionCohort = new CompositionCohortDefinition();
+
+    txNewCompositionCohort.setName("CD4 LESS THAN 200");
+    txNewCompositionCohort.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    txNewCompositionCohort.addParameter(new Parameter("endDate", "End Date", Date.class));
+    txNewCompositionCohort.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    txNewCompositionCohort.addSearch(
+        "CD4-LESS-200",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findPatientsWithCD4LessThan200",
+                EptsQuerysUtils.loadQuery(FIND_PATIENTS_WITH_CD4_LESS_THAN_200)),
+            mappings));
+
+    txNewCompositionCohort.addSearch(
+        "TRANSFERED-IN",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findPatientsWithAProgramStateMarkedAsTransferedInInAPeriod",
+                TxNewQueries.QUERY.findPatientsWithAProgramStateMarkedAsTransferedInInAPeriod),
+            mappings));
+
+    txNewCompositionCohort.addSearch(
+        "TRANSFERED-IN-AND-IN-ART-MASTER-CARD",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCard",
+                TxNewQueries.QUERY
+                    .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCard),
+            mappings));
+
+    txNewCompositionCohort.setCompositionString(
+        "CD4-LESS-200 NOT (TRANSFERED-IN OR TRANSFERED-IN-AND-IN-ART-MASTER-CARD)");
+
+    return txNewCompositionCohort;
+  }
+
+  public CohortDefinition findPatientsWIthCD4GreaterOrEqual200() {
+    final CompositionCohortDefinition txNewCompositionCohort = new CompositionCohortDefinition();
+
+    txNewCompositionCohort.setName("CD4 GREATER OR EQUAL 200");
+    txNewCompositionCohort.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    txNewCompositionCohort.addParameter(new Parameter("endDate", "End Date", Date.class));
+    txNewCompositionCohort.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    txNewCompositionCohort.addSearch(
+        "CD4-GREATER-OR-EQUAL-200",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findPatientsWithCD4LessThan200",
+                EptsQuerysUtils.loadQuery(FIND_PATIENTS_WITH_CD4_GREATER_OR_EQUAL_200)),
+            mappings));
+
+    txNewCompositionCohort.addSearch(
+        "TRANSFERED-IN",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findPatientsWithAProgramStateMarkedAsTransferedInInAPeriod",
+                TxNewQueries.QUERY.findPatientsWithAProgramStateMarkedAsTransferedInInAPeriod),
+            mappings));
+
+    txNewCompositionCohort.addSearch(
+        "TRANSFERED-IN-AND-IN-ART-MASTER-CARD",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCard",
+                TxNewQueries.QUERY
+                    .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCard),
+            mappings));
+
+    txNewCompositionCohort.setCompositionString(
+        "CD4-GREATER-OR-EQUAL-200 NOT (TRANSFERED-IN OR TRANSFERED-IN-AND-IN-ART-MASTER-CARD)");
+
+    return txNewCompositionCohort;
+  }
+
+  public CohortDefinition findPatientsWithUnknownCD4() {
+    final CompositionCohortDefinition txNewCompositionCohort = new CompositionCohortDefinition();
+
+    txNewCompositionCohort.setName("CD4 GREATER OR EQUAL 200");
+    txNewCompositionCohort.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    txNewCompositionCohort.addParameter(new Parameter("endDate", "End Date", Date.class));
+    txNewCompositionCohort.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    txNewCompositionCohort.addSearch(
+        "START-ART", EptsReportUtils.map(this.getTxNewCompositionCohort("TX_NEW"), mappings));
+
+    txNewCompositionCohort.addSearch(
+        "CD4-LESS-200", EptsReportUtils.map(this.findPatientsWithCD4LessThan200(), mappings));
+
+    txNewCompositionCohort.addSearch(
+        "CD4-GREATER-OR-EQUAL-200",
+        EptsReportUtils.map(this.findPatientsWIthCD4GreaterOrEqual200(), mappings));
+
+    txNewCompositionCohort.setCompositionString(
+        "START-ART NOT (CD4-LESS-200 OR CD4-GREATER-OR-EQUAL-200)");
 
     return txNewCompositionCohort;
   }
