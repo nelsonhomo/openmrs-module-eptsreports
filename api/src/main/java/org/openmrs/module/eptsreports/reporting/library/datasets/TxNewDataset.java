@@ -30,12 +30,10 @@ import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.THIRTY_TO_
 import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.TWENTY_FIVE_TO_TWENTY_NINE;
 import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.TWENTY_TO_TWENTY_FOUR;
 import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.UNDER_ONE;
-import static org.openmrs.module.eptsreports.reporting.utils.AgeRange.UNKNOWN;
 
 import java.util.Arrays;
 import java.util.List;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.TxNewCohortQueries;
-import org.openmrs.module.eptsreports.reporting.library.dimensions.AgeDimensionCohortInterface;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.EptsCommonDimension;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.KeyPopulationDimension;
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
@@ -47,7 +45,6 @@ import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDef
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
 import org.openmrs.module.reporting.indicator.CohortIndicator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -58,10 +55,6 @@ public class TxNewDataset extends BaseDataSet {
   @Autowired private EptsCommonDimension eptsCommonDimension;
 
   @Autowired private EptsGeneralIndicator eptsGeneralIndicator;
-
-  @Autowired
-  @Qualifier("txNewAgeDimensionCohort")
-  private AgeDimensionCohortInterface ageDimensionCohort;
 
   @Autowired private KeyPopulationDimension keyPopulationDimension;
 
@@ -114,7 +107,7 @@ public class TxNewDataset extends BaseDataSet {
     this.addDimensions(
         dataSetDefinition,
         mappings,
-        Arrays.asList("N", "LCD4", "GCD4", "UCD4"),
+        Arrays.asList("LCD4", "GCD4", "UCD4"),
         UNDER_ONE,
         ONE_TO_FOUR,
         FIVE_TO_NINE,
@@ -134,8 +127,7 @@ public class TxNewDataset extends BaseDataSet {
 
     dataSetDefinition.addDimension("gender", EptsReportUtils.map(eptsCommonDimension.gender(), ""));
 
-    addAGenderDimensionForUnkwonAgeDimension(
-        dataSetDefinition, Arrays.asList("N", "LCD4", "GCD4", "UCD4"));
+    this.addAGenderDimensionForUnkwonAgeDimension(dataSetDefinition);
 
     dataSetDefinition.addDimension(
         "homosexual",
@@ -245,13 +237,53 @@ public class TxNewDataset extends BaseDataSet {
         SIXTY_TO_SIXTY_FOUR,
         ABOVE_SIXTY_FIVE);
 
-    this.addColums(dataSetDefinition, "", "N", patientEnrolledInHIVStartedARTIndicator, UNKNOWN);
+    dataSetDefinition.addColumn(
+        "LCD4-males-unknownM",
+        "CD4 < 200 for Unknown Age - Male",
+        EptsReportUtils.map(patientWithLessCD4Indicator, mappings),
+        this.getDimensionNameForUnkwonAge(Gender.MALE, AgeRange.UNKNOWN)
+            + "="
+            + this.getDimensionNameForUnkwonAge(Gender.MALE, AgeRange.UNKNOWN));
 
-    this.addColums(dataSetDefinition, "", "LCD4", patientWithLessCD4Indicator, UNKNOWN);
+    dataSetDefinition.addColumn(
+        "LCD4-females-unknownF",
+        "CD4 < 200 for Unknown Age - Female",
+        EptsReportUtils.map(patientWithLessCD4Indicator, mappings),
+        this.getDimensionNameForUnkwonAge(Gender.FEMALE, AgeRange.UNKNOWN)
+            + "="
+            + this.getDimensionNameForUnkwonAge(Gender.FEMALE, AgeRange.UNKNOWN));
 
-    this.addColums(dataSetDefinition, "", "GCD4", patientWithGreaterCD4DIndicatior, UNKNOWN);
+    dataSetDefinition.addColumn(
+        "GCD4-males-unknownM",
+        "CD4 >= 200 for Unknown Age - Male",
+        EptsReportUtils.map(patientWithGreaterCD4DIndicatior, mappings),
+        this.getDimensionNameForUnkwonAge(Gender.MALE, AgeRange.UNKNOWN)
+            + "="
+            + this.getDimensionNameForUnkwonAge(Gender.MALE, AgeRange.UNKNOWN));
 
-    this.addColums(dataSetDefinition, "", "UCD4", patientsWithUnknownCD4Indicator, UNKNOWN);
+    dataSetDefinition.addColumn(
+        "GCD4-females-unknownF",
+        "CD4 >=200 for Unknown Age - Male",
+        EptsReportUtils.map(patientWithGreaterCD4DIndicatior, mappings),
+        this.getDimensionNameForUnkwonAge(Gender.FEMALE, AgeRange.UNKNOWN)
+            + "="
+            + this.getDimensionNameForUnkwonAge(Gender.FEMALE, AgeRange.UNKNOWN));
+
+    dataSetDefinition.addColumn(
+        "UCD4-males-unknownM",
+        "Unknown CD4 value for Unknown Age - Male",
+        EptsReportUtils.map(patientsWithUnknownCD4Indicator, mappings),
+        this.getDimensionNameForUnkwonAge(Gender.MALE, AgeRange.UNKNOWN)
+            + "="
+            + this.getDimensionNameForUnkwonAge(Gender.MALE, AgeRange.UNKNOWN));
+
+    dataSetDefinition.addColumn(
+        "UCD4-females-unknownF",
+        "Unknown CD4 value for Unknown Age - Female",
+        EptsReportUtils.map(patientsWithUnknownCD4Indicator, mappings),
+        this.getDimensionNameForUnkwonAge(Gender.FEMALE, AgeRange.UNKNOWN)
+            + "="
+            + this.getDimensionNameForUnkwonAge(Gender.FEMALE, AgeRange.UNKNOWN));
 
     dataSetDefinition.addColumn(
         "N-MSM",
@@ -281,24 +313,20 @@ public class TxNewDataset extends BaseDataSet {
   }
 
   private void addAGenderDimensionForUnkwonAgeDimension(
-      CohortIndicatorDataSetDefinition dataSetDefinition, List<String> columnPrefixs) {
+      CohortIndicatorDataSetDefinition dataSetDefinition) {
+    dataSetDefinition.addDimension(
+        this.getDimensionNameForUnkwonAge(Gender.MALE, AgeRange.UNKNOWN),
+        EptsReportUtils.map(
+            this.eptsCommonDimension.findPatientsWithUnknownAgeByGender(
+                this.getDimensionNameForUnkwonAge(Gender.MALE, AgeRange.UNKNOWN), Gender.MALE),
+            ""));
 
-    for (String columnPrefix : columnPrefixs) {
-
-      dataSetDefinition.addDimension(
-          this.getColumnName(columnPrefix, AgeRange.UNKNOWN, Gender.MALE),
-          EptsReportUtils.map(
-              this.eptsCommonDimension.findPatientsWithUnknownAgeByGender(
-                  this.getColumnName(columnPrefix, AgeRange.UNKNOWN, Gender.MALE), Gender.MALE),
-              ""));
-
-      dataSetDefinition.addDimension(
-          this.getColumnName(columnPrefix, AgeRange.UNKNOWN, Gender.FEMALE),
-          EptsReportUtils.map(
-              this.eptsCommonDimension.findPatientsWithUnknownAgeByGender(
-                  this.getColumnName(columnPrefix, AgeRange.UNKNOWN, Gender.FEMALE), Gender.FEMALE),
-              ""));
-    }
+    dataSetDefinition.addDimension(
+        this.getDimensionNameForUnkwonAge(Gender.FEMALE, AgeRange.UNKNOWN),
+        EptsReportUtils.map(
+            this.eptsCommonDimension.findPatientsWithUnknownAgeByGender(
+                this.getDimensionNameForUnkwonAge(Gender.FEMALE, AgeRange.UNKNOWN), Gender.FEMALE),
+            ""));
   }
 
   private void addColums(
@@ -325,6 +353,15 @@ public class TxNewDataset extends BaseDataSet {
           EptsReportUtils.map(cohortIndicator, mappings),
           femaleName + "=" + femaleName);
     }
+  }
+
+  private String getDimensionNameForUnkwonAge(final Gender gender, final AgeRange ageRange) {
+    String name = "DM-males-" + ageRange.getName() + "" + gender.getName();
+
+    if (gender.equals(Gender.FEMALE)) {
+      name = "DM-females-" + ageRange.getName() + "" + gender.getName();
+    }
+    return name;
   }
 
   private void addDimensions(
