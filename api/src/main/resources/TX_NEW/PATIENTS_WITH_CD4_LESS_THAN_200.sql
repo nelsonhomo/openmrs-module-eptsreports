@@ -132,7 +132,7 @@ from
 					from patient p
 						inner join encounter e on e.patient_id = p.patient_id
 					   	inner join obs lastCD4 on lastCD4.encounter_id = e.encounter_id
-					where p.voided is false and e.voided is false and lastCD4.voided is false and e.encounter_type = 53
+					where p.voided is false and e.voided is false and lastCD4.voided is false and e.encounter_type = 53 and e.location_id=:location 
 						and lastCD4.concept_id = 1695 and lastCD4.value_numeric <200 and lastCD4.obs_datetime <= :endDate
 					   	group by p.patient_id						
 					
@@ -143,7 +143,7 @@ from
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4ArtStart on cd4ArtStart.encounter_id = e.encounter_id
 					   inner join obs artStartDate on artStartDate.encounter_id = e.encounter_id
-					where p.voided is false and e.voided is false and cd4ArtStart.voided is false and artStartDate.voided is false and e.encounter_type = 53
+					where p.voided is false and e.voided is false and cd4ArtStart.voided is false and artStartDate.voided is false and e.encounter_type = 53 and e.location_id=:location 
 					   and cd4ArtStart.concept_id = 23896 and cd4ArtStart.value_numeric <200 and artStartDate.concept_id = 1190 and artStartDate.value_datetime <= :endDate
 					   group by p.patient_id
 					
@@ -153,7 +153,7 @@ from
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
-					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 6
+					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 6 and e.location_id=:location 
 					   and cd4.concept_id = 1695 and cd4.value_numeric <200 and e.encounter_datetime <= :endDate
 					   group by p.patient_id
 					
@@ -163,7 +163,7 @@ from
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
-					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 13
+					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 13 and e.location_id=:location 
 					   and cd4.concept_id = 1695 and cd4.value_numeric <200 and e.encounter_datetime <= :endDate
 					   group by p.patient_id
 					
@@ -173,7 +173,7 @@ from
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
-					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 51
+					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 51 and e.location_id=:location 
 					   and cd4.concept_id = 1695 and cd4.value_numeric <200 and e.encounter_datetime <= :endDate
 					   group by p.patient_id
 		      	) first_cd4 group by first_cd4.patient_id
@@ -186,7 +186,7 @@ from
 					from patient p
 						inner join encounter e on e.patient_id = p.patient_id
 					   	inner join obs lastCD4 on lastCD4.encounter_id = e.encounter_id
-					where p.voided is false and e.voided is false and lastCD4.voided is false and e.encounter_type = 53
+					where p.voided is false and e.voided is false and lastCD4.voided is false and e.encounter_type = 53 and e.location_id=:location 
 						and lastCD4.concept_id = 1695 and lastCD4.value_numeric >= 200 and lastCD4.obs_datetime <= :endDate
 					   	group by p.patient_id						
 					
@@ -197,7 +197,7 @@ from
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4ArtStart on cd4ArtStart.encounter_id = e.encounter_id
 					   inner join obs artStartDate on artStartDate.encounter_id = e.encounter_id
-					where p.voided is false and e.voided is false and cd4ArtStart.voided is false and artStartDate.voided is false and e.encounter_type = 53
+					where p.voided is false and e.voided is false and cd4ArtStart.voided is false and artStartDate.voided is false and e.encounter_type = 53 and e.location_id=:location 
 					   and cd4ArtStart.concept_id = 23896 and cd4ArtStart.value_numeric >=200 and artStartDate.concept_id = 1190 and artStartDate.value_datetime <= :endDate
 					   group by p.patient_id
 					
@@ -207,7 +207,7 @@ from
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
-					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 6
+					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 6 and e.location_id=:location 
 					   and cd4.concept_id = 1695 and cd4.value_numeric >=200 and e.encounter_datetime <= :endDate
 					   group by p.patient_id
 					
@@ -217,7 +217,7 @@ from
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
-					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 13
+					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 13 and e.location_id=:location 
 					   and cd4.concept_id = 1695 and cd4.value_numeric >=200 and e.encounter_datetime <= :endDate
 					   group by p.patient_id
 					
@@ -227,7 +227,7 @@ from
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
-					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 51
+					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 51  and e.location_id=:location
 					   and cd4.concept_id = 1695 and cd4.value_numeric >=200 and e.encounter_datetime <= :endDate
 					   group by p.patient_id
 		      	) first_cd4 group by first_cd4.patient_id
