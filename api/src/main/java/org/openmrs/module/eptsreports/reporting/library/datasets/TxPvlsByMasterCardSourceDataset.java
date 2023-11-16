@@ -14,7 +14,6 @@ package org.openmrs.module.eptsreports.reporting.library.datasets;
 import java.util.Arrays;
 import java.util.List;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.PvlsBySourceCohortQueries;
-import org.openmrs.module.eptsreports.reporting.library.datasets.BaseDataSet.ColumnParameters;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.AgeDimensionCohortInterface;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.EptsCommonDimension;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.KeyPopulationDimension;
@@ -74,7 +73,7 @@ public class TxPvlsByMasterCardSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "PVLS2-DEN-TOTAL",
-        "Pregant Denominator (Mastercard Source)",
+        "Total PVLS by source denominator (Mastercard Source)",
         EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "");
 
@@ -95,7 +94,7 @@ public class TxPvlsByMasterCardSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "PREGNANT2-DEN",
-        "Pregant Denominator (Mastercard Source)",
+        "PVLS by source denominator - Pregnant Patients (Mastercard Source)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Pregant (Mastercard Card)",
@@ -109,10 +108,10 @@ public class TxPvlsByMasterCardSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "BREASTFEEDING2-DEN",
-        "Breastfeeding (Mastercard Source)",
+        "PVLS by source denominator - Breastfeeding Patients (Mastercard Source)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
-                "Breastfeeding denominator (Mastercaard Source)",
+                "PVLS by source denominator - Breastfeeding Patients (Mastercard Source)",
                 EptsReportUtils.map(
                     pvlsBySourceCohortQueries
                         .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(
@@ -134,7 +133,7 @@ public class TxPvlsByMasterCardSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "PVLS2-NUM-TOTAL",
-        "Pregant Denominator (Mastercard Source)",
+        "Total PVLS by source numerator (Mastercard Source)",
         EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "");
 
@@ -155,7 +154,7 @@ public class TxPvlsByMasterCardSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "PREGNANT2-NUM",
-        "Pregant (Mastercard Source)",
+        "PVLS by source numerator - Pregnant Patients (Mastercard Source)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Pregant routine",
@@ -169,7 +168,7 @@ public class TxPvlsByMasterCardSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "BREASTFEEDING2-NUM",
-        "Breastfeeding routine (Mastercard Source)",
+        "PVLS by source numerator - Breastfeeding Patients (Mastercard Source)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Breastfeeding routine",
@@ -203,25 +202,25 @@ public class TxPvlsByMasterCardSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "DMSM",
-        "Homosexual (MasterCard Source)",
+        "Denominator - Homosexual (MasterCard Source)",
         EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "DPWID",
-        "Drugs User (Mastercard Source) ",
+        "Denominator - Drugs User (Mastercard Source) ",
         EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "drug-user=drug-user");
 
     dataSetDefinition.addColumn(
         "DPRI",
-        "Prisioners (Mastercard Source)",
+        "Denominator - Prisioners (Mastercard Source)",
         EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "prisioner=prisioner");
 
     dataSetDefinition.addColumn(
         "DFSW",
-        "Sex Worker (Mastercard Source)",
+        "Denominator - Sex Worker (Mastercard Source)",
         EptsReportUtils.map(pvlsByMasterCardDenominator, mappings),
         "gender=F|sex-worker=sex-worker");
 
@@ -229,25 +228,25 @@ public class TxPvlsByMasterCardSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "NPWID",
-        "Drugs User (Mastercard Source)",
+        "Numerator - Drugs User (Mastercard Source)",
         EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "drug-user=drug-user");
 
     dataSetDefinition.addColumn(
         "NMSM",
-        "Homosexual (Mastercard Source)",
+        "Numerator - Homosexual (Mastercard Source)",
         EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "NFSW",
-        "Sex Worker (Mastercard Source)",
+        "Numerator - Sex Worker (Mastercard Source)",
         EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "gender=F|sex-worker=sex-worker");
 
     dataSetDefinition.addColumn(
         "NPRI",
-        "Prisioners (Mastercard Source)",
+        "Numerator - Prisioners (Mastercard Source)",
         EptsReportUtils.map(pvlsByMasterCardNumerator, mappings),
         "prisioner=prisioner");
 

@@ -72,7 +72,7 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "PVLS-DEN-TOTAL",
-        "Pregant denominator (Laboratory and FSR Sources)",
+        "Total PVLS by source denominator (Laboratory and FSR Sources)",
         EptsReportUtils.map(pvlsBySourceDenominator, mappings),
         "");
 
@@ -85,7 +85,7 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "PREGNANT-DEN",
-        "Pregant denominator (Laboratory and FSR Sources)",
+        "PVLS by source denominator - Pregnant Patients (Laboratory and FSR Sources)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Pregant Denominator",
@@ -99,7 +99,7 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "BREASTFEEDING-DEN",
-        "Breastfeeding denominator (Laboratory and FSR Sources)",
+        "PVLS by source denominator - Breastfeeding Patients (Laboratory and FSR Sources)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Breastfeeding denominator (Laboratory and FSR Sources)",
@@ -122,7 +122,7 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "PVLS-NUM-TOTAL",
-        "Pregant denominator (Laboratory and FSR Sources)",
+        "Total PVLS by source numerator (Laboratory and FSR Sources)",
         EptsReportUtils.map(pvlsBySourceNumerator, mappings),
         "");
 
@@ -135,7 +135,7 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "PREGNANT-NUM",
-        "Pregant numerator (Laboratory and FSR Sources)",
+        "PVLS by source numerator - Pregnant Patients (Laboratory and FSR Sources)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Pregant routine (Laboratory and FSR Sources)",
@@ -149,7 +149,7 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "BREASTFEEDING-NUM",
-        "Breastfeeding numerator (Laboratory and FSR Sources)",
+        "PVLS by source numerator - Breastfeeding Patients (Laboratory and FSR Sources)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Breastfeeding numerator (Laboratory and FSR Sources)",
@@ -182,25 +182,25 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
     // Key population collumn denominator
     dataSetDefinition.addColumn(
         "DMSM-S1",
-        "Homosexual (Laboratory and FSR Sources)",
+        "Denominator - Homosexual (Laboratory and FSR Sources)",
         EptsReportUtils.map(pvlsBySourceDenominator, mappings),
         "gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "DPWID-S1",
-        "Drugs User (Laboratory and FSR Sources)",
+        "Denominator -Drugs User (Laboratory and FSR Sources)",
         EptsReportUtils.map(pvlsBySourceDenominator, mappings),
         "drug-user=drug-user");
 
     dataSetDefinition.addColumn(
         "DPRI-S1",
-        "Prisioners (Laboratory and FSR Sources)",
+        "Denominator - Prisioners (Laboratory and FSR Sources)",
         EptsReportUtils.map(pvlsBySourceDenominator, mappings),
         "prisioner=prisioner");
 
     dataSetDefinition.addColumn(
         "DFSW-S1",
-        "Sex Worker (Laboratory and FSR Sources)",
+        "Denominator - Sex Worker (Laboratory and FSR Sources)",
         EptsReportUtils.map(pvlsBySourceDenominator, mappings),
         "gender=F|sex-worker=sex-worker");
 
@@ -208,25 +208,25 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "NPWID-S1",
-        "Drugs User (Laboratory and FSR Sources)",
+        "Numerator - Drugs User (Laboratory and FSR Sources)",
         EptsReportUtils.map(pvlsBySourceNumerator, mappings),
         "drug-user=drug-user");
 
     dataSetDefinition.addColumn(
         "NMSM-S1",
-        "Homosexual (Laboratory and FSR Sources)",
+        "Numerator - Homosexual (Laboratory and FSR Sources)",
         EptsReportUtils.map(pvlsBySourceNumerator, mappings),
         "gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "NFSW-S1",
-        "Sex Worker (Laboratory and FSR Sources)",
+        "Numerator - Sex Worker (Laboratory and FSR Sources)",
         EptsReportUtils.map(pvlsBySourceNumerator, mappings),
         "gender=F|sex-worker=sex-worker");
 
     dataSetDefinition.addColumn(
         "NPRI-S1",
-        "Prisioners (Laboratory and FSR Sources)",
+        "Numerator - Prisioners (Laboratory and FSR Sources)",
         EptsReportUtils.map(pvlsBySourceNumerator, mappings),
         "prisioner=prisioner");
 
