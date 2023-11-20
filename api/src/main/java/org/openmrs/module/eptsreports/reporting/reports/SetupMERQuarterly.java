@@ -99,9 +99,9 @@ public class SetupMERQuarterly extends EptsDataExportManager {
     reportDefinition.addDataSetDefinition(
         "C", Mapped.mapStraightThrough(this.txCurrDataset.constructTxCurrDataset(true)));
 
-    // reportDefinition.addDataSetDefinition(
-    // "P", Mapped.mapStraightThrough(this.txPvlsDataset.constructTxPvlsDatset()));
-    //
+    reportDefinition.addDataSetDefinition(
+        "P", Mapped.mapStraightThrough(this.txPvlsDataset.constructTxPvlsDatset()));
+
     reportDefinition.addDataSetDefinition(
         "ML", Mapped.mapStraightThrough(this.txMlDataset.constructtxMlDataset()));
 
