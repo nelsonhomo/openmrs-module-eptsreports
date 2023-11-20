@@ -95,7 +95,7 @@ select patient_id
                         where pat.uuid='c89c90eb-5b03-4899-ab9f-06fecd123511' and pa.value is not null and pa.value<>''                                             
                                 and pa.voided=0 and date(pa.date_created)<=:endDate                                                                                     
                     )                                                                                                                                               
-                allkpsource                                                                                                                                         
+                allkpsource where value_coded is not null                                                                                                                                         
     order by patient_id, obs_datetime desc, ordemSource,ordemKp                                                                                     
            )                                                                                                                                                    
         allkpsorcetakefirst group by patient_id                                                                                                                 
