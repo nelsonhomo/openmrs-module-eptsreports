@@ -235,8 +235,11 @@ public class TxNewCohortQueries {
                     .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCard),
             mappings));
 
+    txNewCompositionCohort.addSearch(
+        "CD4-LESS-200", EptsReportUtils.map(this.findPatientsWithCD4LessThan200(), mappings));
+
     txNewCompositionCohort.setCompositionString(
-        "CD4-GREATER-OR-EQUAL-200 NOT (TRANSFERED-IN OR TRANSFERED-IN-AND-IN-ART-MASTER-CARD)");
+        "CD4-GREATER-OR-EQUAL-200 NOT (CD4-LESS-200 OR TRANSFERED-IN OR TRANSFERED-IN-AND-IN-ART-MASTER-CARD)");
 
     return txNewCompositionCohort;
   }

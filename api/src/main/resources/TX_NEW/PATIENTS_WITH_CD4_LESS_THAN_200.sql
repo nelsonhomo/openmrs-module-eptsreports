@@ -1,6 +1,9 @@
-select tx_new.patient_id 
-from 
-(
+select patient_id
+from (
+		select tx_new.patient_id, min(tx_new.data_cd4)
+		from (
+		select tx_new.patient_id, tx_new.art_start_date,first_cd4.data_cd4  from  
+		(
 		select tx_new.patient_id, tx_new.art_start_date  from  
 		(
 		      select tx_new.patient_id, tx_new.art_start_date from 
@@ -121,121 +124,113 @@ from
 		            ) tx_new_period_anterior on tx_new.patient_id = tx_new_period_anterior.patient_id
 		             where tx_new_period_anterior.patient_id is null
 		            ) tx_new
+		      )tx_new
+				inner join person pe on pe.person_id = tx_new.patient_id
+				where (pe.birthdate is not null and floor(datediff(tx_new.art_start_date,pe.birthdate )/365) >= 5) or pe.birthdate is  null
 		) tx_new
 		inner join
 		(     
 			select first_cd4.patient_id, first_cd4.data_cd4
 		     from (
-		      	select first_cd4.patient_id, min(first_cd4.data_cd4) data_cd4
+		      	select first_cd4.patient_id, first_cd4.data_cd4 data_cd4
 		      	from( 
-					select p.patient_id, min(lastCD4.obs_datetime) data_cd4
+					select p.patient_id, lastCD4.obs_datetime data_cd4
 					from patient p
 						inner join encounter e on e.patient_id = p.patient_id
 					   	inner join obs lastCD4 on lastCD4.encounter_id = e.encounter_id
 					where p.voided is false and e.voided is false and lastCD4.voided is false and e.encounter_type = 53 and e.location_id=:location 
 						and lastCD4.concept_id = 1695 and lastCD4.value_numeric <200 and lastCD4.obs_datetime <= :endDate
-					   	group by p.patient_id						
 					
 					union
 					
-					select p.patient_id, min(artStartDate.value_datetime) data_cd4
+					select p.patient_id, artStartDate.value_datetime data_cd4
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4ArtStart on cd4ArtStart.encounter_id = e.encounter_id
 					   inner join obs artStartDate on artStartDate.encounter_id = e.encounter_id
 					where p.voided is false and e.voided is false and cd4ArtStart.voided is false and artStartDate.voided is false and e.encounter_type = 53 and e.location_id=:location 
 					   and cd4ArtStart.concept_id = 23896 and cd4ArtStart.value_numeric <200 and artStartDate.concept_id = 1190 and artStartDate.value_datetime <= :endDate
-					   group by p.patient_id
 					
 					union
 					
-					select p.patient_id, min(e.encounter_datetime) data_cd4
+					select p.patient_id, e.encounter_datetime data_cd4
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
 					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 6 and e.location_id=:location 
 					   and cd4.concept_id = 1695 and cd4.value_numeric <200 and e.encounter_datetime <= :endDate
-					   group by p.patient_id
 					
 					union
 					
-					select p.patient_id, min(e.encounter_datetime) data_cd4
+					select p.patient_id, e.encounter_datetime data_cd4
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
 					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 13 and e.location_id=:location 
 					   and cd4.concept_id = 1695 and cd4.value_numeric <200 and e.encounter_datetime <= :endDate
-					   group by p.patient_id
-					
+					 
 					union
 					
-					select p.patient_id, min(e.encounter_datetime) data_cd4
+					select p.patient_id, e.encounter_datetime data_cd4
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
 					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 51 and e.location_id=:location 
 					   and cd4.concept_id = 1695 and cd4.value_numeric <200 and e.encounter_datetime <= :endDate
-					   group by p.patient_id
-		      	) first_cd4 group by first_cd4.patient_id
+		      	) first_cd4 
 		      ) first_cd4
 		      left join
 		      ( 
-		      	select first_cd4.patient_id, min(first_cd4.data_cd4) data_cd4
+		      	select first_cd4.patient_id, first_cd4.data_cd4 data_cd4
 		      	from( 
-					select p.patient_id, min(lastCD4.obs_datetime) data_cd4
+					select p.patient_id, lastCD4.obs_datetime data_cd4
 					from patient p
 						inner join encounter e on e.patient_id = p.patient_id
 					   	inner join obs lastCD4 on lastCD4.encounter_id = e.encounter_id
 					where p.voided is false and e.voided is false and lastCD4.voided is false and e.encounter_type = 53 and e.location_id=:location 
 						and lastCD4.concept_id = 1695 and lastCD4.value_numeric >= 200 and lastCD4.obs_datetime <= :endDate
-					   	group by p.patient_id						
-					
+					 
 					union
 					
-					select p.patient_id, min(artStartDate.value_datetime) data_cd4
+					select p.patient_id, artStartDate.value_datetime data_cd4
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4ArtStart on cd4ArtStart.encounter_id = e.encounter_id
 					   inner join obs artStartDate on artStartDate.encounter_id = e.encounter_id
 					where p.voided is false and e.voided is false and cd4ArtStart.voided is false and artStartDate.voided is false and e.encounter_type = 53 and e.location_id=:location 
 					   and cd4ArtStart.concept_id = 23896 and cd4ArtStart.value_numeric >=200 and artStartDate.concept_id = 1190 and artStartDate.value_datetime <= :endDate
-					   group by p.patient_id
-					
+					  
 					union
 					
-					select p.patient_id, min(e.encounter_datetime) data_cd4
+					select p.patient_id, e.encounter_datetime data_cd4
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
 					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 6 and e.location_id=:location 
 					   and cd4.concept_id = 1695 and cd4.value_numeric >=200 and e.encounter_datetime <= :endDate
-					   group by p.patient_id
-					
+					  
 					union
 					
-					select p.patient_id, min(e.encounter_datetime) data_cd4
+					select p.patient_id, e.encounter_datetime data_cd4
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
 					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 13 and e.location_id=:location 
 					   and cd4.concept_id = 1695 and cd4.value_numeric >=200 and e.encounter_datetime <= :endDate
-					   group by p.patient_id
-					
+					 
 					union
 					
-					select p.patient_id, min(e.encounter_datetime) data_cd4
+					select p.patient_id, e.encounter_datetime data_cd4
 					from patient p
 					   inner join encounter e on e.patient_id = p.patient_id
 					   inner join obs cd4 on cd4.encounter_id = e.encounter_id
 					where p.voided is false and e.voided is false and cd4.voided is false and e.encounter_type = 51  and e.location_id=:location
 					   and cd4.concept_id = 1695 and cd4.value_numeric >=200 and e.encounter_datetime <= :endDate
-					   group by p.patient_id
-		      	) first_cd4 group by first_cd4.patient_id
+		      	) first_cd4 
 		      ) first_cd4_greater on first_cd4_greater.patient_id = first_cd4.patient_id
 		      where first_cd4_greater.data_cd4 is null or first_cd4_greater.data_cd4>=first_cd4.data_cd4
 		            
 		) first_cd4 on first_cd4.patient_id = tx_new.patient_id
-		where first_cd4.data_cd4 between date_add(tx_new.art_start_date, interval - 90 day)  and date_add(tx_new.art_start_date, interval 28 day) 
+	)tx_new
+	where tx_new.data_cd4 between date_add(tx_new.art_start_date, interval - 90 day)  and date_add(tx_new.art_start_date, interval 28 day) group by tx_new.patient_id
 )tx_new
-inner join person pe on pe.person_id = tx_new.patient_id
-where (pe.birthdate is not null and floor(datediff(tx_new.art_start_date,pe.birthdate )/365) >= 5) or pe.birthdate is  null

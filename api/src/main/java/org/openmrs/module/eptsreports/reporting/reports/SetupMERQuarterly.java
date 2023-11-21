@@ -96,17 +96,17 @@ public class SetupMERQuarterly extends EptsDataExportManager {
     reportDefinition.addDataSetDefinition(
         "N", Mapped.mapStraightThrough(this.txNewDataset.constructTxNewDataset()));
 
-    reportDefinition.addDataSetDefinition(
-        "C", Mapped.mapStraightThrough(this.txCurrDataset.constructTxCurrDataset(true)));
+    //		reportDefinition.addDataSetDefinition("C",
+    //				Mapped.mapStraightThrough(this.txCurrDataset.constructTxCurrDataset(true)));
+    //
+    //		reportDefinition.addDataSetDefinition("P",
+    //				Mapped.mapStraightThrough(this.txPvlsDataset.constructTxPvlsDatset()));
+    //
+    //		reportDefinition.addDataSetDefinition("ML",
+    // Mapped.mapStraightThrough(this.txMlDataset.constructtxMlDataset()));
 
-    reportDefinition.addDataSetDefinition(
-        "P", Mapped.mapStraightThrough(this.txPvlsDataset.constructTxPvlsDatset()));
-
-    reportDefinition.addDataSetDefinition(
-        "ML", Mapped.mapStraightThrough(this.txMlDataset.constructtxMlDataset()));
-
-    // reportDefinition.addDataSetDefinition(
-    // "R", Mapped.mapStraightThrough(this.txRttDataset.constructTxRttDataset()));
+    //    reportDefinition.addDataSetDefinition(
+    //        "R", Mapped.mapStraightThrough(this.txRttDataset.constructTxRttDataset()));
     //
     // reportDefinition.addDataSetDefinition(
     // "TR", Mapped.mapStraightThrough(this.txTfrInDataset.constructTxTRFIN()));
