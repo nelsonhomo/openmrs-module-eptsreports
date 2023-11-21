@@ -67,10 +67,26 @@ public class PrepNewDataset extends BaseDataSet {
     final CohortDefinition clientsNewlyEnrolledInPrep =
         this.prepNewCohortQueries.getClientsNewlyEnrolledInPrep();
 
+    final CohortDefinition clientsWithPregnancyStatus =
+        this.prepNewCohortQueries.getClientsWithPregnancyStatusDuringReportingPeriod();
+
+    final CohortDefinition clientsWithBreastfeedingStatus =
+        this.prepNewCohortQueries.getClientsWithBreastfeedingStatusDuringReportingPeriod();
+
     final CohortIndicator clientsNewlyEnrolledInPrepIndicator =
         this.eptsGeneralIndicator.getIndicator(
             "clientsNewlyEnrolledInPrepIndicator",
             EptsReportUtils.map(clientsNewlyEnrolledInPrep, mappings));
+
+    final CohortIndicator clientsWithPregnancyStatusInPrepIndicator =
+        this.eptsGeneralIndicator.getIndicator(
+            "clientsWithPregnancyStatusInPrepIndicator",
+            EptsReportUtils.map(clientsWithPregnancyStatus, mappings));
+
+    final CohortIndicator clientsWithBreastfeedingStatusInPrepIndicator =
+        this.eptsGeneralIndicator.getIndicator(
+            "clientsWithBreastfeedingStatusInPrepIndicator",
+            EptsReportUtils.map(clientsWithBreastfeedingStatus, mappings));
 
     this.addDimensions(
         dataSetDefinition,
@@ -188,6 +204,18 @@ public class PrepNewDataset extends BaseDataSet {
         "Transgender",
         EptsReportUtils.map(clientsNewlyEnrolledInPrepIndicator, mappings),
         "transgender=transgender");
+
+    dataSetDefinition.addColumn(
+        "PREP-N-PREGNANT",
+        "PREP_NEW: PREGNANT STATUS",
+        EptsReportUtils.map(clientsWithPregnancyStatusInPrepIndicator, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "PREP-N-BREASTFEEDING",
+        "PREP_NEW: BREASTFEEDING STATUS",
+        EptsReportUtils.map(clientsWithBreastfeedingStatusInPrepIndicator, mappings),
+        "");
 
     return dataSetDefinition;
   }
