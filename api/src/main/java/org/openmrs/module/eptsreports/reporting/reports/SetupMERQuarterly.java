@@ -96,28 +96,26 @@ public class SetupMERQuarterly extends EptsDataExportManager {
     reportDefinition.addDataSetDefinition(
         "N", Mapped.mapStraightThrough(this.txNewDataset.constructTxNewDataset()));
 
-    //		reportDefinition.addDataSetDefinition("C",
-    //				Mapped.mapStraightThrough(this.txCurrDataset.constructTxCurrDataset(true)));
-    //
-    //		reportDefinition.addDataSetDefinition("P",
-    //				Mapped.mapStraightThrough(this.txPvlsDataset.constructTxPvlsDatset()));
-    //
-    //		reportDefinition.addDataSetDefinition("ML",
-    // Mapped.mapStraightThrough(this.txMlDataset.constructtxMlDataset()));
+    reportDefinition.addDataSetDefinition(
+        "C", Mapped.mapStraightThrough(this.txCurrDataset.constructTxCurrDataset(true)));
 
-    //    reportDefinition.addDataSetDefinition(
-    //        "R", Mapped.mapStraightThrough(this.txRttDataset.constructTxRttDataset()));
-    //
-    // reportDefinition.addDataSetDefinition(
-    // "TR", Mapped.mapStraightThrough(this.txTfrInDataset.constructTxTRFIN()));
-    //
-    // reportDefinition.addDataSetDefinition(
-    // "PREP",
-    // Mapped.mapStraightThrough(this.prepNewDataset.constructPrepNewDataset()));
-    //
-    // reportDefinition.addDataSetDefinition(
-    // "PrEP_CT",
-    // Mapped.mapStraightThrough(this.prepCtDataset.constructPrepCtDataset()));
+    reportDefinition.addDataSetDefinition(
+        "P", Mapped.mapStraightThrough(this.txPvlsDataset.constructTxPvlsDatset()));
+
+    reportDefinition.addDataSetDefinition(
+        "ML", Mapped.mapStraightThrough(this.txMlDataset.constructtxMlDataset()));
+
+    reportDefinition.addDataSetDefinition(
+        "R", Mapped.mapStraightThrough(this.txRttDataset.constructTxRttDataset()));
+
+    reportDefinition.addDataSetDefinition(
+        "TR", Mapped.mapStraightThrough(this.txTfrInDataset.constructTxTRFIN()));
+
+    reportDefinition.addDataSetDefinition(
+        "PREP", Mapped.mapStraightThrough(this.prepNewDataset.constructPrepNewDataset()));
+
+    reportDefinition.addDataSetDefinition(
+        "PrEP_CT", Mapped.mapStraightThrough(this.prepCtDataset.constructPrepCtDataset()));
 
     reportDefinition.addDataSetDefinition(
         "D",
