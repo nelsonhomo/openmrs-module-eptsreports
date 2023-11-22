@@ -1,7 +1,8 @@
    select patient_id                                                                                                   
              from                                                                                                                    
-             (select inicio_fila_seg_prox.*,                                                                                 
-                     GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30), COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_usar 
+             (select inicio_fila_seg_prox.*,     
+             		GREATEST(COALESCE(data_fila,data_seguimento), COALESCE(data_seguimento,data_fila)) data_usar_c ,                                                                            
+                    GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30), COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_usar 
              from                                                                                                                        
                  (select     inicio_fila_seg.*,                                                                                          
                  max(obs_fila.value_datetime) data_proximo_lev,                                                                          
@@ -9,7 +10,8 @@
               from                                                                                                                           
             (select inicio.*,                                                                                                                    
                  saida.data_estado,                                                                                                          
-                 max_fila.data_fila,                                                                                                         
+                 max_fila.data_fila,
+                 max_consulta.data_seguimento,                                                                                                           
                  max_recepcao.data_recepcao_levantou                                                                                         
              from                                                                                                                                
              (   
@@ -283,7 +285,16 @@
              where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18 and                                                                     
                      e.location_id=:location and e.encounter_datetime<=:endDate                                                                                  
              group by p.patient_id                                                                                                                               
-             ) max_fila on inicio.patient_id=max_fila.patient_id                                                                                                 
+             ) max_fila on inicio.patient_id=max_fila.patient_id  
+              left join                                                                                                                                          
+              (  select  p.patient_id,max(encounter_datetime) data_seguimento                                                                                    
+             from    patient p                                                                                                                                   
+                     inner join person pe on pe.person_id = p.patient_id                                                                                         
+                     inner join encounter e on e.patient_id=p.patient_id                                                                                         
+             where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type in (6,9) and                                                               
+                     e.location_id=:location and e.encounter_datetime<=:endDate                                                                                  
+             group by p.patient_id                                                                                                                               
+             ) max_consulta on inicio.patient_id=max_consulta.patient_id                                                                                                    
               left join                                                                                                                                          
               (                                                                                                                                                  
              select  p.patient_id,max(value_datetime) data_recepcao_levantou                                                                                     
@@ -308,4 +319,4 @@
              ) inicio_fila_seg_prox                                                                                                                              
              group by patient_id                                                                                                                                 
              ) coorte12meses_final                                                                                                                               
-             where (data_estado is null or (data_estado is not null and  data_fila>data_estado)) and date_add(data_usar, interval 28 day) >=:endDate
+             where (data_estado is null or (data_estado is not null and  data_usar_c>data_estado)) and date_add(data_usar, interval 28 day) >=:endDate
