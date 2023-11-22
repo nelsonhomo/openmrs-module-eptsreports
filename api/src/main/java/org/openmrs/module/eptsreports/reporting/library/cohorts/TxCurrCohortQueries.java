@@ -145,15 +145,25 @@ public class TxCurrCohortQueries {
 
   @DocumentedDefinition(value = "findPatientsOnArtOnArvDispenseForLessThan3Months")
   public CohortDefinition findPatientsOnArtOnArvDispenseForLessThan3Months() {
-    final SqlCohortDefinition definition = new SqlCohortDefinition();
+    CompositionCohortDefinition cd = new CompositionCohortDefinition();
+    cd.setName("Get patients On Art On ARV Dispensation less than 3 Months");
+    cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+    cd.addParameter(new Parameter("location", "Location", Location.class));
 
-    definition.setName("findPatientsOnArtOnArvDispenseForLessThan3Months");
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
+    String mapping = "endDate=${endDate},location=${location}";
 
-    definition.setQuery(
-        TxCurrQueries.QUERY.findPatientsWhoAreInDispenseType(DispensationIntervalType.MONTHLY));
+    cd.addSearch("TX-CURR", EptsReportUtils.map(this.findPatientsWhoAreActiveOnART(), mapping));
 
-    return definition;
+    cd.addSearch(
+        "ART-DISPENSATION-BETWEEN-3-5-MONTHS",
+        EptsReportUtils.map(this.findPatientsOnArtOnArvDispenseBetween3And5Months(), mapping));
+
+    cd.addSearch(
+        "ART-DISPENSATION-GREAT-6-MONTHS",
+        EptsReportUtils.map(this.findPatientsOnArtOnArvDispenseFor6OrMoreMonths(), mapping));
+
+    cd.setCompositionString(
+        "TX-CURR NOT (ART-DISPENSATION-BETWEEN-3-5-MONTHS OR ART-DISPENSATION-GREAT-6-MONTHS)");
+    return cd;
   }
 }
