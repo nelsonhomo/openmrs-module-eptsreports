@@ -61,6 +61,25 @@ public class MQCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientsWhoWhereMarkedAsTransferedInOnMasterCardRF5Category9")
+  public CohortDefinition findPatientsWhoWhereMarkedAsTransferedInOnMasterCardRF5Category9() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsWhoWhereMarkedAsTransferedInOnMasterCardRF5Category9");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQQueriesInterface.QUERY.findPatientsWhoWhereMarkedAsTransferedInOnMasterCardRF5Category9;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientsWhoTransferedOutRF07")
   public CohortDefinition findPatientsWhoTransferedOutRF07() {
 
@@ -110,6 +129,25 @@ public class MQCohortQueries {
 
     String query =
         MQQueriesInterface.QUERY.getPatientsWhoArePregnantOrBreastfeeding(TypePTV.PREGNANT);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWhoAreBreastfeedingInARTInitiation")
+  public CohortDefinition findPatientsWhoAreBreastfeedingInARTInitiation() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsWhoAreBreastfeedingInARTInitiation");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQQueriesInterface.QUERY.getPatientsWhoArePregnantOrBreastfeeding(TypePTV.BREASTFEEDING);
 
     definition.setQuery(query);
 

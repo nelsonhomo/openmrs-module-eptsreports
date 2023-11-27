@@ -69,25 +69,27 @@ public interface MICategory9QueriesInterface {
     }
 
     public static final String findPatientsWhoArePregnantDuringPreviousPeriod =
-        "select pregnat.patient_id from (  "
-            + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from person pe  "
-            + "inner join patient p on pe.person_id=p.patient_id  "
-            + "inner join encounter e on p.patient_id=e.patient_id  "
-            + "inner join obs o on e.encounter_id=o.encounter_id  "
-            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F' and  "
-            + "o.concept_id=1982 and o.value_coded=1065  "
-            + "group by p.patient_id "
-            + ")pregnat  "
-            + "where pregnat.patient_id not in ( "
-            + "Select p.patient_id from person pe  "
-            + "inner join patient p on pe.person_id=p.patient_id  "
-            + "inner join encounter e on p.patient_id=e.patient_id  "
-            + "inner join obs o on e.encounter_id=o.encounter_id  "
+        "select pregnant.patient_id from "
+            + "( "
+            + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from person pe "
+            + "inner join patient p on pe.person_id=p.patient_id "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on e.encounter_id=o.encounter_id "
             + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F' and "
-            + "o.concept_id=1982 and o.value_coded=1065  "
-            + "and e.encounter_datetime >  DATE_SUB(:endRevisionDate, INTERVAL 9 Month) AND   pregnat.encounter_datetime < DATE_SUB(:endRevisionDate, INTERVAL 2 Month) "
+            + "o.concept_id=1982 and o.value_coded=1065 and e.encounter_datetime  between :startInclusionDate AND :endInclusionDate "
             + "group by p.patient_id "
-            + ") and pregnat.encounter_datetime between  :startInclusionDate AND :endInclusionDate ";
+            + ")pregnant "
+            + "where pregnant.patient_id not in "
+            + "( "
+            + "Select p.patient_id from person pe "
+            + "inner join patient p on pe.person_id=p.patient_id "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on e.encounter_id=o.encounter_id "
+            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F' and "
+            + "o.concept_id=1982 and o.value_coded=1065 "
+            + "and e.encounter_datetime >= DATE_SUB(pregnant.encounter_datetime, INTERVAL 3 Month) and e.encounter_datetime < pregnant.encounter_datetime "
+            + "group by p.patient_id "
+            + ") ";
 
     public static final String
         findPatientsWhithCD4OnFirstClinicalConsultationDuringInclusionDateNumeratorCategory9 =
