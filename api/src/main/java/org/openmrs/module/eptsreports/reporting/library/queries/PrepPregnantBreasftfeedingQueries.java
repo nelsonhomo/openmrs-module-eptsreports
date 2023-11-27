@@ -7,7 +7,8 @@ public class PrepPregnantBreasftfeedingQueries {
       final PregnantOrBreastfeedingWomen womenState) {
 
     String query =
-        "select patient_id from( "
+        "select patient_id from ( "
+            + "select * from( "
             + "select consulta.patient_id,gravida.data_gravida, lactante.data_lactante, "
             + "            if(gravida.data_gravida is null and lactante.data_lactante is null,null, "
             + "            if(gravida.data_gravida is null,2, "
@@ -75,6 +76,9 @@ public class PrepPregnantBreasftfeedingQueries {
             + ") lactante order by patient_id,data_lactante asc "
             + ")final group by patient_id "
             + ") lactante on lactante.patient_id = consulta.patient_id where (lactante.data_lactante is not null or gravida.data_gravida is not null) "
+            + ") final "
+            + "inner join person pe on pe.person_id = final.patient_id "
+            + "where  pe.voided=0 and pe.gender = 'F' "
             + ") final ";
 
     switch (womenState) {
