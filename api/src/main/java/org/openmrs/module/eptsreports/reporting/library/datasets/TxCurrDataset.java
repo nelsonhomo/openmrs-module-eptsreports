@@ -71,7 +71,7 @@ public class TxCurrDataset extends BaseDataSet {
     dataSetDefinition.setName("TX_CURR Data Set");
     dataSetDefinition.addParameters(this.getParameters());
 
-    final String mappings = "endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     final CohortDefinition txCurrCompositionCohort =
         this.txCurrCohortQueries.findPatientsWhoAreActiveOnART();

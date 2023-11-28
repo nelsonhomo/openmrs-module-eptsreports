@@ -45,7 +45,7 @@ public interface TxCurrQueries {
               /* ==================FILA================== */
               + " 																																			"
               + "			select 	maxFila.patient_id, 																									"
-              + "					maxFila.last_levantamento data_clinica, 																				"
+              + "					max(obsNext.value_datetime) data_clinica, 																				"
               + "					if(datediff(max(obsNext.value_datetime),maxFila.last_levantamento)<83,1, 												"
               + "						if(datediff(max(obsNext.value_datetime),maxFila.last_levantamento) BETWEEN 83 and 173,2,3)) tipoDispensa, 			"
               + "					1 as fonte, 																											"
@@ -63,7 +63,7 @@ public interface TxCurrQueries {
               + "				inner join obs obsNext on e.encounter_id=obsNext.encounter_id 																"
               + "			where 	date(e.encounter_datetime)=date(maxFila.last_levantamento) and  														"
               + "					e.encounter_type=18 and e.location_id=:location and e.voided=0 and obsNext.voided=0 and  								"
-              + "					obsNext.concept_id=5096	 																								"
+              + "					obsNext.concept_id=5096 and obsNext.value_datetime >= :startDate 																								"
               + "			group  by maxFila.patient_id  																									"
               + " 																																			"
               + "			UNION  																															"
