@@ -103,29 +103,13 @@ from
 					) allSaida
 					left join
 					(
-						select patient_id,max(max_date) max_date      
-						from
-						(
-								Select p.patient_id,max(encounter_datetime) max_date                                                                                                
-								from    patient p                                                                                                                                   
-										inner join person pe on pe.person_id = p.patient_id                                                                                         
-										inner join encounter e on e.patient_id=p.patient_id                                                                                         
-								where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18                                                                      
-										and e.location_id=:location  and e.encounter_datetime < :startDate                                                                                  
-									group by p.patient_id 
-
-								union
-
-								Select p.patient_id,max(encounter_datetime) max_date                                                                                    
-								from  patient p                                                                                                                                   
-										inner join person pe on pe.person_id = p.patient_id                                                                                         
-										inner join encounter e on e.patient_id=p.patient_id                                                                                         
-								where p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type in (6,9)                                                                
-										and e.location_id=:location  and e.encounter_datetime < :startDate                                                                                  
-									group by p.patient_id 
-               
-						) last_encounter group  by patient_id
-              
+						Select p.patient_id,max(encounter_datetime) max_date                                                                                                
+						from    patient p                                                                                                                                   
+								inner join person pe on pe.person_id = p.patient_id                                                                                         
+								inner join encounter e on e.patient_id=p.patient_id                                                                                         
+						where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18                                                                      
+								and e.location_id=:location  and e.encounter_datetime < :startDate                                                                                  
+							group by p.patient_id 
 					) last_encounter on allSaida.patient_id  = last_encounter.patient_id 
 					where allSaida.data_estado >= last_encounter.max_date
 			) saida
