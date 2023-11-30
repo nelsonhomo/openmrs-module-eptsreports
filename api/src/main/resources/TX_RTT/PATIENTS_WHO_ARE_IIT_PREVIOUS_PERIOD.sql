@@ -1,10 +1,11 @@
 select coorte_final.patient_id
 from (
 		select inicio_fila_recepcao_prox.*,
-			GREATEST(COALESCE(data_proximo_levantamento,data_recepcao_levantou30), COALESCE(data_recepcao_levantou30,data_proximo_levantamento)) data_iit,
+			GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30), COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_iit,
 			GREATEST(COALESCE(data_fila_restart,data_recepcao_levantou_restart), COALESCE(data_recepcao_levantou_restart,data_fila_restart)) data_restart 
 		from(
 				select inicio_fila_recepcao.*,
+				 	max(obs_fila.value_datetime) data_proximo_lev, 
 				     date_add(data_recepcao_levantou, interval 30 day) data_recepcao_levantou30    
 				from(
 						select inicio.*,
@@ -204,7 +205,7 @@ from (
 						) max_proximo_levantamento on inicio.patient_id=max_proximo_levantamento.patient_id  
 						left join                                                                                                                                           
 						( 	
-							select p.patient_id,max(encounter_datetime) data_fila_restart                                                                                                
+							select p.patient_id,min(encounter_datetime) data_fila_restart                                                                                                
 							from patient p                                                                                                                                   
 						     	inner join person pe on pe.person_id = p.patient_id                                                                                         
 						      	inner join encounter e on e.patient_id=p.patient_id                                                                                         
@@ -225,7 +226,7 @@ from (
 						) max_recepcao on inicio.patient_id=max_recepcao.patient_id 
 						left join                                                                                                                                          
 						(                                                                                                                                                  
-							select p.patient_id,max(value_datetime) data_recepcao_levantou_restart                                                                                     
+							select p.patient_id,min(value_datetime) data_recepcao_levantou_restart                                                                                     
 						     from patient p                                                                                                                                   
 						     	inner join person pe on pe.person_id = p.patient_id                                                                                         
 						          inner join encounter e on p.patient_id=e.patient_id                                                                                         
@@ -237,7 +238,13 @@ from (
 							group by inicio.patient_id  
 						                                                                                                                       
 					) inicio_fila_recepcao                                                                                                          
-				   group by inicio_fila_recepcao.patient_id   
+				   	left join                                                                                                                                          
+			         	obs obs_fila on obs_fila.person_id=inicio_fila_recepcao.patient_id                                                                                      
+			              and obs_fila.voided=0                                                                                                                             
+			              and obs_fila.obs_datetime=inicio_fila_recepcao.data_fila                                                                                                
+			              and obs_fila.concept_id=5096                                                                                                                       
+			              and obs_fila.location_id=:location                                                                                                                 
+             	   		group by inicio_fila_recepcao.patient_id  
 			) inicio_fila_recepcao_prox
 		  		group by patient_id                                                                                                                                                                    
   ) coorte_final 
