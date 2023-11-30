@@ -33,9 +33,7 @@ import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.openmrs.module.reporting.query.encounter.definition.SqlEncounterQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ResumoMensalCohortQueries {
 
   private HivMetadata hivMetadata;
