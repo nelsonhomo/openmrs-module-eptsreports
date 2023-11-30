@@ -243,8 +243,7 @@ public class MQCategory9CohortQueries {
     definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
-            this.mQCohortQueries
-                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+            this.mQCohortQueries.findPatientsWhoWhereMarkedAsTransferedInOnMasterCardRF5Category9(),
             mappings));
 
     definition.addSearch(
@@ -298,8 +297,7 @@ public class MQCategory9CohortQueries {
     definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
-            this.mQCohortQueries
-                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+            this.mQCohortQueries.findPatientsWhoWhereMarkedAsTransferedInOnMasterCardRF5Category9(),
             mappings));
 
     definition.addSearch(
@@ -624,8 +622,7 @@ public class MQCategory9CohortQueries {
     definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
-            this.mQCohortQueries
-                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+            this.mQCohortQueries.findPatientsWhoWhereMarkedAsTransferedInOnMasterCardRF5Category9(),
             mappings));
 
     definition.setCompositionString("PREGNANT-INCLUSION-DATE NOT TRANSFERED-IN ");
