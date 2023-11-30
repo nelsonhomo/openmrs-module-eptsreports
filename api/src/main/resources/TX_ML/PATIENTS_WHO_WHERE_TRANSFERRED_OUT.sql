@@ -2,9 +2,10 @@ select patient_id
 from (
 			select inicio_fila_seg_prox.*,         
 					data_fila  ultimo_fila, 
-					greatest(coalesce(data_proximo_levantamento,data_recepcao_levantou30),coalesce(data_recepcao_levantou30,data_proximo_levantamento)) maximo_proximo_fila_recepcao
+					greatest(coalesce(data_proximo_lev,data_recepcao_levantou30),coalesce(data_recepcao_levantou30,data_proximo_lev)) maximo_proximo_fila_recepcao
 			 from (
 						select inicio_fila_seg.*,
+							max(obs_fila.value_datetime) data_proximo_lev,  
 							date_add(data_recepcao_levantou, interval 30 day) data_recepcao_levantou30          
 						from (
 									select inicio.*,        
@@ -12,7 +13,6 @@ from (
 										entrada_obitos.data_estado data_entrada_obito,
 										entradas_por_transferencia.data_estado  data_entrada_transferencia,
 										max_fila.data_fila, 
-										max_proximo_levantamento.data_proximo_levantamento,
 										max_recepcao.data_recepcao_levantou   
 									from (   
 												select patient_id,data_inicio 
@@ -439,15 +439,6 @@ from (
 															and e.location_id=:location and e.encounter_datetime<=:endDate          
 															group by p.patient_id 
 											) max_fila on inicio.patient_id=max_fila.patient_id  
-											left join             
-											( 		select p.patient_id, max(o.value_datetime) data_proximo_levantamento                                                                                            
-													from patient p                                                                                                                                   
-														inner join encounter e on e.patient_id= p.patient_id 
-														inner join obs o on o.encounter_id = e.encounter_id                                                                                        
-													where p.voided= 0 and e.voided=0 and o.voided = 0 and e.encounter_type=18 and o.concept_id = 5096                                                                  
-														and e.location_id=:location and e.encounter_datetime <= :endDate                                                                               
-														group by p.patient_id 
-											) max_proximo_levantamento on inicio.patient_id=max_proximo_levantamento.patient_id  
 											left join            
 											(		select  p.patient_id,max(value_datetime) data_recepcao_levantou             
 													from    patient p     
@@ -460,8 +451,15 @@ from (
 															group by p.patient_id 
 											) max_recepcao on inicio.patient_id=max_recepcao.patient_id  
 												group by inicio.patient_id             
-						) inicio_fila_seg     
+						) inicio_fila_seg
+						left join            
+						obs obs_fila on obs_fila.person_id=inicio_fila_seg.patient_id
+								and obs_fila.voided=0   
+								and obs_fila.obs_datetime=inicio_fila_seg.data_fila      
+								and obs_fila.concept_id=5096           
+								and obs_fila.location_id=:location  
+								group by inicio_fila_seg.patient_id    
 			) inicio_fila_seg_prox
 					group by patient_id   
 ) coorte12meses_final 
- where  ((data_estado is null or (data_estado is not null and  data_fila > data_estado))  and data_entrada_obito is null and data_entrada_transferencia >= data_fila and data_entrada_transferencia <= :endDate and date_add(maximo_proximo_fila_recepcao, interval 1 day) >=:startDate) 
+ where ((data_estado is null or (data_estado is not null and  data_fila > data_estado))  and data_entrada_obito is null and data_entrada_transferencia >= data_fila and data_entrada_transferencia <= :endDate and date_add(maximo_proximo_fila_recepcao, interval 1 day) >=:startDate)
