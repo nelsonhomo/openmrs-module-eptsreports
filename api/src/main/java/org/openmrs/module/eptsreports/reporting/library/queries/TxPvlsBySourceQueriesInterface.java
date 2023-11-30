@@ -165,8 +165,9 @@ public interface TxPvlsBySourceQueriesInterface {
               + "inner join encounter e on p.patient_id=e.patient_id "
               + "inner join obs o on e.encounter_id=o.encounter_id "
               + "where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in ( %s ) and  o.concept_id in (856,1305) and o.obs_datetime > '0000-00-00 00:00' and  date(o.obs_datetime) between date_add(date_add(:endDate, interval -12 MONTH), interval 1 day) and :endDate and e.location_id=:location group by p.patient_id) ultima_carga "
-              + "inner join obs on obs.person_id=ultima_carga.patient_id and date(obs.obs_datetime)=date(ultima_carga.data_carga) "
-              + "where obs.voided=0 and obs.concept_id=856 and obs.value_numeric>=1000 and obs.location_id=:location "
+              + "inner join encounter e on ultima_carga.patient_id=e.patient_id "
+              + "inner join obs on obs.encounter_id=e.encounter_id and date(obs.obs_datetime)=date(ultima_carga.data_carga) "
+              + "where obs.voided=0 and obs.concept_id=856 and obs.value_numeric>=1000 and e.voided = 0 and e.encounter_type in ( %s ) and e.location_id=:location "
               + ")cvNaoSuprimida on cvSuprimida.patient_id = cvNaoSuprimida.patient_id "
               + "where date(cvSuprimida.data_carga) = date(cvNaoSuprimida.data_carga) "
               + ") "
@@ -180,6 +181,7 @@ public interface TxPvlsBySourceQueriesInterface {
                   query,
                   StringUtils.join(Arrays.asList(13, 51), ","),
                   StringUtils.join(Arrays.asList(13, 51), ","),
+                  StringUtils.join(Arrays.asList(13, 51), ","),
                   StringUtils.join(Arrays.asList(13, 51), ","));
           break;
 
@@ -187,6 +189,7 @@ public interface TxPvlsBySourceQueriesInterface {
           query =
               String.format(
                   query,
+                  StringUtils.join(Arrays.asList(6, 9, 53), ","),
                   StringUtils.join(Arrays.asList(6, 9, 53), ","),
                   StringUtils.join(Arrays.asList(6, 9, 53), ","),
                   StringUtils.join(Arrays.asList(6, 9, 53), ","));
