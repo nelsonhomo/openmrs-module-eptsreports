@@ -37,8 +37,22 @@ from
 									and obsOpenDate.value_datetime between :startDate and :endDate and e.location_id=:location 
 								group by p.patient_id  
 					) transferido_de                                                                    
-						inner join encounter e on e.patient_id = transferido_de.patient_id                                        
-					where e.voided is false and e.encounter_type = 18 and e.encounter_datetime between :startDate and :endDate and e.location_id =:location  
+					inner join
+					(
+					  	select e.patient_id 
+						from patient p 
+							inner join encounter e on p.patient_id=e.patient_id 
+						where p.voided=0 and e.encounter_type = 18 and e.voided=0 
+							and e.encounter_datetime between :startDate and :endDate and e.location_id=:location
+       					union 
+
+						select p.patient_id 
+						from patient p 
+							inner join encounter e on p.patient_id=e.patient_id 
+							inner join obs o on e.encounter_id=o.encounter_id 
+						where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and o.concept_id=23866 
+							and o.value_datetime is not null and o.value_datetime between :startDate and :endDate and e.location_id=:location
+					)levantamentos on levantamentos.patient_id = transferido_de.patient_id   
 			)                                                                           
 			transferidos_de group by patient_id 
 
