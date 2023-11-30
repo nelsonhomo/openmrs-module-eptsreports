@@ -1,8 +1,8 @@
-select coorte_final.patient_id
+	select coorte_final.patient_id
 from (
 		select inicio_fila_recepcao_prox.*,   
 			GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30), COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_iit,
-			GREATEST(COALESCE(data_fila_restart,data_recepcao_levantou_restart), COALESCE(data_recepcao_levantou_restart,data_fila_restart)) data_restart 
+			LEAST(COALESCE(data_fila_restart,data_recepcao_levantou_restart), COALESCE(data_recepcao_levantou_restart,data_fila_restart)) data_restart 
 		from(
 				select inicio_fila_recepcao.*,
 					 max(obs_fila.value_datetime) data_proximo_lev,
