@@ -1,41 +1,33 @@
-select all_transferidos_de.patient_id 
+select distinct all_transferidos_de.patient_id
 from 
 (
-			select patient_id, max(data_transferencia)   data_transferencia                                                       
+			select patient_id, data_transferencia                                                       
 			from
 			(                                           
-					select distinct max_estado.patient_id, max_estado.data_transferencia                                             
-					from 
-					(                                                                                            
-							select pg.patient_id, max(ps.start_date) data_transferencia                                                      
-							from patient p                                                             
-									inner join patient_program pg on p.patient_id = pg.patient_id                                     
-									inner join patient_state ps on pg.patient_program_id = ps.patient_program_id                              
-							where pg.voided=0 and ps.voided=0 and p.voided=0  and pg.program_id = 2                                               
-									and ps.start_date between :startDate and :endDate and pg.location_id =:location 
-								group by pg.patient_id                           
-					) max_estado                                                                                                                                  
-							inner join patient_program pp on pp.patient_id = max_estado.patient_id                                      
-							inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_transferencia                 
-					where pp.program_id = 2 and ps.state = 29 and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location                    
-			
+					select pg.patient_id, ps.start_date data_transferencia                                                      
+					from patient p                                                             
+						inner join patient_program pg on p.patient_id = pg.patient_id                                     
+						inner join patient_state ps on pg.patient_program_id = ps.patient_program_id                              
+					where pg.voided=0 and ps.voided=0 and p.voided=0  and pg.program_id = 2 and ps.state = 29                                              
+						and ps.start_date between :startDate and :endDate and pg.location_id =:location 
+								                   
 					union                                                                                               
 					
 					select transferido_de.patient_id, transferido_de.data_transferencia                                            
 					from  
 					(                                                                         
-							select p.patient_id, max(obsOpenDate.value_datetime) data_transferencia 
-							from patient p                               
-									inner join encounter e on p.patient_id=e.patient_id                                           
-									inner join obs obsTransIn on e.encounter_id= obsTransIn.encounter_id                                    
-									inner join obs obsOpenDate on e.encounter_id= obsOpenDate.encounter_id                                  
-									inner join obs obsInTarv on e.encounter_id= obsInTarv.encounter_id                                    
-							where e.voided=0 and obsTransIn.voided=0 and p.voided=0  and obsOpenDate.voided =0 and obsInTarv.voided =0                 
-									and e.encounter_type=53 and obsTransIn.concept_id=1369 and obsTransIn.value_coded=1065                          
-									and obsOpenDate.concept_id=23891 and obsOpenDate.value_datetime is not null                               
-									and obsInTarv.concept_id=6300 and obsInTarv.value_coded=6276                                        
-									and obsOpenDate.value_datetime between :startDate and :endDate and e.location_id=:location 
-								group by p.patient_id  
+						select p.patient_id, obsOpenDate.value_datetime data_transferencia 
+						from patient p                               
+								inner join encounter e on p.patient_id=e.patient_id                                           
+								inner join obs obsTransIn on e.encounter_id= obsTransIn.encounter_id                                    
+								inner join obs obsOpenDate on e.encounter_id= obsOpenDate.encounter_id                                  
+								inner join obs obsInTarv on e.encounter_id= obsInTarv.encounter_id                                    
+						where e.voided=0 and obsTransIn.voided=0 and p.voided=0  and obsOpenDate.voided =0 and obsInTarv.voided =0                 
+								and e.encounter_type=53 and obsTransIn.concept_id=1369 and obsTransIn.value_coded=1065                          
+								and obsOpenDate.concept_id=23891 and obsOpenDate.value_datetime is not null                               
+								and obsInTarv.concept_id=6300 and obsInTarv.value_coded = 6276                                       
+								and obsOpenDate.value_datetime between :startDate and :endDate and e.location_id=:location 
+								
 					) transferido_de                                                                    
 					inner join
 					(
@@ -54,7 +46,7 @@ from
 							and o.value_datetime is not null and o.value_datetime between :startDate and :endDate and e.location_id=:location
 					)levantamentos on levantamentos.patient_id = transferido_de.patient_id   
 			)                                                                           
-			transferidos_de group by patient_id 
+			transferidos_de 
 
 			union
 			
@@ -152,7 +144,7 @@ from
 							group by p.patient_id
 				   ) ultimo_levantamento group by patient_id
 			) ultimo_levantamento on saida.patient_id  = ultimo_levantamento.patient_id 
-			where ultimo_levantamento.data_ultimo_levantamento is null or  ultimo_levantamento.data_ultimo_levantamento < :startDate 
+			where ultimo_levantamento.data_ultimo_levantamento < :startDate 
 )all_transferidos_de
 	inner join
 	(
