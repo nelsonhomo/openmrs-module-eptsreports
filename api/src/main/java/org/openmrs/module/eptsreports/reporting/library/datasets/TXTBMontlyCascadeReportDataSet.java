@@ -98,6 +98,7 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
     this.addSection7(dataSetDefinition, mappings);
     this.addSection8(
         dataSetDefinition, "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}");
+
     return dataSetDefinition;
   }
 
@@ -314,7 +315,7 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
 
     CohortIndicator positiveResults =
         this.getIndicator(
-            this.txtbCohortQueries.getPositiveResultCohortDefinition(
+            this.txtbCohortQueries.getPositiveResultsForTXTBMontlyCascadeCohortDefinition(
                 txtbCohortQueries.getDenominator(),
                 "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}"));
 
@@ -325,28 +326,28 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
         "");
 
     dataSetDefinition.addColumn(
-        "TBD-PR-baciloscopia",
-        "6a.Screened patients with positive TB testing result - Baciloscopia",
-        EptsReportUtils.map(positiveResults, mappings),
-        "posetiveTestResult=positiveBaciloscopia");
-
-    dataSetDefinition.addColumn(
         "TBD-PR-mWRD",
         " 6a.Screened patients with positive TB testing result - mWRD MTB/RIF",
         EptsReportUtils.map(positiveResults, mappings),
-        "posetiveTestResult=positiveGenexpert");
+        "diagnostictest=genexpert|posetiveTestResult=positiveGenexpert");
+
+    dataSetDefinition.addColumn(
+        "TBD-PR-baciloscopia",
+        "6a.Screened patients with positive TB testing result - Baciloscopia",
+        EptsReportUtils.map(positiveResults, mappings),
+        "diagnostictest=baciloscopia|posetiveTestResult=positiveBaciloscopia");
 
     dataSetDefinition.addColumn(
         "TBD-PR-tblam",
         " 6a.Screened patients with positive TB testing result - TB LAM",
         EptsReportUtils.map(positiveResults, mappings),
-        "posetiveTestResult=positiveTblam");
+        "diagnostictest=tblam|posetiveTestResult=positiveTblam");
 
     dataSetDefinition.addColumn(
         "TBD-PR-other",
         "6a.Screened patients with positive TB testing result - Additional test other",
         EptsReportUtils.map(positiveResults, mappings),
-        "posetiveTestResult=positiveAdditonalDiagnostic");
+        "diagnostictest=additonalDiagnostic|posetiveTestResult=positiveAdditonalDiagnostic");
 
     CohortIndicator negativeResults =
         this.getIndicator(
@@ -359,28 +360,28 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
         "");
 
     dataSetDefinition.addColumn(
-        "TBD-NR-baciloscopia",
-        "6b.Screened patients with negative TB testing result - Baciloscopia",
-        EptsReportUtils.map(negativeResults, mappings),
-        "negativeTestResult=negativeBaciloscopia");
-
-    dataSetDefinition.addColumn(
         "TBD-NR-mWRD",
         " 6b.Screened patients with negative TB testing result - mWRD MTB/RIF",
         EptsReportUtils.map(negativeResults, mappings),
-        "negativeTestResult=negativeGenexpert");
+        "diagnostictest=genexpert|negativeTestResult=negativeGenexpert");
+
+    dataSetDefinition.addColumn(
+        "TBD-NR-baciloscopia",
+        "6b.Screened patients with negative TB testing result - Baciloscopia",
+        EptsReportUtils.map(negativeResults, mappings),
+        "diagnostictest=baciloscopia|negativeTestResult=negativeBaciloscopia");
 
     dataSetDefinition.addColumn(
         "TBD-NR-tblam",
         "6b.Screened patients with negative TB testing result - TB LAM",
         EptsReportUtils.map(negativeResults, mappings),
-        "negativeTestResult=negativeTblam");
+        "diagnostictest=tblam|negativeTestResult=negativeTblam");
 
     dataSetDefinition.addColumn(
         "TBD-NR-other",
         "6b.Screened patients with negative TB testing result - Additional test other",
         EptsReportUtils.map(negativeResults, mappings),
-        "negativeTestResult=negativeAdditonalDiagnostic");
+        "diagnostictest=additonalDiagnostic|negativeTestResult=negativeAdditonalDiagnostic");
   }
 
   private void addSection7(CohortIndicatorDataSetDefinition dataSetDefinition, String mappings) {
@@ -395,16 +396,16 @@ public class TXTBMontlyCascadeReportDataSet extends BaseDataSet {
         "");
 
     dataSetDefinition.addColumn(
-        "TBD-STB-baciloscopia",
-        "7. Screened patients with pos TB testing result who initiated treatment - Baciloscopia",
-        EptsReportUtils.map(startedTBTreatment, mappings),
-        "diagnostictest=baciloscopia");
-
-    dataSetDefinition.addColumn(
         "TBD-STB-mWRD",
         " 7. Screened patients with pos TB testing result who initiated treatment - mWRD MTB/RIF",
         EptsReportUtils.map(startedTBTreatment, mappings),
         "diagnostictest=genexpert");
+
+    dataSetDefinition.addColumn(
+        "TBD-STB-baciloscopia",
+        "7. Screened patients with pos TB testing result who initiated treatment - Baciloscopia",
+        EptsReportUtils.map(startedTBTreatment, mappings),
+        "diagnostictest=baciloscopia");
 
     dataSetDefinition.addColumn(
         "TBD-STB-tblam",
