@@ -7,23 +7,32 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSetDefinition;
+import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ResumoMensalDAHDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
-import org.openmrs.module.eptsreports.reporting.reports.manager.EptsPeriodIndicatorDataExportManager;
+import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.ReportingConstants;
 import org.openmrs.module.reporting.ReportingException;
+import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.report.ReportDesign;
 import org.openmrs.module.reporting.report.definition.PeriodIndicatorReportDefinition;
 import org.openmrs.module.reporting.report.definition.ReportDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class SetupResumoMensalDAHReport extends EptsPeriodIndicatorDataExportManager {
+@Component
+public class SetupResumoMensalDAHReport extends EptsDataExportManager {
 
   @Autowired private ResumoMensalDAHDataSetDefinition resumoMensalDAHDataSetDefinition;
 
   @Autowired protected GenericCohortQueries genericCohortQueries;
+
+  @Autowired private DatimCodeDataSet datimCodeDataSet;
+
+  @Autowired private SismaCodeDataSet sismaCodeDataSet;
 
   @Autowired
   public SetupResumoMensalDAHReport(
@@ -32,13 +41,18 @@ public class SetupResumoMensalDAHReport extends EptsPeriodIndicatorDataExportMan
   }
 
   @Override
-  public String getExcelDesignUuid() {
-    return "eb8e2380-8d14-11ee-95c2-4365f9ce2f2e";
+  public String getVersion() {
+    return "1.0-SNAPSHOT";
   }
 
   @Override
   public String getUuid() {
-    return "f46052f8-8d14-11ee-8b82-6be2aa180891";
+    return "cf55c79a-929b-11ee-b76f-136f10e32f96";
+  }
+
+  @Override
+  public String getExcelDesignUuid() {
+    return "d681b920-929b-11ee-9fef-eb6e8a206d88";
   }
 
   @Override
@@ -67,6 +81,14 @@ public class SetupResumoMensalDAHReport extends EptsPeriodIndicatorDataExportMan
         "R",
         mapStraightThrough(resumoMensalDAHDataSetDefinition.constructResumoMensalDAHDataSet()));
 
+    rd.addDataSetDefinition(
+        "D",
+        Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
+
+    rd.addDataSetDefinition(
+        "SC",
+        Mapped.mapStraightThrough(this.sismaCodeDataSet.constructDataset(this.getParameters())));
+
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
@@ -76,18 +98,13 @@ public class SetupResumoMensalDAHReport extends EptsPeriodIndicatorDataExportMan
   }
 
   @Override
-  public String getVersion() {
-    return "1.0-SNAPSHOT";
-  }
-
-  @Override
   public List<ReportDesign> constructReportDesigns(ReportDefinition reportDefinition) {
     ReportDesign reportDesign = null;
     try {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "Relatorio_Mensal_DAH.xls",
+              "Resumo_Mensal_DAH.xls",
               "Resumo Mensal de DAH Report",
               getExcelDesignUuid(),
               null);

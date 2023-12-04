@@ -1,7 +1,6 @@
 package org.openmrs.module.eptsreports.reporting.library.queries;
 
 import java.util.Arrays;
-
 import org.apache.commons.lang.StringUtils;
 
 public class ResumoMensalDAHQueries {
@@ -71,17 +70,19 @@ public class ResumoMensalDAHQueries {
 
     return query;
   }
-  
+
   public enum ARTSituation {
-	  
-      NEW_ENROLLED,
+    NEW_ENROLLED,
 
-      RESTART,
-      
-      ACTIVE
+    RESTART,
 
-    }
-  
+    ACTIVE,
+
+    PREGNANT,
+
+    SEGUIMENTO_DAH
+  }
+
   /**
    * Situação do TARV no início do seguimento
    *
@@ -90,27 +91,27 @@ public class ResumoMensalDAHQueries {
   public static String findPatientsARTSituation(ARTSituation artSituation) {
 
     String query =
-            "            select p.patient_id from patient p "
-                    + "           join encounter e on p.patient_id=e.patient_id "
-                    + "           join obs o on o.encounter_id=e.encounter_id "
-                    + "       where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 "
-                    + "           and o.concept_id=1255 and o.value_coded = %s "
-                    + "           and e.encounter_datetime >= :startDate and e.encounter_datetime <= :endDate "
-                    + "           and e.location_id=:location ";
+        "            select p.patient_id from patient p "
+            + "           join encounter e on p.patient_id=e.patient_id "
+            + "           join obs o on o.encounter_id=e.encounter_id "
+            + "       where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 "
+            + "           and o.concept_id=1255 and o.value_coded = %s "
+            + "           and e.encounter_datetime >= :startDate and e.encounter_datetime <= :endDate "
+            + "           and e.location_id=:location ";
 
     switch (artSituation) {
-    case NEW_ENROLLED:
-      query = String.format(query, 1256);
-      break;
-      
-    case RESTART:
-  	    query = String.format(query, 1705);
-  	    break;
-  	    
-    case ACTIVE:
-  	    query = String.format(query, 6275);
-  	    break;
-  }
+      case NEW_ENROLLED:
+        query = String.format(query, 1256);
+        break;
+
+      case RESTART:
+        query = String.format(query, 1705);
+        break;
+
+      case ACTIVE:
+        query = String.format(query, 6275);
+        break;
+    }
     return query;
   }
 
@@ -171,7 +172,7 @@ public class ResumoMensalDAHQueries {
             + " 	from "
             + "  	patient p inner join encounter e on p.patient_id=e.patient_id "
             + " 	where p.voided=0 and e.voided=0 and e.encounter_type=90 and e.encounter_datetime >= :startDate - INTERVAL 6 MONTH "
-            + " 	AND e.encounter_datetime <= endDate - INTERVAL 6 MONTH - INTERVAL 1 DAY "
+            + " 	AND e.encounter_datetime <= :endDate - INTERVAL 6 MONTH - INTERVAL 1 DAY "
             + "	and e.location_id=:location "
             + "	) dah "
             + "	inner join ( "
@@ -181,7 +182,7 @@ public class ResumoMensalDAHQueries {
             + "  where e.voided=0 and p.voided=0 and e.encounter_type = 90 and "
             + "      o.voided = 0 and o.concept_id=1708 and o.value_coded = 1366 and e.location_id=:location "
             + "	) saidaDAH on saidaDAH.patient_id = dah.patient_id "
-            + "	where saidaDAH.obs_datetime >= dah.encounter_datetime and saidaDAH.obs_datetime <= endDate ";
+            + "	where saidaDAH.obs_datetime >= dah.encounter_datetime and saidaDAH.obs_datetime <= :endDate ";
 
     return query;
   }
@@ -255,117 +256,133 @@ public class ResumoMensalDAHQueries {
 
     return query;
   }
-  
-  public static final String
-  findPatientsWhoHaveSpecificExamTestResults(
-      TypesOfExams typeOfExam) {
 
-String query =
-"select p.patient_id "
-        + "   from patient p "
-        + "inner join encounter e on e.patient_id=p.patient_id "
-        + "inner join obs o on o.encounter_id=e.encounter_id "
-        + "  where p.voided=0 and  e.voided=0 and e.encounter_type = 90 and o.concept_id=%s  and o.voided=0 and o.value_coded in (%s) "
-        + "        and  e.location_id=:location and o.obs_datetime between :startDate and :endDate "
-        + "        union "
-        + "select p.patient_id "
-        + "   from patient p "
-        + "inner join encounter e on e.patient_id=p.patient_id "
-        + "inner join obs o on o.encounter_id=e.encounter_id "
-        + "  where p.voided=0 and  e.voided=0 and e.encounter_type = 6 and o.concept_id=%s  and o.voided=0 and o.value_coded in (%s) "
-        + "        and  e.location_id=:location and e.encounter_datetime between :startDate and :endDate ";
+  public static final String findPatientsWhoHaveSpecificExamTestResults(TypesOfExams typeOfExam) {
 
-switch (typeOfExam) {
-  case TBLAM:
-    query = String.format(query, 23951, StringUtils.join(Arrays.asList(703, 664), ","));
-    break;
-    
-  case TBLAM_POS:
-	    query = String.format(query, 23951, 703);
-	    break;
+    String query =
+        "select p.patient_id "
+            + "   from patient p "
+            + "inner join encounter e on e.patient_id=p.patient_id "
+            + "inner join obs o on o.encounter_id=e.encounter_id "
+            + "  where p.voided=0 and  e.voided=0 and e.encounter_type = 90 and o.concept_id=%s  and o.voided=0 and o.value_coded in (%s) "
+            + "        and  e.location_id=:location and o.obs_datetime between :startDate and :endDate "
+            + "        union "
+            + "select p.patient_id "
+            + "   from patient p "
+            + "inner join encounter e on e.patient_id=p.patient_id "
+            + "inner join obs o on o.encounter_id=e.encounter_id "
+            + "  where p.voided=0 and  e.voided=0 and e.encounter_type = 6 and o.concept_id=%s  and o.voided=0 and o.value_coded in (%s) "
+            + "        and  e.location_id=:location and e.encounter_datetime between :startDate and :endDate ";
 
-  case CRAG_SORO:
-    query = String.format(query, 165390 , StringUtils.join(Arrays.asList(703, 664), ","));
-    break;
-    
-  case CRAG_SORO_POS:
-	    query = String.format(query, 165390, 703);
-	    break;
-    
-  case CRAG_LCR:
-	    query = String.format(query, 165362 , StringUtils.join(Arrays.asList(703, 664), ","));
-	    break;
-	    
-  case CRAG_LCR_POS:
-	    query = String.format(query, 165362 , 703);
-	    break;
-}
-return query;
-}
-  
-  
-  public enum MCCTreatment {
-	  
-      MCC_PREVENTIVE_TREATMENT,
+    switch (typeOfExam) {
+      case TBLAM:
+        query =
+            String.format(
+                query,
+                23951,
+                StringUtils.join(Arrays.asList(703, 664), ","),
+                23951,
+                StringUtils.join(Arrays.asList(703, 664), ","));
+        break;
 
-      MCC_TREATMENT,
-      
-      QUIMIOTHERAPHY_CICLE_ONE
+      case TBLAM_POS:
+        query = String.format(query, 23951, 703, 23951, 703);
+        break;
 
+      case CRAG_SORO:
+        query =
+            String.format(
+                query,
+                165390,
+                StringUtils.join(Arrays.asList(703, 664), ","),
+                165390,
+                StringUtils.join(Arrays.asList(703, 664), ","));
+        break;
+
+      case CRAG_SORO_POS:
+        query = String.format(query, 165390, 703, 165390, 703);
+        break;
+
+      case CRAG_LCR:
+        query =
+            String.format(
+                query,
+                165362,
+                StringUtils.join(Arrays.asList(703, 664), ","),
+                165362,
+                StringUtils.join(Arrays.asList(703, 664), ","));
+        break;
+
+      case CRAG_LCR_POS:
+        query = String.format(query, 165362, 703, 165362, 703);
+        break;
     }
-  
+    return query;
+  }
+
+  public enum MCCTreatment {
+    MCC_PREVENTIVE_TREATMENT,
+
+    MCC_TREATMENT,
+
+    QUIMIOTHERAPHY_CICLE_ONE
+  }
+
   /**
-   * 16) Número de utentes com CrAg sérico positivo que iniciaram tratamento preventivo de MCC durante o mês
+   * 16) Número de utentes com CrAg sérico positivo que iniciaram tratamento preventivo de MCC
+   * durante o mês
    *
    * @return String
    */
   public static String findPatientsWhoInMCCTreatment(MCCTreatment treatment) {
 
     String query =
-    		"	select p.patient_id from patient p " +
-    				"	join encounter e on p.patient_id=e.patient_id " +
-    				"	join obs o on o.encounter_id=e.encounter_id " +
-    				"	where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 " +
-    				"	and o.concept_id=%s and " +
-    				"	o.value_datetime >= :startDate and o.value_datetime <= :endDate " +
-    				"	and e.location_id=:location ";
+        "	select p.patient_id from patient p "
+            + "	join encounter e on p.patient_id=e.patient_id "
+            + "	join obs o on o.encounter_id=e.encounter_id "
+            + "	where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 "
+            + "	and o.concept_id=%s and "
+            + "	o.value_datetime >= :startDate and o.value_datetime <= :endDate "
+            + "	and e.location_id=:location ";
 
     switch (treatment) {
-    case MCC_PREVENTIVE_TREATMENT:
-      query = String.format(query, 165393);
-      break;
-      
-    case MCC_TREATMENT:
-  	    query = String.format(query, 165363);
-  	    break;
-  	    
-    case QUIMIOTHERAPHY_CICLE_ONE:
-  	    query = String.format(query, 165379);
-  	    break;
-  }
+      case MCC_PREVENTIVE_TREATMENT:
+        query = String.format(query, 165393);
+        break;
+
+      case MCC_TREATMENT:
+        query = String.format(query, 165363);
+        break;
+
+      case QUIMIOTHERAPHY_CICLE_ONE:
+        query = String.format(query, 165379);
+        break;
+    }
     return query;
   }
-  
+
   /**
-   * 18) Número de utentes com novo diagnóstico de sarcoma de kaposi e com indicação para quimioterapia durante o mês
+   * 18) Número de utentes com novo diagnóstico de sarcoma de kaposi e com indicação para
+   * quimioterapia durante o mês
    *
    * @return String
    */
-  public static String getNumberOfPatientsWithNewSKDiagnosticAndQuimiotheraphyIndicationDuringPeriod18() {
+  public static String
+      getNumberOfPatientsWithNewSKDiagnosticAndQuimiotheraphyIndicationDuringPeriod18() {
 
     String query =
-    		"	select p.patient_id from patient p " +
-    				"	join encounter e on p.patient_id=e.patient_id " +
-    				"	join obs o on o.encounter_id=e.encounter_id " +
-    				"     join obs oQuimio on oQuimio.encounter_id = e.encounter_id " +
-    				"	where e.voided=0 and o.voided=0 and oQuimio.voided = 0 and p.voided=0 and e.encounter_type = 90 " +
-    				"	and o.concept_id=1413 and oQuimio.concept_id = 20294 and oQuimio.value_coded = 1065 " +
-    				"	and o.value_datetime >= :startDate and o.value_datetime <= :endDate " +
-    				"	and e.location_id=:location ";
+        "	select p.patient_id from patient p "
+            + "	join encounter e on p.patient_id=e.patient_id "
+            + "	join obs o on o.encounter_id=e.encounter_id "
+            + "     join obs oQuimio on oQuimio.encounter_id = e.encounter_id "
+            + "	where e.voided=0 and o.voided=0 and oQuimio.voided = 0 and p.voided=0 and e.encounter_type = 90 "
+            + "	and o.concept_id=1413 and oQuimio.concept_id = 20294 and oQuimio.value_coded = 1065 "
+            + "	and o.value_datetime >= :startDate and o.value_datetime <= :endDate "
+            + "	and e.location_id=:location ";
 
     return query;
   }
-  
+
   /**
    * O sistema irá identificar mulheres grávidas HIV+, para desagregação dos indicadores 8 a 19
    *
@@ -374,54 +391,54 @@ return query;
   public static String findPatientsMarkedAsPregnantInTheLast6MonthsBeforeEndDate() {
 
     String query =
-    		"Select p.patient_id from person pe " +
-    				"inner join patient p on pe.person_id=p.patient_id " +
-    				"inner join encounter e on p.patient_id=e.patient_id " +
-    				"inner join obs o on e.encounter_id=o.encounter_id " +
-    				"where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F' and " +
-    				"o.concept_id=1982 and o.value_coded=1065 and e.encounter_datetime " +
-    				"between date_add(date_sub(:startDate, interval 3 month), interval 1 day) and :endDate ";
+        "Select p.patient_id from person pe "
+            + "inner join patient p on pe.person_id=p.patient_id "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on e.encounter_id=o.encounter_id "
+            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F' and "
+            + "o.concept_id=1982 and o.value_coded=1065 and e.encounter_datetime "
+            + "between date_add(date_sub(:startDate, interval 3 month), interval 1 day) and :endDate ";
 
     return query;
   }
-  
+
   /**
-   * RF30 O sistema irá identificar utentes em seguimento de DAH, para desagregação dos indicadores 10 a 19
+   * RF30 O sistema irá identificar utentes em seguimento de DAH, para desagregação dos indicadores
+   * 10 a 19
    *
    * @return String
    */
   public static String findPatientsInDAHExcludingPatientsWithSaidaDAH() {
 
     String query =
-    		"	select final.patient_id from ( " +
-    				"	select inicioDAH.patient_id, inicioDAH.dataInicioDAH, saidasDAH.dataSaidaDAH from ( " +
-    				"	select p.patient_id,max(e.encounter_datetime) dataInicioDAH " +
-    				" 	from " +
-    				"  	patient p inner join encounter e on p.patient_id=e.patient_id " +
-    				" 	where p.voided=0 and e.voided=0 and e.encounter_type=90 " +
-    				" 	and e.encounter_datetime <= :endDate " +
-    				"	and e.location_id=:location " +
-    				"	group by p.patient_id " +
-    				"	) inicioDAH left join " +
-    				"	( " +
-    				"  select p.patient_id, o.obs_datetime dataSaidaDAH from patient p " +
-    				"      join encounter e on p.patient_id=e.patient_id " +
-    				"      join obs o on o.encounter_id=e.encounter_id " +
-    				"  where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 " +
-    				"      and o.concept_id=1708 and o.value_coded in (1366,1707,1706) " +
-    				"      and e.location_id=:location " +
-    				"      union " +
-    				"  select p.patient_id, o.value_datetime dataSaidaDAH from patient p " +
-    				"      join encounter e on p.patient_id=e.patient_id " +
-    				"      join obs o on o.encounter_id=e.encounter_id " +
-    				"  where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 " +
-    				"      and o.concept_id=165386 and e.location_id=:location " +
-    				"      )saidasDAH on saidasDAH.patient_id = inicioDAH.patient_id " +
-    				"      and saidasDAH.dataSaidaDAH between inicioDAH.dataInicioDAH and :endDate " +
-    				"      ) final " +
-    				"        where final.dataSaidaDAH is null ";
+        "	select final.patient_id from ( "
+            + "	select inicioDAH.patient_id, inicioDAH.dataInicioDAH, saidasDAH.dataSaidaDAH from ( "
+            + "	select p.patient_id,max(e.encounter_datetime) dataInicioDAH "
+            + " 	from "
+            + "  	patient p inner join encounter e on p.patient_id=e.patient_id "
+            + " 	where p.voided=0 and e.voided=0 and e.encounter_type=90 "
+            + " 	and e.encounter_datetime <= :endDate "
+            + "	and e.location_id=:location "
+            + "	group by p.patient_id "
+            + "	) inicioDAH left join "
+            + "	( "
+            + "  select p.patient_id, o.obs_datetime dataSaidaDAH from patient p "
+            + "      join encounter e on p.patient_id=e.patient_id "
+            + "      join obs o on o.encounter_id=e.encounter_id "
+            + "  where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 "
+            + "      and o.concept_id=1708 and o.value_coded in (1366,1707,1706) "
+            + "      and e.location_id=:location "
+            + "      union "
+            + "  select p.patient_id, o.value_datetime dataSaidaDAH from patient p "
+            + "      join encounter e on p.patient_id=e.patient_id "
+            + "      join obs o on o.encounter_id=e.encounter_id "
+            + "  where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 "
+            + "      and o.concept_id=165386 and e.location_id=:location "
+            + "      )saidasDAH on saidasDAH.patient_id = inicioDAH.patient_id "
+            + "      and saidasDAH.dataSaidaDAH between inicioDAH.dataInicioDAH and :endDate "
+            + "      ) final "
+            + "        where final.dataSaidaDAH is null ";
 
     return query;
   }
-  
 }
