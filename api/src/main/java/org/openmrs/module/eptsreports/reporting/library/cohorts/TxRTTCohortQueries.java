@@ -12,6 +12,7 @@ import org.openmrs.module.eptsreports.reporting.calculation.rtt.TxRTTPLHIVLess12
 import org.openmrs.module.eptsreports.reporting.calculation.rtt.TxRTTPatientsWhoAreTransferedOutCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.rtt.TxRTTPatientsWhoExperiencedIITCalculation;
 import org.openmrs.module.eptsreports.reporting.cohort.definition.BaseFghCalculationCohortDefinition;
+import org.openmrs.module.eptsreports.reporting.library.queries.TxRttQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -48,6 +49,8 @@ public class TxRTTCohortQueries {
 
     final CompositionCohortDefinition composition = new CompositionCohortDefinition();
 
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
     composition.setName("Tx RTT - Patients on RTT");
     composition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     composition.addParameter(new Parameter("endDate", "End Date", Date.class));
@@ -59,13 +62,16 @@ public class TxRTTCohortQueries {
             this.genericCohorts.generalSql(
                 "Patients who experienced interruption in treatment by end of previous reporting period",
                 EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT_PREVIOUS_PERIOD)),
-            "startDate=${startDate},endDate=${endDate},location=${location}"));
+            mappings));
 
     composition.addSearch(
         "RTT-TRANFERRED-OUT",
         EptsReportUtils.map(
-            this.getPatientsWhoWhereTransferredOutCalculation(),
-            "endDate=${startDate},location=${location}"));
+            this.genericCohorts.generalSql(
+                "Patients who experienced interruption in treatment by end of previous reporting period",
+                TxRttQueries.QUERY
+                    .findPatientsWhoWhereTransferredOutByEndOfPreviousReportingPeriod),
+            mappings));
 
     composition.addSearch(
         "TX-CURR",
@@ -75,9 +81,7 @@ public class TxRTTCohortQueries {
 
     composition.addSearch(
         "TRF-IN",
-        EptsReportUtils.map(
-            this.tRFINCohortQueries.getPatiensWhoAreTransferredIn(),
-            "startDate=${startDate},endDate=${endDate},location=${location}"));
+        EptsReportUtils.map(this.tRFINCohortQueries.getPatiensWhoAreTransferredIn(), mappings));
 
     composition.setCompositionString(
         "((IIT-PREVIOUS-PERIOD NOT RTT-TRANFERRED-OUT) AND TX-CURR) NOT TRF-IN");

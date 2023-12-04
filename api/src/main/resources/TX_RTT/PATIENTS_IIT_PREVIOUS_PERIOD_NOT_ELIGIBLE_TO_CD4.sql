@@ -233,4 +233,4 @@ from (
 			) inicio_fila_recepcao_prox
 		  		group by patient_id                                                                                                                                                                    
   ) coorte_final 
-  where ((data_estado is null or (data_estado is not null and  data_fila > data_estado)) and date_add(data_iit, interval 28 day) < :startDate or (data_iit is null and data_fila is not null)) and data_restart between :startDate and :endDate  and datediff(data_restart, data_iit ) <  60
+  where ((data_estado is null or (data_estado is not null and  data_fila > data_estado)) and date_add(data_iit, interval 28 day) < date_add(:startDate, interval -1 day)  or (data_iit is null and data_fila is not null)) and data_restart between :startDate and :endDate  and datediff(data_restart, data_iit ) <  60

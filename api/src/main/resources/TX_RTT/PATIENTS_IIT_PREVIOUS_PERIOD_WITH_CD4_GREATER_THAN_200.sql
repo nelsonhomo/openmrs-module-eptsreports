@@ -260,7 +260,7 @@ from (
 		   	inner join person pe on pe.person_id = inicio_fila_recepcao_prox.patient_id
 		 where (pe.birthdate is not null and floor(datediff(inicio_fila_recepcao_prox.art_start_date,pe.birthdate )/365) >= 5) or pe.birthdate is  null                                                                                                                                                                  
   ) coorte_final 
-  where ((data_estado is null or (data_estado is not null and  data_fila > data_estado)) and date_add(data_iit, interval 28 day) < :startDate or (data_iit is null and data_fila is not null))   and data_restart between :startDate and :endDate 
+  where ((data_estado is null or (data_estado is not null and  data_fila > data_estado)) and date_add(data_iit, interval 28 day) < date_add(:startDate, interval -1 day)  or (data_iit is null and data_fila is not null))   and data_restart between :startDate and :endDate 
 ) coorte_final 
 inner join
 		(     
