@@ -11,10 +11,8 @@ import org.openmrs.module.eptsreports.reporting.calculation.BaseFghCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.BooleanResult;
 import org.openmrs.module.eptsreports.reporting.calculation.generic.LastFilaCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.generic.LastRecepcaoLevantamentoCalculation;
-import org.openmrs.module.eptsreports.reporting.calculation.generic.LastSeguimentoCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.generic.OnArtInitiatedArvDrugsCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.generic.TxRttNextFilaUntilEndDateCalculation;
-import org.openmrs.module.eptsreports.reporting.calculation.generic.TxRttNextSeguimentoUntilEndDateCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.txml.TxMLPatientCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.util.processor.CalculationProcessorUtils;
 import org.openmrs.module.reporting.evaluation.EvaluationContext;
@@ -40,10 +38,7 @@ public class TxRTTPatientsWhoExperiencedIITCalculation extends BaseFghCalculatio
         Context.getRegisteredComponents(LastFilaCalculation.class)
             .get(0)
             .evaluate(cohort, parameterValues, context);
-    CalculationResultMap lastSeguimentoCalculationResult =
-        Context.getRegisteredComponents(LastSeguimentoCalculation.class)
-            .get(0)
-            .evaluate(cohort, parameterValues, context);
+
     LastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation =
         Context.getRegisteredComponents(LastRecepcaoLevantamentoCalculation.class).get(0);
     CalculationResultMap lastRecepcaoLevantamentoResult =
@@ -53,19 +48,13 @@ public class TxRTTPatientsWhoExperiencedIITCalculation extends BaseFghCalculatio
         Context.getRegisteredComponents(TxRttNextFilaUntilEndDateCalculation.class)
             .get(0)
             .evaluate(lastFilaCalculationResult.keySet(), parameterValues, context);
-    CalculationResultMap nextSeguimentoResult =
-        Context.getRegisteredComponents(TxRttNextSeguimentoUntilEndDateCalculation.class)
-            .get(0)
-            .evaluate(lastSeguimentoCalculationResult.keySet(), parameterValues, context);
 
     return this.evaluateUsingCalculationRules(
         cohort,
         startDate,
         resultMap,
         lastFilaCalculationResult,
-        lastSeguimentoCalculationResult,
         nextFilaResult,
-        nextSeguimentoResult,
         lastRecepcaoLevantamentoResult,
         lastRecepcaoLevantamentoCalculation);
   }
@@ -75,9 +64,7 @@ public class TxRTTPatientsWhoExperiencedIITCalculation extends BaseFghCalculatio
       Date startDate,
       CalculationResultMap resultMap,
       CalculationResultMap lastFilaCalculationResult,
-      CalculationResultMap lastSeguimentoCalculationResult,
       CalculationResultMap nextFilaResult,
-      CalculationResultMap nextSeguimentoResult,
       CalculationResultMap lastRecepcaoLevantamentoResult,
       LastRecepcaoLevantamentoCalculation lastRecepcaoLevantamentoCalculation) {
 
@@ -86,7 +73,6 @@ public class TxRTTPatientsWhoExperiencedIITCalculation extends BaseFghCalculatio
           CalculationProcessorUtils.getMaxDate(
               patientId,
               nextFilaResult,
-              nextSeguimentoResult,
               TxMLPatientCalculation.getLastRecepcaoLevantamentoPlus30(
                   patientId, lastRecepcaoLevantamentoResult, lastRecepcaoLevantamentoCalculation));
 
@@ -99,8 +85,6 @@ public class TxRTTPatientsWhoExperiencedIITCalculation extends BaseFghCalculatio
       } else {
         this.checkConsultationsOrFilaWithoutNextConsultationDate(
             patientId, resultMap, startDate, lastFilaCalculationResult, nextFilaResult);
-        this.checkConsultationsOrFilaWithoutNextConsultationDate(
-            patientId, resultMap, startDate, lastSeguimentoCalculationResult, nextSeguimentoResult);
       }
     }
 
