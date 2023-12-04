@@ -355,7 +355,7 @@
               left join                                                                                                                                          
               obs obs_fila on obs_fila.person_id=inicio_fila_seg.patient_id                                                                                      
                	and obs_fila.voided=0                                                                                                                             
-              	and (obs_fila.obs_datetime=inicio_fila_seg.data_fila  or ultimo_fila_data_criacao.date_created = obs_fila.date_created)                                                                                                  
+              	and (obs_fila.obs_datetime=inicio_fila_seg.data_fila  or (ultimo_fila_data_criacao.date_created = obs_fila.date_created and ultimo_fila_data_criacao.encounter_id = obs_fila.encounter_id ))                                                                                                       
               	and obs_fila.concept_id=5096                                                                                                                       
               	and obs_fila.location_id=:location                                                                                                                 
              group by inicio_fila_seg.patient_id                                                                                                                 
