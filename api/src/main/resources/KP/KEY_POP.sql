@@ -15,12 +15,15 @@ select patient_id
                             inner join encounter e on e.patient_id=maxkp.patient_id and maxkp.maxkpdate=e.encounter_datetime                                            
                             inner join obs o on o.encounter_id=e.encounter_id and maxkp.maxkpdate=o.obs_datetime                                                        
                         where o.concept_id=23703 and o.voided=0 and e.encounter_type=6 and e.voided=0 and e.location_id=:location and o.value_coded in (20454,20426)    
+                        
                         union                                                                                                                                           
+                        
                         select maxkp.patient_id, o.value_coded,o.obs_datetime,1 ordemSource,3 ordemKp from (                                                            
                             select p.patient_id,max(e.encounter_datetime) maxkpdate from patient p                                                                      
                                 inner join encounter e on p.patient_id=e.patient_id                                                                                     
-                                inner join obs o on e.encounter_id=o.encounter_id                                                                                       
-                            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=23703 and  e.encounter_type=6 and e.encounter_datetime<=:endDate and  o.value_coded in(1901,1377)  and     
+                                inner join obs o on e.encounter_id=o.encounter_id     
+                                inner join person pe on pe.person_id=p.patient_id                                                                                     
+                            where p.voided=0 and e.voided=0 and o.voided=0 and  pe.voided = 0 and pe.gender='F' and concept_id=23703 and  e.encounter_type=6 and e.encounter_datetime<=:endDate and  o.value_coded = 1901  and     
                                   e.location_id=:location                                                                                                           
                                 group by p.patient_id                                                                                                               
                             )                                                                                                                                       
@@ -29,7 +32,26 @@ select patient_id
                             inner join obs o on o.encounter_id=e.encounter_id and maxkp.maxkpdate=o.obs_datetime                                                        
                             inner join person pe on pe.person_id=maxkp.patient_id                                                                                       
                         where o.concept_id=23703 and o.voided=0 and e.encounter_type=6 and e.voided=0 and e.location_id=:location and pe.voided=0                   
-                            and ((pe.gender='F' and o.value_coded=1901) or  (pe.gender='M' and o.value_coded=1377))                                                     
+                            and (pe.gender='F' and o.value_coded=1901)                                                     
+                        
+              		    union
+
+						select maxkp.patient_id, o.value_coded,o.obs_datetime,1 ordemSource,3 ordemKp from (                                                            
+                            select p.patient_id,max(e.encounter_datetime) maxkpdate from patient p                                                                      
+                                inner join encounter e on p.patient_id=e.patient_id                                                                                     
+                                inner join obs o on e.encounter_id=o.encounter_id     
+                                inner join person pe on pe.person_id=p.patient_id                                                                                      
+                            where p.voided=0 and e.voided=0 and o.voided=0 and  pe.voided = 0 and pe.gender='M'  and concept_id=23703 and  e.encounter_type=6 and e.encounter_datetime<=:endDate and  o.value_coded  = 1377  and     
+                                  e.location_id=:location                                                                                                           
+                                group by p.patient_id                                                                                                               
+                            )                                                                                                                                       
+                        maxkp                                                                                                                                       
+                            inner join encounter e on e.patient_id=maxkp.patient_id and maxkp.maxkpdate=e.encounter_datetime                                            
+                            inner join obs o on o.encounter_id=e.encounter_id and maxkp.maxkpdate=o.obs_datetime                                                        
+                            inner join person pe on pe.person_id=maxkp.patient_id                                                                                       
+                        where o.concept_id=23703 and o.voided=0 and e.encounter_type=6 and e.voided=0 and e.location_id=:location and pe.voided=0                   
+                            and (pe.gender='M' and o.value_coded=1377)                                               
+              			          
                         union                                                                                                                                       
                                                                                                                                                        
                         select maxkp.patient_id, o.value_coded,o.obs_datetime,2 ordemSource,5 ordemKp from (                                                        
