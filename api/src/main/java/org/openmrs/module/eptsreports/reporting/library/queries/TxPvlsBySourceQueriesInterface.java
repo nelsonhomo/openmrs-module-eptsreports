@@ -120,8 +120,8 @@ public interface TxPvlsBySourceQueriesInterface {
       String query =
           "select inicio_real.patient_id  from ( "
               + "select patient_id,min(data_inicio) data_inicio from ( "
-              + "select p.patient_id,min(e.encounter_datetime) data_inicio from patient p  "
-              + "inner join encounter e on p.patient_id=e.patient_id	"
+              + "select p.patient_id,min(e.encounter_datetime) data_inicio from patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id "
               + "inner join obs o on o.encounter_id=e.encounter_id "
               + "where e.voided=0 and o.voided=0 and p.voided=0 and  e.encounter_type in (18,6,9) and o.concept_id=1255 and o.value_coded=1256 and e.encounter_datetime > '0000-00-00 00:00' and  e.encounter_datetime<=:endDate and e.location_id=:location group by p.patient_id "
               + "union "
@@ -147,17 +147,52 @@ public interface TxPvlsBySourceQueriesInterface {
               + "Select p.patient_id,max(o.obs_datetime) data_carga from patient p "
               + "inner join encounter e on p.patient_id=e.patient_id "
               + "inner join obs o on e.encounter_id=o.encounter_id "
-              + "where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in (%s) and  o.concept_id in (856,1305) and o.obs_datetime > '0000-00-00 00:00' and  date(o.obs_datetime) between date_add(date_add(:endDate, interval -12 MONTH), interval 1 day) and :endDate and e.location_id=:location group by p.patient_id) ultima_carga "
+              + "where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in ( %s ) and  o.concept_id in (856,1305) and o.obs_datetime > '0000-00-00 00:00' and  date(o.obs_datetime) between date_add(date_add(:endDate, interval -12 MONTH), interval 1 day) and :endDate and e.location_id=:location group by p.patient_id) ultima_carga "
               + "inner join obs on obs.person_id=ultima_carga.patient_id and date(obs.obs_datetime)=date(ultima_carga.data_carga) "
-              + "where obs.voided=0 and ((obs.concept_id=856 and obs.value_numeric<1000) or (obs.concept_id=1305 and obs.value_coded in (1306,23814,23905,23906,23907,23908,23904,165331)))  and obs.location_id=:location) carga_viral on inicio_real.patient_id=carga_viral.patient_id "
+              + "where obs.voided=0 and ((obs.concept_id=856 and obs.value_numeric<1000) or (obs.concept_id=1305 and obs.value_coded in (1306,23814,23905,23906,23907,23908,23904,165331)))  and obs.location_id=:location "
+              + "and ultima_carga.patient_id NOT IN ( "
+              + "	select cvSuprimida.patient_id from (select ultima_carga.patient_id,ultima_carga.data_carga,obs.value_numeric valor_carga,obs.concept_id,obs.value_coded from ( "
+              + "Select p.patient_id,max(o.obs_datetime) data_carga from patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs o on e.encounter_id=o.encounter_id "
+              + "where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in ( %s ) and  o.concept_id in (856,1305) and o.obs_datetime > '0000-00-00 00:00' and  date(o.obs_datetime) between date_add(date_add(:endDate, interval -12 MONTH), interval 1 day) and :endDate and e.location_id=:location group by p.patient_id) ultima_carga "
+              + "inner join obs on obs.person_id=ultima_carga.patient_id and date(obs.obs_datetime)=date(ultima_carga.data_carga) "
+              + "where obs.voided=0 and ((obs.concept_id=856 and obs.value_numeric<1000) or (obs.concept_id=1305 and obs.value_coded in (1306,23814,23905,23906,23907,23908,23904,165331)))  and obs.location_id=:location "
+              + ")cvSuprimida "
+              + "left join( "
+              + "select ultima_carga.patient_id,ultima_carga.data_carga,obs.value_numeric valor_carga,obs.concept_id,obs.value_coded from ( "
+              + "Select p.patient_id,max(o.obs_datetime) data_carga from patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs o on e.encounter_id=o.encounter_id "
+              + "where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type in ( %s ) and  o.concept_id in (856,1305) and o.obs_datetime > '0000-00-00 00:00' and  date(o.obs_datetime) between date_add(date_add(:endDate, interval -12 MONTH), interval 1 day) and :endDate and e.location_id=:location group by p.patient_id) ultima_carga "
+              + "inner join encounter e on ultima_carga.patient_id=e.patient_id "
+              + "inner join obs on obs.encounter_id=e.encounter_id and date(obs.obs_datetime)=date(ultima_carga.data_carga) "
+              + "where obs.voided=0 and obs.concept_id=856 and obs.value_numeric>=1000 and e.voided = 0 and e.encounter_type in ( %s ) and e.location_id=:location "
+              + ")cvNaoSuprimida on cvSuprimida.patient_id = cvNaoSuprimida.patient_id "
+              + "where date(cvSuprimida.data_carga) = date(cvNaoSuprimida.data_carga) "
+              + ") "
+              + ") carga_viral on inicio_real.patient_id=carga_viral.patient_id "
               + "where carga_viral.data_carga>=date_add(inicio_real.data_inicio, interval 90 DAY) ";
+
       switch (sourceType) {
         case LAB_FSR:
-          query = String.format(query, StringUtils.join(Arrays.asList(13, 51), ","));
+          query =
+              String.format(
+                  query,
+                  StringUtils.join(Arrays.asList(13, 51), ","),
+                  StringUtils.join(Arrays.asList(13, 51), ","),
+                  StringUtils.join(Arrays.asList(13, 51), ","),
+                  StringUtils.join(Arrays.asList(13, 51), ","));
           break;
 
         case MASTERCARD:
-          query = String.format(query, StringUtils.join(Arrays.asList(6, 9, 53), ","));
+          query =
+              String.format(
+                  query,
+                  StringUtils.join(Arrays.asList(6, 9, 53), ","),
+                  StringUtils.join(Arrays.asList(6, 9, 53), ","),
+                  StringUtils.join(Arrays.asList(6, 9, 53), ","),
+                  StringUtils.join(Arrays.asList(6, 9, 53), ","));
           break;
       }
       return query;

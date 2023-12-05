@@ -50,7 +50,7 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
 
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    dataSetDefinition.setName("TX_PVLS Data Set");
+    dataSetDefinition.setName("TX_PVLS by source Data Set");
 
     dataSetDefinition.addParameters(this.getParameters());
 
@@ -61,262 +61,102 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
         EptsReportUtils.map(
             eptsCommonDimension.age(ageDimensionCohort), "effectiveDate=${endDate}"));
 
+    final CohortIndicator pvlsBySourceDenominator =
+        this.eptsGeneralIndicator.getIndicator(
+            "PVLS by source denominator",
+            EptsReportUtils.map(
+                pvlsBySourceCohortQueries
+                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsBySource(
+                        SourceType.LAB_FSR),
+                mappings));
+
     dataSetDefinition.addColumn(
-        "PVLSTOTAL-S1",
-        "Total patients with Viral load - Denominator",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "patients with viral load",
-                EptsReportUtils.map(
-                    this.pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsBySource(
-                            SourceType.LAB_FSR),
-                    mappings)),
-            mappings),
+        "PVLS-DEN-TOTAL",
+        "Total PVLS by source denominator (Laboratory and e-Lab Sources)",
+        EptsReportUtils.map(pvlsBySourceDenominator, mappings),
         "");
 
     addRow(
         dataSetDefinition,
-        "DR-S1",
-        "Adults & Children Denominator Routine (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "viral load results on routine adults and children",
-                EptsReportUtils.map(
-                    this.pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsRotine(
-                            SourceType.LAB_FSR),
-                    mappings)),
-            mappings),
-        getAdultChildrenColumns());
-
-    addRow(
-        dataSetDefinition,
-        "DT-S1",
-        "Adults & Children Denominator Target (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "viral load results on Target adults and children",
-                EptsReportUtils.map(
-                    this.pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsTarget(
-                            SourceType.LAB_FSR),
-                    mappings)),
-            mappings),
+        "PVLS-DEN",
+        "Patients with Viral load - Denominator",
+        EptsReportUtils.map(pvlsBySourceDenominator, mappings),
         getAdultChildrenColumns());
 
     dataSetDefinition.addColumn(
-        "DPREGROTINE-S1",
-        "Pregant routine (Laboratory and FSR Sources)",
+        "PREGNANT-DEN",
+        "PVLS by source denominator - Pregnant Patients (Laboratory and e-Lab Sources)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
-                "Pregant routine",
+                "Pregant Denominator",
                 EptsReportUtils.map(
                     pvlsBySourceCohortQueries
-                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsRotine(
+                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(
                             SourceType.LAB_FSR, WomanState.PREGNANT),
                     mappings)),
             mappings),
         "");
 
     dataSetDefinition.addColumn(
-        "DPREGTARGET-S1",
-        "pregnant target (Laboratory and FSR Sources)",
+        "BREASTFEEDING-DEN",
+        "PVLS by source denominator - Breastfeeding Patients (Laboratory and e-Lab Sources)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
-                "Pregant target (Laboratory and FSR Sources)",
+                "Breastfeeding denominator (Laboratory and FSR Sources)",
                 EptsReportUtils.map(
                     pvlsBySourceCohortQueries
-                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsTarget(
-                            SourceType.LAB_FSR, WomanState.PREGNANT),
-                    mappings)),
-            mappings),
-        "");
-
-    dataSetDefinition.addColumn(
-        "DBREASROTINE-S1",
-        "Breastfeeding routine (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Breastfeeding routine (Laboratory and FSR Sources)",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsRotine(
+                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(
                             SourceType.LAB_FSR, WomanState.BREASTFEEDING),
                     mappings)),
             mappings),
         "");
 
-    dataSetDefinition.addColumn(
-        "DBREASTARGET-S1",
-        "Breastfeeding Target (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Breastfeeding Target",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findWomanStateWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsTarget(
-                            SourceType.LAB_FSR, WomanState.BREASTFEEDING),
-                    mappings)),
-            mappings),
-        "");
+    final CohortIndicator pvlsBySourceNumerator =
+        this.eptsGeneralIndicator.getIndicator(
+            "pvls denominator",
+            EptsReportUtils.map(
+                pvlsBySourceCohortQueries
+                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(
+                        SourceType.LAB_FSR),
+                mappings));
 
     dataSetDefinition.addColumn(
-        "NRTOTAL-S1",
-        "Total patients with Viral load - numerator (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "patients with viral load",
-                EptsReportUtils.map(
-                    this.pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(
-                            SourceType.LAB_FSR),
-                    mappings)),
-            mappings),
+        "PVLS-NUM-TOTAL",
+        "Total PVLS by source numerator (Laboratory and e-Lab Sources)",
+        EptsReportUtils.map(pvlsBySourceNumerator, mappings),
         "");
 
     addRow(
         dataSetDefinition,
-        "NR-S1",
-        "Adults & Children Numerator Routine (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "viral load results on routine adults and children (Laboratory and FSR Sources)",
-                EptsReportUtils.map(
-                    this.pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsRotine(
-                            SourceType.LAB_FSR),
-                    mappings)),
-            mappings),
-        getAdultChildrenColumns());
-
-    addRow(
-        dataSetDefinition,
-        "NT-S1",
-        "Adults & Children Numerator target (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "viral load results on target adults and children (Laboratory and FSR Sources)",
-                EptsReportUtils.map(
-                    this.pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsTarget(
-                            SourceType.LAB_FSR),
-                    mappings)),
-            mappings),
+        "PVLS-NUM",
+        "Adults & Children Numerator (Laboratory and e-Lab Sources)",
+        EptsReportUtils.map(pvlsBySourceNumerator, mappings),
         getAdultChildrenColumns());
 
     dataSetDefinition.addColumn(
-        "NPREGROTINE-S1",
-        "Pregant routine (Laboratory and FSR Sources)",
+        "PREGNANT-NUM",
+        "PVLS by source numerator - Pregnant Patients (Laboratory and e-Lab Sources)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
-                "Pregant routine (Laboratory and FSR Sources)",
+                "PVLS by source numerator - Pregnant Patients (Laboratory and e-Lab Sources)",
                 EptsReportUtils.map(
                     pvlsBySourceCohortQueries
-                        .findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsWithVlMoreThan1000Rotine(
+                        .findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsWithVlMoreThan1000(
                             SourceType.LAB_FSR, WomanState.PREGNANT),
                     mappings)),
             mappings),
         "");
 
     dataSetDefinition.addColumn(
-        "NPREGTARGET-S1",
-        "Pregant routine (Laboratory and FSR Sources)",
+        "BREASTFEEDING-NUM",
+        "PVLS by source numerator - Breastfeeding Patients (Laboratory and e-Lab Sources)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
-                "Pregant routine (Laboratory and FSR Sources)",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsWithVlMoreThan1000Target(
-                            SourceType.LAB_FSR, WomanState.PREGNANT),
-                    mappings)),
-            mappings),
-        "");
-
-    dataSetDefinition.addColumn(
-        "NBREASROTINE-S1",
-        "Breastfeeding routine (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Breastfeeding routine (Laboratory and FSR Sources)",
+                "Breastfeeding numerator (Laboratory and FSR Sources)",
                 EptsReportUtils.map(
                     pvlsBySourceCohortQueries
                         .findPregnantBreatsFeedingWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsWithVlMoreThan1000Rotine(
                             SourceType.LAB_FSR, WomanState.BREASTFEEDING),
-                    mappings)),
-            mappings),
-        "");
-
-    dataSetDefinition.addColumn(
-        "NBREASTARGET-S1",
-        "Breastfeeding target (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Breastfeeding target (Laboratory and FSR Sources)",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPregnantBreatsFeedingWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsWithVlMoreThan1000Target(
-                            SourceType.LAB_FSR, WomanState.BREASTFEEDING),
-                    mappings)),
-            mappings),
-        "");
-
-    // Add SubTotal Denominator
-
-    dataSetDefinition.addColumn(
-        "DRSUBTOTAL-S1",
-        "Rotine Sub Total (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Rotine Sub Total",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsRotine(
-                            SourceType.LAB_FSR),
-                    mappings)),
-            mappings),
-        "");
-
-    dataSetDefinition.addColumn(
-        "DTSUBTOTAL-S1",
-        "Target Sub Total (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Target Sub Total (Laboratory and FSR Sources)",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsTarget(
-                            SourceType.LAB_FSR),
-                    mappings)),
-            mappings),
-        "");
-
-    // Add SubTotal Numerator
-
-    dataSetDefinition.addColumn(
-        "NRSUBTOTAL-S1",
-        "Rotine Numerator Sub Total (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Rotine Numerator Sub Total (Laboratory and FSR Sources)",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsRotine(
-                            SourceType.LAB_FSR),
-                    mappings)),
-            mappings),
-        "");
-
-    dataSetDefinition.addColumn(
-        "NTSUBTOTAL-S1",
-        "Target Numerator Sub Total (Laboratory and FSR Sources)",
-        EptsReportUtils.map(
-            eptsGeneralIndicator.getIndicator(
-                "Target Numerator Sub Total (Laboratory and FSR Sources)",
-                EptsReportUtils.map(
-                    pvlsBySourceCohortQueries
-                        .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsTarget(
-                            SourceType.LAB_FSR),
                     mappings)),
             mappings),
         "");
@@ -340,139 +180,54 @@ public class TxPvlsByLabAndFSRSourceDataset extends BaseDataSet {
         EptsReportUtils.map(this.keyPopulationDimension.findPatientsWhoAreSexWorker(), mappings));
 
     // Key population collumn denominator
-
-    final CohortIndicator rotineDenominator =
-        this.eptsGeneralIndicator.getIndicator(
-            "rotine",
-            EptsReportUtils.map(
-                pvlsBySourceCohortQueries
-                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsRotine(
-                        SourceType.LAB_FSR),
-                mappings));
-
-    final CohortIndicator targetDenominator =
-        this.eptsGeneralIndicator.getIndicator(
-            "target",
-            EptsReportUtils.map(
-                pvlsBySourceCohortQueries
-                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12MonthsTarget(
-                        SourceType.LAB_FSR),
-                mappings));
-
     dataSetDefinition.addColumn(
-        "DRMSM-S1",
-        "Homosexual (Laboratory and FSR Sources)",
-        EptsReportUtils.map(rotineDenominator, mappings),
+        "DMSM-S1",
+        "Denominator - Homosexual (Laboratory and e-Lab Sources)",
+        EptsReportUtils.map(pvlsBySourceDenominator, mappings),
         "gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
-        "DTMSM-S1",
-        "Homosexual (Laboratory and FSR Sources)",
-        EptsReportUtils.map(targetDenominator, mappings),
-        "gender=M|homosexual=homosexual");
-
-    dataSetDefinition.addColumn(
-        "DRPWID-S1",
-        "Drugs User (Laboratory and FSR Sources)",
-        EptsReportUtils.map(rotineDenominator, mappings),
+        "DPWID-S1",
+        "Denominator -Drugs User (Laboratory and e-Lab Sources)",
+        EptsReportUtils.map(pvlsBySourceDenominator, mappings),
         "drug-user=drug-user");
 
     dataSetDefinition.addColumn(
-        "DTPWID-S1",
-        "Drugs User (Laboratory and FSR Sources)",
-        EptsReportUtils.map(targetDenominator, mappings),
-        "drug-user=drug-user");
-
-    dataSetDefinition.addColumn(
-        "DRPRI-S1",
-        "Prisioners (Laboratory and FSR Sources)",
-        EptsReportUtils.map(rotineDenominator, mappings),
+        "DPRI-S1",
+        "Denominator - Prisioners (Laboratory and e-Lab Sources)",
+        EptsReportUtils.map(pvlsBySourceDenominator, mappings),
         "prisioner=prisioner");
 
     dataSetDefinition.addColumn(
-        "DTPRI-S1",
-        "Prisioners (Laboratory and FSR Sources)",
-        EptsReportUtils.map(targetDenominator, mappings),
-        "prisioner=prisioner");
-
-    dataSetDefinition.addColumn(
-        "DRFSW-S1",
-        "Sex Worker (Laboratory and FSR Sources)",
-        EptsReportUtils.map(rotineDenominator, mappings),
-        "gender=F|sex-worker=sex-worker");
-
-    dataSetDefinition.addColumn(
-        "DTFSW-S1",
-        "Sex Worker (Laboratory and FSR Sources)",
-        EptsReportUtils.map(targetDenominator, mappings),
+        "DFSW-S1",
+        "Denominator - Sex Worker (Laboratory and e-Lab Sources)",
+        EptsReportUtils.map(pvlsBySourceDenominator, mappings),
         "gender=F|sex-worker=sex-worker");
 
     // Key population collumn Numerator
 
-    final CohortIndicator rotineNumerator =
-        this.eptsGeneralIndicator.getIndicator(
-            "rotine",
-            EptsReportUtils.map(
-                pvlsBySourceCohortQueries
-                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsRotine(
-                        SourceType.LAB_FSR),
-                mappings));
-
-    final CohortIndicator targetNumerator =
-        this.eptsGeneralIndicator.getIndicator(
-            "target",
-            EptsReportUtils.map(
-                pvlsBySourceCohortQueries
-                    .findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12MonthsTarget(
-                        SourceType.LAB_FSR),
-                mappings));
-
     dataSetDefinition.addColumn(
-        "NRPWID-S1",
-        "Drugs User (Laboratory and FSR Sources)",
-        EptsReportUtils.map(rotineNumerator, mappings),
+        "NPWID-S1",
+        "Numerator - Drugs User (Laboratory and e-Lab Sources)",
+        EptsReportUtils.map(pvlsBySourceNumerator, mappings),
         "drug-user=drug-user");
 
     dataSetDefinition.addColumn(
-        "NTPWID-S1",
-        "Drugs User (Laboratory and FSR Sources)",
-        EptsReportUtils.map(targetNumerator, mappings),
-        "drug-user=drug-user");
-
-    dataSetDefinition.addColumn(
-        "NRMSM-S1",
-        "Homosexual (Laboratory and FSR Sources)",
-        EptsReportUtils.map(rotineNumerator, mappings),
+        "NMSM-S1",
+        "Numerator - Homosexual (Laboratory and e-Lab Sources)",
+        EptsReportUtils.map(pvlsBySourceNumerator, mappings),
         "gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
-        "NTMSM-S1",
-        "Homosexual (Laboratory and FSR Sources)",
-        EptsReportUtils.map(targetNumerator, mappings),
-        "gender=M|homosexual=homosexual");
-
-    dataSetDefinition.addColumn(
-        "NRFSW-S1",
-        "Sex Worker (Laboratory and FSR Sources)",
-        EptsReportUtils.map(rotineNumerator, mappings),
+        "NFSW-S1",
+        "Numerator - Sex Worker (Laboratory and e-Lab Sources)",
+        EptsReportUtils.map(pvlsBySourceNumerator, mappings),
         "gender=F|sex-worker=sex-worker");
 
     dataSetDefinition.addColumn(
-        "NTFSW-S1",
-        "Sex Worker (Laboratory and FSR Sources)",
-        EptsReportUtils.map(targetNumerator, mappings),
-        "gender=F|sex-worker=sex-worker");
-
-    dataSetDefinition.addColumn(
-        "NRPRI-S1",
-        "Prisioners (Laboratory and FSR Sources)",
-        EptsReportUtils.map(rotineNumerator, mappings),
-        "prisioner=prisioner");
-
-    dataSetDefinition.addColumn(
-        "NTPRI-S1",
-        "Prisioners (Laboratory and FSR Sources)",
-        EptsReportUtils.map(targetNumerator, mappings),
+        "NPRI-S1",
+        "Numerator - Prisioners (Laboratory and e-Lab Sources)",
+        EptsReportUtils.map(pvlsBySourceNumerator, mappings),
         "prisioner=prisioner");
 
     return dataSetDefinition;
