@@ -84,13 +84,30 @@ public class ResumoMensalDAHCohortQueries {
             mappings));
 
     definition.addSearch(
+        "REINICIOTARV",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsRegisteredAsReinitiatedARTDuringReportPeriod2",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.RESTART)),
+            mappings));
+
+    definition.addSearch(
+        "EMTARV",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.ACTIVE)),
+            mappings));
+
+    definition.addSearch(
         "B1",
         EptsReportUtils.map(
             resumoMensalCohortQueries
                 .getPatientsWhoInitiatedTarvAtThisFacilityDuringCurrentMonthB1(),
             mappings));
 
-    definition.setCompositionString("DAHPERIOD AND (INICIOTARV OR B1)");
+    definition.setCompositionString(
+        "DAHPERIOD AND (INICIOTARV OR (B1 NOT (REINICIOTARV OR EMTARV)))");
 
     return definition;
   }
@@ -128,9 +145,26 @@ public class ResumoMensalDAHCohortQueries {
                 ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.RESTART)),
             mappings));
 
+    definition.addSearch(
+        "EMTARV",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.ACTIVE)),
+            mappings));
+
+    definition.addSearch(
+        "NEW-ENROLLED",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.NEW_ENROLLED)),
+            mappings));
+
     definition.addSearch("B3", EptsReportUtils.map(resumoMensalCohortQueries.getSumB3(), mappings));
 
-    definition.setCompositionString("DAHPERIOD AND (REINICIOTARV OR B3)");
+    definition.setCompositionString(
+        "DAHPERIOD AND (REINICIOTARV OR (B3 NOT (EMTARV OR NEW-ENROLLED)))");
 
     return definition;
   }
@@ -168,12 +202,29 @@ public class ResumoMensalDAHCohortQueries {
             mappings));
 
     definition.addSearch(
+        "RESTART",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.RESTART)),
+            mappings));
+
+    definition.addSearch(
+        "NEW-ENROLLED",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.NEW_ENROLLED)),
+            mappings));
+
+    definition.addSearch(
         "B12",
         EptsReportUtils.map(
             resumoMensalCohortQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHLastMonthB12(),
             mappings));
 
-    definition.setCompositionString("DAHPERIOD AND (EMTARV OR B12)");
+    definition.setCompositionString(
+        "DAHPERIOD AND (EMTARV OR (B12 NOT (RESTART OR NEW-ENROLLED)))");
 
     return definition;
   }
