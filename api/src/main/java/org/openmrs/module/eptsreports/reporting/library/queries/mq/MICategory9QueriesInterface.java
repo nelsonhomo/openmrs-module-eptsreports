@@ -173,7 +173,7 @@ public interface MICategory9QueriesInterface {
                 + "and obsCD4.value_numeric is not null   "
                 + "and obsCD4.voided=0   "
                 + "and obsCD4.obs_datetime >=firstClinica.encounter_datetime  "
-                + "and obsCD4.obs_datetime<date_add(firstClinica.encounter_datetime, interval 33 day)   "
+                + "and obsCD4.obs_datetime<=date_add(firstClinica.encounter_datetime, interval 33 day)   "
                 + "and obsCD4.location_id=:location "
                 + "and e.encounter_type=6 ";
 
