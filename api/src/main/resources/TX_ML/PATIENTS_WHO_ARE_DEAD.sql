@@ -413,7 +413,7 @@ from (
 																				inner join encounter e on e.patient_id= p.patient_id 
 																				inner join obs o on o.encounter_id = e.encounter_id                                                                                        
 																			where p.voided= 0 and e.voided=0 and o.voided = 0 and e.encounter_type=18 and o.concept_id = 5096                                                                  
-																				and e.location_id=:location and e.encounter_datetime <= :endDate                                                                               
+																				and e.location_id=:location and e.encounter_datetime < :startDate                                                                               
 																				group by p.patient_id 
 																				union
 																				select p.patient_id, date_add(max(value_datetime), interval 31 day) data_ultimo_levantamento             
@@ -422,7 +422,7 @@ from (
 																						inner join encounter e on p.patient_id=e.patient_id   
 																						inner join obs o on e.encounter_id=o.encounter_id 
 																				where p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52 
-																						and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime <= :endDate 
+																						and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime < :startDate 
 																						group by p.patient_id
 																	) ultimo_levantamento group by patient_id
 															) ultimo_levantamento on saidas_por_transferencia.patient_id = ultimo_levantamento.patient_id 
