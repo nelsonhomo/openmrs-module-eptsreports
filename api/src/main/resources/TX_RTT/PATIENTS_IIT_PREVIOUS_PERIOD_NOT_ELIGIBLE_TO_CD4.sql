@@ -1,5 +1,8 @@
 	select coorte_final.patient_id
 from (
+
+select inicio_fila_recepcao_prox.*
+		from(
 		select inicio_fila_recepcao_prox.*,   
 			GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30), COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_iit,
 			LEAST(COALESCE(data_fila_restart,data_recepcao_levantou_restart), COALESCE(data_recepcao_levantou_restart,data_fila_restart)) data_restart 
@@ -231,6 +234,9 @@ from (
 			             	and obs_fila.location_id=:location                                                                                                                 
              	   			group by inicio_fila_recepcao.patient_id    
 			) inicio_fila_recepcao_prox
-		  		group by patient_id                                                                                                                                                                    
+		  		group by patient_id 
+		 )	inicio_fila_recepcao_prox 
+		   		inner join person pe on pe.person_id = inicio_fila_recepcao_prox.patient_id
+		 	where (pe.birthdate is not null and floor(datediff(:endDate,pe.birthdate )/365) >= 5) or pe.birthdate is  null      
   ) coorte_final 
   where ((data_estado is null or (data_estado is not null and  data_fila > data_estado)) and date_add(data_iit, interval 28 day) < date_add(:startDate, interval -1 day)  or (data_iit is null and data_fila is not null)) and data_restart between :startDate and :endDate  and datediff(data_restart, data_iit ) <  60
