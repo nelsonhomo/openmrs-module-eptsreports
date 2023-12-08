@@ -295,12 +295,12 @@ public class ResumoMensalDAHQueries {
                 query,
                 165390,
                 StringUtils.join(Arrays.asList(703, 664), ","),
-                165390,
+                23952,
                 StringUtils.join(Arrays.asList(703, 664), ","));
         break;
 
       case CRAG_SORO_POS:
-        query = String.format(query, 165390, 703, 165390, 703);
+        query = String.format(query, 165390, 703, 23952, 703);
         break;
 
       case CRAG_LCR:
