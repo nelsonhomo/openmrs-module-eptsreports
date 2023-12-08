@@ -190,7 +190,7 @@ public interface MQCategory9QueriesInterface {
                 + "inner join encounter e on firstClinica.patient_id=e.patient_id   "
                 + "inner join obs obsCD4 on obsCD4.encounter_id=e.encounter_id   "
                 + "where firstClinica.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH)   "
-                + "and obsCD4.concept_id in(1695,703)  "
+                + "and obsCD4.concept_id in(1695,730)  "
                 + "and obsCD4.value_numeric is not null   "
                 + "and obsCD4.voided=0   "
                 + "and obsCD4.obs_datetime >=firstClinica.encounter_datetime  "
