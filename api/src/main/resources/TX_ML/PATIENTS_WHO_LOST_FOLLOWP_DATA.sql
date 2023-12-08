@@ -3,8 +3,8 @@ from (
 select inicio_fila_seg.*
 from (
 			select inicio.*,
-			ultimo_levantamento.data_ultimo_levantamento,
-			datediff(ultimo_levantamento.data_ultimo_levantamento, data_inicio )   intervaloIIT         
+			ultimo_levantamento.data_proximo_levantamento,
+			datediff(ultimo_levantamento.data_proximo_levantamento, data_inicio )   intervaloIIT         
 			from (   
 						select patient_id,data_inicio 
 						from ( 
@@ -130,17 +130,27 @@ from (
 					) inicio
 					left join
 					(  
-							select patient_id, max(data_ultimo_levantamento)  data_ultimo_levantamento    
+							select patient_id, max(data_proximo_levantamento)  data_proximo_levantamento    
 							from (
-									select p.patient_id, max(o.value_datetime) data_ultimo_levantamento                                                                                            
-									from patient p                                                                                                                                   
-										inner join encounter e on e.patient_id= p.patient_id 
-										inner join obs o on o.encounter_id = e.encounter_id                                                                                        
-									where p.voided= 0 and e.voided=0 and o.voided = 0 and e.encounter_type=18 and o.concept_id = 5096                                                                  
-										and e.location_id=:location and e.encounter_datetime <=:endDate                                                                               
-										group by p.patient_id 
+									select max_fila.patient_id, obs_fila.value_datetime data_proximo_levantamento
+									from(
+											select p.patient_id, max(e.encounter_datetime) data_fila                                                                                            
+											from patient p                                                                                                                                   
+												inner join encounter e on e.patient_id= p.patient_id 
+												inner join obs o on o.encounter_id = e.encounter_id                                                                                        
+											where p.voided= 0 and e.voided=0 and o.voided = 0 and e.encounter_type=18 and o.concept_id = 5096                                                                  
+												and e.location_id=:location and e.encounter_datetime <=:endDate                                                                                
+												group by p.patient_id
+										) max_fila
+										left join     										       
+											obs obs_fila on obs_fila.person_id=max_fila.patient_id
+											and obs_fila.voided=0   
+											and obs_fila.obs_datetime=max_fila.data_fila      
+											and obs_fila.concept_id=5096           
+											and obs_fila.location_id=:location  
+										
 										union
-										select p.patient_id, date_add(max(value_datetime), interval 30 day) data_ultimo_levantamento             
+										select p.patient_id, date_add(max(o.value_datetime), interval 30 day) data_proximo_levantamento             
 										from patient p     
 												inner join person pe on pe.person_id = p.patient_id   
 												inner join encounter e on p.patient_id=e.patient_id   
@@ -153,5 +163,5 @@ from (
 
 					
 ) inicio_fila_seg 
-	where  date_add(data_ultimo_levantamento, interval 28 day) >=date_add(:startDate, interval -1 day)  and date_add(data_ultimo_levantamento, interval 28 day) < :endDate
+	where  date_add(data_proximo_levantamento, interval 28 day) >=date_add(:startDate, interval -1 day)  and date_add(data_proximo_levantamento, interval 28 day) < :endDate
 ) iit where intervaloIIT  %s 

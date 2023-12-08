@@ -32,26 +32,22 @@ public class TxMlCohortQueries {
   private String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
   public CohortDefinition getPatientstotalIIT() {
-    String mapping = "startDate=${startDate},endDate=${endDate},location=${location}";
     CompositionCohortDefinition cd = new CompositionCohortDefinition();
     cd.setName("Get patients who are IIT (Totals)");
     cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
     cd.addParameter(new Parameter("endDate", "End Date", Date.class));
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
-    cd.addSearch("TX-ML", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mapping));
-
-    cd.addSearch("DEAD", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mapping));
-
+    cd.addSearch("TX-ML", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mappings));
+    cd.addSearch("DEAD", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mappings));
     cd.addSearch(
-        "TRANSFERREDOUT", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mapping));
+        "TRANSFERREDOUT", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mappings));
 
     cd.setCompositionString("(TX-ML NOT (DEAD OR TRANSFERREDOUT)");
     return cd;
   }
 
   public CohortDefinition getPatientsWhoAreIITLessThan3Months() {
-    String mapping = "startDate=${startDate},endDate=${endDate},location=${location}";
     CompositionCohortDefinition cd = new CompositionCohortDefinition();
     cd.setName("Get patients who are LTFU less than 3 months");
     cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -66,19 +62,13 @@ public class TxMlCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql("Finding IIT patients < 90 days", query), mappings));
 
-    cd.addSearch(
-        "TRANSFERREDOUT", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mapping));
-    cd.addSearch("DEAD", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mapping));
+    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
 
-    cd.addSearch("TXML", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mappings));
-
-    cd.setCompositionString(
-        "(TXML AND missedAppointmentIITLess3Month) NOT (DEAD OR TRANSFERREDOUT)");
+    cd.setCompositionString("IIT AND missedAppointmentIITLess3Month");
     return cd;
   }
 
   public CohortDefinition getPatientsWhoAreIITGreaterOrEqual6Months() {
-    String mapping = "startDate=${startDate},endDate=${endDate},location=${location}";
     CompositionCohortDefinition cd = new CompositionCohortDefinition();
     cd.setName("Get patients who are LTFU less than 6 months");
     cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -92,16 +82,9 @@ public class TxMlCohortQueries {
         "missedAppointmentIITGreaterOrEqual6Month",
         EptsReportUtils.map(
             this.genericCohorts.generalSql("Finding IIT patients >= 180 days", query), mappings));
+    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
 
-    cd.addSearch(
-        "TRANSFERREDOUT", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mapping));
-
-    cd.addSearch("DEAD", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mapping));
-
-    cd.addSearch("TXML", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mappings));
-
-    cd.setCompositionString(
-        "(TXML AND missedAppointmentIITGreaterOrEqual6Month) NOT (DEAD OR TRANSFERREDOUT)");
+    cd.setCompositionString("IIT AND missedAppointmentIITGreaterOrEqual6Month");
     return cd;
   }
 
@@ -122,16 +105,9 @@ public class TxMlCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql("Finding IIT patients between 90 and 180 days", query),
             mappings));
+    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
 
-    cd.addSearch(
-        "TRANSFERREDOUT", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mapping));
-
-    cd.addSearch("DEAD", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mapping));
-
-    cd.addSearch("TXML", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mappings));
-
-    cd.setCompositionString(
-        "(TXML AND missedAppointmentIITBetween3And5Months) NOT (DEAD OR TRANSFERREDOUT)");
+    cd.setCompositionString("IIT AND missedAppointmentIITBetween3And5Months");
     return cd;
   }
 
