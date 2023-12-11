@@ -15,7 +15,9 @@ select patient_id
                             inner join encounter e on e.patient_id=maxkp.patient_id and maxkp.maxkpdate=e.encounter_datetime                                            
                             inner join obs o on o.encounter_id=e.encounter_id and maxkp.maxkpdate=o.obs_datetime                                                        
                         where o.concept_id=23703 and o.voided=0 and e.encounter_type=6 and e.voided=0 and e.location_id=:location and o.value_coded in (20454,20426)    
+                        
                         union                                                                                                                                           
+                        
                         select maxkp.patient_id, o.value_coded,o.obs_datetime,1 ordemSource,3 ordemKp from (                                                            
                             select p.patient_id,max(e.encounter_datetime) maxkpdate from patient p                                                                      
                                 inner join encounter e on p.patient_id=e.patient_id                                                                                     

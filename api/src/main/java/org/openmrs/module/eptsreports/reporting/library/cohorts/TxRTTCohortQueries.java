@@ -12,6 +12,8 @@ import org.openmrs.module.eptsreports.reporting.calculation.rtt.TxRTTPLHIVLess12
 import org.openmrs.module.eptsreports.reporting.calculation.rtt.TxRTTPatientsWhoAreTransferedOutCalculation;
 import org.openmrs.module.eptsreports.reporting.calculation.rtt.TxRTTPatientsWhoExperiencedIITCalculation;
 import org.openmrs.module.eptsreports.reporting.cohort.definition.BaseFghCalculationCohortDefinition;
+import org.openmrs.module.eptsreports.reporting.library.queries.TxRttQueries;
+import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -28,45 +30,173 @@ public class TxRTTCohortQueries {
 
   @Autowired private TRFINCohortQueries tRFINCohortQueries;
 
+  @Autowired private GenericCohortQueries genericCohorts;
+
+  private static final String FIND_PATIENTS_WHO_ARE_IIT_PREVIOUS_PERIOD =
+      "TX_RTT/PATIENTS_WHO_ARE_IIT_PREVIOUS_PERIOD.sql";
+
+  private static final String FIND_PATIENTS_WITH_CD4 =
+      "TX_RTT/PATIENTS_IIT_PREVIOUS_PERIOD_WITH_CD4.sql";
+
+  private static final String FIND_PATIENTS_NOT_ELIGIBLE_TO_CD4 =
+      "TX_RTT/PATIENTS_IIT_PREVIOUS_PERIOD_NOT_ELIGIBLE_TO_CD4.sql";
+
   @DocumentedDefinition(value = "TxRttPatientsOnRTT")
   public CohortDefinition getPatientsOnRTT() {
 
-    final CompositionCohortDefinition compositionDefinition = new CompositionCohortDefinition();
+    final CompositionCohortDefinition composition = new CompositionCohortDefinition();
 
-    compositionDefinition.setName("Tx RTT - Patients on RTT");
-    compositionDefinition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    compositionDefinition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    compositionDefinition.addParameter(new Parameter("location", "location", Location.class));
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    final String mappings =
-        "startDate=${startDate-1d},endDate=${startDate-1d},realEndDate=${endDate},location=${location}";
+    composition.setName("Tx RTT - Patients on RTT");
+    composition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    composition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    composition.addParameter(new Parameter("location", "location", Location.class));
 
-    compositionDefinition.addSearch(
+    composition.addSearch(
         "IIT-PREVIOUS-PERIOD",
-        EptsReportUtils.map(this.getPatientsWhoExperiencedIITCalculation(), mappings));
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "Patients who experienced interruption in treatment by end of previous reporting period",
+                EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT_PREVIOUS_PERIOD)),
+            mappings));
 
-    compositionDefinition.addSearch(
+    composition.addSearch(
         "RTT-TRANFERRED-OUT",
         EptsReportUtils.map(
-            this.getPatientsWhoWhereTransferredOutCalculation(),
-            "endDate=${startDate},location=${location}"));
+            this.genericCohorts.generalSql(
+                "Patients who experienced interruption in treatment by end of previous reporting period",
+                TxRttQueries.QUERY
+                    .findPatientsWhoWhereTransferredOutByEndOfPreviousReportingPeriod),
+            mappings));
 
-    compositionDefinition.addSearch(
+    composition.addSearch(
         "TX-CURR",
         EptsReportUtils.map(
             this.txCurrCohortQueries.findPatientsWhoAreActiveOnART(),
             "endDate=${endDate},location=${location}"));
 
-    compositionDefinition.addSearch(
+    composition.addSearch(
         "TRF-IN",
-        EptsReportUtils.map(
-            this.tRFINCohortQueries.getPatiensWhoAreTransferredIn(),
-            "startDate=${startDate},endDate=${endDate},location=${location}"));
+        EptsReportUtils.map(this.tRFINCohortQueries.getPatiensWhoAreTransferredIn(), mappings));
 
-    compositionDefinition.setCompositionString(
+    composition.setCompositionString(
         "((IIT-PREVIOUS-PERIOD NOT RTT-TRANFERRED-OUT) AND TX-CURR) NOT TRF-IN");
 
-    return compositionDefinition;
+    return composition;
+  }
+
+  public CohortDefinition findPatientsWithCD4LessThan200() {
+    final CompositionCohortDefinition composition = new CompositionCohortDefinition();
+
+    composition.setName("CD4 LESS THAN 200");
+    composition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    composition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    composition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    String query =
+        String.format(
+            EptsQuerysUtils.loadQuery(FIND_PATIENTS_WITH_CD4),
+            " coorte_final.data_cd4 is not null and  (coorte_final.data_cd4_greater is null or coorte_final.data_cd4_greater >= coorte_final.data_cd4 ) ");
+
+    composition.addSearch(
+        "CD4-LESS-200",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql("findPatientsWithCD4LessThan200", query), mappings));
+
+    composition.addSearch("RTT", EptsReportUtils.map(this.getPatientsOnRTT(), mappings));
+
+    composition.addSearch(
+        "CD4-NOT-ELIGIBLE", EptsReportUtils.map(this.findPatientsNotEligibleToCD4(), mappings));
+
+    composition.setCompositionString("(CD4-LESS-200 AND RTT) NOT CD4-NOT-ELIGIBLE");
+
+    return composition;
+  }
+
+  public CohortDefinition findPatientsWIthCD4GreaterOrEqual200() {
+    final CompositionCohortDefinition composition = new CompositionCohortDefinition();
+
+    composition.setName("CD4 GREATER OR EQUAL 200");
+    composition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    composition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    composition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    String query =
+        String.format(
+            EptsQuerysUtils.loadQuery(FIND_PATIENTS_WITH_CD4),
+            " coorte_final.data_cd4_greater is not null and ( coorte_final.data_cd4 is null or coorte_final.data_cd4_greater < coorte_final.data_cd4) ");
+
+    composition.addSearch(
+        "CD4-GREATER-OR-EQUAL-200",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql("findPatientsWIthCD4GreaterOrEqual200", query),
+            mappings));
+
+    composition.addSearch(
+        "CD4-NOT-ELIGIBLE", EptsReportUtils.map(this.findPatientsNotEligibleToCD4(), mappings));
+    composition.addSearch("RTT", EptsReportUtils.map(this.getPatientsOnRTT(), mappings));
+
+    composition.setCompositionString("(CD4-GREATER-OR-EQUAL-200 AND RTT) NOT CD4-NOT-ELIGIBLE");
+
+    return composition;
+  }
+
+  public CohortDefinition findPatientsWithUnknownCD4() {
+    final CompositionCohortDefinition composition = new CompositionCohortDefinition();
+
+    composition.setName("Unkwown CD4");
+    composition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    composition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    composition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    composition.addSearch("RTT", EptsReportUtils.map(this.getPatientsOnRTT(), mappings));
+
+    composition.addSearch(
+        "CD4-LESS-200", EptsReportUtils.map(this.findPatientsWithCD4LessThan200(), mappings));
+
+    composition.addSearch(
+        "CD4-GREATER-OR-EQUAL-200",
+        EptsReportUtils.map(this.findPatientsWIthCD4GreaterOrEqual200(), mappings));
+
+    composition.addSearch(
+        "CD4-NOT-ELIGIBLE", EptsReportUtils.map(this.findPatientsNotEligibleToCD4(), mappings));
+
+    composition.setCompositionString(
+        "RTT NOT (CD4-LESS-200 OR CD4-GREATER-OR-EQUAL-200 OR CD4-NOT-ELIGIBLE)");
+
+    return composition;
+  }
+
+  public CohortDefinition findPatientsNotEligibleToCD4() {
+    final CompositionCohortDefinition composition = new CompositionCohortDefinition();
+
+    composition.setName("CD4 GREATER OR EQUAL 200");
+    composition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    composition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    composition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    composition.addSearch("RTT", EptsReportUtils.map(this.getPatientsOnRTT(), mappings));
+
+    composition.addSearch(
+        "CD4-NOT-ELIGIBLE",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findPatientsNotEligibleToCD4",
+                EptsQuerysUtils.loadQuery(FIND_PATIENTS_NOT_ELIGIBLE_TO_CD4)),
+            mappings));
+
+    composition.setCompositionString("RTT AND CD4-NOT-ELIGIBLE");
+
+    return composition;
   }
 
   @DocumentedDefinition(value = "TxRttPatientsWhoExperiencedIITCalculation")
