@@ -16,16 +16,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class TxMlCohortQueries {
 
-  private static final String FIND_PATIENTS_WHO_LOST_FOLLOWP =
-      "TX_ML/PATIENTS_WHO_LOST_FOLLOWP.sql";
+  private static final String FIND_PATIENTS_WHO_STARTED_ART = "TX_ML/PATIENTS_WHO_STARTED_ART.sql";
 
   private static final String FIND_PATIENTS_WHO_WHERE_TRANSFERRED_OUT =
       "TX_ML/PATIENTS_WHO_WHERE_TRANSFERRED_OUT.sql";
 
   private static final String FIND_PATIENTS_WHO_ARE_DEAD = "TX_ML/PATIENTS_WHO_ARE_DEAD.sql";
 
-  private static final String FIND_PATIENTS_WHO_LOST_FOLLOWP_DATA =
-      "TX_ML/PATIENTS_WHO_LOST_FOLLOWP_DATA.sql";
+  private static final String FIND_PATIENTS_WHO_ARE_IIT = "TX_ML/PATIENTS_WHO_ARE_IIT.sql";
 
   @Autowired private GenericCohortQueries genericCohorts;
 
@@ -38,12 +36,21 @@ public class TxMlCohortQueries {
     cd.addParameter(new Parameter("endDate", "End Date", Date.class));
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
-    cd.addSearch("TX-ML", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mappings));
+    cd.addSearch("ART-START", EptsReportUtils.map(this.getPatientsWhOStartedART(), mappings));
+
+    String query = String.format(EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT), "");
+
+    cd.addSearch(
+        "IIT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql("Finding IIT Patients", query), mappings));
+
     cd.addSearch("DEAD", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mappings));
     cd.addSearch(
         "TRANSFERREDOUT", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mappings));
 
-    cd.setCompositionString("(TX-ML NOT (DEAD OR TRANSFERREDOUT)");
+    cd.setCompositionString("( ART-START AND IIT) NOT (DEAD OR TRANSFERREDOUT)");
+
     return cd;
   }
 
@@ -55,7 +62,8 @@ public class TxMlCohortQueries {
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
     String query =
-        String.format(EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_LOST_FOLLOWP_DATA), " < 90 ");
+        String.format(
+            EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT), " where intervaloIIT < 90 ");
 
     cd.addSearch(
         "missedAppointmentIITLess3Month",
@@ -68,28 +76,7 @@ public class TxMlCohortQueries {
     return cd;
   }
 
-  public CohortDefinition getPatientsWhoAreIITGreaterOrEqual6Months() {
-    CompositionCohortDefinition cd = new CompositionCohortDefinition();
-    cd.setName("Get patients who are LTFU less than 6 months");
-    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-    cd.addParameter(new Parameter("location", "Location", Location.class));
-
-    String query =
-        String.format(EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_LOST_FOLLOWP_DATA), " >= 180 ");
-
-    cd.addSearch(
-        "missedAppointmentIITGreaterOrEqual6Month",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql("Finding IIT patients >= 180 days", query), mappings));
-    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
-
-    cd.setCompositionString("IIT AND missedAppointmentIITGreaterOrEqual6Month");
-    return cd;
-  }
-
   public CohortDefinition getPatientsWhoAreIITBetween3And5Months() {
-    String mapping = "startDate=${startDate},endDate=${endDate},location=${location}";
     CompositionCohortDefinition cd = new CompositionCohortDefinition();
     cd.setName("Get patients who are LTFU Greater than 3 months And Less Than 6 Months");
     cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -98,7 +85,8 @@ public class TxMlCohortQueries {
 
     String query =
         String.format(
-            EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_LOST_FOLLOWP_DATA), " between 90 and 180 ");
+            EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT),
+            " where intervaloIIT between 90 and 180 ");
 
     cd.addSearch(
         "missedAppointmentIITBetween3And5Months",
@@ -108,6 +96,27 @@ public class TxMlCohortQueries {
     cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
 
     cd.setCompositionString("IIT AND missedAppointmentIITBetween3And5Months");
+    return cd;
+  }
+
+  public CohortDefinition getPatientsWhoAreIITGreaterOrEqual6Months() {
+    CompositionCohortDefinition cd = new CompositionCohortDefinition();
+    cd.setName("Get patients who are LTFU less than 6 months");
+    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    cd.addParameter(new Parameter("endDate", "End Date", Date.class));
+    cd.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        String.format(
+            EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT), " where intervaloIIT  >= 180 ");
+
+    cd.addSearch(
+        "missedAppointmentIITGreaterOrEqual6Month",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql("Finding IIT patients >= 180 days", query), mappings));
+    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
+
+    cd.setCompositionString("IIT AND missedAppointmentIITGreaterOrEqual6Month");
     return cd;
   }
 
@@ -121,15 +130,35 @@ public class TxMlCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
+    definition.addSearch("DEAD", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mappings));
     definition.addSearch(
-        "TXML",
+        "TRANSFERREDOUT", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mappings));
+    definition.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
+
+    definition.setCompositionString("DEAD OR TRANSFERREDOUT OR IIT");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoStartedArt")
+  public CohortDefinition getPatientsWhOStartedART() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("patientsWhoStartedArt");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "ART-START",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
-                "Finding patients who missed next appointment",
-                EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_LOST_FOLLOWP)),
+                "Finding patients who Initiated ART",
+                EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_STARTED_ART)),
             mappings));
 
-    definition.setCompositionString("TXML");
+    definition.setCompositionString("ART-START");
 
     return definition;
   }
@@ -145,7 +174,7 @@ public class TxMlCohortQueries {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.addSearch(
-        "TXML", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mappings));
+        "ART-START", EptsReportUtils.map(this.getPatientsWhOStartedART(), mappings));
 
     definition.addSearch(
         "DEAD",
@@ -155,7 +184,7 @@ public class TxMlCohortQueries {
                 EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_DEAD)),
             mappings));
 
-    definition.setCompositionString("TXML and DEAD");
+    definition.setCompositionString("ART-START and DEAD");
 
     return definition;
   }
@@ -170,7 +199,7 @@ public class TxMlCohortQueries {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.addSearch(
-        "TXML", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mappings));
+        "ART-START", EptsReportUtils.map(this.getPatientsWhOStartedART(), mappings));
 
     definition.addSearch(
         "TRANSFERREDOUT",
@@ -180,7 +209,7 @@ public class TxMlCohortQueries {
                 EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_WHERE_TRANSFERRED_OUT)),
             mappings));
 
-    definition.setCompositionString("TRANSFERREDOUT AND TXML");
+    definition.setCompositionString("ART-START AND TRANSFERREDOUT");
 
     return definition;
   }
@@ -195,7 +224,7 @@ public class TxMlCohortQueries {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.addSearch(
-        "TXML", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mappings));
+        "ART-START", EptsReportUtils.map(this.getPatientsWhOStartedART(), mappings));
 
     definition.addSearch(
         "REFUSEDTREATMENT",
@@ -206,7 +235,7 @@ public class TxMlCohortQueries {
                     .findPatiensWhoStoppedOrRefusedTreatmentByTheEndOfReportingDate),
             mappings));
 
-    definition.setCompositionString("(TXML and REFUSEDTREATMENT) NOT REFUSEDTREATMENT");
+    definition.setCompositionString("(ART-START AND REFUSEDTREATMENT) NOT REFUSEDTREATMENT");
     return definition;
   }
 }
