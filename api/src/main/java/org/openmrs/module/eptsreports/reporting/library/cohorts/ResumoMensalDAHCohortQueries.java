@@ -85,30 +85,13 @@ public class ResumoMensalDAHCohortQueries {
             mappings));
 
     definition.addSearch(
-        "REINICIOTARV",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsRegisteredAsReinitiatedARTDuringReportPeriod2",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.RESTART)),
-            mappings));
-
-    definition.addSearch(
-        "EMTARV",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.ACTIVE)),
-            mappings));
-
-    definition.addSearch(
         "B1",
         EptsReportUtils.map(
             resumoMensalCohortQueries
                 .getPatientsWhoInitiatedTarvAtThisFacilityDuringCurrentMonthB1(),
             mappings));
 
-    definition.setCompositionString(
-        "DAHPERIOD AND (INICIOTARV OR (B1 NOT (REINICIOTARV OR EMTARV)))");
+    definition.setCompositionString("DAHPERIOD AND (INICIOTARV OR B1)");
 
     return definition;
   }
@@ -147,25 +130,14 @@ public class ResumoMensalDAHCohortQueries {
             mappings));
 
     definition.addSearch(
-        "EMTARV",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.ACTIVE)),
-            mappings));
-
-    definition.addSearch(
         "NEW-ENROLLED",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.NEW_ENROLLED)),
+            this.getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriodI1(),
             mappings));
 
     definition.addSearch("B3", EptsReportUtils.map(this.getSumB3(), mappings));
 
-    definition.setCompositionString(
-        "DAHPERIOD AND (REINICIOTARV OR (B3 NOT (EMTARV OR NEW-ENROLLED)))");
+    definition.setCompositionString("DAHPERIOD AND ((REINICIOTARV OR B3) NOT NEW-ENROLLED)");
 
     return definition;
   }
@@ -205,17 +177,13 @@ public class ResumoMensalDAHCohortQueries {
     definition.addSearch(
         "RESTART",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.RESTART)),
+            this.getNumberOfPatientsWhoReinitiatedARTWhoInitiatedDAHDuringReportPeriodI2(),
             mappings));
 
     definition.addSearch(
         "NEW-ENROLLED",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.NEW_ENROLLED)),
+            this.getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriodI1(),
             mappings));
 
     definition.addSearch(
@@ -225,7 +193,7 @@ public class ResumoMensalDAHCohortQueries {
             mappings));
 
     definition.setCompositionString(
-        "DAHPERIOD AND (EMTARV OR (B12 NOT (RESTART OR NEW-ENROLLED)))");
+        "DAHPERIOD AND ((EMTARV OR B12) NOT (RESTART OR NEW-ENROLLED))");
 
     return definition;
   }
@@ -1440,36 +1408,38 @@ public class ResumoMensalDAHCohortQueries {
                 ResumoMensalDAHQueries.findPatientsMarkedAsPregnantInTheLast6MonthsBeforeEndDate()),
             mappings));
 
-    if (artSituation == ARTSituation.NEW_ENROLLED) {
-      definition.addSearch(
-          "NEW-ON-ART",
-          EptsReportUtils.map(
-              this.genericCohortQueries.generalSql(
-                  "getNumberOfPatientsRegisteredAsNewEnrolledARTDuringReportPeriod1",
-                  ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.NEW_ENROLLED)),
-              mappings));
+    definition.addSearch(
+        "NEW-ON-ART",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsRegisteredAsNewEnrolledARTDuringReportPeriod1",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.NEW_ENROLLED)),
+            mappings));
 
-      definition.addSearch(
-          "B1",
-          EptsReportUtils.map(
-              resumoMensalCohortQueries
-                  .getPatientsWhoInitiatedTarvAtThisFacilityDuringCurrentMonthB1(),
-              mappingsBack2Months));
+    definition.addSearch(
+        "B1",
+        EptsReportUtils.map(
+            resumoMensalCohortQueries
+                .getPatientsWhoInitiatedTarvAtThisFacilityDuringCurrentMonthB1(),
+            mappingsBack2Months));
+
+    definition.addSearch(
+        "RESTART-ART",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsRegisteredAsNewEnrolledARTDuringReportPeriod1",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.RESTART)),
+            mappings));
+
+    definition.addSearch("B3", EptsReportUtils.map(this.getSumB3(), mappingsBack2Months));
+
+    if (artSituation == ARTSituation.NEW_ENROLLED) {
 
       composition = "(NEW-ON-ART OR B1) NOT PREGNANT";
 
     } else if (artSituation == ARTSituation.RESTART) {
-      definition.addSearch(
-          "RESTART-ART",
-          EptsReportUtils.map(
-              this.genericCohortQueries.generalSql(
-                  "getNumberOfPatientsRegisteredAsNewEnrolledARTDuringReportPeriod1",
-                  ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.RESTART)),
-              mappings));
 
-      definition.addSearch("B3", EptsReportUtils.map(this.getSumB3(), mappingsBack2Months));
-
-      composition = "(RESTART-ART OR B3) NOT PREGNANT";
+      composition = "((RESTART-ART OR B3) NOT PREGNANT) NOT ((NEW-ON-ART OR B1) NOT PREGNANT)";
 
     } else if (artSituation == ARTSituation.ACTIVE) {
 
@@ -1487,7 +1457,8 @@ public class ResumoMensalDAHCohortQueries {
               resumoMensalCohortQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHLastMonthB12(),
               mappings));
 
-      composition = "(ACTIVE OR B12) NOT PREGNANT";
+      composition =
+          "((ACTIVE OR B12) NOT (((RESTART-ART OR B3) NOT (NEW-ON-ART OR B1)) OR (NEW-ON-ART OR B1))) NOT PREGNANT";
     }
     definition.setCompositionString(composition);
 
