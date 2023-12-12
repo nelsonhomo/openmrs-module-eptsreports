@@ -312,6 +312,142 @@ public class TxNewDataset extends BaseDataSet {
     return dataSetDefinition;
   }
 
+  public DataSetDefinition constructTxNewDatasetForIMER() {
+    final CohortIndicatorDataSetDefinition dataSetDefinition =
+        new CohortIndicatorDataSetDefinition();
+
+    dataSetDefinition.setName("TX_NEW Data Set");
+    dataSetDefinition.addParameters(this.getParameters());
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    final CohortDefinition patientEnrolledInART =
+        this.txNewCohortQueries.getTxNewCompositionCohort("patientEnrolledInART");
+
+    final CohortIndicator patientEnrolledInHIVStartedARTIndicator =
+        this.eptsGeneralIndicator.getIndicator(
+            "patientNewlyEnrolledInHIVIndicator",
+            EptsReportUtils.map(patientEnrolledInART, mappings));
+
+    dataSetDefinition.addDimension("gender", EptsReportUtils.map(eptsCommonDimension.gender(), ""));
+    this.addDimensions(
+        dataSetDefinition,
+        mappings,
+        Arrays.asList("N"),
+        UNDER_ONE,
+        ONE_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        FIFTEEN_TO_NINETEEN,
+        TWENTY_TO_TWENTY_FOUR,
+        TWENTY_FIVE_TO_TWENTY_NINE,
+        THIRTY_TO_THRITY_FOUR,
+        THIRTY_FIVE_TO_THIRTY_NINE,
+        FORTY_TO_FORTY_FOUR,
+        FORTY_FIVE_TO_FORTY_NINE,
+        ABOVE_FIFTY,
+        FIFTY_TO_FIFTY_FOUR,
+        FIFTY_FIVE_TO_FIFTY_NINE,
+        SIXTY_TO_SIXTY_FOUR,
+        ABOVE_SIXTY_FIVE);
+
+    dataSetDefinition.addDimension(
+        this.getColumnName(AgeRange.UNKNOWN, Gender.MALE),
+        EptsReportUtils.map(
+            this.eptsCommonDimension.findPatientsWithUnknownAgeByGender(
+                this.getColumnName(AgeRange.UNKNOWN, Gender.MALE), Gender.MALE),
+            ""));
+
+    dataSetDefinition.addDimension(
+        this.getColumnName(AgeRange.UNKNOWN, Gender.FEMALE),
+        EptsReportUtils.map(
+            this.eptsCommonDimension.findPatientsWithUnknownAgeByGender(
+                this.getColumnName(AgeRange.UNKNOWN, Gender.FEMALE), Gender.FEMALE),
+            ""));
+
+    dataSetDefinition.addDimension(
+        "breastfeeding",
+        EptsReportUtils.map(this.eptsCommonDimension.findPatientsWhoAreBreastfeeding(), mappings));
+
+    dataSetDefinition.addDimension(
+        "homosexual",
+        EptsReportUtils.map(this.keyPopulationDimension.findPatientsWhoAreHomosexual(), mappings));
+
+    dataSetDefinition.addDimension(
+        "drug-user",
+        EptsReportUtils.map(this.keyPopulationDimension.findPatientsWhoUseDrugs(), mappings));
+
+    dataSetDefinition.addDimension(
+        "prisioner",
+        EptsReportUtils.map(this.keyPopulationDimension.findPatientsWhoAreInPrison(), mappings));
+
+    dataSetDefinition.addDimension(
+        "sex-worker",
+        EptsReportUtils.map(this.keyPopulationDimension.findPatientsWhoAreSexWorker(), mappings));
+
+    dataSetDefinition.addColumn(
+        "1All",
+        "TX_NEW: New on ART",
+        EptsReportUtils.map(patientEnrolledInHIVStartedARTIndicator, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "ANC",
+        "TX_NEW: Breastfeeding Started ART",
+        EptsReportUtils.map(patientEnrolledInHIVStartedARTIndicator, mappings),
+        "breastfeeding=breastfeeding");
+
+    this.addColums(
+        dataSetDefinition,
+        mappings,
+        "N",
+        patientEnrolledInHIVStartedARTIndicator,
+        UNDER_ONE,
+        ONE_TO_FOUR,
+        FIVE_TO_NINE,
+        TEN_TO_FOURTEEN,
+        FIFTEEN_TO_NINETEEN,
+        TWENTY_TO_TWENTY_FOUR,
+        TWENTY_FIVE_TO_TWENTY_NINE,
+        THIRTY_TO_THRITY_FOUR,
+        THIRTY_FIVE_TO_THIRTY_NINE,
+        FORTY_TO_FORTY_FOUR,
+        FORTY_FIVE_TO_FORTY_NINE,
+        ABOVE_FIFTY,
+        FIFTY_TO_FIFTY_FOUR,
+        FIFTY_FIVE_TO_FIFTY_NINE,
+        SIXTY_TO_SIXTY_FOUR,
+        ABOVE_SIXTY_FIVE);
+    this.addColums(
+        dataSetDefinition, "", "N", patientEnrolledInHIVStartedARTIndicator, AgeRange.UNKNOWN);
+
+    dataSetDefinition.addColumn(
+        "N-MSM",
+        "Homosexual",
+        EptsReportUtils.map(patientEnrolledInHIVStartedARTIndicator, mappings),
+        "gender=M|homosexual=homosexual");
+
+    dataSetDefinition.addColumn(
+        "N-PWID",
+        "Drugs User",
+        EptsReportUtils.map(patientEnrolledInHIVStartedARTIndicator, mappings),
+        "drug-user=drug-user");
+
+    dataSetDefinition.addColumn(
+        "N-PRI",
+        "Prisioners",
+        EptsReportUtils.map(patientEnrolledInHIVStartedARTIndicator, mappings),
+        "prisioner=prisioner");
+
+    dataSetDefinition.addColumn(
+        "N-FSW",
+        "Sex Worker",
+        EptsReportUtils.map(patientEnrolledInHIVStartedARTIndicator, mappings),
+        "gender=F|sex-worker=sex-worker");
+
+    return dataSetDefinition;
+  }
+
   private void addAGenderDimensionForUnkwonAgeDimension(
       CohortIndicatorDataSetDefinition dataSetDefinition) {
     dataSetDefinition.addDimension(
@@ -396,5 +532,9 @@ public class TxNewDataset extends BaseDataSet {
 
   private String getColumnName(String columnPrefix, AgeRange range, Gender gender) {
     return range.getDesagregationColumnName(columnPrefix, gender);
+  }
+
+  private String getColumnName(AgeRange range, Gender gender) {
+    return range.getDesagregationColumnName("N", gender);
   }
 }
