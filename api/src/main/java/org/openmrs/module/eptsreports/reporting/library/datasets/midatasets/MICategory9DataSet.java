@@ -22,7 +22,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1ChildrenAdult(),
+                    .findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9_9_1(),
                 "CAT9ADUL01TNUMERATOR",
                 mappings),
             mappings),
@@ -34,7 +34,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1(),
+                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9_9_1(),
                 "CAT9ADUL01TDENOMINATOR",
                 mappings),
             mappings),
@@ -46,11 +46,11 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9Section9_2(),
+                    .findPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9_9_2(),
                 "CAT9ADUL02TNUMERATOR",
                 mappings),
             mappings),
-        "ageOnTheFirstConsultationDuringInclusionPeriod=15+");
+        "ageOnTheFirstConsultationDuringInclusionPeriod=15+Back3Months");
 
     dataSetDefinition.addColumn(
         "CAT9ADUL02TDENOMINATOR",
@@ -58,11 +58,11 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 miCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1(),
+                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9_9_2(),
                 "CAT9ADUL02TDENOMINATOR",
                 mappings),
             mappings),
-        "ageOnTheFirstConsultationDuringInclusionPeriod=15+");
+        "ageOnTheFirstConsultationDuringInclusionPeriod=15+Back3Months");
 
     // Criancas
 
@@ -72,7 +72,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1Childrens(),
+                    .findPatientsInARTWhoHaveAreFirstConsultationNumeratorAdultCategory9_9_3(),
                 "CAT9CHILDREN01TNUMERATOR",
                 mappings),
             mappings),
@@ -84,7 +84,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1Childrens(),
+                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9_9_3(),
                 "CAT9ACHILDREN01TDENOMINATOR",
                 mappings),
             mappings),
@@ -96,11 +96,11 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9SectionChildrens(),
+                    .findPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9_9_4(),
                 "CAT9CHILDREN02TNUMERATOR",
                 mappings),
             mappings),
-        "ageOnTheFirstConsultationDuringInclusionPeriod=15-");
+        "ageOnTheFirstConsultationDuringInclusionPeriod=15-Back3Months");
 
     dataSetDefinition.addColumn(
         "CAT9ACHILDREN02TDENOMINATOR",
@@ -108,11 +108,11 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 miCategory9CohortQueries
-                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9Section9_1Childrens(),
+                    .findPatientsInARTWhoHaveAreFirstConsultationDenominatorAdultCategory9_9_4(),
                 "CAT9ACHILDREN02TDENOMINATOR",
                 mappings),
             mappings),
-        "ageOnTheFirstConsultationDuringInclusionPeriod=15-");
+        "ageOnTheFirstConsultationDuringInclusionPeriod=15-Back3Months");
 
     // Gravidas
 
@@ -122,7 +122,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPragnantWomanWhoARTWhoHaveAreFirstConsultationNumeratorAdultCategory9Section9_1(),
+                    .findPragnantWomanWhoARTWhoHaveAreFirstConsultationNumeratorAdultCategory9_9_5(),
                 "CAT9PREGNANT01TNUMERATOR",
                 mappings),
             mappings),
@@ -134,7 +134,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9(),
+                    .findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_5(),
                 "CAT9PREGNANT01TDENOMINATOR",
                 mappings),
             mappings),
@@ -146,7 +146,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPregnantWomanPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9Section9_2(),
+                    .findPregnantWomanPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9_9_6(),
                 "CAT9PREGNANT02TNUMERATOR",
                 mappings),
             mappings),
@@ -158,7 +158,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 miCategory9CohortQueries
-                    .findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9(),
+                    .findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_6(),
                 "CAT9PREGNANT02TDENOMINATOR",
                 mappings),
             mappings),
