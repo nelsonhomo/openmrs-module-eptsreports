@@ -5,6 +5,7 @@ import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries.ARTSituation;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries.MCCTreatment;
+import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TypesOfExams;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -161,7 +162,7 @@ public class ResumoMensalDAHCohortQueries {
                 ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.NEW_ENROLLED)),
             mappings));
 
-    definition.addSearch("B3", EptsReportUtils.map(resumoMensalCohortQueries.getSumB3(), mappings));
+    definition.addSearch("B3", EptsReportUtils.map(this.getSumB3(), mappings));
 
     definition.setCompositionString(
         "DAHPERIOD AND (REINICIOTARV OR (B3 NOT (EMTARV OR NEW-ENROLLED)))");
@@ -1466,8 +1467,7 @@ public class ResumoMensalDAHCohortQueries {
                   ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.RESTART)),
               mappings));
 
-      definition.addSearch(
-          "B3", EptsReportUtils.map(resumoMensalCohortQueries.getSumB3(), mappingsBack2Months));
+      definition.addSearch("B3", EptsReportUtils.map(this.getSumB3(), mappingsBack2Months));
 
       composition = "(RESTART-ART OR B3) NOT PREGNANT";
 
@@ -1540,6 +1540,83 @@ public class ResumoMensalDAHCohortQueries {
             mappings));
 
     definition.setCompositionString("RF29");
+
+    return definition;
+  }
+
+  public CohortDefinition getSumB3() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("Number Of Patients Transferred In From Other Health Facilities");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    final String mappingsBackThreeMonths = "endDate=${endDate-3m+1d},location=${location}";
+
+    definition.addSearch("ABANDONED", EptsReportUtils.map(this.getAbandonedPatient(), mappings));
+
+    definition.addSearch(
+        "SUSPEND",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "SUSPEND", ResumoMensalDAHQueries.getPatientsWhoSuspendTratmentLastMonth()),
+            mappingsBackThreeMonths));
+
+    definition.addSearch(
+        "PICKUP",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "PICKUP", ResumoMensalQueries.getPatientsWhoHaveDrugPickup()),
+            mappings));
+
+    definition.setCompositionString("(ABANDONED OR SUSPEND) AND PICKUP ");
+
+    return definition;
+  }
+
+  public CohortDefinition getAbandonedPatient() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("Number Of Patients Transferred In From Other Health Facilities");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate-3m+1d},location=${location}";
+
+    definition.addSearch(
+        "ABANDONED",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "ABANDONED", ResumoMensalDAHQueries.getPatientsWhoAbandonedTratmentToBeExclude()),
+            mappings));
+
+    definition.addSearch(
+        "SUSPEND",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "SUSPEND", ResumoMensalDAHQueries.getPatientsWhoSuspendTratmentLastMonth()),
+            mappings));
+
+    definition.addSearch(
+        "DIED",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "DIED", ResumoMensalDAHQueries.getPatientsWhoDiedTratmentLastMonth()),
+            mappings));
+
+    definition.addSearch(
+        "TRFOUT",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "TRFOUT",
+                ResumoMensalDAHQueries.getPatientsTransferredFromAnotherHealthFacilityLastMonth()),
+            mappings));
+
+    definition.setCompositionString("ABANDONED NOT (SUSPEND OR DIED OR TRFOUT)");
 
     return definition;
   }
