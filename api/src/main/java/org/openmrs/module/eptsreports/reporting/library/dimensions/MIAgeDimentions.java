@@ -722,16 +722,31 @@ public class MIAgeDimentions {
     final String mappings =
         "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
 
+    final String mappingsBackThreeMonths =
+        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+
     dimension.addCohortDefinition(
         "15-",
         EptsReportUtils.map(
             this.calculateAgeOnTheFirstConsultationDateBiggerThanParam(15), mappings));
 
     dimension.addCohortDefinition(
+        "15-Back3Months",
+        EptsReportUtils.map(
+            this.calculateAgeOnTheFirstConsultationDateBiggerThanParam(15),
+            mappingsBackThreeMonths));
+
+    dimension.addCohortDefinition(
         "15+",
         EptsReportUtils.map(
             this.calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding(15),
             mappings));
+
+    dimension.addCohortDefinition(
+        "15+Back3Months",
+        EptsReportUtils.map(
+            this.calculateAgeOnTheFirstConsultationDateBiggerThanParamOrBreastfeeding(15),
+            mappingsBackThreeMonths));
 
     return dimension;
   }

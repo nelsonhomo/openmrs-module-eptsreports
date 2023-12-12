@@ -29,6 +29,12 @@ public interface MQQueriesInterface {
                 + "INNER JOIN obs obsTarv ON e.encounter_id=obsTarv.encounter_id AND obsTarv.voided=0 AND obsTarv.concept_id=6300 AND obsTarv.value_coded=6276 "
                 + "WHERE p.voided=0 AND e.voided=0 AND e.encounter_type=53 AND  e.location_id=:location ";
 
+    public static final String findPatientsWhoWhereMarkedAsTransferedInOnMasterCardRF5Category9 =
+        "SELECT p.patient_id from patient p "
+            + "INNER JOIN encounter e ON p.patient_id=e.patient_id "
+            + "INNER JOIN obs obsTrans ON e.encounter_id=obsTrans.encounter_id AND obsTrans.voided=0 AND obsTrans.concept_id=1369 AND obsTrans.value_coded=1065 "
+            + "WHERE p.voided=0 AND e.voided=0 AND e.encounter_type=53 AND  e.location_id=:location ";
+
     public static final String findPatientsWhoTransferedOutRF07 =
         "select saida.patient_id from "
             + "( "
