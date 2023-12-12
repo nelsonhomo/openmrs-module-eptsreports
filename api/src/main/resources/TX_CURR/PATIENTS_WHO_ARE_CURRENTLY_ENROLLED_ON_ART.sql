@@ -345,13 +345,19 @@
              group by p.patient_id                                                                                                                               
               ) max_recepcao on inicio.patient_id=max_recepcao.patient_id                                                                                        
               group by inicio.patient_id                                                                                                                         
-             ) inicio_fila_seg                                                                                                                                   
+             ) inicio_fila_seg
+             left join                                                                                                                                          
+              encounter ultimo_fila_data_criacao on ultimo_fila_data_criacao.patient_id=inicio_fila_seg.patient_id                                                                                      
+             	and ultimo_fila_data_criacao.voided=0                                     
+               	and ultimo_fila_data_criacao.encounter_type = 18  
+              	and ultimo_fila_data_criacao.encounter_datetime = inicio_fila_seg.data_fila                                                                                            
+              	and ultimo_fila_data_criacao.location_id=:location                     
               left join                                                                                                                                          
               obs obs_fila on obs_fila.person_id=inicio_fila_seg.patient_id                                                                                      
-               and obs_fila.voided=0                                                                                                                             
-              and obs_fila.obs_datetime=inicio_fila_seg.data_fila                                                                                                
-              and obs_fila.concept_id=5096                                                                                                                       
-              and obs_fila.location_id=:location                                                                                                                 
+               	and obs_fila.voided=0                                                                                                                             
+              	and (obs_fila.obs_datetime=inicio_fila_seg.data_fila  or (ultimo_fila_data_criacao.date_created = obs_fila.date_created and ultimo_fila_data_criacao.encounter_id = obs_fila.encounter_id ))                                                                                                       
+              	and obs_fila.concept_id=5096                                                                                                                       
+              	and obs_fila.location_id=:location                                                                                                                 
              group by inicio_fila_seg.patient_id                                                                                                                 
              ) inicio_fila_seg_prox                                                                                                                              
              group by patient_id                                                                                                                                 

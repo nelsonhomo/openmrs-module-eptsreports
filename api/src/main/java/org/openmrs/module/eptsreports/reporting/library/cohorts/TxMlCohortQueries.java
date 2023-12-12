@@ -2,11 +2,6 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts;
 
 import java.util.Date;
 import org.openmrs.Location;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.eptsreports.reporting.calculation.txml.TxMLPatientsWhoAreIITBetween3And5MonthsCalculation;
-import org.openmrs.module.eptsreports.reporting.calculation.txml.TxMLPatientsWhoAreIITGreaterOrEquel6MonthsCalculation;
-import org.openmrs.module.eptsreports.reporting.calculation.txml.TxMLPatientsWhoAreIITLessThan3MonthsCalculation;
-import org.openmrs.module.eptsreports.reporting.cohort.definition.BaseFghCalculationCohortDefinition;
 import org.openmrs.module.eptsreports.reporting.library.queries.TXMLQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -29,60 +24,67 @@ public class TxMlCohortQueries {
 
   private static final String FIND_PATIENTS_WHO_ARE_DEAD = "TX_ML/PATIENTS_WHO_ARE_DEAD.sql";
 
+  private static final String FIND_PATIENTS_WHO_LOST_FOLLOWP_DATA =
+      "TX_ML/PATIENTS_WHO_LOST_FOLLOWP_DATA.sql";
+
   @Autowired private GenericCohortQueries genericCohorts;
 
   private String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
   public CohortDefinition getPatientstotalIIT() {
-    String mapping = "startDate=${startDate},endDate=${endDate},location=${location}";
     CompositionCohortDefinition cd = new CompositionCohortDefinition();
     cd.setName("Get patients who are IIT (Totals)");
     cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
     cd.addParameter(new Parameter("endDate", "End Date", Date.class));
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
-    cd.addSearch("TX-ML", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mapping));
-
-    cd.addSearch("DEAD", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mapping));
-
+    cd.addSearch("TX-ML", EptsReportUtils.map(this.getPatientsWhoMissedNextApointment(), mappings));
+    cd.addSearch("DEAD", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mappings));
     cd.addSearch(
-        "TRANSFERREDOUT", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mapping));
+        "TRANSFERREDOUT", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mappings));
 
     cd.setCompositionString("(TX-ML NOT (DEAD OR TRANSFERREDOUT)");
     return cd;
   }
 
   public CohortDefinition getPatientsWhoAreIITLessThan3Months() {
-    String mapping = "startDate=${startDate},endDate=${endDate},location=${location}";
     CompositionCohortDefinition cd = new CompositionCohortDefinition();
     cd.setName("Get patients who are LTFU less than 3 months");
     cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
     cd.addParameter(new Parameter("endDate", "End Date", Date.class));
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
+    String query =
+        String.format(EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_LOST_FOLLOWP_DATA), " < 90 ");
+
     cd.addSearch(
         "missedAppointmentIITLess3Month",
-        EptsReportUtils.map(this.getPatientsWhoAreIITLessThan3MonthsCalculation(), mapping));
-    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mapping));
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql("Finding IIT patients < 90 days", query), mappings));
 
-    cd.setCompositionString("missedAppointmentIITLess3Month AND IIT");
+    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
+
+    cd.setCompositionString("IIT AND missedAppointmentIITLess3Month");
     return cd;
   }
 
   public CohortDefinition getPatientsWhoAreIITGreaterOrEqual6Months() {
-    String mapping = "startDate=${startDate},endDate=${endDate},location=${location}";
     CompositionCohortDefinition cd = new CompositionCohortDefinition();
     cd.setName("Get patients who are LTFU less than 6 months");
     cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
     cd.addParameter(new Parameter("endDate", "End Date", Date.class));
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
+    String query =
+        String.format(EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_LOST_FOLLOWP_DATA), " >= 180 ");
+
     cd.addSearch(
         "missedAppointmentIITGreaterOrEqual6Month",
-        EptsReportUtils.map(this.getPatientsWhoAreIITGreatherOrEqual6MonthsCalculation(), mapping));
-    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mapping));
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql("Finding IIT patients >= 180 days", query), mappings));
+    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
 
-    cd.setCompositionString("missedAppointmentIITGreaterOrEqual6Month AND IIT");
+    cd.setCompositionString("IIT AND missedAppointmentIITGreaterOrEqual6Month");
     return cd;
   }
 
@@ -94,13 +96,18 @@ public class TxMlCohortQueries {
     cd.addParameter(new Parameter("endDate", "End Date", Date.class));
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
+    String query =
+        String.format(
+            EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_LOST_FOLLOWP_DATA), " between 90 and 180 ");
+
     cd.addSearch(
         "missedAppointmentIITBetween3And5Months",
         EptsReportUtils.map(
-            this.getPatientsWhoAreIITBetween3And5MonthsCalculationCalculation(), mapping));
-    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mapping));
+            this.genericCohorts.generalSql("Finding IIT patients between 90 and 180 days", query),
+            mappings));
+    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
 
-    cd.setCompositionString("missedAppointmentIITBetween3And5Months AND IIT");
+    cd.setCompositionString("IIT AND missedAppointmentIITBetween3And5Months");
     return cd;
   }
 
@@ -201,53 +208,5 @@ public class TxMlCohortQueries {
 
     definition.setCompositionString("(TXML and REFUSEDTREATMENT) NOT REFUSEDTREATMENT");
     return definition;
-  }
-
-  @DocumentedDefinition(value = "PatientsWhoAreIITLessThan3MonthsCalculation")
-  private CohortDefinition getPatientsWhoAreIITLessThan3MonthsCalculation() {
-    BaseFghCalculationCohortDefinition cd =
-        new BaseFghCalculationCohortDefinition(
-            "PatientsWhoAreIITLessThan3MonthsCalculation",
-            Context.getRegisteredComponents(TxMLPatientsWhoAreIITLessThan3MonthsCalculation.class)
-                .get(0));
-    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    cd.addParameter(new Parameter("endDate", "end Date", Date.class));
-    cd.addParameter(new Parameter("location", "Location", Location.class));
-
-    return cd;
-  }
-
-  @DocumentedDefinition(value = "PatientsWhoAreIITGreatherOrEqual6MonthsCalculation")
-  private CohortDefinition getPatientsWhoAreIITGreatherOrEqual6MonthsCalculation() {
-
-    BaseFghCalculationCohortDefinition cd =
-        new BaseFghCalculationCohortDefinition(
-            "PatientsWhoAreIITGreatherOrEqual6MonthsCalculation",
-            Context.getRegisteredComponents(
-                    TxMLPatientsWhoAreIITGreaterOrEquel6MonthsCalculation.class)
-                .get(0));
-    cd.setName("PatientsWhoAreIITGreatherOrEqual6MonthsCalculation");
-    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    cd.addParameter(new Parameter("endDate", "end Date", Date.class));
-    cd.addParameter(new Parameter("location", "Location", Location.class));
-
-    return cd;
-  }
-
-  @DocumentedDefinition(value = "PatientsWhoAreIITBetween3And5MonthsCalculation")
-  private CohortDefinition getPatientsWhoAreIITBetween3And5MonthsCalculationCalculation() {
-
-    BaseFghCalculationCohortDefinition cd =
-        new BaseFghCalculationCohortDefinition(
-            "PatientsWhoAreIITBetween3And5MonthsCalculation",
-            Context.getRegisteredComponents(
-                    TxMLPatientsWhoAreIITBetween3And5MonthsCalculation.class)
-                .get(0));
-    cd.setName("PatientsWhoAreIITBetween3And5MonthsCalculation");
-    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    cd.addParameter(new Parameter("endDate", "end Date", Date.class));
-    cd.addParameter(new Parameter("location", "Location", Location.class));
-
-    return cd;
   }
 }

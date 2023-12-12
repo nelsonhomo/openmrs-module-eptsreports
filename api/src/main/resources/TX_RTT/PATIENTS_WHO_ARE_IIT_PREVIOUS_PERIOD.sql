@@ -172,7 +172,7 @@ from (
 			                                         inner join person pe on pe.person_id = p.patient_id                                                                     
 			                                         inner join encounter e on p.patient_id=e.patient_id                                                                     
 			                                         inner join obs o on o.encounter_id=e.encounter_id                                                                       
-			                                     where e.voided=0 and p.voided=0 and pe.voided = 0 and e.encounter_datetime<= :endDate                                       
+			                                     where e.voided=0 and p.voided=0 and pe.voided = 0 and e.encounter_datetime< :startDate                                       
 			                                         and e.encounter_type = 21 and  e.location_id= :location                                                                 
 			                                         group by p.patient_id                                                                                                   
 			                                 ) ultimaBusca                                                                                                                   
@@ -248,5 +248,5 @@ from (
 			) inicio_fila_recepcao_prox
 		  		group by patient_id                                                                                                                                                                    
   ) coorte_final 
-  where ((data_estado is null or (data_estado is not null and  data_fila > data_estado)) and date_add(data_iit, interval 28 day) < :startDate or (data_iit is null and data_fila is not null) ) and data_restart between :startDate and :endDate  
+  where ((data_estado is null or (data_estado is not null and  data_fila > data_estado)) and date_add(data_iit, interval 28 day) < date_add(:startDate, interval -1 day) or (data_iit is null and data_fila is not null) ) and data_restart between :startDate and :endDate  
   

@@ -87,7 +87,7 @@ public class TxRttDataset extends BaseDataSet {
 
     this.addDimensions(
         definition,
-        mappings,
+        "endDate=${endDate}",
         Arrays.asList("R-LCD4", "R-GCD4", "R-UCD4", "R-NE-CD4"),
         UNDER_ONE,
         ONE_TO_FOUR,
@@ -443,44 +443,17 @@ public class TxRttDataset extends BaseDataSet {
         cohortIndicatorDataSetDefinition.addDimension(
             this.getColumnName(columnPrefix, range, Gender.MALE),
             EptsReportUtils.map(
-                this.eptsCommonDimension.findPatientsWhoAreNewlyEnrolledOnArtByAgeAndGender(
-                    this.getColumnName(columnPrefix, range, Gender.MALE),
-                    range,
-                    Gender.MALE.getName()),
+                this.eptsCommonDimension.findPatientsByGenderAndRange(
+                    this.getColumnName(columnPrefix, range, Gender.MALE), range, Gender.MALE),
                 mappings));
 
         cohortIndicatorDataSetDefinition.addDimension(
             this.getColumnName(columnPrefix, range, Gender.FEMALE),
             EptsReportUtils.map(
-                this.eptsCommonDimension.findPatientsWhoAreNewlyEnrolledOnArtByAgeAndGender(
-                    this.getColumnName(columnPrefix, range, Gender.FEMALE),
-                    range,
-                    Gender.FEMALE.getName()),
+                this.eptsCommonDimension.findPatientsByGenderAndRange(
+                    this.getColumnName(columnPrefix, range, Gender.FEMALE), range, Gender.FEMALE),
                 mappings));
       }
-    }
-  }
-
-  private void addDimensions(
-      final CohortIndicatorDataSetDefinition cohortIndicatorDataSetDefinition,
-      final String mappings,
-      final AgeRange... ranges) {
-
-    for (final AgeRange range : ranges) {
-
-      cohortIndicatorDataSetDefinition.addDimension(
-          this.getColumnName(range, Gender.MALE),
-          EptsReportUtils.map(
-              this.eptsCommonDimension.findPatientsByGenderAndRange(
-                  this.getColumnName(range, Gender.MALE), range, Gender.MALE),
-              mappings));
-
-      cohortIndicatorDataSetDefinition.addDimension(
-          this.getColumnName(range, Gender.FEMALE),
-          EptsReportUtils.map(
-              this.eptsCommonDimension.findPatientsByGenderAndRange(
-                  this.getColumnName(range, Gender.FEMALE), range, Gender.FEMALE),
-              mappings));
     }
   }
 
@@ -512,9 +485,5 @@ public class TxRttDataset extends BaseDataSet {
 
   private String getColumnName(String columnPrefix, AgeRange range, Gender gender) {
     return range.getDesagregationColumnName(columnPrefix, gender);
-  }
-
-  private String getColumnName(final AgeRange range, final Gender gender) {
-    return range.getDesagregationColumnName("R", gender);
   }
 }
