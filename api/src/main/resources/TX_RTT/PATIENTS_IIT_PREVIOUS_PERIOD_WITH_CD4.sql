@@ -7,7 +7,7 @@ from(
 			select inicio_fila_recepcao_prox.* 
 			from(
 				select inicio_fila_recepcao_prox.*,  
-					GREATEST(COALESCE(data_proximo_levantamento,data_recepcao_levantou30), COALESCE(data_recepcao_levantou30,data_proximo_levantamento)) data_iit,
+					GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30), COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_iit,
 					LEAST(COALESCE(data_fila_restart,data_recepcao_levantou_restart), COALESCE(data_recepcao_levantou_restart,data_fila_restart)) data_restart 
 				from(
 						select inicio_fila_recepcao.*,
@@ -17,7 +17,6 @@ from(
 								select inicio.*,
 									 saida.data_estado,
 									 max_fila.data_fila, 
-									 max_proximo_levantamento.data_proximo_levantamento,
 									 max_recepcao.data_recepcao_levantou,
 								     max_fila_restart.data_fila_restart,
 								     max_recepcao_restart.data_recepcao_levantou_restart   
@@ -199,15 +198,6 @@ from(
 										and e.location_id=:location and e.encounter_datetime< :startDate                                                                                 
 										group by p.patient_id                                                                                                                               
 								) max_fila on inicio.patient_id=max_fila.patient_id
-								left join             
-								( 		select p.patient_id, max(o.value_datetime) data_proximo_levantamento                                                                                            
-									from patient p                                                                                                                                   
-										inner join encounter e on e.patient_id= p.patient_id 
-										inner join obs o on o.encounter_id = e.encounter_id                                                                                        
-									where p.voided= 0 and e.voided=0 and o.voided = 0 and e.encounter_type=18 and o.concept_id = 5096                                                                  
-										and e.location_id=:location and e.encounter_datetime < :startDate                                                                                
-										group by p.patient_id 
-								) max_proximo_levantamento on inicio.patient_id=max_proximo_levantamento.patient_id  
 								left join                                                                                                                                           
 								( 	
 									select p.patient_id,min(encounter_datetime) data_fila_restart                                                                                                
@@ -244,12 +234,18 @@ from(
 								                                                                                                                       
 							) inicio_fila_recepcao 
 					   left join                                                                                                                                          
-			              obs obs_fila on obs_fila.person_id=inicio_fila_recepcao.patient_id                                                                                      
-			               	and obs_fila.voided=0                                                                                                                             
-			              	and obs_fila.obs_datetime=inicio_fila_recepcao.data_fila                                                                                                
-			              	and obs_fila.concept_id=5096                                                                                                                       
-			              	and obs_fila.location_id=:location                                                                                                                 
-             	   			group by inicio_fila_recepcao.patient_id    
+						encounter ultimo_fila_data_criacao on inicio_fila_recepcao.patient_id = ultimo_fila_data_criacao.patient_id                                                                                 
+							and ultimo_fila_data_criacao.voided=0                                     
+							and ultimo_fila_data_criacao.encounter_type = 18  
+							and ultimo_fila_data_criacao.encounter_datetime = inicio_fila_recepcao.data_fila                                                                                            
+							and ultimo_fila_data_criacao.location_id=:location                      
+						left join                                                                                                                                          
+						obs obs_fila on inicio_fila_recepcao.patient_id = obs_fila.person_id                                                                                     
+							and obs_fila.voided=0                                                                                                                             
+							and (obs_fila.obs_datetime=inicio_fila_recepcao.data_fila  or (ultimo_fila_data_criacao.date_created = obs_fila.date_created and ultimo_fila_data_criacao.encounter_id = obs_fila.encounter_id ))                                                                                                       
+							and obs_fila.concept_id=5096                                                                                                                       
+							and obs_fila.location_id=:location                                                                                                                   
+             	   		group by inicio_fila_recepcao.patient_id    
 			) inicio_fila_recepcao_prox
 		  		group by patient_id 
 		   )	inicio_fila_recepcao_prox 
