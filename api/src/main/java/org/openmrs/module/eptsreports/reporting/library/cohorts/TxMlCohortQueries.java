@@ -2,7 +2,6 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts;
 
 import java.util.Date;
 import org.openmrs.Location;
-import org.openmrs.module.eptsreports.reporting.library.queries.TXMLQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -25,6 +24,9 @@ public class TxMlCohortQueries {
 
   private static final String FIND_PATIENTS_WHO_ARE_IIT = "TX_ML/PATIENTS_WHO_ARE_IIT.sql";
 
+  private static final String FIND_PATIENTS_WHO_STOPPED_REFUSED_TREATMENT =
+      "TX_ML/PATIENTS_WHO_STOPPED_REFUSED_TREATMENT.sql";
+
   @Autowired private GenericCohortQueries genericCohorts;
 
   private String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
@@ -38,7 +40,7 @@ public class TxMlCohortQueries {
 
     cd.addSearch("ART-START", EptsReportUtils.map(this.getPatientsWhOStartedART(), mappings));
 
-    String query = String.format(EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT), "");
+    String query = EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT);
 
     cd.addSearch(
         "IIT",
@@ -48,8 +50,12 @@ public class TxMlCohortQueries {
     cd.addSearch("DEAD", EptsReportUtils.map(this.getPatientsMarkedAsDead(), mappings));
     cd.addSearch(
         "TRANSFERREDOUT", EptsReportUtils.map(this.getPatientsWhoAreTransferedOut(), mappings));
+    cd.addSearch(
+        "STOPPED-TREATMENT",
+        EptsReportUtils.map(this.getPatientsWhoRefusedOrStoppedTreatment(), mappings));
 
-    cd.setCompositionString("( ART-START AND IIT) NOT (DEAD OR TRANSFERREDOUT)");
+    cd.setCompositionString(
+        "(ART-START AND (IIT OR STOPPED-TREATMENT)) NOT (DEAD OR TRANSFERREDOUT)");
 
     return cd;
   }
@@ -61,18 +67,29 @@ public class TxMlCohortQueries {
     cd.addParameter(new Parameter("endDate", "End Date", Date.class));
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
-    String query =
-        String.format(
-            EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT), " where intervaloIIT < 90 ");
+    String iitQuery =
+        EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT) + " where intervaloIIT < 90 ";
 
     cd.addSearch(
         "missedAppointmentIITLess3Month",
         EptsReportUtils.map(
-            this.genericCohorts.generalSql("Finding IIT patients < 90 days", query), mappings));
+            this.genericCohorts.generalSql("Finding IIT patients < 90 days", iitQuery), mappings));
+
+    String stoppedRefusedTreatmentQuery =
+        EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_STOPPED_REFUSED_TREATMENT)
+            + " where intervaloIIT < 90 ";
+
+    cd.addSearch(
+        "stopRefusedTreatment",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "Finding StoppedRefusedTreatment patients  < 90  days",
+                stoppedRefusedTreatmentQuery),
+            mappings));
 
     cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
 
-    cd.setCompositionString("IIT AND missedAppointmentIITLess3Month");
+    cd.setCompositionString("IIT AND (missedAppointmentIITLess3Month OR stopRefusedTreatment)");
     return cd;
   }
 
@@ -83,19 +100,33 @@ public class TxMlCohortQueries {
     cd.addParameter(new Parameter("endDate", "End Date", Date.class));
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
-    String query =
-        String.format(
-            EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT),
-            " where intervaloIIT between 90 and 180 ");
+    String iitQuery =
+        EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT)
+            + " where intervaloIIT >= 90 and intervaloIIT < 180 ";
 
     cd.addSearch(
         "missedAppointmentIITBetween3And5Months",
         EptsReportUtils.map(
-            this.genericCohorts.generalSql("Finding IIT patients between 90 and 180 days", query),
+            this.genericCohorts.generalSql(
+                "Finding IIT patients  >= 90 and  < 180  days", iitQuery),
             mappings));
+
+    String stoppedRefusedTreatmentQuery =
+        EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_STOPPED_REFUSED_TREATMENT)
+            + " where intervaloIIT >= 90 and intervaloIIT < 180 ";
+
+    cd.addSearch(
+        "stopRefusedTreatment",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "Finding StoppedRefusedTreatment patients  >= 90 and  < 180  days",
+                stoppedRefusedTreatmentQuery),
+            mappings));
+
     cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
 
-    cd.setCompositionString("IIT AND missedAppointmentIITBetween3And5Months");
+    cd.setCompositionString(
+        "IIT AND (missedAppointmentIITBetween3And5Months OR stopRefusedTreatment)");
     return cd;
   }
 
@@ -106,17 +137,29 @@ public class TxMlCohortQueries {
     cd.addParameter(new Parameter("endDate", "End Date", Date.class));
     cd.addParameter(new Parameter("location", "Location", Location.class));
 
-    String query =
+    String iitQuery =
         String.format(
             EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT), " where intervaloIIT  >= 180 ");
-
     cd.addSearch(
         "missedAppointmentIITGreaterOrEqual6Month",
         EptsReportUtils.map(
-            this.genericCohorts.generalSql("Finding IIT patients >= 180 days", query), mappings));
+            this.genericCohorts.generalSql("Finding IIT patients >= 180 days", iitQuery),
+            mappings));
     cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
 
-    cd.setCompositionString("IIT AND missedAppointmentIITGreaterOrEqual6Month");
+    String stoppedRefusedTreatmentQuery =
+        EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_STOPPED_REFUSED_TREATMENT)
+            + " where intervaloIIT  >= 180  ";
+    cd.addSearch(
+        "stopRefusedTreatment",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "Finding StoppedRefusedTreatment patients  >=180  days",
+                stoppedRefusedTreatmentQuery),
+            mappings));
+
+    cd.setCompositionString(
+        "IIT AND (missedAppointmentIITGreaterOrEqual6Month or stopRefusedTreatment)");
     return cd;
   }
 
@@ -189,6 +232,32 @@ public class TxMlCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "PatientsWhoStoppedTreatment")
+  public CohortDefinition getPatientsWhoRefusedOrStoppedTreatment() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("PatientsWhoStoppedTreatment");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "ART-START", EptsReportUtils.map(this.getPatientsWhOStartedART(), mappings));
+
+    definition.addSearch(
+        "STOPPED-TREATMENT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "Finding patients who refused/Stopped Treatment",
+                EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_STOPPED_REFUSED_TREATMENT)),
+            mappings));
+
+    definition.setCompositionString("ART-START and STOPPED-TREATMENT");
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "patientsWhoAreTransferedOut")
   public CohortDefinition getPatientsWhoAreTransferedOut() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -211,31 +280,6 @@ public class TxMlCohortQueries {
 
     definition.setCompositionString("ART-START AND TRANSFERREDOUT");
 
-    return definition;
-  }
-
-  @DocumentedDefinition(value = "patientsWhoRefusedStoppedTreatment")
-  public CohortDefinition getPatientsWhoRefusedOrStoppedTreatment() {
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-
-    definition.setName("patientsWhoRefusedStoppedTreatment");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
-
-    definition.addSearch(
-        "ART-START", EptsReportUtils.map(this.getPatientsWhOStartedART(), mappings));
-
-    definition.addSearch(
-        "REFUSEDTREATMENT",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "Finding patients who stopped/suspended treatment ",
-                TXMLQueriesInterface.QUERY
-                    .findPatiensWhoStoppedOrRefusedTreatmentByTheEndOfReportingDate),
-            mappings));
-
-    definition.setCompositionString("(ART-START AND REFUSEDTREATMENT) NOT REFUSEDTREATMENT");
     return definition;
   }
 }

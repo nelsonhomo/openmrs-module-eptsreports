@@ -380,4 +380,4 @@ from (
 					
 ) inicio_fila_seg 
 	where (inicio_fila_seg.data_estado is null or (inicio_fila_seg.data_estado is not null and  inicio_fila_seg.data_fila > inicio_fila_seg.data_estado))  and date_add(data_proximo_levantamento, interval 28 day) >= date_add(:startDate, interval -1 day) and date_add(data_proximo_levantamento, interval 28 day) < :endDate
-) iit  %s 
+) iit  
