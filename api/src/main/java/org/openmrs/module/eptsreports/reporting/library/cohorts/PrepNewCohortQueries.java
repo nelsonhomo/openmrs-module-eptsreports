@@ -16,6 +16,8 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts;
 import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.queries.PrepNewQueries;
+import org.openmrs.module.eptsreports.reporting.library.queries.PrepPregnantBreasftfeedingQueries;
+import org.openmrs.module.eptsreports.reporting.utils.EptsReportConstants.PregnantOrBreastfeedingWomen;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -64,5 +66,59 @@ public class PrepNewCohortQueries {
     txNewCompositionCohort.setCompositionString("START-PREP NOT TRANSFERED-IN ");
 
     return txNewCompositionCohort;
+  }
+
+  public CohortDefinition getClientsWithPregnancyStatusDuringReportingPeriod() {
+    final CompositionCohortDefinition prepNewCompositionCohort = new CompositionCohortDefinition();
+
+    prepNewCompositionCohort.setName("PREGNANT");
+    prepNewCompositionCohort.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    prepNewCompositionCohort.addParameter(new Parameter("endDate", "End Date", Date.class));
+    prepNewCompositionCohort.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    prepNewCompositionCohort.addSearch(
+        "START-PREP", EptsReportUtils.map(this.getClientsNewlyEnrolledInPrep(), mappings));
+
+    prepNewCompositionCohort.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findClientsWithPregnancyStatusDuringReportingPeriod",
+                PrepPregnantBreasftfeedingQueries.findPatientsWhoArePregnantOrBreastfeeding(
+                    PregnantOrBreastfeedingWomen.PREGNANTWOMEN)),
+            mappings));
+
+    prepNewCompositionCohort.setCompositionString("START-PREP AND PREGNANT");
+
+    return prepNewCompositionCohort;
+  }
+
+  public CohortDefinition getClientsWithBreastfeedingStatusDuringReportingPeriod() {
+    final CompositionCohortDefinition prepNewCompositionCohort = new CompositionCohortDefinition();
+
+    prepNewCompositionCohort.setName("BREASTFEEDING");
+    prepNewCompositionCohort.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    prepNewCompositionCohort.addParameter(new Parameter("endDate", "End Date", Date.class));
+    prepNewCompositionCohort.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    prepNewCompositionCohort.addSearch(
+        "START-PREP", EptsReportUtils.map(this.getClientsNewlyEnrolledInPrep(), mappings));
+
+    prepNewCompositionCohort.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "findClientsWithBreastfeedingStatusDuringReportingPeriod",
+                PrepPregnantBreasftfeedingQueries.findPatientsWhoArePregnantOrBreastfeeding(
+                    PregnantOrBreastfeedingWomen.BREASTFEEDINGWOMEN)),
+            mappings));
+
+    prepNewCompositionCohort.setCompositionString("START-PREP AND BREASTFEEDING");
+
+    return prepNewCompositionCohort;
   }
 }
