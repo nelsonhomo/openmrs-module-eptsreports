@@ -3,7 +3,7 @@ from (
 		select coorte_final.*, datediff(data_restart,data_iit) iit_art_interval
 		from (
 				select inicio_fila_recepcao_prox.*,
-					GREATEST(COALESCE(data_proximo_lev,data_recepcao_levantou30), COALESCE(data_recepcao_levantou30,data_proximo_lev)) data_iit,
+					GREATEST(COALESCE(data_proximo_levantamento,data_recepcao_levantou30), COALESCE(data_recepcao_levantou30,data_proximo_levantamento)) data_iit,
 					LEAST(COALESCE(data_fila_restart,data_recepcao_levantou_restart), COALESCE(data_recepcao_levantou_restart,data_fila_restart)) data_restart 
 				from(
 						select inicio_fila_recepcao.*,
