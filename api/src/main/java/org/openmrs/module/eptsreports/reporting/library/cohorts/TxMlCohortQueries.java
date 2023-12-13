@@ -61,106 +61,17 @@ public class TxMlCohortQueries {
   }
 
   public CohortDefinition getPatientsWhoAreIITLessThan3Months() {
-    CompositionCohortDefinition cd = new CompositionCohortDefinition();
-    cd.setName("Get patients who are LTFU less than 3 months");
-    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-    cd.addParameter(new Parameter("location", "Location", Location.class));
-
-    String iitQuery =
-        EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT) + " where intervaloIIT < 90 ";
-
-    cd.addSearch(
-        "missedAppointmentIITLess3Month",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql("Finding IIT patients < 90 days", iitQuery), mappings));
-
-    String stoppedRefusedTreatmentQuery =
-        EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_STOPPED_REFUSED_TREATMENT)
-            + " where intervaloIIT < 90 ";
-
-    cd.addSearch(
-        "stopRefusedTreatment",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "Finding StoppedRefusedTreatment patients  < 90  days",
-                stoppedRefusedTreatmentQuery),
-            mappings));
-
-    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
-
-    cd.setCompositionString("IIT AND (missedAppointmentIITLess3Month OR stopRefusedTreatment)");
-    return cd;
+    return getIITCohortDefinition(" IIT patients < 90 days", " where intervaloIIT < 90 ");
   }
 
   public CohortDefinition getPatientsWhoAreIITBetween3And5Months() {
-    CompositionCohortDefinition cd = new CompositionCohortDefinition();
-    cd.setName("Get patients who are LTFU Greater than 3 months And Less Than 6 Months");
-    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-    cd.addParameter(new Parameter("location", "Location", Location.class));
-
-    String iitQuery =
-        EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT)
-            + " where intervaloIIT >= 90 and intervaloIIT < 180 ";
-
-    cd.addSearch(
-        "missedAppointmentIITBetween3And5Months",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "Finding IIT patients  >= 90 and  < 180  days", iitQuery),
-            mappings));
-
-    String stoppedRefusedTreatmentQuery =
-        EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_STOPPED_REFUSED_TREATMENT)
-            + " where intervaloIIT >= 90 and intervaloIIT < 180 ";
-
-    cd.addSearch(
-        "stopRefusedTreatment",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "Finding StoppedRefusedTreatment patients  >= 90 and  < 180  days",
-                stoppedRefusedTreatmentQuery),
-            mappings));
-
-    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
-
-    cd.setCompositionString(
-        "IIT AND (missedAppointmentIITBetween3And5Months OR stopRefusedTreatment)");
-    return cd;
+    return getIITCohortDefinition(
+        " IIT patients  >= 90 and  < 180  days",
+        " where intervaloIIT >= 90 and intervaloIIT < 180");
   }
 
   public CohortDefinition getPatientsWhoAreIITGreaterOrEqual6Months() {
-    CompositionCohortDefinition cd = new CompositionCohortDefinition();
-    cd.setName("Get patients who are LTFU less than 6 months");
-    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-    cd.addParameter(new Parameter("location", "Location", Location.class));
-
-    String iitQuery =
-        String.format(
-            EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT), " where intervaloIIT  >= 180 ");
-    cd.addSearch(
-        "missedAppointmentIITGreaterOrEqual6Month",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql("Finding IIT patients >= 180 days", iitQuery),
-            mappings));
-    cd.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
-
-    String stoppedRefusedTreatmentQuery =
-        EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_STOPPED_REFUSED_TREATMENT)
-            + " where intervaloIIT  >= 180  ";
-    cd.addSearch(
-        "stopRefusedTreatment",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "Finding StoppedRefusedTreatment patients  >=180  days",
-                stoppedRefusedTreatmentQuery),
-            mappings));
-
-    cd.setCompositionString(
-        "IIT AND (missedAppointmentIITGreaterOrEqual6Month or stopRefusedTreatment)");
-    return cd;
+    return getIITCohortDefinition(" IIT patients >= 180 days", "where intervaloIIT  >= 180");
   }
 
   @DocumentedDefinition(value = "patientsWhoMissedNextApointment")
@@ -281,5 +192,36 @@ public class TxMlCohortQueries {
     definition.setCompositionString("ART-START AND TRANSFERREDOUT");
 
     return definition;
+  }
+
+  private CohortDefinition getIITCohortDefinition(String intervalLabel, String interval) {
+    final CompositionCohortDefinition composition = new CompositionCohortDefinition();
+
+    composition.setName("IIT -" + intervalLabel);
+    composition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    composition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    composition.addParameter(new Parameter("location", "location", Location.class));
+
+    composition.addSearch("IIT", EptsReportUtils.map(this.getPatientstotalIIT(), mappings));
+
+    composition.addSearch(
+        "IIT-INTERVAL",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "Finding " + intervalLabel,
+                EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_IIT) + interval),
+            mappings));
+
+    composition.addSearch(
+        "STOPPED-REFUSED-TREATMENT",
+        EptsReportUtils.map(
+            this.genericCohorts.generalSql(
+                "Finding " + intervalLabel,
+                EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_STOPPED_REFUSED_TREATMENT) + interval),
+            mappings));
+
+    composition.setCompositionString("IIT AND (IIT-INTERVAL or STOPPED-REFUSED-TREATMENT)");
+
+    return composition;
   }
 }
