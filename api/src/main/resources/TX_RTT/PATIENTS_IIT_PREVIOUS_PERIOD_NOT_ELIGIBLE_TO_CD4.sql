@@ -225,7 +225,7 @@ select inicio_fila_recepcao_prox.*
 						left join                                                                                                                                          
 						obs obs_fila on inicio_fila_recepcao.patient_id = obs_fila.person_id                                                                                     
 							and obs_fila.voided=0                                                                                                                             
-							and (obs_fila.obs_datetime=inicio_fila_recepcao.data_fila  or (ultimo_fila_data_criacao.date_created = obs_fila.date_created and ultimo_fila_data_criacao.encounter_id = obs_fila.encounter_id ))                                                                                                       
+							and ultimo_fila_data_criacao.encounter_id = obs_fila.encounter_id                                                                                                       
 							and obs_fila.concept_id=5096                                                                                                                       
 							and obs_fila.location_id=:location                                                                                                                  
              	   		group by inicio_fila_recepcao.patient_id    
