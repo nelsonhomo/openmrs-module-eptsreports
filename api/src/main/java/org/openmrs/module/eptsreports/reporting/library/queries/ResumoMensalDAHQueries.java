@@ -80,7 +80,9 @@ public class ResumoMensalDAHQueries {
 
     PREGNANT,
 
-    SEGUIMENTO_DAH
+    SEGUIMENTO_DAH,
+
+    ALL
   }
 
   /**
@@ -95,7 +97,7 @@ public class ResumoMensalDAHQueries {
             + "           join encounter e on p.patient_id=e.patient_id "
             + "           join obs o on o.encounter_id=e.encounter_id "
             + "       where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 "
-            + "           and o.concept_id=1255 and o.value_coded = %s "
+            + "           and o.concept_id=1255 and o.value_coded in ( %s ) "
             + "           and e.encounter_datetime >= :startDate and e.encounter_datetime <= :endDate "
             + "           and e.location_id=:location ";
 
@@ -109,7 +111,11 @@ public class ResumoMensalDAHQueries {
         break;
 
       case ACTIVE:
-        query = String.format(query, 6275);
+        query = String.format(query, 6276);
+        break;
+
+      case ALL:
+        query = String.format(query, StringUtils.join(Arrays.asList(1256, 1705, 6276, 6275), ","));
         break;
     }
     return query;
@@ -293,14 +299,14 @@ public class ResumoMensalDAHQueries {
         query =
             String.format(
                 query,
-                165390,
+                23952,
                 StringUtils.join(Arrays.asList(703, 664), ","),
                 23952,
                 StringUtils.join(Arrays.asList(703, 664), ","));
         break;
 
       case CRAG_SORO_POS:
-        query = String.format(query, 165390, 703, 23952, 703);
+        query = String.format(query, 23952, 703, 23952, 703);
         break;
 
       case CRAG_LCR:
@@ -326,6 +332,14 @@ public class ResumoMensalDAHQueries {
     MCC_TREATMENT,
 
     QUIMIOTHERAPHY_CICLE_ONE
+  }
+
+  public enum PeriodoAbandono {
+    PRIMEIRO,
+
+    SEGUNDO,
+
+    TERCEIRO
   }
 
   /**
