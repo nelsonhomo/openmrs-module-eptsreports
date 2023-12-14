@@ -171,14 +171,12 @@ public class PrepCtCohortQueries {
         "START-PREP", EptsReportUtils.map(this.getClientsNewlyEnrolledInPrep(), mappings));
 
     prepCtCompositionCohort.addSearch(
-        "INDETERMINATE-TEST",
-        EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "findClientsWithIndeterminateTestResult",
-                PrepCtQueries.QUERY.findClientsWithIndeterminateTestResult),
-            mappings));
+        "POSITIVE", EptsReportUtils.map(this.getClientsWithPositiveTestResult(), mappings));
 
-    prepCtCompositionCohort.setCompositionString("START-PREP AND INDETERMINATE-TEST");
+    prepCtCompositionCohort.addSearch(
+        "NEGATIVE", EptsReportUtils.map(this.getClientsWithNegativeTestResult(), mappings));
+
+    prepCtCompositionCohort.setCompositionString("START-PREP NOT (POSITIVE OR NEGATIVE)");
 
     return prepCtCompositionCohort;
   }
