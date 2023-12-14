@@ -1,4 +1,6 @@
-select entradas_por_transferencia.patient_id  
+select entradas_por_transferencia.patient_id
+from(
+select entradas_por_transferencia.*, saida.data_estado data_estado_saida, ultimo_fila.data_fila  
 from(
 	select entradas_por_transferencia.patient_id, entradas_por_transferencia.data_estado 
 	from(
@@ -372,5 +374,15 @@ left join
 							) last_fila on saida.patient_id  = last_fila.patient_id 
 									where saida.data_estado >= last_fila.max_date or last_fila.max_date is null
 
- ) saida on entradas_por_transferencia.patient_id = saida.patient_id      
-	where saida.patient_id is null
+ ) saida on entradas_por_transferencia.patient_id = saida.patient_id   
+ left join                                                                                                                                           
+ ( 	select p.patient_id,max(encounter_datetime) data_fila                                                                                                
+   	from patient p                                                                                                                                   
+           inner join person pe on pe.person_id = p.patient_id                                                                                         
+           inner join encounter e on e.patient_id=p.patient_id                                                                                         
+   where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18 and                                                                     
+           e.location_id=:location and e.encounter_datetime<=:endDate                                                                                      
+   group by p.patient_id                                                                                                                               
+   ) ultimo_fila on entradas_por_transferencia.patient_id=ultimo_fila.patient_id       
+) entradas_por_transferencia
+	where entradas_por_transferencia.data_estado_saida is null or (entradas_por_transferencia.data_estado_saida is not null and entradas_por_transferencia.data_estado_saida < entradas_por_transferencia.data_fila)
