@@ -76,12 +76,12 @@ public class SetupMERQuarterly extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "PEPFAR MER 2.6.1 Quarterly";
+    return "PEPFAR MER 2.7 Quarterly";
   }
 
   @Override
   public String getDescription() {
-    return "PEPFAR MER 2.6.1 Quarterly";
+    return "PEPFAR MER 2.7 Quarterly";
   }
 
   @Override
@@ -95,6 +95,9 @@ public class SetupMERQuarterly extends EptsDataExportManager {
 
     reportDefinition.addDataSetDefinition(
         "N", Mapped.mapStraightThrough(this.txNewDataset.constructTxNewDataset()));
+
+    reportDefinition.addDataSetDefinition(
+        "TR", Mapped.mapStraightThrough(this.txTfrInDataset.constructTxTRFIN()));
 
     reportDefinition.addDataSetDefinition(
         "C", Mapped.mapStraightThrough(this.txCurrDataset.constructTxCurrDataset(true)));
@@ -116,6 +119,7 @@ public class SetupMERQuarterly extends EptsDataExportManager {
 
     reportDefinition.addDataSetDefinition(
         "PrEP_CT", Mapped.mapStraightThrough(this.prepCtDataset.constructPrepCtDataset()));
+
     reportDefinition.addDataSetDefinition(
         "D",
         Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
@@ -136,8 +140,8 @@ public class SetupMERQuarterly extends EptsDataExportManager {
       reportDesign =
           this.createXlsReportDesign(
               reportDefinition,
-              "PEPFAR_MER_2.6.1_Quarterly.xls",
-              "PEPFAR MER 2.6.1 Quarterly",
+              "PEPFAR_MER_2.7_Quarterly.xls",
+              "PEPFAR MER 2.7 Quarterly",
               this.getExcelDesignUuid(),
               null);
       final Properties props = new Properties();

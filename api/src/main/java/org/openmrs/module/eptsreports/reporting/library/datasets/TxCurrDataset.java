@@ -71,7 +71,7 @@ public class TxCurrDataset extends BaseDataSet {
     dataSetDefinition.setName("TX_CURR Data Set");
     dataSetDefinition.addParameters(this.getParameters());
 
-    final String mappings = "endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     final CohortDefinition txCurrCompositionCohort =
         this.txCurrCohortQueries.findPatientsWhoAreActiveOnART();
@@ -200,25 +200,25 @@ public class TxCurrDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "C-MSM",
-        "Homosexual",
+        "Men who have sex with men (MSM)",
         EptsReportUtils.map(txCurrIndicator, mappings),
         "gender=M|homosexual=homosexual");
 
     dataSetDefinition.addColumn(
         "C-PWID",
-        "Drugs User",
+        "People who inject drugs (PWID)",
         EptsReportUtils.map(txCurrIndicator, mappings),
         "drug-user=drug-user");
 
     dataSetDefinition.addColumn(
         "C-PRI",
-        "Prisioners",
+        "People in prison and other closed settings",
         EptsReportUtils.map(txCurrIndicator, mappings),
         "prisioner=prisioner");
 
     dataSetDefinition.addColumn(
         "C-FSW",
-        "Sex Worker",
+        "Female sex workers (FSW)",
         EptsReportUtils.map(txCurrIndicator, mappings),
         "gender=F|sex-worker=sex-worker");
 

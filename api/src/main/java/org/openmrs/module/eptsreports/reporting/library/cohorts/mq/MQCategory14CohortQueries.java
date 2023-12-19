@@ -33,7 +33,19 @@ public class MQCategory14CohortQueries {
             findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
-    definition.setCompositionString("DENOMINATOR-TXPVLS");
+    definition.addSearch(
+        "A1-PREGNANT",
+        EptsReportUtils.map(
+            findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            "endDate=${endRevisionDate},location=${location}"));
+
+    definition.addSearch(
+        "A2-BREASTFEEDING",
+        EptsReportUtils.map(
+            findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            "endDate=${endRevisionDate},location=${location}"));
+
+    definition.setCompositionString("DENOMINATOR-TXPVLS NOT (A1-PREGNANT OR A2-BREASTFEEDING)");
 
     return definition;
   }
@@ -146,7 +158,19 @@ public class MQCategory14CohortQueries {
             findPatientsWhoHaveMoreThan3MonthsOnArtWithViralLoadResultLessthan1000RegisteredInTheLast12Months(),
             "endDate=${endRevisionDate},location=${location}"));
 
-    definition.setCompositionString("NUMERATOR-TXPVLS");
+    definition.addSearch(
+        "A1-PREGNANT",
+        EptsReportUtils.map(
+            findPregnantWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            "endDate=${endRevisionDate},location=${location}"));
+
+    definition.addSearch(
+        "A2-BREASTFEEDING",
+        EptsReportUtils.map(
+            findBreastfeedingWomanWhoHaveMoreThan3MonthsOnArtWithViralLoadRegisteredInTheLast12Months(),
+            "endDate=${endRevisionDate},location=${location}"));
+
+    definition.setCompositionString("NUMERATOR-TXPVLS NOT (A1-PREGNANT OR A2-BREASTFEEDING)");
 
     return definition;
   }

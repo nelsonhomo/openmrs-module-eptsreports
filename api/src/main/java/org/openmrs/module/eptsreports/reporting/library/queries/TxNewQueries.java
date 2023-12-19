@@ -52,7 +52,7 @@ public interface TxNewQueries {
             + "INNER JOIN obs o ON e.encounter_id=o.encounter_id "
             + "WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.encounter_type=52 "
             + "AND o.concept_id=23866 AND o.value_datetime is NOT NULL AND o.value_datetime<=:endDate AND e.location_id=:location GROUP BY p.patient_id) "
-            + "art_start GROUP BY patient_id ) tx_new WHERE art_start_date BETWEEN :startDate AND :endDate";
+            + "art_start GROUP BY patient_id ) tx_new WHERE art_start_date BETWEEN :startDate AND :endDate AND art_start_date < '2022-12-21'";
 
     public static final String findPatientsWhoAreNewlyEnrolledOnARTMISAU =
         "SELECT patient_id FROM "

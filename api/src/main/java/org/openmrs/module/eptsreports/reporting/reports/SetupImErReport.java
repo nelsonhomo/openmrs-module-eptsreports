@@ -77,7 +77,7 @@ public class SetupImErReport extends EptsDataExportManager {
     rd.setParameters(this.txNewDataset.getParameters());
 
     rd.addDataSetDefinition(
-        "N", Mapped.mapStraightThrough(this.txNewDataset.constructTxNewDataset()));
+        "N", Mapped.mapStraightThrough(this.txNewDataset.constructTxNewDatasetForIMER()));
 
     rd.addDataSetDefinition(
         "C", Mapped.mapStraightThrough(this.txCurrDataset.constructTxCurrDataset(true)));

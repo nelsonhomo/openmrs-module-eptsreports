@@ -89,6 +89,29 @@ public interface MQCategory9QueriesInterface {
             + "group by p.patient_id "
             + ") and pregnat.encounter_datetime between DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH)";
 
+    public static final String findPatientsWhoArePregnantDuringPreviousPeriodRF10 =
+        "select pregnant.patient_id from "
+            + "( "
+            + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from person pe "
+            + "inner join patient p on pe.person_id=p.patient_id "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on e.encounter_id=o.encounter_id "
+            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F' and "
+            + "o.concept_id=1982 and o.value_coded=1065 and e.encounter_datetime  between :startInclusionDate AND :endInclusionDate "
+            + "group by p.patient_id "
+            + ")pregnant "
+            + "where pregnant.patient_id not in "
+            + "( "
+            + "Select p.patient_id from person pe "
+            + "inner join patient p on pe.person_id=p.patient_id "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on e.encounter_id=o.encounter_id "
+            + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F' and "
+            + "o.concept_id=1982 and o.value_coded=1065 "
+            + "and e.encounter_datetime >= DATE_SUB(pregnant.encounter_datetime, INTERVAL 3 Month) and e.encounter_datetime < pregnant.encounter_datetime "
+            + "group by p.patient_id "
+            + ") ";
+
     public static final String
         findPatientsWhithCD4OnFirstClinicalConsultationDuringInclusionDateNumeratorCategory9 =
             "select firstClinica.patient_id  from  (  "
@@ -167,11 +190,11 @@ public interface MQCategory9QueriesInterface {
                 + "inner join encounter e on firstClinica.patient_id=e.patient_id   "
                 + "inner join obs obsCD4 on obsCD4.encounter_id=e.encounter_id   "
                 + "where firstClinica.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH)   "
-                + "and obsCD4.concept_id in(1695,703)  "
+                + "and obsCD4.concept_id in(1695,730)  "
                 + "and obsCD4.value_numeric is not null   "
                 + "and obsCD4.voided=0   "
                 + "and obsCD4.obs_datetime >=firstClinica.encounter_datetime  "
-                + "and obsCD4.obs_datetime<date_add(firstClinica.encounter_datetime, interval 33 day)   "
+                + "and obsCD4.obs_datetime<=date_add(firstClinica.encounter_datetime, interval 33 day)   "
                 + "and obsCD4.location_id=:location "
                 + "and e.encounter_type=6 ";
   }
