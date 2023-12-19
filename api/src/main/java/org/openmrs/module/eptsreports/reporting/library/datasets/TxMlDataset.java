@@ -114,78 +114,78 @@ public class TxMlDataset extends BaseDataSet {
         EptsReportUtils.map(this.keyPopulationDimension.findPatientsWhoAreSexWorker(), mappings));
 
     dsd.addColumn(
-        "M1",
+        "ML1",
         "Total missed appointments",
         EptsReportUtils.map(patientsWhoMissedNextApointmentIndicator, mappings),
         "");
     super.addRow(
         dsd,
-        "M2",
+        "ML2",
         "Age and Gender",
         EptsReportUtils.map(patientsWhoMissedNextApointmentIndicator, mappings),
         getColumnsForAgeAndGender());
 
     dsd.addColumn(
-        "M2-TotalMale",
+        "ML2-TotalMale",
         " Age and Gender (Totals male) ",
         EptsReportUtils.map(patientsWhoMissedNextApointmentIndicator, mappings),
         "gender=M");
     dsd.addColumn(
-        "M2-TotalFemale",
+        "ML2-TotalFemale",
         "Age and Gender (Totals female) ",
         EptsReportUtils.map(patientsWhoMissedNextApointmentIndicator, mappings),
         "gender=F");
 
     dsd.addColumn(
-        "M4-TotalIIT", "Total IIT", EptsReportUtils.map(patientstotalIITIndicator, mappings), "");
+        "ML4-TotalIIT", "Total IIT", EptsReportUtils.map(patientstotalIITIndicator, mappings), "");
 
     super.addRow(
         dsd,
-        "M4",
+        "ML4",
         "IIT < 90 days",
         EptsReportUtils.map(iitLessThan3MonthsIndicator, mappings),
         getColumnsForAgeAndGender());
     dsd.addColumn(
-        "M4-TotalMale",
+        "ML4-TotalMale",
         "IIT < 90 days (Totals male) ",
         EptsReportUtils.map(iitLessThan3MonthsIndicator, mappings),
         "gender=M");
     dsd.addColumn(
-        "M4-TotalFemale",
+        "ML4-TotalFemale",
         "IIT < 90 days (Totals female) ",
         EptsReportUtils.map(iitLessThan3MonthsIndicator, mappings),
         "gender=F");
 
     super.addRow(
         dsd,
-        "M5",
+        "ML5",
         "IIT >= 180 days",
         EptsReportUtils.map(iitGreaterOrEqual6MonthsIndicator, mappings),
         getColumnsForAgeAndGender());
     dsd.addColumn(
-        "M5-TotalMale",
+        "ML5-TotalMale",
         "IIT >= 180 days (Totals male) ",
         EptsReportUtils.map(iitGreaterOrEqual6MonthsIndicator, mappings),
         "gender=M");
     dsd.addColumn(
-        "M5-TotalFemale",
+        "ML5-TotalFemale",
         "IIT >= 180 days (Totals female) ",
         EptsReportUtils.map(iitGreaterOrEqual6MonthsIndicator, mappings),
         "gender=F");
 
     super.addRow(
         dsd,
-        "M8",
+        "ML8",
         "IIT >= 90 days AND IIT < 180 days",
         EptsReportUtils.map(iitBetween3And5MonthsIndicator, mappings),
         getColumnsForAgeAndGender());
     dsd.addColumn(
-        "M8-TotalMale",
+        "ML8-TotalMale",
         "IIT >= 90 days AND IIT < 180 days (Totals male) ",
         EptsReportUtils.map(iitBetween3And5MonthsIndicator, mappings),
         "gender=M");
     dsd.addColumn(
-        "M8-TotalFemale",
+        "ML8-TotalFemale",
         "IIT >= 90 days AND IIT < 180 days (Totals female) ",
         EptsReportUtils.map(iitBetween3And5MonthsIndicator, mappings),
         "gender=F");
@@ -201,7 +201,7 @@ public class TxMlDataset extends BaseDataSet {
         dsd,
         EptsReportUtils.map(patientsWhoMissedNextApointmentIndicator, mappings),
         mappings,
-        "M2",
+        "ML2",
         "TX_ML",
         "");
 
@@ -209,7 +209,7 @@ public class TxMlDataset extends BaseDataSet {
         dsd,
         EptsReportUtils.map(patientsWhoMissedNextApointmentIndicator, mappings),
         mappings,
-        "M3",
+        "ML3",
         "Died",
         "dead=dead");
 
@@ -217,7 +217,7 @@ public class TxMlDataset extends BaseDataSet {
         dsd,
         EptsReportUtils.map(iitLessThan3MonthsIndicator, mappings),
         mappings,
-        "M4",
+        "ML4",
         "IIT < 3 months",
         "iitless3months=iitless3months");
 
@@ -225,7 +225,7 @@ public class TxMlDataset extends BaseDataSet {
         dsd,
         EptsReportUtils.map(iitBetween3And5MonthsIndicator, mappings),
         mappings,
-        "M8",
+        "ML8",
         "IIT for 3-5 months",
         "iitbetween3and5months=iitbetween3and5months");
 
@@ -233,7 +233,7 @@ public class TxMlDataset extends BaseDataSet {
         dsd,
         EptsReportUtils.map(iitGreaterOrEqual6MonthsIndicator, mappings),
         mappings,
-        "M5",
+        "ML5",
         "IIT > = 6 months",
         "iitgreaterorequal6months=iitgreaterorequal6months");
 
@@ -241,7 +241,7 @@ public class TxMlDataset extends BaseDataSet {
         dsd,
         EptsReportUtils.map(patientsWhoMissedNextApointmentIndicator, mappings),
         mappings,
-        "M6",
+        "ML6",
         "Transfered Out",
         "transferedout=transferedout");
 
@@ -249,7 +249,7 @@ public class TxMlDataset extends BaseDataSet {
         dsd,
         EptsReportUtils.map(patientsWhoMissedNextApointmentIndicator, mappings),
         mappings,
-        "M7",
+        "ML7",
         "Refused (Stopped) Treatment",
         "refusedorstoppedtreatment=refusedorstoppedtreatment");
 
@@ -262,7 +262,7 @@ public class TxMlDataset extends BaseDataSet {
       final String mappings) {
     String dimension = "dead=dead";
     for (ColumnParameters column : getColumnsForAgeAndGender()) {
-      String name = "M3" + "-" + column.getColumn();
+      String name = "ML3" + "-" + column.getColumn();
       String label = "Dead" + " (" + column.getLabel() + ")";
       String dimensionIter =
           (column.getDimensions().length() > 2)
@@ -271,9 +271,9 @@ public class TxMlDataset extends BaseDataSet {
       dataSetDefinition.addColumn(name, label, indicator, dimensionIter);
     }
     dataSetDefinition.addColumn(
-        "M3-TotalMale", "Dead (Totals male) ", indicator, "gender=M|dead=dead");
+        "ML3-TotalMale", "Dead (Totals male) ", indicator, "gender=M|dead=dead");
     dataSetDefinition.addColumn(
-        "M3-TotalFemale", "Dead (Totals female) ", indicator, "gender=F|dead=dead");
+        "ML3-TotalFemale", "Dead (Totals female) ", indicator, "gender=F|dead=dead");
   }
 
   private void setTransferedDimension(
@@ -282,7 +282,7 @@ public class TxMlDataset extends BaseDataSet {
       final String mappings) {
     String dimension = "transferedout=transferedout";
     for (ColumnParameters column : getColumnsForAgeAndGender()) {
-      String name = "M6" + "-" + column.getColumn();
+      String name = "ML6" + "-" + column.getColumn();
       String label = "Transfered Out" + " (" + column.getLabel() + ")";
       String dimensionIter =
           (column.getDimensions().length() > 2)
@@ -291,12 +291,12 @@ public class TxMlDataset extends BaseDataSet {
       dataSetDefinition.addColumn(name, label, indicator, dimensionIter);
     }
     dataSetDefinition.addColumn(
-        "M6-TotalMale",
+        "ML6-TotalMale",
         "Transfered Out (Totals male) ",
         indicator,
         "gender=M|transferedout=transferedout");
     dataSetDefinition.addColumn(
-        "M6-TotalFemale",
+        "ML6-TotalFemale",
         "Transfered Out (Totals female) ",
         indicator,
         "gender=F|transferedout=transferedout");
@@ -309,7 +309,7 @@ public class TxMlDataset extends BaseDataSet {
 
     String dimension = "refusedorstoppedtreatment=refusedorstoppedtreatment";
     for (ColumnParameters column : getColumnsForAgeAndGender()) {
-      String name = "M7" + "-" + column.getColumn();
+      String name = "ML7" + "-" + column.getColumn();
       String label = "Stopped/Refused Treatment" + " (" + column.getLabel() + ")";
       String dimensionIter =
           (column.getDimensions().length() > 2)
@@ -318,12 +318,12 @@ public class TxMlDataset extends BaseDataSet {
       dataSetDefinition.addColumn(name, label, indicator, dimensionIter);
     }
     dataSetDefinition.addColumn(
-        "M7-TotalMale",
+        "ML7-TotalMale",
         "Stopped/Refused Treatment (Totals male) ",
         indicator,
         "gender=M|refusedorstoppedtreatment=refusedorstoppedtreatment");
     dataSetDefinition.addColumn(
-        "M7-TotalFemale",
+        "ML7-TotalFemale",
         "Stopped/Refused Treatment (Totals female) ",
         indicator,
         "gender=F|refusedorstoppedtreatment=refusedorstoppedtreatment");
