@@ -70,12 +70,14 @@ public class SetupListPatientsWithAdvancedHIVDiseaseReport extends EptsDataExpor
     rd.addDataSetDefinition(
         "DAHTOTAL",
         Mapped.mapStraightThrough(
-            this.listOfPatientsWithDAHDataSet.getTotalOfPatietsWithDAHDataset()));
+            this.listOfPatientsWithDAHDataSet.getTotalOfPatietsElegibleToMDSDahDataset(
+                this.getParameters())));
 
     rd.addDataSetDefinition(
         "MDSDAHTOTAL",
         Mapped.mapStraightThrough(
-            this.listOfPatientsWithDAHDataSet.getTotalOfPatietsiNmdsOfDAHDataset()));
+            this.listOfPatientsWithDAHDataSet.getTotalOfPatietsInMDSOfDAHDataset(
+                this.getParameters())));
 
     rd.addDataSetDefinition(
         "D",

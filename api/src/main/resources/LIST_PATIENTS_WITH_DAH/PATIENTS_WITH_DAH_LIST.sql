@@ -14,7 +14,7 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
      when ISNULL(estadoPermanencia.RespostaEstadoPermanencia) then 'N/A' 
      end as ultimoEstadoPermanencia, 
           case 
-     when situacaoTARVnoDAH.value_coded = 1256 then 'Iniciar' 
+     when situacaoTARVnoDAH.value_coded = 1256 then 'Novo início' 
      when situacaoTARVnoDAH.value_coded = 1705 then 'Reiniciar' 
      when situacaoTARVnoDAH.value_coded = 6276 then 'Em TARV' 
      when situacaoTARVnoDAH.value_coded = 6275 then 'Pré TARV' 

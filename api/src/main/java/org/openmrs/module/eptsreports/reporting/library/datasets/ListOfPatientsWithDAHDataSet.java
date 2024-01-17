@@ -3,8 +3,8 @@ package org.openmrs.module.eptsreports.reporting.library.datasets;
 import java.util.Date;
 import java.util.List;
 import org.openmrs.Location;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.ListOfPatientsWithDAHCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
-import org.openmrs.module.eptsreports.reporting.library.queries.ListOfPatientsWithDAHQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 public class ListOfPatientsWithDAHDataSet extends BaseDataSet {
 
   @Autowired private EptsGeneralIndicator eptsGeneralIndicator;
+  @Autowired private ListOfPatientsWithDAHCohortQueries listOfPatientsWithDAHCohortQueries;
 
   private static final String FIND_PATIENTS_WITH_DAH_LIST =
       "LIST_PATIENTS_WITH_DAH/PATIENTS_WITH_DAH_LIST.sql";
@@ -36,12 +37,12 @@ public class ListOfPatientsWithDAHDataSet extends BaseDataSet {
     return dsd;
   }
 
-  public DataSetDefinition getTotalOfPatietsWithDAHDataset() {
+  public DataSetDefinition getTotalOfPatietsElegibleToMDSDahDataset(List<Parameter> list) {
     final CohortIndicatorDataSetDefinition dataSetDefinition =
         new CohortIndicatorDataSetDefinition();
 
-    dataSetDefinition.setName("Patients with DAH Total");
-    dataSetDefinition.addParameters(this.getParameters());
+    dataSetDefinition.setName("PatientsElegible to MDS Dah Total");
+    dataSetDefinition.addParameters(list);
 
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
     final CohortDefinition dahTotal = this.findPatientsWithDAHTotal();
@@ -57,15 +58,16 @@ public class ListOfPatientsWithDAHDataSet extends BaseDataSet {
     return dataSetDefinition;
   }
 
-  public DataSetDefinition getTotalOfPatietsiNmdsOfDAHDataset() {
+  public DataSetDefinition getTotalOfPatietsInMDSOfDAHDataset(List<Parameter> list) {
     final CohortIndicatorDataSetDefinition dataSetDefinition =
         new CohortIndicatorDataSetDefinition();
 
     dataSetDefinition.setName("Patients in MDS of DAH Total");
-    dataSetDefinition.addParameters(this.getParameters());
+    dataSetDefinition.addParameters(list);
 
-    final String mappings = "startDate=${startDate},location=${location}";
-    final CohortDefinition dahTotal = this.findPatientsInMDSOfDAHTotal();
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final CohortDefinition dahTotal =
+        this.listOfPatientsWithDAHCohortQueries.getPatientsInMDSDuringPeriod();
     dataSetDefinition.addColumn(
         "TOTALINMDSOFDAH",
         "Total de Pacientes em MDS de DAH",
@@ -88,19 +90,6 @@ public class ListOfPatientsWithDAHDataSet extends BaseDataSet {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.setQuery(EptsQuerysUtils.loadQuery(FIND_PATIENTS_WITH_DAH_TOTAL));
-
-    return definition;
-  }
-
-  @DocumentedDefinition(value = "findPatientsInMDSOfDAHTotal")
-  private CohortDefinition findPatientsInMDSOfDAHTotal() {
-    final SqlCohortDefinition definition = new SqlCohortDefinition();
-
-    definition.setName("findPatientsInMDSOfDAHTotal");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
-
-    definition.setQuery(ListOfPatientsWithDAHQueries.QUERY.findPatientsInMDSOfDAHTotal);
 
     return definition;
   }
