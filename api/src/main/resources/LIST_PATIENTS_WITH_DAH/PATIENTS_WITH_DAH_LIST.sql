@@ -15,7 +15,7 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
      end as ultimoEstadoPermanencia, 
           case 
      when situacaoTARVnoDAH.value_coded = 1256 then 'Novo início' 
-     when situacaoTARVnoDAH.value_coded = 1705 then 'Reiniciar' 
+     when situacaoTARVnoDAH.value_coded = 1705 then 'Reinício' 
      when situacaoTARVnoDAH.value_coded = 6276 then 'Em TARV' 
      when situacaoTARVnoDAH.value_coded = 6275 then 'Pré TARV' 
      when ISNULL(situacaoTARVnoDAH.value_coded) then 'N/A' 
@@ -217,7 +217,7 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
          ) min_estado 
              inner join patient_program pp on pp.patient_id = min_estado.patient_id 
              inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = min_estado.data_estado 
-         where (pp.program_id=1 and ps.state=28) or (pp.program_id=2 and ps.state=29) and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location 
+         where (pp.program_id=1 and ps.state=28) or (pp.program_id=2 and ps.state=29) and pp.voided = 0 and ps.voided = 0 and pp.location_id = 212 
         union 
         SELECT p.patient_id,MIN(obsData.value_datetime) AS initialDate  FROM patient p 
         INNER JOIN encounter e  ON e.patient_id=p.patient_id 
@@ -849,6 +849,7 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
     ) maxCD4 group by patient_id 
     ) maxCD4 on maxCD4.patient_id = inicioDAH.patient_id 
     left join( 
+    select penultimoCd4.patient_id, penultimoCd4.dataCd4Anterior, o.value_numeric from (
      select ultimoCd4.patient_id, max(penultimoCd4.obs_datetime) dataCd4Anterior, penultimoCd4.value_numeric from ( 
     select patient_id, max(data_cd4) max_data_cd4, value_numeric from ( 
     Select p.patient_id,o.obs_datetime data_cd4, o.value_numeric  From patient p 
@@ -867,6 +868,11 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
     )penultimoCd4 on penultimoCd4.patient_id = ultimoCd4.patient_id 
     and date(penultimoCd4.obs_datetime) < ultimoCd4.max_data_cd4 
     group by patient_id 
+    ) penultimoCd4 
+    inner join encounter e on e.patient_id = penultimoCd4.patient_id
+    inner join obs o on e.encounter_id=o.encounter_id 
+    where e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,53,90) 
+    and penultimoCd4.dataCd4Anterior = date(o.obs_datetime)
     )penultimoCd4 on penultimoCd4.patient_id = inicioDAH.patient_id 
     left join ( 
     select patient_id, max(data_carga) data_carga, resultadoCV, comments from (
@@ -1093,7 +1099,7 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
     ) penultimaCV group by penultimaCV.patient_id 
     )penultimaCV on penultimaCV.patient_id = inicioDAH.patient_id 
     left join( 
-     Select p.patient_id,max(o.obs_datetime) max_tblam, 
+     Select p.patient_id,max(o.obs_datetime) max_tblam, e.encounter_id,
      case o.value_coded 
       when 703 then 'Positivo' 
       when 664 then 'Negativo' 
@@ -1103,7 +1109,7 @@ select inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,
     inner join encounter e on p.patient_id=e.patient_id 
     inner join obs o on e.encounter_id=o.encounter_id 
     where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 23951 and  e.encounter_type in (6,13,90) 
-    and o.obs_datetime <= :endDate and e.location_id=:location 
+    and o.obs_datetime <= :endDate and e.location_id=:location
     group by p.patient_id 
     )ultimoTbLam on ultimoTbLam.patient_id = inicioDAH.patient_id 
     left join ( 
