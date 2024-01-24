@@ -168,7 +168,7 @@ select inicioDAH.patient_id
          ) min_estado 
              inner join patient_program pp on pp.patient_id = min_estado.patient_id 
              inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = min_estado.data_estado 
-         where (pp.program_id=1 and ps.state=28) or (pp.program_id=2 and ps.state=29) and pp.voided = 0 and ps.voided = 0 and pp.location_id = 212 
+         where (pp.program_id=1 and ps.state=28) or (pp.program_id=2 and ps.state=29) and pp.voided = 0 and ps.voided = 0 and pp.location_id =:location 
         union 
         SELECT p.patient_id,MIN(obsData.value_datetime) AS initialDate  FROM patient p 
         INNER JOIN encounter e  ON e.patient_id=p.patient_id 
