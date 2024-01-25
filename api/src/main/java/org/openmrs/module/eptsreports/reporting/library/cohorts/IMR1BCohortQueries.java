@@ -29,6 +29,8 @@ import org.springframework.stereotype.Component;
 public class IMR1BCohortQueries {
 
   private static final String IMR1B = "IMR1B/PATIENTS_WHO_ARE_NEWLY_ENROLLED_ON_ART_IMR1B.sql";
+  private static final String IMR1B2 =
+      "IMR1B/PATIENTS_WHO_ARE_NEWLY_ENROLLED_ON_ART_CHILDREN_IMR1B2.sql";
 
   @Autowired private IMR1CohortQueries iMR1CohortQueries;
 
@@ -115,11 +117,10 @@ public class IMR1BCohortQueries {
     compsitionDefinition.addSearch(
         "CHILDREN",
         EptsReportUtils.map(
-            iMR1CohortQueries.findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(AgeRange.CHILDREN),
-            mappings));
+            this.findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(AgeRange.CHILDREN), mappings));
 
     compsitionDefinition.setCompositionString(
-        "(DENOMINATOR NOT (PREGNANT OR BREASTFEEDING)) NOT CHILDREN");
+        "DENOMINATOR NOT ((PREGNANT OR BREASTFEEDING) NOT CHILDREN)");
 
     return compsitionDefinition;
   }
@@ -243,6 +244,28 @@ public class IMR1BCohortQueries {
     definition.setQuery(
         IMR1BQueries.QUERY
             .findPatientsNewlyEnrolledOnArtTreatmentAndInitiatedArtTreatmentWithEnrollmentDateGreatherThanArtStartDateAMonthPriorToTheReporingPeriod);
+
+    return definition;
+  }
+
+  public CohortDefinition findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(final AgeRange ageRange) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+    definition.setName("patientsPregnantEnrolledOnARTCare");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = EptsQuerysUtils.loadQuery(IMR1B2);
+    query = String.format(query, ageRange.getMin(), ageRange.getMax());
+
+    if (AgeRange.ADULT.equals(ageRange)) {
+      query =
+          query.replace(
+              "BETWEEN " + ageRange.getMin() + " AND " + ageRange.getMax(),
+              ">= " + ageRange.getMax());
+    }
+
+    definition.setQuery(query);
 
     return definition;
   }
