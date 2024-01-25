@@ -15,6 +15,7 @@ import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.queries.IMR1BQueries;
 import org.openmrs.module.eptsreports.reporting.utils.AgeRange;
+import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -26,6 +27,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class IMR1BCohortQueries {
+
+  private static final String IMR1B = "IMR1B/PATIENTS_WHO_ARE_NEWLY_ENROLLED_ON_ART_IMR1B.sql";
 
   @Autowired private IMR1CohortQueries iMR1CohortQueries;
 
@@ -220,9 +223,7 @@ public class IMR1BCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    definition.setQuery(
-        IMR1BQueries.QUERY
-            .findPatientsNewlyEnrolledOnArtTreatmentAndInitiatedArtTreatmentAMonthPriorToTheReporingPeriod);
+    definition.setQuery(EptsQuerysUtils.loadQuery(IMR1B));
 
     return definition;
   }
