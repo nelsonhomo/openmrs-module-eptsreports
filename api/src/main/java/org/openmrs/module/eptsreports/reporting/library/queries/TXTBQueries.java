@@ -9,6 +9,11 @@ import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 
 public class TXTBQueries {
 
+  private static final String TX_NEW = "TXTB/TXNEW_UNTIL_END_DATE.sql";
+
+  private static final String FIND_PATIENTS_WHO_ARE_SCEENED_FOR_TB = "TXTB/TB_SCREENED.sql";
+
+  private static final String FIND_PATIENTS_WHO_ARE__TB_TREATMENT = "TXTB/TB_TREATMENT.sql";
   private static final String FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT =
       "TRANSFERRED_OUT/FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT.sql";
 
@@ -200,6 +205,21 @@ public class TXTBQueries {
             + "and e.encounter_type in (6) and o.concept_id=23758 and o.value_coded in(1065,1066)  and e.location_id=:location  "
             + "AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate ";
     return query;
+  }
+
+  public static String findPatientWhoAreNewEnrolledOnARTUntilEndDate() {
+
+    return EptsQuerysUtils.loadQuery(TX_NEW);
+  }
+
+  public static String findPatientWhoAreScreenedForTB() {
+
+    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_SCEENED_FOR_TB);
+  }
+
+  public static String findPatientWhoAreTBTreatment() {
+
+    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE__TB_TREATMENT);
   }
 
   public static String findPatientWhoAreTransferedOut() {
