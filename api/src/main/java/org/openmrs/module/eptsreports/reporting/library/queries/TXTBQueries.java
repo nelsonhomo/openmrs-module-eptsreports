@@ -14,6 +14,9 @@ public class TXTBQueries {
   private static final String FIND_PATIENTS_WHO_ARE_SCEENED_FOR_TB = "TXTB/TB_SCREENED.sql";
 
   private static final String FIND_PATIENTS_WHO_ARE__TB_TREATMENT = "TXTB/TB_TREATMENT.sql";
+
+  private static final String FIND_PATIENTS_WHO_ARE_TB_POSITIVE = "TXTB/TB_POSITIVE_SCREENING.sql";
+
   private static final String FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT =
       "TRANSFERRED_OUT/FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT.sql";
 
@@ -215,6 +218,11 @@ public class TXTBQueries {
   public static String findPatientWhoAreScreenedForTB() {
 
     return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_SCEENED_FOR_TB);
+  }
+
+  public static String findPatientWhoAreTBPositive() {
+
+    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TB_POSITIVE);
   }
 
   public static String findPatientWhoAreTBTreatment() {

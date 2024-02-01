@@ -33,6 +33,8 @@ public class TXTBCohortQueries {
 
   @Autowired private GenericCohortQueries genericCohortQueries;
 
+  @Autowired private TxNewCohortQueries txNewCohortQueries;
+
   @Autowired private TXTBDenominatorForTBMontlyCascadeQueries denominatorForTBMontlyCascadeQueries;
 
   private final String generalParameterMapping =
@@ -438,15 +440,13 @@ public class TXTBCohortQueries {
   public CohortDefinition txTbNumerator() {
     final CompositionCohortDefinition cd = new CompositionCohortDefinition();
     cd.setName("TxTB - txTbNumerator");
-    final CohortDefinition A = this.txTbNumeratorA();
-    cd.addSearch("A", EptsReportUtils.map(A, this.generalParameterMapping));
+    final CohortDefinition A = this.findPatientsWhoAreTBTreatment();
 
     cd.addSearch(
-        "A-PREVIOUS-PERIOD",
-        EptsReportUtils.map(
-            A, "startDate=${startDate-6m},endDate=${startDate-1d},location=${location}"));
+        "DENOMINATOR", EptsReportUtils.map(this.getDenominator(), this.generalParameterMapping));
 
-    cd.setCompositionString("A NOT A-PREVIOUS-PERIOD");
+    cd.addSearch("TBTRETMENT", EptsReportUtils.map(A, this.generalParameterMapping));
+    cd.setCompositionString("DENOMINATOR AND TBTRETMENT");
 
     this.addGeneralParameters(cd);
     return cd;
@@ -518,8 +518,10 @@ public class TXTBCohortQueries {
         "new-on-art", EptsReportUtils.map(this.getNewOnArt(), this.generalParameterMapping));
     definition.addSearch(
         "positive-screening",
-        EptsReportUtils.map(this.positiveScreening(), this.generalParameterMapping));
+        EptsReportUtils.map(this.findPatientWhoAreTBPositive(), this.generalParameterMapping));
+
     this.addGeneralParameters(definition);
+
     definition.setCompositionString("denominator AND new-on-art AND positive-screening");
     return definition;
   }
@@ -534,7 +536,7 @@ public class TXTBCohortQueries {
         "new-on-art", EptsReportUtils.map(this.getNewOnArt(), this.generalParameterMapping));
     definition.addSearch(
         "positive-screening",
-        EptsReportUtils.map(this.positiveScreening(), this.generalParameterMapping));
+        EptsReportUtils.map(this.findPatientWhoAreTBPositive(), this.generalParameterMapping));
     this.addGeneralParameters(definition);
     definition.setCompositionString("(denominator AND new-on-art) NOT positive-screening");
     return definition;
@@ -550,7 +552,7 @@ public class TXTBCohortQueries {
         "new-on-art", EptsReportUtils.map(this.getNewOnArt(), this.generalParameterMapping));
     definition.addSearch(
         "positive-screening",
-        EptsReportUtils.map(this.positiveScreening(), this.generalParameterMapping));
+        EptsReportUtils.map(this.findPatientWhoAreTBPositive(), this.generalParameterMapping));
     this.addGeneralParameters(definition);
     definition.setCompositionString("(denominator AND positive-screening) NOT new-on-art");
     return definition;
@@ -566,7 +568,7 @@ public class TXTBCohortQueries {
         "new-on-art", EptsReportUtils.map(this.getNewOnArt(), this.generalParameterMapping));
     definition.addSearch(
         "positive-screening",
-        EptsReportUtils.map(this.positiveScreening(), this.generalParameterMapping));
+        EptsReportUtils.map(this.findPatientWhoAreTBPositive(), this.generalParameterMapping));
     this.addGeneralParameters(definition);
     definition.setCompositionString("denominator NOT (new-on-art OR positive-screening)");
     return definition;
@@ -611,9 +613,8 @@ public class TXTBCohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName("patientsPregnantEnrolledOnART");
-    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
     String query = TXTBQueries.findPatientWhoAreNewEnrolledOnARTUntilEndDate();
@@ -629,9 +630,8 @@ public class TXTBCohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName("patientsPregnantEnrolledOnART");
-    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
     String query = TXTBQueries.findPatientWhoAreScreenedForTB();
@@ -646,10 +646,9 @@ public class TXTBCohortQueries {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("patientsPregnantEnrolledOnART");
-    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.setName("findPatientsWhoAreTBTreatment");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
     String query = TXTBQueries.findPatientWhoAreTBTreatment();
@@ -665,9 +664,8 @@ public class TXTBCohortQueries {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName("patientsPregnantEnrolledOnART");
-    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
     String query = TXTBQueries.findPatientWhoAreTransferedOut();
@@ -677,40 +675,74 @@ public class TXTBCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientWhoAreTBPositive")
+  public CohortDefinition findPatientWhoAreTBPositive() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = TXTBQueries.findPatientWhoAreTBPositive();
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "Denominator")
   public CohortDefinition getDenominator() {
-    CompositionCohortDefinition cd = new CompositionCohortDefinition();
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("getTotalNumerator");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
     final String mappingsToBeExclude =
-        "startDate=${startDate-6m},endDate=${startDate},location=${location}";
+        "startDate=${startDate-6m},endDate=${startDate-1d},location=${location}";
 
-    cd.setName("TX TB");
-    cd.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    cd.addParameter(new Parameter("endDate", "End Date", Date.class));
-    cd.addParameter(new Parameter("location", "Location", Location.class));
-    cd.addSearch(
-        "TXNEW", map(this.findPatientsWhoAreNewEnrolledOnARTUntilTheEndReportinPeriod(), mappings));
-    cd.addSearch("SCREENED", map(this.findPatientsWhoAreScreenedForTB(), mappings));
-    cd.addSearch("TREATMENT-1", map(this.findPatientsWhoAreTBTreatment(), mappings));
-    cd.addSearch("TREATMENT-2", map(this.findPatientsWhoAreTBTreatment(), mappingsToBeExclude));
-    cd.addSearch("TROUT", map(this.findPatientsWhoAreTrasferedOut(), mappings));
+    definition.addSearch(
+        "TXNEW",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreNewEnrolledOnARTUntilTheEndReportinPeriod(), mappings));
 
-    cd.setCompositionString("(TXNEW AND SCREENED) NOT((TROUT NOT(TREATMENT)) OR TREATMENT-2)");
+    definition.addSearch(
+        "SCREENED", EptsReportUtils.map(this.findPatientsWhoAreScreenedForTB(), mappings));
+    definition.addSearch(
+        "TREATMENT-1", EptsReportUtils.map(this.findPatientsWhoAreTBTreatment(), mappings));
+    definition.addSearch(
+        "TREATMENT-2",
+        EptsReportUtils.map(this.findPatientsWhoAreTBTreatment(), mappingsToBeExclude));
+    definition.addSearch(
+        "TROUT", EptsReportUtils.map(this.findPatientsWhoAreTrasferedOut(), mappings));
 
-    return cd;
+    definition.setCompositionString(
+        "(TXNEW AND SCREENED) NOT((TROUT NOT(TREATMENT-1)) OR TREATMENT-2)");
+
+    return definition;
   }
 
   @DocumentedDefinition(value = "get New on Art")
   public CohortDefinition getNewOnArt() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("TxTB - New on ART");
-    this.addGeneralParameters(definition);
+
+    definition.setName("getTotalNumerator");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
     definition.addSearch(
-        "started-on-period",
-        EptsReportUtils.map(
-            this.genericCohortQueries.getStartedArtOnPeriod(false, true),
-            "onOrAfter=${startDate},onOrBefore=${endDate},location=${location}"));
-    definition.setCompositionString("started-on-period");
+        "TXNEW",
+        EptsReportUtils.map(txNewCohortQueries.getTxNewCompositionCohort("TXNEW"), mappings));
+
+    definition.setCompositionString("TXNEW");
+
     return definition;
   }
 

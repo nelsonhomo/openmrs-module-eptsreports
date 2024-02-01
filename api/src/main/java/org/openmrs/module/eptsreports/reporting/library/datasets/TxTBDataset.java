@@ -67,6 +67,7 @@ public class TxTBDataset extends BaseDataSet {
     CohortIndicator numerator =
         eptsGeneralIndicator.getIndicator(
             "NUMERATOR", EptsReportUtils.map(txTbCohortQueries.txTbNumerator(), mappings));
+    
     CohortIndicator patientsPreviouslyOnARTNumerator =
         eptsGeneralIndicator.getIndicator(
             "patientsPreviouslyOnARTNumerator",
@@ -106,6 +107,7 @@ public class TxTBDataset extends BaseDataSet {
         eptsGeneralIndicator.getIndicator(
             "newOnARTPositiveScreening",
             EptsReportUtils.map(txTbCohortQueries.newOnARTPositiveScreening(), mappings));
+
     CohortIndicator newOnARTNegativeScreening =
         eptsGeneralIndicator.getIndicator(
             "newOnARTNegativeScreening",
