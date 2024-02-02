@@ -53,13 +53,26 @@ public class TxTBDataset extends BaseDataSet {
             eptsCommonDimension.age(ageDimensionCohort), "effectiveDate=${endDate}"));
 
     addTXTBDenominator(mappings, dataSetDefinition);
-
     addTXTBNumerator(mappings, dataSetDefinition);
     addSpecimenSentDisaggregation(mappings, dataSetDefinition);
     addDiagnositcTestDisaggregation(mappings, dataSetDefinition);
     addPositiveResultsDisaggregation(mappings, dataSetDefinition);
+    addCXDisaggregation(mappings, dataSetDefinition);
 
     return dataSetDefinition;
+  }
+
+  private void addCXDisaggregation(
+      String mappings, CohortIndicatorDataSetDefinition dataSetDefinition) {
+    CohortIndicator specimentSent =
+        eptsGeneralIndicator.getIndicator(
+            "SPECIMEN-SENT", EptsReportUtils.map(txTbCohortQueries.getPatientWhoAreCX(), mappings));
+
+    dataSetDefinition.addColumn(
+        "TX_TB_TOTAL_CX",
+        "TX_TB: Total Patients With CX",
+        EptsReportUtils.map(specimentSent, mappings),
+        "");
   }
 
   private void addTXTBNumerator(
@@ -67,7 +80,7 @@ public class TxTBDataset extends BaseDataSet {
     CohortIndicator numerator =
         eptsGeneralIndicator.getIndicator(
             "NUMERATOR", EptsReportUtils.map(txTbCohortQueries.txTbNumerator(), mappings));
-    
+
     CohortIndicator patientsPreviouslyOnARTNumerator =
         eptsGeneralIndicator.getIndicator(
             "patientsPreviouslyOnARTNumerator",
@@ -171,19 +184,20 @@ public class TxTBDataset extends BaseDataSet {
         eptsGeneralIndicator.getIndicator(
             "GENEXPERT-DIAGNOSTIC-TEST",
             EptsReportUtils.map(
-                txTbCohortQueries.getGeneXpertMTBDiagnosticTestCohortDefinition(), mappings));
+                txTbCohortQueries.getDiagnosticTestCohortDefinitionMWRS(), mappings));
 
     CohortIndicator smearOnly =
         eptsGeneralIndicator.getIndicator(
             "SMEAR-ONLY-DIAGNOSTIC-TEST",
             EptsReportUtils.map(
-                txTbCohortQueries.getSmearMicroscopyOnlyDiagnosticTestCohortDefinition(),
-                mappings));
+                txTbCohortQueries.getDiagnosticTestSmearMicroscopyOnly(), mappings));
+
     CohortIndicator otherNoExpert =
         eptsGeneralIndicator.getIndicator(
             "OTHER-NO-EXPERT-DIAGNOSTIC-TEST",
             EptsReportUtils.map(
-                txTbCohortQueries.getAdditionalOtherThanGenExpertTestCohortDefinition(), mappings));
+                txTbCohortQueries.getDiagnosticTestCohortDefinitionOther(), mappings));
+
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_GENEXPERT_DIAGNOSTIC",
         "TX_TB: Total Gene Xpert MTB/RIF Assay (Diagnostic Test)",
@@ -207,10 +221,7 @@ public class TxTBDataset extends BaseDataSet {
     CohortIndicator positiveResults =
         eptsGeneralIndicator.getIndicator(
             "POSITIVE-RESULT",
-            EptsReportUtils.map(
-                txTbCohortQueries.getPositiveResultCohortDefinition(
-                    txTbCohortQueries.getDenominator(), mappings),
-                mappings));
+            EptsReportUtils.map(txTbCohortQueries.getPositiveResultCohortDefinition(), mappings));
 
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_POSITIVE_RESULT",

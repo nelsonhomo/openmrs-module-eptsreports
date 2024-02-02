@@ -17,6 +17,24 @@ public class TXTBQueries {
 
   private static final String FIND_PATIENTS_WHO_ARE_TB_POSITIVE = "TXTB/TB_POSITIVE_SCREENING.sql";
 
+  private static final String FIND_PATIENTS_WHO_ARE_TB_SPECIMENT_SENT =
+      "TXTB/TB_DISAGGREGATION_SPECIMEN_SENT.sql";
+
+  private static final String FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_SMEAR_MICROSCOPY_ONLY =
+      "TXTB/TB_DISAGGREGATION_DIAGNOSTIC_TEST_SMEAR_MICROSCOPY_ONLY.sql";
+
+  private static final String FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_MWRD =
+      "TXTB/TB_DISAGGREGATION_DIAGNOSTIC_TEST_MWRD.sql";
+
+  private static final String FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_OTHER =
+      "TXTB/TB_DISAGGREGATION_DIAGNOSTIC_TEST_OTHER.sql";
+
+  private static final String FIND_PATIENTS_WHO_ARE_TB_POSITIVE_RESULT =
+      "TXTB/TB_POSITIVE_RESULT_RETURN.sql";
+
+  private static final String FIND_PATIENTS_WHO_ARE_TB_CX =
+      "TXTB/TB_DISAGGREGATION_DIAGNOSTIC_TEST_CXR.sql";
+
   private static final String FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT =
       "TRANSFERRED_OUT/FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT.sql";
 
@@ -233,6 +251,37 @@ public class TXTBQueries {
   public static String findPatientWhoAreTransferedOut() {
 
     return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT);
+  }
+
+  public static String findPatientWhoAreSpecimenSent() {
+
+    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TB_SPECIMENT_SENT);
+  }
+
+  public static String findPatientWhoAreDiagnosticTestSmearMicroscopyOnly() {
+
+    return EptsQuerysUtils.loadQuery(
+        FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_SMEAR_MICROSCOPY_ONLY);
+  }
+
+  public static String findPatientWhoAreDiagnosticTestMWRD() {
+
+    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_MWRD);
+  }
+
+  public static String findPatientWhoAreDiagnosticTestOther() {
+
+    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_OTHER);
+  }
+
+  public static String findPatientWhoArePosiveResult() {
+
+    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TB_POSITIVE_RESULT);
+  }
+
+  public static String findPatientWhoAreCX() {
+
+    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TB_CX);
   }
 
   public static String dateObsForEncounterAndQuestionAndAnswers(
