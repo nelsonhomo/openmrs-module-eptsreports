@@ -583,8 +583,8 @@ public class TXTBCohortQueries {
     cd.addSearch(
         "started-during-reporting-period",
         EptsReportUtils.map(
-            this.genericCohortQueries.getStartedArtOnPeriod(false, true),
-            "onOrAfter=${startDate},onOrBefore=${endDate},location=${location}"));
+            txNewCohortQueries.getTxNewCompositionCohort("TX_NEW"),
+            "startDate=${startDate},endDate=${endDate},location=${location}"));
     cd.setCompositionString("NUM AND started-during-reporting-period");
     this.addGeneralParameters(cd);
 
@@ -600,8 +600,8 @@ public class TXTBCohortQueries {
     cd.addSearch(
         "started-before-start-reporting-period",
         EptsReportUtils.map(
-            this.genericCohortQueries.getStartedArtBeforeDate(false),
-            "onOrBefore=${startDate-1d},location=${location}"));
+            this.findPatientsWhoAreNewEnrolledOnARTUntilTheEndReportinPeriod(),
+            "endDate=${startDate-1d},location=${location}"));
     cd.setCompositionString("NUM AND started-before-start-reporting-period");
     this.addGeneralParameters(cd);
     return cd;
@@ -770,7 +770,7 @@ public class TXTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    String query = TXTBQueries.findPatientWhoAreDiagnosticTestOther();
+    String query = TXTBQueries.findPatientWhoArePosiveResult();
 
     definition.setQuery(query);
 
@@ -1014,6 +1014,27 @@ public class TXTBCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "getSymptomScreenAlone")
+  public CohortDefinition getSymptomScreenAlone() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("getTotalNumerator");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch("DENOMINATOR", EptsReportUtils.map(this.getDenominator(), mappings));
+
+    definition.addSearch("DTS", EptsReportUtils.map(this.findPatientWhoAreCX(), mappings));
+
+    definition.setCompositionString("DENOMINATOR NOT DTS");
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "getDiagnosticTestCohortDefinitionMWRS")
   public CohortDefinition getDiagnosticTestCohortDefinitionMWRS() {
 
@@ -1051,9 +1072,15 @@ public class TXTBCohortQueries {
     definition.addSearch("DENOMINATOR", EptsReportUtils.map(this.getDenominator(), mappings));
 
     definition.addSearch(
-        "DTS", EptsReportUtils.map(this.findPatientWhoAreDiagnosticTestOther(), mappings));
+        "OTHER", EptsReportUtils.map(this.findPatientWhoAreDiagnosticTestOther(), mappings));
 
-    definition.setCompositionString("DENOMINATOR AND DTS");
+    definition.addSearch(
+        "SM", EptsReportUtils.map(this.getDiagnosticTestSmearMicroscopyOnly(), mappings));
+
+    definition.addSearch(
+        "GX", EptsReportUtils.map(this.getDiagnosticTestCohortDefinitionMWRS(), mappings));
+
+    definition.setCompositionString("(DENOMINATOR AND OTHER) NOT (SM OR GX)");
 
     return definition;
   }
