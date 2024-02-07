@@ -18,6 +18,7 @@ public class CxCaSCRNCohortQueries {
   @Autowired private TxCurrCohortQueries txCurrCohortQueries;
 
   private static final int CONCEPT_2094 = 2094;
+  private static final int CONCEPT_165436 = 165436;
   private static final int ANSWER_2093 = 2093;
   private static final int ANSWER_664 = 664;
   private static final int ANSWER_703 = 703;
@@ -58,7 +59,7 @@ public class CxCaSCRNCohortQueries {
   @DocumentedDefinition(
       value = "findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative")
   public CohortDefinition
-      findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative() {
+      findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(int resultType) {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName("findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriod");
@@ -69,7 +70,7 @@ public class CxCaSCRNCohortQueries {
     definition.setQuery(
         CxCaSCRNQueries.QUERY
             .findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodByReusult(
-                CONCEPT_2094, ANSWER_664));
+                resultType, ANSWER_664));
 
     return definition;
   }
@@ -225,12 +226,20 @@ public class CxCaSCRNCohortQueries {
         "NUMERATOR", EptsReportUtils.map(this.getTotalNumeratorFirstScreening(), mappings));
 
     definition.addSearch(
-        "FIRST-SCREENING-NEGATIVE",
+        "VIA-NEGATIVE",
         EptsReportUtils.map(
-            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(),
+            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
+                CONCEPT_2094),
             mappings));
 
-    definition.setCompositionString("NUMERATOR AND FIRST-SCREENING-NEGATIVE");
+    definition.addSearch(
+        "HPV-NEGATIVE",
+        EptsReportUtils.map(
+            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
+                CONCEPT_165436),
+            mappings));
+
+    definition.setCompositionString("NUMERATOR AND (VIA-NEGATIVE OR HPV-NEGATIVE)");
 
     return definition;
   }
@@ -320,9 +329,17 @@ public class CxCaSCRNCohortQueries {
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
-        "NEGATIVE",
+        "VIA-NEGATIVE",
         EptsReportUtils.map(
-            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(),
+            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
+                CONCEPT_2094),
+            mappings));
+
+    definition.addSearch(
+        "HPV-NEGATIVE",
+        EptsReportUtils.map(
+            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
+                CONCEPT_165436),
             mappings));
 
     definition.addSearch(
@@ -330,7 +347,7 @@ public class CxCaSCRNCohortQueries {
         EptsReportUtils.map(
             this.getTotalNumeratorRescreenedAfterPreviousNegativeTotal(), mappings));
 
-    definition.setCompositionString("NEGATIVE AND N2");
+    definition.setCompositionString("(VIA-NEGATIVE OR HPV-NEGATIVE) AND N2");
 
     return definition;
   }
@@ -436,10 +453,19 @@ public class CxCaSCRNCohortQueries {
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
-        "NEGATIVE",
+        "VIA-NEGATIVE",
         EptsReportUtils.map(
-            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(),
+            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
+                CONCEPT_2094),
             mappings));
+
+    definition.addSearch(
+        "HPV-NEGATIVE",
+        EptsReportUtils.map(
+            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
+                CONCEPT_165436),
+            mappings));
+
     definition.addSearch(
         "P2",
         EptsReportUtils.map(
@@ -448,7 +474,7 @@ public class CxCaSCRNCohortQueries {
 
     definition.addSearch("SCREENING", EptsReportUtils.map(this.getTotalNumerator(), mappings));
 
-    definition.setCompositionString("NEGATIVE AND P2 AND SCREENING");
+    definition.setCompositionString("(VIA-NEGATIVE OR HPV-NEGATIVE) AND P2 AND SCREENING");
 
     return definition;
   }
@@ -566,16 +592,25 @@ public class CxCaSCRNCohortQueries {
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     definition.addSearch(
-        "NEGATIVE",
+        "VIA-NEGATIVE",
         EptsReportUtils.map(
-            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(),
+            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
+                CONCEPT_2094),
             mappings));
+
+    definition.addSearch(
+        "HPV-NEGATIVE",
+        EptsReportUtils.map(
+            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
+                CONCEPT_165436),
+            mappings));
+
     definition.addSearch(
         "P2",
         EptsReportUtils.map(
             this.getTotalNumeratorRescreenedAfterPreviousPositiveTotal(), mappings));
 
-    definition.setCompositionString("NEGATIVE AND P2");
+    definition.setCompositionString("(VIA-NEGATIVE OR HPV-NEGATIVE) AND P2");
 
     return definition;
   }
