@@ -101,7 +101,7 @@ public class IMR1BCohortQueries {
         EptsReportUtils.map(iMR1CohortQueries.getAllPatientsWhoAreBreastfeeding(), mappings));
 
     compsitionDefinition.setCompositionString(
-        "(DENOMINATOR AND CHILDREN) NOT(PREGNANT OR BREASTFEEDING OR ADULT)");
+        "((DENOMINATOR AND CHILDREN) NOT(PREGNANT OR BREASTFEEDING)) NOT ADULT ");
 
     return compsitionDefinition;
   }

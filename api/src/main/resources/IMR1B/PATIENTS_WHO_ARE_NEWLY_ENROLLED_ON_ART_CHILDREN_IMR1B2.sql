@@ -1,4 +1,7 @@
-SELECT patient_id FROM                                                                                                                                            		
+select f.patient_id
+from 
+(
+SELECT patient_id,art_start_date  FROM                                                                                                                                            		
 (
 
  select patient_id, min(art_start_date) art_start_date 
@@ -50,10 +53,10 @@ SELECT patient_id FROM
       art_start group by patient_id 
 ) tx_new where art_start_date <=:endDate and art_start_date < '2023-12-21'
 union
-select tx_new.patient_id
+select tx_new.patient_id, tx_new.art_start_date
 from 
 (
-      select tx_new.patient_id, tx_new.art_start_date 
+      select tx_new.patient_id, tx_new.art_start_date
       from
       ( 
             select patient_id, art_start_date from 
@@ -117,8 +120,9 @@ from
       ) tx_new_period_anterior on tx_new.patient_id = tx_new_period_anterior.patient_id
        where tx_new_period_anterior.patient_id is null
       )  tx_new 
-      INNER JOIN person pe ON tx_new.patient_id=pe.person_id WHERE TIMESTAMPDIFF(year,birthdate,art_start_date) BETWEEN %d AND %d  AND birthdate IS NOT NULL 
       GROUP BY patient_id 
 
-      
+      )f 
+	INNER JOIN person pe ON f.patient_id=pe.person_id 
+    WHERE TIMESTAMPDIFF(year,birthdate,art_start_date) BETWEEN %d AND %d   AND birthdate IS NOT NULL
    
