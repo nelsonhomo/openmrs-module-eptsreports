@@ -53,7 +53,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
       CohortIndicatorDataSetDefinition dataSetDefinition, String mappings) {
     dataSetDefinition.addColumn(
         "CXTOTAL",
-        "Number of individual HIV-positive women on ART who received a screening test for cervical cancer",
+        "CXCA_SCRN: Number of individual HIV-positive women on ART who received a screening test for cervical cancer",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "CXCA_SCRN: Number of individual HIV-positive women on ART who received a screening test for cervical cancer",
@@ -63,7 +63,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "CXFRT",
-        "1st time screened  total",
+        "CXCA_SCRN: 1st time screened  total",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "1st time screened  total",
@@ -75,7 +75,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "CXN",
-        "1st time screened (Negative)",
+        "CXCA_SCRN: 1st time screened (Negative)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "1st time screened (Negative)",
@@ -88,7 +88,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "CXP",
-        "1st time screened (Positive)",
+        "CXCA_SCRN: 1st time screened (Positive)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "1st time screened (Positive)",
@@ -101,7 +101,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "CXS",
-        "1st time screened (Suspect Cancer)",
+        "CXCA_SCRN: 1st time screened (Suspect Cancer)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "1st time screened (Suspect Cancer)",
@@ -113,7 +113,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "CXRNT",
-        "Rescreened after previous negative (Total)",
+        "CXCA_SCRN: Rescreened after previous negative (Total)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Rescreened after previous negative (Total)",
@@ -127,7 +127,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "RNN",
-        "Rescreened after previous negative (Negative)",
+        "CXCA_SCRN: Rescreened after previous negative (Negative)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Rescreened after previous negative (Negative)",
@@ -141,7 +141,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "RNP",
-        "Rescreened after previous negative (Positive)",
+        "CXCA_SCRN: Rescreened after previous negative (Positive)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Rescreened after previous negative (Positive)",
@@ -155,7 +155,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "RNS",
-        "Rescreened after previous negative (Suspect Cancer)",
+        "CXCA_SCRN: Rescreened after previous negative (Suspect Cancer)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Suspect Cancer Numerator",
@@ -168,7 +168,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "CXPTT",
-        "Post-treatment follow-up (Total)",
+        "CXCA_SCRN: Post-treatment follow-up (Total)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Post-treatment follow-up (Total)",
@@ -182,7 +182,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "PTN",
-        "Post-treatment follow-up (Negative)",
+        "CXCA_SCRN: Post-treatment follow-up (Negative)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Post-treatment follow-up (Negative)",
@@ -196,7 +196,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "PTP",
-        "Post-treatment follow-up (Positive)",
+        "CXCA_SCRN: Post-treatment follow-up (Positive)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Post-treatment follow-up (Positive)",
@@ -210,7 +210,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "PTS",
-        "Post-treatment follow-up (Suspect Cancer)",
+        "CXCA_SCRN: Post-treatment follow-up (Suspect Cancer)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Post-treatment follow-up (Suspect Cancer)",
@@ -225,7 +225,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "CXRPT",
-        "Rescreened after previous positive (Total)",
+        "CXCA_SCRN: Rescreened after previous positive (Total)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Post-treatment follow-up (Total)",
@@ -239,7 +239,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "RSPN",
-        "Rescreened after previous positive (Negative)",
+        "CXCA_SCRN: Rescreened after previous positive (Negative)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Rescreened after previous positive (Negative)",
@@ -253,7 +253,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "RSPP",
-        "Rescreened after previous positive (Positive)",
+        "CXCA_SCRN: Rescreened after previous positive (Positive)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Post-treatment follow-up (Positive)",
@@ -267,7 +267,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "RSPS",
-        "Rescreened after previous positive (Suspect Cancer)",
+        "CXCA_SCRN: Rescreened after previous positive (Suspect Cancer)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Post-treatment follow-up (Suspect Cancer)",
@@ -283,7 +283,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
       CohortIndicatorDataSetDefinition dataSetDefinition, String mappings) {
     dataSetDefinition.addColumn(
         "CXPTTL",
-        "Number of HIV-positive women on ART screened for cervical cancer with a positive result",
+        "CXCA_SCRN_POS: Number of HIV-positive women on ART screened for cervical cancer with a positive result",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "CXCA_SCRN_POS: Number of HIV-positive women on ART screened for cervical cancer with a positive result",
@@ -296,7 +296,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "CXPFR",
-        "1st time screened ",
+        "CXCA_SCRN_POS: 1st time screened ",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "1st time screened positive",
@@ -309,7 +309,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "CXPRN",
-        "Rescreened after previous negative",
+        "CXCA_SCRN_POS: Rescreened after previous negative",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Rescreened after previous negative",
@@ -323,7 +323,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "CXPPF",
-        "Post-treatment follow-up",
+        "CXCA_SCRN_POS: Post-treatment follow-up",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Post-treatment follow-up",
@@ -337,7 +337,7 @@ public class CxCaSCRNDataSet extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "CXPRSP",
-        "Rescreened after previous positive",
+        "CXCA_SCRN_POS: Rescreened after previous positive",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Post-treatment follow-up",
