@@ -134,7 +134,8 @@ public class IMR1BCohortQueries {
         EptsReportUtils.map(
             this.findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(AgeRange.CHILDREN), mappings));
 
-    compsitionDefinition.setCompositionString("DENOMINATOR NOT ((PREGNANT OR BREASTFEEDING))");
+    compsitionDefinition.setCompositionString(
+        "(DENOMINATOR NOT ((PREGNANT OR BREASTFEEDING))) NOT CHILDREN ");
 
     return compsitionDefinition;
   }
