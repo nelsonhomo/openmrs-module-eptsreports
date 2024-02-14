@@ -85,12 +85,14 @@ public class IMR1BCohortQueries {
     compsitionDefinition.addSearch(
         "CHILDREN",
         EptsReportUtils.map(
-            this.findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(AgeRange.CHILDREN), mappings));
+            iMR1CohortQueries.findPatientsAgeByTheDateOfEnrollmentOnARTCare(AgeRange.CHILDREN),
+            mappings));
 
     compsitionDefinition.addSearch(
         "ADULT",
         EptsReportUtils.map(
-            this.findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(AgeRange.ADULT), mappings));
+            iMR1CohortQueries.findPatientsAgeByTheDateOfEnrollmentOnARTCare(AgeRange.ADULT),
+            mappings));
 
     compsitionDefinition.addSearch(
         "PREGNANT",
@@ -132,7 +134,8 @@ public class IMR1BCohortQueries {
     compsitionDefinition.addSearch(
         "CHILDREN",
         EptsReportUtils.map(
-            this.findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(AgeRange.CHILDREN), mappings));
+            iMR1CohortQueries.findPatientsAgeByTheDateOfEnrollmentOnARTCare(AgeRange.CHILDREN),
+            mappings));
 
     compsitionDefinition.setCompositionString(
         "(DENOMINATOR NOT ((PREGNANT OR BREASTFEEDING))) NOT CHILDREN ");
@@ -214,7 +217,8 @@ public class IMR1BCohortQueries {
     compsitionDefinition.addSearch(
         "CHILDREN",
         EptsReportUtils.map(
-            this.findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(AgeRange.CHILDREN), mappings));
+            iMR1CohortQueries.findPatientsAgeByTheDateOfEnrollmentOnARTCare(AgeRange.CHILDREN),
+            mappings));
 
     compsitionDefinition.addSearch(
         "DENOMINATOR",
