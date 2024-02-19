@@ -125,7 +125,6 @@
                                                         ) ultimo_levantamento on f.patient_id = ultimo_levantamento.patient_id 
                                                     where ultimo_levantamento.data_ultimo_levantamento <= :endDate 
                                                     group by f.patient_id  
-                                                group by f.patient_id 
                                          ) 
                                          saida on inicio.patient_id=saida.patient_id 
                                          left join 
@@ -183,4 +182,3 @@
                         ) coorte12meses_final 
                          where (((data_estado is null or ((data_estado is not null and decisao=2) and  data_usar_c>data_estado))  and date_add(data_usar, interval 60 day) >=:endDate) 
                          OR    ((decisao=1 and data_estado<data_fila) and date_add(data_usar, interval 60 day) >=:endDate)) ;
-  }
