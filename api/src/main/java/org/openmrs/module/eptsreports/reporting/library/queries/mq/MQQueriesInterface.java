@@ -21,6 +21,7 @@ public interface MQQueriesInterface {
             + ") art_start   "
             + "GROUP BY patient_id   "
             + ") tx_new WHERE art_start_date BETWEEN :startInclusionDate AND :endInclusionDate ";
+    
     public static final String
         findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06 =
             "SELECT p.patient_id from patient p "
