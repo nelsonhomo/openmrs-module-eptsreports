@@ -465,7 +465,7 @@ public class Eri4MonthsQueries {
             + "SELECT p.patient_id, pg.patient_program_id, max(ps.start_date) as maxStateDate  FROM patient p "
             + "inner join patient_program pg on p.patient_id=pg.patient_id "
             + "inner join patient_state ps on pg.patient_program_id=ps.patient_program_id "
-            + "WHERE pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and location_id=:location  and ps.start_date<=:endDate and p.patient_id = 90735 "
+            + "WHERE pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and location_id=:location  and ps.start_date<=:endDate "
             + "GROUP BY pg.patient_program_id "
             + ") maxState "
             + "inner join patient_state ps on ps.patient_program_id=maxState.patient_program_id "
