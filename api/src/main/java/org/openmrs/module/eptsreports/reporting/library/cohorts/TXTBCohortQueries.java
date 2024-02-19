@@ -840,7 +840,8 @@ public class TXTBCohortQueries {
 
     definition.addSearch(
         "TXNEW",
-        EptsReportUtils.map(txNewCohortQueries.getTxNewCompositionCohort("TXNEW"), mappings));
+        EptsReportUtils.map(
+            txNewCohortQueries.findPatientsWhoAreNewEnrolmentOnARTForTxTB(), mappings));
 
     definition.setCompositionString("TXNEW");
 
