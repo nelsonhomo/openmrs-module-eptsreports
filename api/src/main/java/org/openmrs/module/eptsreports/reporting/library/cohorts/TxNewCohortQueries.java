@@ -361,13 +361,6 @@ public class TxNewCohortQueries {
     String query = EptsQuerysUtils.loadQuery(FIND_AGE_PATIENTS_ON_TX_NEW);
     query = String.format(query, ageRange.getMin(), ageRange.getMax());
 
-    if (AgeRange.ADULT.equals(ageRange)) {
-      query =
-          query.replace(
-              "BETWEEN " + ageRange.getMin() + " AND " + ageRange.getMax(),
-              ">= " + ageRange.getMax());
-    }
-
     definition.setQuery(query);
 
     return definition;
