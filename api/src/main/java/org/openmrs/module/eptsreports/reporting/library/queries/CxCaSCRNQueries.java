@@ -44,17 +44,36 @@ public interface CxCaSCRNQueries {
         findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodByReusult(
             int concept, int answer) {
       String sql =
-          "SELECT finalCCU.patient_id FROM  ( "
-              + "SELECT p.patient_id,min(o.obs_datetime) dataccu, o.value_coded FROM patient p  "
-              + "INNER JOIN encounter e on p.patient_id=e.patient_id      "
-              + "INNER JOIN obs o on o.encounter_id=e.encounter_id  "
-              + "WHERE e.voided=0 and o.voided=0 and p.voided=0 AND e.encounter_type=28 "
-              + "and o.concept_id=%s and o.value_coded in (2093,664,703) AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location "
-              + "GROUP BY p.patient_id  "
-              + ")finalCCU where finalCCU.value_coded = %s "
-              + " GROUP by finalCCU.patient_id ";
+          "SELECT f.patient_id FROM ( "
+              + "SELECT finalCCU.patient_id,max(finalCCU.dataccu) dataccu,finalCCU.anwer,finalCCU.ordem "
+              + "FROM  (  "
+              + "SELECT p.patient_id,o.obs_datetime dataccu, o.value_coded anwer, 1 as ordem FROM patient p   "
+              + "INNER JOIN encounter e on p.patient_id=e.patient_id       "
+              + "INNER JOIN obs o on o.encounter_id=e.encounter_id   "
+              + "WHERE e.voided=0 and o.voided=0 and p.voided=0 AND e.encounter_type=28  "
+              + "and o.concept_id=%s and o.value_coded in (703) "
+              + "AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location  "
+              + "union "
+              + "SELECT p.patient_id,o.obs_datetime dataccu, o.value_coded,2 ordem FROM patient p   "
+              + "INNER JOIN encounter e on p.patient_id=e.patient_id       "
+              + "INNER JOIN obs o on o.encounter_id=e.encounter_id   "
+              + "WHERE e.voided=0 and o.voided=0 and p.voided=0 AND e.encounter_type=28  "
+              + "and o.concept_id=%s and o.value_coded in (664)  "
+              + "AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location  "
+              + "union "
+              + "SELECT p.patient_id,o.obs_datetime dataccu, o.value_coded, 3 ordem FROM patient p   "
+              + "INNER JOIN encounter e on p.patient_id=e.patient_id       "
+              + "INNER JOIN obs o on o.encounter_id=e.encounter_id   "
+              + "WHERE e.voided=0 and o.voided=0 and p.voided=0 AND e.encounter_type=28  "
+              + "and o.concept_id=%s and o.value_coded in (2093)  "
+              + "AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location  "
+              + ")finalCCU  "
+              + "where finalCCU.anwer=%s  "
+              + "GROUP by finalCCU.patient_id  "
+              + "order by finalCCU.ordem ASC "
+              + ")f ";
 
-      return String.format(sql, concept, answer);
+      return String.format(sql, concept, concept, concept, answer);
     }
 
     public static final String findPatientWithScreeningTypeVisitAsRescreenedAfterPreviousNegative =
@@ -157,11 +176,12 @@ public interface CxCaSCRNQueries {
             + ") rastreioPositivoAtivoanterior on rastreioperiodo.patient_id=rastreioPositivoAtivoanterior.patient_id "
             + "inner join encounter e on e.patient_id=rastreioperiodo.patient_id "
             + "inner join obs o on e.encounter_id=o.encounter_id "
-            + "where e.voided=0 and e.voided=0 and e.encounter_type=28 and ( "
-            + "(o.concept_id = 2117 and o.value_coded = 1065 and e.encounter_datetime>=rastreioPositivoAtivoanterior.dataRastreioPositivo and e.encounter_datetime<=rastreioperiodo.dataRastreioPeriodo ) or "
-            + "(o.concept_id = 2149 and o.value_coded in (23974,23972,23970,23973) and o.obs_datetime>=rastreioPositivoAtivoanterior.dataRastreioPositivo and o.obs_datetime<=rastreioperiodo.dataRastreioPeriodo ) or "
-            + "(o.concept_id=23967 and o.value_datetime>=rastreioPositivoAtivoanterior.dataRastreioPositivo and o.value_datetime<=rastreioperiodo.dataRastreioPeriodo) or "
-            + "(o.concept_id=1185 and o.value_coded in(23974, 165439) and o.obs_datetime>=rastreioPositivoAtivoanterior.dataRastreioPositivo and o.obs_datetime<=rastreioperiodo.dataRastreioPeriodo)) and "
+            + "where e.voided=0 and o.voided=0 and e.encounter_type=28 and ( "
+            + "(o.concept_id = 2117 and o.value_coded = 1065 and e.encounter_datetime>=rastreioPositivoAtivoanterior.dataRastreioPositivo and e.encounter_datetime<=rastreioperiodo.dataRastreioPeriodo and e.encounter_datetime<=:endDate ) or "
+            + "(o.concept_id = 2149 and o.value_coded in (23974,23972,23970,23973) and o.obs_datetime>=rastreioPositivoAtivoanterior.dataRastreioPositivo and o.obs_datetime<=rastreioperiodo.dataRastreioPeriodo and e.encounter_datetime<=:endDate ) or "
+            + "(o.concept_id=23967 and o.value_datetime>=rastreioPositivoAtivoanterior.dataRastreioPositivo and o.value_datetime<=rastreioperiodo.dataRastreioPeriodo and e.encounter_datetime<=:endDate ) or "
+            + "(o.concept_id=1185 and o.value_coded in(23974, 165439) and o.obs_datetime>=rastreioPositivoAtivoanterior.dataRastreioPositivo and o.obs_datetime<=rastreioperiodo.dataRastreioPeriodo and e.encounter_datetime<=:endDate )"
+            + ") and "
             + "e.location_id=:location; ";
 
     public static final String findpatientwithCxCaPositive =
