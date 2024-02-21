@@ -44,11 +44,6 @@ public class GenericMICohortQueryCategory12 {
             this.mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappingsMI));
 
     definition.addSearch(
-        "BREASTFEEDING",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappingsMI));
-
-    definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
             this.mQCohortQueries
@@ -60,7 +55,7 @@ public class GenericMICohortQueryCategory12 {
         EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappingsMI));
 
     definition.setCompositionString(
-        "START-ART-A NOT (PREGNANT OR BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)");
+        "START-ART-A NOT (PREGNANT OR TRANSFERED-IN OR TRANSFERED-OUT)");
     return definition;
   }
 
@@ -96,11 +91,6 @@ public class GenericMICohortQueryCategory12 {
             this.mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
 
     definition.addSearch(
-        "BREASTFEEDING",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
-
-    definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
             this.mQCohortQueries
@@ -112,7 +102,7 @@ public class GenericMICohortQueryCategory12 {
         EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
 
     definition.setCompositionString(
-        "START-ART-A NOT (PREGNANT OR BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)");
+        "START-ART-A NOT (PREGNANT OR TRANSFERED-IN OR TRANSFERED-OUT)");
     return definition;
   }
 
@@ -200,11 +190,6 @@ public class GenericMICohortQueryCategory12 {
             this.mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
 
     definition.addSearch(
-        "BREASTFEEDING",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
-
-    definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
             this.mQCohortQueries
@@ -216,7 +201,7 @@ public class GenericMICohortQueryCategory12 {
         EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
 
     definition.setCompositionString(
-        "(START-ART-A AND PREGNANT) NOT (BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)");
+        "(START-ART-A AND PREGNANT) NOT (TRANSFERED-IN OR TRANSFERED-OUT)");
     return definition;
   }
 
@@ -252,11 +237,6 @@ public class GenericMICohortQueryCategory12 {
             this.mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
 
     definition.addSearch(
-        "BREASTFEEDING",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
-
-    definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
             this.mQCohortQueries
@@ -268,7 +248,7 @@ public class GenericMICohortQueryCategory12 {
         EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
 
     definition.setCompositionString(
-        "(START-ART-A AND PREGNANT) NOT (BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)");
+        "(START-ART-A AND PREGNANT) NOT (TRANSFERED-IN OR TRANSFERED-OUT)");
     return definition;
   }
 }
