@@ -45,35 +45,40 @@ public interface CxCaSCRNQueries {
             int concept, int answer) {
       String sql =
           "SELECT f.patient_id FROM ( "
-              + "SELECT finalCCU.patient_id,max(finalCCU.dataccu) dataccu,finalCCU.anwer,finalCCU.ordem "
+              + "SELECT f.patient_id,dataccu,o.value_coded as anwer  FROM ( "
+              + "SELECT finalCCU.patient_id,max(finalCCU.dataccu) dataccu "
               + "FROM  (  "
-              + "SELECT p.patient_id,o.obs_datetime dataccu, o.value_coded anwer, 1 as ordem FROM patient p   "
+              + "SELECT p.patient_id,o.obs_datetime dataccu, o.value_coded anwer FROM patient p   "
               + "INNER JOIN encounter e on p.patient_id=e.patient_id       "
               + "INNER JOIN obs o on o.encounter_id=e.encounter_id   "
               + "WHERE e.voided=0 and o.voided=0 and p.voided=0 AND e.encounter_type=28  "
-              + "and o.concept_id=%s and o.value_coded in (703) "
+              + "and o.concept_id=%s and o.value_coded in (703)  "
               + "AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location  "
               + "union "
-              + "SELECT p.patient_id,o.obs_datetime dataccu, o.value_coded,2 ordem FROM patient p   "
+              + "SELECT p.patient_id,o.obs_datetime dataccu, o.value_coded FROM patient p   "
               + "INNER JOIN encounter e on p.patient_id=e.patient_id       "
               + "INNER JOIN obs o on o.encounter_id=e.encounter_id   "
               + "WHERE e.voided=0 and o.voided=0 and p.voided=0 AND e.encounter_type=28  "
               + "and o.concept_id=%s and o.value_coded in (664)  "
               + "AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location  "
               + "union "
-              + "SELECT p.patient_id,o.obs_datetime dataccu, o.value_coded, 3 ordem FROM patient p   "
+              + "SELECT p.patient_id,o.obs_datetime dataccu, o.value_coded FROM patient p   "
               + "INNER JOIN encounter e on p.patient_id=e.patient_id       "
-              + "INNER JOIN obs o on o.encounter_id=e.encounter_id   "
+              + "INNER JOIN obs o on o.encounter_id=e.encounter_id  "
               + "WHERE e.voided=0 and o.voided=0 and p.voided=0 AND e.encounter_type=28  "
               + "and o.concept_id=%s and o.value_coded in (2093)  "
               + "AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location  "
               + ")finalCCU  "
-              + "where finalCCU.anwer=%s  "
-              + "GROUP by finalCCU.patient_id  "
-              + "order by finalCCU.ordem ASC "
-              + ")f ";
+              + " group by finalCCU.patient_id "
+              + ")f "
+              + "inner join encounter e on e.patient_id=f.patient_id "
+              + "inner join obs o on o.encounter_id=e.encounter_id "
+              + "where e.voided=0 and o.voided=0 and e.encounter_type=28 and o.concept_id=%s and o.value_coded in(703,664,2093)  "
+              + "and o.obs_datetime=f.dataccu "
+              + ")f "
+              + "where f.anwer=%s ";
 
-      return String.format(sql, concept, concept, concept, answer);
+      return String.format(sql, concept, concept, concept, concept, answer);
     }
 
     public static final String findPatientWithScreeningTypeVisitAsRescreenedAfterPreviousNegative =
