@@ -38,6 +38,7 @@
                                              )inicio 
                                              left join 
                                          ( 
+                                            select f.patient_id,f.data_estado,f.decisao from (
                                             select f.patient_id, max(data_estado) data_estado,decisao from 
                                                     ( 
                                                      select f.patient_id,f.data_estado, 1 decisao from 
@@ -95,9 +96,11 @@
                                                      from person 
                                                      where dead=1 and death_date is not null and death_date<:startDate 
                                                      ) 
-                                                     allSaida 
-                                                     group by patient_id 
-                                                    )f
+	                                                 allSaida 
+	                                                 group by patient_id 
+	                                                )f
+	                                                group by patient_id
+	                                                )f
                                                     left join
                                                     (  
                                                         select patient_id, max(data_ultimo_levantamento)  data_ultimo_levantamento    
@@ -108,7 +111,7 @@
                                                                 inner join encounter e on e.patient_id= p.patient_id 
                                                                 inner join obs o on o.encounter_id = e.encounter_id                                                                                        
                                                             where p.voided= 0 and e.voided=0 and o.voided = 0 and e.encounter_type=18 and o.concept_id = 5096                                                                  
-                                                                and e.location_id=:location and e.encounter_datetime <= :startDate                                                                               
+                                                                and e.location_id=:location and e.encounter_datetime < :startDate                                                                               
                                                                 group by p.patient_id 
                                                     
                                                             union
@@ -119,11 +122,11 @@
                                                               inner join encounter e on p.patient_id=e.patient_id                                                                                         
                                                               inner join obs o on e.encounter_id=o.encounter_id                                                                                           
                                                             where p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52                                                       
-                                                              and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime <= :startDate                                                                                        
+                                                              and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime < :startDate                                                                                        
                                                             group by p.patient_id
                                                             ) ultimo_levantamento group by patient_id
                                                         ) ultimo_levantamento on f.patient_id = ultimo_levantamento.patient_id 
-                                                    where ultimo_levantamento.data_ultimo_levantamento <= :startDate 
+                                                    where ultimo_levantamento.data_ultimo_levantamento < :startDate 
                                                     group by f.patient_id 
                                             ) 
                                              saida on inicio.patient_id=saida.patient_id 

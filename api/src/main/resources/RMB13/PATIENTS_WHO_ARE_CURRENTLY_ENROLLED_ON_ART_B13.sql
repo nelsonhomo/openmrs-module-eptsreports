@@ -38,6 +38,7 @@
                                          )inicio 
                                          left join 
                                      ( 
+                                        select f.patient_id,f.data_estado,f.decisao from (
                                         select f.patient_id, max(data_estado) data_estado,decisao from 
                                                 ( 
                                                  select f.patient_id,f.data_estado, 1 decisao from 
@@ -97,6 +98,8 @@
                                                  ) 
                                                  allSaida 
                                                  group by patient_id 
+                                                )f
+                                                group by patient_id
                                                 )f
                                                 left join
                                                     (  
