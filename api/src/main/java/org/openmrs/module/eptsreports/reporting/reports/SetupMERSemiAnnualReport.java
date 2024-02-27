@@ -55,12 +55,12 @@ public class SetupMERSemiAnnualReport extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "PEPFAR MER 2.6.1 Semi-Annual";
+    return "PEPFAR MER 2.7 Semi-Annual";
   }
 
   @Override
   public String getDescription() {
-    return "PEPFAR MER 2.6.1 Semi-Annual";
+    return "PEPFAR MER 2.7 Semi-Annual";
   }
 
   @Override
@@ -70,8 +70,10 @@ public class SetupMERSemiAnnualReport extends EptsDataExportManager {
     rd.setName(getName());
     rd.setDescription(getDescription());
     rd.setParameters(txMlDataset.getParameters());
-    rd.addDataSetDefinition("T", Mapped.mapStraightThrough(txTBDataset.constructTxTBDataset()));
-    rd.addDataSetDefinition("TBPREV", Mapped.mapStraightThrough(tbPrevDataset.constructDatset()));
+    //    rd.addDataSetDefinition("T",
+    // Mapped.mapStraightThrough(txTBDataset.constructTxTBDataset()));
+    //    rd.addDataSetDefinition("TBPREV",
+    // Mapped.mapStraightThrough(tbPrevDataset.constructDatset()));
     rd.addDataSetDefinition("CX", Mapped.mapStraightThrough(cxCaSCRNDataSet.constructDatset()));
     rd.addDataSetDefinition("CXT", Mapped.mapStraightThrough(cxCaTXDataSet.constructDatset()));
     rd.addDataSetDefinition(
@@ -93,8 +95,8 @@ public class SetupMERSemiAnnualReport extends EptsDataExportManager {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "PEPFAR_MER_2.6.1_Semiannual.xls",
-              "PEPFAR MER 2.6.1 Semi-Annual Report",
+              "PEPFAR_MER_2.7_Semiannual.xls",
+              "PEPFAR MER 2.7 Semi-Annual Report",
               getExcelDesignUuid(),
               null);
       Properties props = new Properties();
