@@ -75,6 +75,20 @@ public class CxCaSCRNCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientsWithLastViaResultEqualHPVNegative")
+  public CohortDefinition findPatientsWithLastViaResultEqualHPVNegative() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsWithLastViaResultEqualHPVNegative");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.setQuery(CxCaSCRNQueries.QUERY.findPatientsWithLastViaResultEqualHPVNegative);
+
+    return definition;
+  }
+
   @DocumentedDefinition(
       value = "findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodPositive")
   public CohortDefinition
@@ -234,10 +248,7 @@ public class CxCaSCRNCohortQueries {
 
     definition.addSearch(
         "HPV-NEGATIVE",
-        EptsReportUtils.map(
-            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
-                CONCEPT_165436),
-            mappings));
+        EptsReportUtils.map(this.findPatientsWithLastViaResultEqualHPVNegative(), mappings));
 
     definition.setCompositionString("NUMERATOR AND (VIA-NEGATIVE OR HPV-NEGATIVE)");
 
@@ -337,10 +348,7 @@ public class CxCaSCRNCohortQueries {
 
     definition.addSearch(
         "HPV-NEGATIVE",
-        EptsReportUtils.map(
-            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
-                CONCEPT_165436),
-            mappings));
+        EptsReportUtils.map(this.findPatientsWithLastViaResultEqualHPVNegative(), mappings));
 
     definition.addSearch(
         "N2",
@@ -461,10 +469,7 @@ public class CxCaSCRNCohortQueries {
 
     definition.addSearch(
         "HPV-NEGATIVE",
-        EptsReportUtils.map(
-            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
-                CONCEPT_165436),
-            mappings));
+        EptsReportUtils.map(this.findPatientsWithLastViaResultEqualHPVNegative(), mappings));
 
     definition.addSearch(
         "P2",
@@ -600,10 +605,7 @@ public class CxCaSCRNCohortQueries {
 
     definition.addSearch(
         "HPV-NEGATIVE",
-        EptsReportUtils.map(
-            this.findPatientsWithScreeningTestForCervicalCancerDuringReportingPeriodNegative(
-                CONCEPT_165436),
-            mappings));
+        EptsReportUtils.map(this.findPatientsWithLastViaResultEqualHPVNegative(), mappings));
 
     definition.addSearch(
         "P2",

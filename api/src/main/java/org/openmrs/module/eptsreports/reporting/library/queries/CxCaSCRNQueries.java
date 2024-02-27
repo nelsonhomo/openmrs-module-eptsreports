@@ -116,10 +116,11 @@ public interface CxCaSCRNQueries {
             + "inner join  ( "
             + "select maxRastreioAnterior.patient_id from  ( "
             + "select patient_id, max(dataRastreio) dataRastreio from ( "
+            + "Select negativeResut.patient_id, negativeResut.dataRastreio from ( "
             + "Select p.patient_id,max(o.obs_datetime) dataRastreio from patient p "
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs o on e.encounter_id=o.encounter_id "
-            + "where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=2094 and value_coded in (703,664,2093) and "
+            + "where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=2094 and value_coded = 664 and "
             + "e.encounter_type=28 and e.encounter_datetime<:startDate and e.location_id=:location "
             + "group by p.patient_id "
             + "union "
@@ -129,14 +130,20 @@ public interface CxCaSCRNQueries {
             + "WHERE e.voided=0 and o.voided=0 and p.voided=0 AND e.encounter_type=28 "
             + "and o.concept_id=165436 and o.value_coded = 664 AND e.encounter_datetime < :startDate and e.location_id=:location "
             + "group by p.patient_id "
+            + ") negativeResut "
+            + " left join "
+            + "( "
+            + "Select p.patient_id,o.obs_datetime dataRastreio from patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on e.encounter_id=o.encounter_id "
+            + "where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=2094 and value_coded in (703,2093) and "
+            + "e.encounter_type=28 and e.encounter_datetime<:startDate and e.location_id=:location "
+            + ") positiveOrCancer on "
+            + "positiveOrCancer.patient_id = negativeResut.patient_id "
+            + "where ((negativeResut.dataRastreio > positiveOrCancer.dataRastreio) or positiveOrCancer.patient_id is null) "
             + ") maxRastreioAnterior group by patient_id "
             + ") maxRastreioAnterior "
-            + "inner join encounter e on e.patient_id=maxRastreioAnterior.patient_id "
-            + "inner join obs obsRastreioNegativo on e.encounter_id=obsRastreioNegativo.encounter_id "
-            + "where obsRastreioNegativo.voided=0 and obsRastreioNegativo.obs_datetime=maxRastreioAnterior.dataRastreio and "
-            + "obsRastreioNegativo.concept_id in (2094,165436)  and obsRastreioNegativo.value_coded=664	and "
-            + "e.voided=0 and e.encounter_type=28 and e.location_id=:location "
-            + ") rastreioNegativoanterior on rastreioperiodo.patient_id=rastreioNegativoanterior.patient_id ";
+            + ")rastreioNegatiVoAnterior on rastreioNegatiVoAnterior.patient_id = rastreioperiodo.patient_id ";
 
     public static final String findPatientWithScreeningTypeVisitAsRescreenedAfterPreviousPositive =
         " select rastreioperiodo.patient_id from ( "
@@ -221,5 +228,27 @@ public interface CxCaSCRNQueries {
             + "where obsRastreio.voided=0 and obsRastreio.obs_datetime=rastreioPeriodo.dataRastreio and  "
             + "obsRastreio.concept_id=2094 and obsRastreio.value_coded=703	and  "
             + "rastreio.voided=0 and rastreio.location_id=:location and rastreio.encounter_type=28 ";
+
+    public static final String findPatientsWithLastViaResultEqualHPVNegative =
+        "select hpvNegative.patient_id from ( "
+            + "SELECT p.patient_id,max(o.obs_datetime) dataccu FROM patient p "
+            + "INNER JOIN encounter e on p.patient_id=e.patient_id "
+            + "INNER JOIN obs o on o.encounter_id=e.encounter_id "
+            + "WHERE e.voided=0 and o.voided=0 and p.voided=0 AND e.encounter_type=28 "
+            + "and o.concept_id=165436 and o.value_coded = 664 "
+            + "AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location "
+            + "group by p.patient_id "
+            + ") hpvNegative "
+            + "left join ( "
+            + "SELECT p.patient_id,max(o.obs_datetime) dataccu FROM patient p "
+            + "INNER JOIN encounter e on p.patient_id=e.patient_id "
+            + "INNER JOIN obs o on o.encounter_id=e.encounter_id "
+            + "WHERE e.voided=0 and o.voided=0 and p.voided=0 AND e.encounter_type=28 "
+            + "and o.concept_id=2094 and o.value_coded in (664, 703, 2093) "
+            + "AND e.encounter_datetime>=:startDate and e.encounter_datetime<=:endDate and e.location_id=:location "
+            + "group by p.patient_id "
+            + ") positiveOrCancer "
+            + "on positiveOrCancer.patient_id = hpvNegative.patient_id "
+            + "where (hpvNegative.dataccu > positiveOrCancer.dataccu or positiveOrCancer.patient_id is null) ";
   }
 }
