@@ -99,7 +99,7 @@ public class SetupListPatientsWithAdvancedHIVDiseaseReport extends EptsDataExpor
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "List_Patients_In_DAH.xls",
+              "Lista_Utentes_DAH.xls",
               "Lista de Utentes em Doença Avançada por HIV",
               getExcelDesignUuid(),
               null);

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
-import org.openmrs.module.eptsreports.reporting.library.queries.ListOfPatientsWithDAHQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -22,17 +21,19 @@ public class ListOfPatientsWithDAHDataSet extends BaseDataSet {
 
   @Autowired private EptsGeneralIndicator eptsGeneralIndicator;
 
-  private static final String FIND_PATIENTS_WITH_DAH_LIST =
-      "LIST_PATIENTS_WITH_DAH/PATIENTS_WITH_DAH_LIST.sql";
-  private static final String FIND_PATIENTS_WITH_DAH_TOTAL =
-      "LIST_PATIENTS_WITH_DAH/PATIENTS_WITH_DAH_TOTAL.sql";
+  private static final String FIND_PATIENTS_ELEGIBLE_TO_FOLLOWUP_DAH_LIST =
+      "LIST_PATIENTS_WITH_DAH/PATIENTS_ELEGIBLE_TO_FOLLOWUP_DAH_LIST.sql";
+  private static final String FIND_PATIENTS_ELEGIBLE_TO_FOLLOWUP_DAH_TOTAL =
+      "LIST_PATIENTS_WITH_DAH/PATIENTS_ELEGIBLE_TO_FOLLOWUP_DAH_TOTAL.sql";
+  private static final String FIND_PATIENTS_WHO_INITIATED_FOLLOWUP_DAH_DURING_REPORT_PERIOD_TOTAL =
+      "LIST_PATIENTS_WITH_DAH/PATIENTS_WHO_INITIATED_FOLLOWUP_DAH_DURING_REPORT_PERIOD.sql";
 
   public DataSetDefinition constructDataset(List<Parameter> list) {
 
     SqlDataSetDefinition dsd = new SqlDataSetDefinition();
     dsd.setName("Find list of patients with DAH");
     dsd.addParameters(list);
-    dsd.setSqlQuery(EptsQuerysUtils.loadQuery(FIND_PATIENTS_WITH_DAH_LIST));
+    dsd.setSqlQuery(EptsQuerysUtils.loadQuery(FIND_PATIENTS_ELEGIBLE_TO_FOLLOWUP_DAH_LIST));
     return dsd;
   }
 
@@ -44,13 +45,13 @@ public class ListOfPatientsWithDAHDataSet extends BaseDataSet {
     dataSetDefinition.addParameters(this.getParameters());
 
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-    final CohortDefinition dahTotal = this.findPatientsWithDAHTotal();
+    final CohortDefinition elegibleToFollowUpDAH = this.findPatientsElegibleToFollowUpDAHTotal();
     dataSetDefinition.addColumn(
         "TOTALWITHDAH",
-        "Total de Pacientes com DAH",
+        "Total de utentes eleigíveis ao modelo de DAH",
         EptsReportUtils.map(
             this.eptsGeneralIndicator.getIndicator(
-                "dahTotal", EptsReportUtils.map(dahTotal, mappings)),
+                "dahTotal", EptsReportUtils.map(elegibleToFollowUpDAH, mappings)),
             mappings),
         "");
 
@@ -61,14 +62,15 @@ public class ListOfPatientsWithDAHDataSet extends BaseDataSet {
     final CohortIndicatorDataSetDefinition dataSetDefinition =
         new CohortIndicatorDataSetDefinition();
 
-    dataSetDefinition.setName("Patients in MDS of DAH Total");
+    dataSetDefinition.setName("Total de novos inícios no modelo de DAH");
     dataSetDefinition.addParameters(this.getParameters());
 
-    final String mappings = "startDate=${startDate},location=${location}";
-    final CohortDefinition dahTotal = this.findPatientsInMDSOfDAHTotal();
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final CohortDefinition dahTotal =
+        this.findPatientsWhoInitiatedFollowUpDAHDuringReportPeriodTotal();
     dataSetDefinition.addColumn(
         "TOTALINMDSOFDAH",
-        "Total de Pacientes em MDS de DAH",
+        "Total de novos inícios no modelo de DAH",
         EptsReportUtils.map(
             this.eptsGeneralIndicator.getIndicator(
                 "mdsdahTotal", EptsReportUtils.map(dahTotal, mappings)),
@@ -78,29 +80,32 @@ public class ListOfPatientsWithDAHDataSet extends BaseDataSet {
     return dataSetDefinition;
   }
 
-  @DocumentedDefinition(value = "findPatientsWithDAHTotal")
-  private CohortDefinition findPatientsWithDAHTotal() {
+  @DocumentedDefinition(value = "findPatientsElegibleToFollowUpDAHTotal")
+  private CohortDefinition findPatientsElegibleToFollowUpDAHTotal() {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("findPatientsWithDAHTotal");
+    definition.setName("findPatientsElegibleToFollowUpDAHTotal");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    definition.setQuery(EptsQuerysUtils.loadQuery(FIND_PATIENTS_WITH_DAH_TOTAL));
+    definition.setQuery(EptsQuerysUtils.loadQuery(FIND_PATIENTS_ELEGIBLE_TO_FOLLOWUP_DAH_TOTAL));
 
     return definition;
   }
 
-  @DocumentedDefinition(value = "findPatientsInMDSOfDAHTotal")
-  private CohortDefinition findPatientsInMDSOfDAHTotal() {
+  @DocumentedDefinition(value = "findPatientsWhoInitiatedFollowUpDAHDuringReportPeriodTotal")
+  private CohortDefinition findPatientsWhoInitiatedFollowUpDAHDuringReportPeriodTotal() {
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("findPatientsInMDSOfDAHTotal");
+    definition.setName("findPatientsWhoInitiatedFollowUpDAHDuringReportPeriodTotal");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    definition.setQuery(ListOfPatientsWithDAHQueries.QUERY.findPatientsInMDSOfDAHTotal);
+    definition.setQuery(
+        EptsQuerysUtils.loadQuery(
+            FIND_PATIENTS_WHO_INITIATED_FOLLOWUP_DAH_DURING_REPORT_PERIOD_TOTAL));
 
     return definition;
   }
