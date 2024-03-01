@@ -634,5 +634,34 @@ public interface MICategory15QueriesInterface {
                 + "and (DATEDIFF(clinica.data_proxima_consulta,clinica.data_consulta) <=37) and cv.patient_id = clinica.patient_id "
                 + "group by  cv.patient_id "
                 + ")result ";
+
+    public static final String
+        findPatientsWhoHaveTbTreatmentMarkedEnd30DaysBeforeTheLastAppointment =
+            "select f.patient_id from "
+                + "( "
+                + "select lastEnc.patient_id,lastEnc.enc,date_sub(lastEnc.enc , interval 30 day)enc_menos_30, tb.data_fim_tb "
+                + "from "
+                + "( "
+                + "Select p.patient_id,max(e.encounter_datetime) enc from patient p "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "where p.voided=0 and e.voided=0 and e.encounter_type=6 and "
+                + "e.encounter_datetime BETWEEN date_sub(:endRevisionDate , interval 2 MONTH) AND  date_sub(:endRevisionDate , interval 1 MONTH)  and e.location_id=:location "
+                + "group by p.patient_id "
+                + ")lastEnc "
+                + "inner join "
+                + "( "
+                + "select p.patient_id,max(o.obs_datetime) as data_fim_tb, e.encounter_id "
+                + "from patient p "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "inner join obs o on o.encounter_id=e.encounter_id "
+                + "where e.encounter_type=6 and e.voided=0 and o.voided=0 and p.voided=0 and o.concept_id=1268 "
+                + "and o.value_coded=1267 "
+                + "and e.location_id=:location "
+                + "and o.obs_datetime  <= :endRevisionDate "
+                + "group by p.patient_id "
+                + ")tb on lastEnc.patient_id=tb.patient_id "
+                + "WHERE tb.data_fim_tb BETWEEN date_sub(lastEnc.enc , interval 30 day) and lastEnc.enc "
+                + " order by lastEnc.enc desc "
+                + " )f ";
   }
 }
