@@ -1783,7 +1783,7 @@ left join
     			inner join encounter e on p.patient_id=e.patient_id 
     			inner join obs o on e.encounter_id=o.encounter_id 
     		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,53,90) 
-    			and o.obs_datetime <= :endDate and e.location_id=:location 
+    			and o.obs_datetime <= :endDate and e.location_id=:location order by o.obs_datetime desc 
     )
    penultimoCd4 on penultimoCd4.patient_id = ultimoCd4.patient_id 
    	and date(penultimoCd4.obs_datetime) < ultimoCd4.max_data_cd4 
