@@ -55,7 +55,7 @@ public interface CxCaTXQueries {
           break;
 
         case ALL:
-          query = query + "";
+          query = query + "where tipoTratamento in(1,2,3)";
           break;
       }
 
