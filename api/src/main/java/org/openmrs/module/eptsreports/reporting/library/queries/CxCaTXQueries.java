@@ -28,9 +28,6 @@ public interface CxCaTXQueries {
               + "inner join encounter e on e.patient_id=rastreioPositivo.patient_id "
               + "inner join obs o on e.encounter_id=o.encounter_id "
               + "where e.voided=0 and o.voided=0 and e.encounter_type=28 and ( "
-              + "(o.concept_id = 2117 and o.value_coded = 1065 "
-              + "and e.encounter_datetime between rastreioPositivo.dataRastreioPositivo and :endDate "
-              + ") or "
               + "(o.concept_id = 2149 and o.value_coded in (23974,23972,23970,23973) "
               + "and o.obs_datetime between rastreioPositivo.dataRastreioPositivo and :endDate "
               + ") or "
@@ -55,7 +52,7 @@ public interface CxCaTXQueries {
           break;
 
         case ALL:
-          query = query + "where tipoTratamento in(1,2,3)";
+          query = query + "";
           break;
       }
 
