@@ -17,24 +17,6 @@ public class TXTBQueries {
 
   private static final String FIND_PATIENTS_WHO_ARE_TB_POSITIVE = "TXTB/TB_POSITIVE_SCREENING.sql";
 
-  private static final String FIND_PATIENTS_WHO_ARE_TB_SPECIMENT_SENT =
-      "TXTB/TB_DISAGGREGATION_SPECIMEN_SENT.sql";
-
-  private static final String FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_SMEAR_MICROSCOPY_ONLY =
-      "TXTB/TB_DISAGGREGATION_DIAGNOSTIC_TEST_SMEAR_MICROSCOPY_ONLY.sql";
-
-  private static final String FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_MWRD =
-      "TXTB/TB_DISAGGREGATION_DIAGNOSTIC_TEST_MWRD.sql";
-
-  private static final String FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_OTHER =
-      "TXTB/TB_DISAGGREGATION_DIAGNOSTIC_TEST_OTHER.sql";
-
-  private static final String FIND_PATIENTS_WHO_ARE_TB_POSITIVE_RESULT =
-      "TXTB/TB_POSITIVE_RESULT_RETURN.sql";
-
-  private static final String FIND_PATIENTS_WHO_ARE_TB_CX =
-      "TXTB/TB_DISAGGREGATION_DIAGNOSTIC_TEST_CXR.sql";
-
   private static final String FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT =
       "TRANSFERRED_OUT/FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT.sql";
 
@@ -255,33 +237,159 @@ public class TXTBQueries {
 
   public static String findPatientWhoAreSpecimenSent() {
 
-    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TB_SPECIMENT_SENT);
+    return "select specimenSent.patient_id                                                                            "
+        + "from(                                                                                                     "
+        + "      select p.patient_id,e.encounter_datetime data_inicio                                                "
+        + "      from patient p                                                                                      "
+        + "            inner join encounter e on p.patient_id=e.patient_id                                           "
+        + "            inner join obs o on o.encounter_id=e.encounter_id                                             "
+        + "      where e.voided=0 and o.voided=0 and p.voided=0                                                      "
+        + "            and e.encounter_type in (13, 51) and o.concept_id in(23723, 165189, 23951, 307, 23774)        "
+        + "            and e.location_id= :location  and e.encounter_datetime   between :startDate and :endDate      "
+        + "      union                                                                                               "
+        + "      select p.patient_id,e.encounter_datetime data_inicio                                                "
+        + "      from patient p                                                                                      "
+        + "            inner join encounter e on p.patient_id=e.patient_id                                           "
+        + "            inner join obs o on o.encounter_id=e.encounter_id                                             "
+        + "      where e.voided=0 and o.voided=0 and p.voided=0                                                      "
+        + "            and e.encounter_type=6 and o.concept_id=23722 and o.value_coded in(23723, 23774, 23951, 307)  "
+        + "            and e.location_id= :location and e.encounter_datetime   between :startDate and :endDate       "
+        + "      union                                                                                               "
+        + "      select p.patient_id,e.encounter_datetime data_inicio                                                "
+        + "      from patient p                                                                                      "
+        + "            inner join encounter e on p.patient_id=e.patient_id                                           "
+        + "            inner join obs o on o.encounter_id=e.encounter_id                                             "
+        + "      where e.voided=0 and o.voided=0 and p.voided=0                                                      "
+        + "            and e.encounter_type=6 and o.concept_id in(23723, 23774, 23951, 307)                          "
+        + "            and e.location_id= :location and e.encounter_datetime   between :startDate and :endDate       "
+        + " )specimenSent                                                                                            ";
   }
 
   public static String findPatientWhoAreDiagnosticTestSmearMicroscopyOnly() {
 
-    return EptsQuerysUtils.loadQuery(
-        FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_SMEAR_MICROSCOPY_ONLY);
+    return "select diagnosticTest.patient_id                                                                    "
+        + "from(                                                                                               "
+        + "      select p.patient_id,e.encounter_datetime data_inicio                                          "
+        + "      from patient p                                                                                "
+        + "            inner join encounter e on p.patient_id=e.patient_id                                     "
+        + "            inner join obs o on o.encounter_id=e.encounter_id                                       "
+        + "      where e.voided=0 and o.voided=0 and p.voided=0                                                "
+        + "            and e.encounter_type in(6) and o.concept_id=23722 and o.value_coded=307                 "
+        + "            and e.location_id= :location  and e.encounter_datetime   between :startDate and :endDate "
+        + "      union                                                                                          "
+        + "      select  p.patient_id,e.encounter_datetime data_inicio                                          "
+        + "      from patient p                                                                                 "
+        + "            inner join encounter e on p.patient_id=e.patient_id                                      "
+        + "            inner join obs o on o.encounter_id=e.encounter_id                                        "
+        + "      where e.voided=0 and o.voided=0 and p.voided=0                                                 "
+        + "            and e.encounter_type in(6,13) and o.concept_id=307                                       "
+        + "            and e.location_id= :location  and e.encounter_datetime   between :startDate and :endDate "
+        + ")diagnosticTest                                                                                      ";
   }
 
   public static String findPatientWhoAreDiagnosticTestMWRD() {
 
-    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_MWRD);
+    return "select diagnosticTest.patient_id 																			"
+        + "from(                                                                                                     "
+        + "		select  p.patient_id,e.encounter_datetime data_inicio                                               "
+        + "		from patient p                                                                                      "
+        + "      		inner join encounter e on p.patient_id=e.patient_id                                         "
+        + "      		inner join obs o on o.encounter_id=e.encounter_id 											"
+        + "		where e.voided=0 and o.voided=0 and p.voided=0                                                      "
+        + "      		and e.encounter_type=6 and o.concept_id=23722 and o.value_coded=23723  						"
+        + "      		and e.location_id= :location  and e.encounter_datetime between  :startDate and :endDate     "
+        + "		union                                                                                               "
+        + "		select p.patient_id,e.encounter_datetime data_inicio                                                "
+        + "		from patient p                                                                                      "
+        + "      		inner join encounter e on p.patient_id=e.patient_id                                         "
+        + "      		inner join obs o on o.encounter_id=e.encounter_id                                           "
+        + "		where e.voided=0 and o.voided=0 and p.voided=0                                                      "
+        + "     			and e.encounter_type in(6,13) and o.concept_id=23723   										"
+        + "      		and e.location_id= :location  and e.encounter_datetime between  :startDate and :endDate     "
+        + "		union 																								"
+        + "		select p.patient_id,e.encounter_datetime data_inicio                                                "
+        + "		from patient p                                                                                      "
+        + "      		inner join encounter e on p.patient_id=e.patient_id                                         "
+        + "      		inner join obs o on o.encounter_id=e.encounter_id                                           "
+        + "		where e.voided=0 and o.voided=0 and p.voided=0                                                      "
+        + "      		and e.encounter_type =13 and o.concept_id=165189											"
+        + "      		and e.location_id= :location  and e.encounter_datetime between  :startDate and :endDate 	"
+        + ")diagnosticTest 																							";
   }
 
   public static String findPatientWhoAreDiagnosticTestOther() {
 
-    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TB_DIAGNOSTIC_TEST_OTHER);
+    return "select diagnosticTest.patient_id                                                                                "
+        + "from(                                                                                                           "
+        + "      select  p.patient_id,e.encounter_datetime data_inicio                                                     "
+        + "      from patient p                                                                                            "
+        + "            inner join encounter e on p.patient_id=e.patient_id                                                 "
+        + "            inner join obs o on o.encounter_id=e.encounter_id                                                   "
+        + "      where e.voided=0 and o.voided=0 and p.voided=0                                                            "
+        + "            and e.encounter_type=6 and o.concept_id=23722 and o.value_coded in(23774,23951)                     "
+        + "            and e.location_id= :location  and e.encounter_datetime   between  :startDate and :endDate           "
+        + "      union                                                                                                     "
+        + "      select  p.patient_id,e.encounter_datetime data_inicio                                                     "
+        + "      from patient p                                                                                            "
+        + "            inner join encounter e on p.patient_id=e.patient_id                                                 "
+        + "            inner join obs o on o.encounter_id=e.encounter_id                                                   "
+        + "      where e.voided=0 and o.voided=0 and p.voided=0                                                            "
+        + "            and e.encounter_type in (6,13) and o.concept_id in(23774,23951)                                     "
+        + "            and e.location_id= :location  and e.encounter_datetime   between  :startDate and :endDate           "
+        + ")diagnosticTest                                                                                                 ";
   }
 
   public static String findPatientWhoArePosiveResult() {
 
-    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TB_POSITIVE_RESULT);
+    return "select diagnosticTest.patient_id                                                               "
+        + "from(                                                                                         "
+        + "      select  p.patient_id,e.encounter_datetime data_inicio                                                       "
+        + "      from patient p                                                                                                    "
+        + "            inner join encounter e on p.patient_id=e.patient_id                                                          "
+        + "            inner join obs o on o.encounter_id=e.encounter_id "
+        + "      where e.voided=0 and o.voided=0 and p.voided=0                                                              "
+        + "            and e.encounter_type=6 and o.concept_id in(23723,23774,23951,307) and o.value_coded in(703) "
+        + "            and e.location_id= :location  and e.encounter_datetime   between :startDate and :endDate "
+        + "      union                                                                                                     "
+        + "      select p.patient_id,e.encounter_datetime data_inicio                                                       "
+        + "      from patient p                                                                                                    "
+        + "            inner join encounter e on p.patient_id=e.patient_id                                                          "
+        + "            inner join obs o on o.encounter_id=e.encounter_id "
+        + "      where e.voided=0 and o.voided=0 and p.voided=0                                                              "
+        + "            and e.encounter_type=13 and o.concept_id in(307,23723,23774,23951) and o.value_coded in(703) "
+        + "            and e.location_id= :location  and e.encounter_datetime   between :startDate and :endDate "
+        + "      union                                                                                                       "
+        + "      select  p.patient_id,e.encounter_datetime data_inicio                                                       "
+        + "      from patient p                                                                                                    "
+        + "            inner join encounter e on p.patient_id=e.patient_id                                                          "
+        + "            inner join obs o on o.encounter_id=e.encounter_id "
+        + "      where e.voided=0 and o.voided=0 and p.voided=0                                                              "
+        + "            and e.encounter_type=13 and o.concept_id=165189 and o.value_coded=1065 "
+        + "            and e.location_id= :location  and e.encounter_datetime   between :startDate and :endDate "
+        + "      union                                                                                                         "
+        + "      select  p.patient_id,e.encounter_datetime data_inicio                                                       "
+        + "      from patient p                                                                                                    "
+        + "            inner join encounter e on p.patient_id=e.patient_id                                                          "
+        + "            inner join obs o on o.encounter_id=e.encounter_id "
+        + "      where e.voided=0 and o.voided=0 and p.voided=0                                                              "
+        + "            and e.encounter_type=51 and o.concept_id=23951 and o.value_coded=703 "
+        + "            and e.location_id= :location  and e.encounter_datetime   between :startDate and :endDate            "
+        + ")diagnosticTest                                                                                                 ";
   }
 
-  public static String findPatientWhoAreCX() {
-
-    return EptsQuerysUtils.loadQuery(FIND_PATIENTS_WHO_ARE_TB_CX);
+  public static String findPatientWhoAreCXR() {
+    return "select diagnosticTest.patient_id  										"
+        + "from( 																	"
+        + "		select p.patient_id,e.encounter_datetime data_inicio                "
+        + "		from patient p                                                      "
+        + "      		inner join encounter e on p.patient_id=e.patient_id         "
+        + "      		inner join obs o on o.encounter_id=e.encounter_id 			"
+        + "		where e.voided=0 and o.voided=0 and p.voided=0                      "
+        + "      		and e.encounter_type in(6) and o.concept_id=12 and o.value_coded in(23956, 664,1138)   "
+        + "      		and e.location_id= :location  and e.encounter_datetime between :startDate and :endDate "
+        + ")diagnosticTest 															"
+        + "	inner join person on person.person_id = diagnosticTest.patient_id 		"
+        + "where person.birthdate is not null and  floor(datediff(:endDate,person.birthdate )/365) >= 10 ";
   }
 
   public static String dateObsForEncounterAndQuestionAndAnswers(

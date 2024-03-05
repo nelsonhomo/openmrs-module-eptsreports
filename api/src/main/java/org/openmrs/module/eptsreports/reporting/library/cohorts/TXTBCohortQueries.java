@@ -739,7 +739,7 @@ public class TXTBCohortQueries {
     return definition;
   }
 
-  public CohortDefinition findPatientWhoAreCX() {
+  public CohortDefinition findPatientWhoAreCXR() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
@@ -748,7 +748,7 @@ public class TXTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    String query = TXTBQueries.findPatientWhoAreCX();
+    String query = TXTBQueries.findPatientWhoAreCXR();
 
     definition.setQuery(query);
 
@@ -903,8 +903,8 @@ public class TXTBCohortQueries {
     return definition;
   }
 
-  @DocumentedDefinition(value = "findPatientWhoAreCX")
-  public CohortDefinition getPatientWhoAreCX() {
+  @DocumentedDefinition(value = "findPatientWhoAreCXR")
+  public CohortDefinition getPatientWhoAreCXR() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
@@ -916,9 +916,9 @@ public class TXTBCohortQueries {
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
     definition.addSearch("DENOMINATOR", EptsReportUtils.map(this.getDenominator(), mappings));
 
-    definition.addSearch("CX", EptsReportUtils.map(this.findPatientWhoAreCX(), mappings));
+    definition.addSearch("CXR", EptsReportUtils.map(this.findPatientWhoAreCXR(), mappings));
 
-    definition.setCompositionString("DENOMINATOR AND CX");
+    definition.setCompositionString("DENOMINATOR AND CXR");
 
     return definition;
   }
@@ -998,7 +998,7 @@ public class TXTBCohortQueries {
 
     definition.addSearch("DENOMINATOR", EptsReportUtils.map(this.getDenominator(), mappings));
 
-    definition.addSearch("DTS", EptsReportUtils.map(this.findPatientWhoAreCX(), mappings));
+    definition.addSearch("DTS", EptsReportUtils.map(this.findPatientWhoAreCXR(), mappings));
 
     definition.setCompositionString("DENOMINATOR NOT DTS");
 

@@ -57,16 +57,16 @@ public class TxTBDataset extends BaseDataSet {
     addSpecimenSentDisaggregation(mappings, dataSetDefinition);
     addDiagnositcTestDisaggregation(mappings, dataSetDefinition);
     addPositiveResultsDisaggregation(mappings, dataSetDefinition);
-    addCXDisaggregation(mappings, dataSetDefinition);
+    addCXRDisaggregation(mappings, dataSetDefinition);
 
     return dataSetDefinition;
   }
 
-  private void addCXDisaggregation(
+  private void addCXRDisaggregation(
       String mappings, CohortIndicatorDataSetDefinition dataSetDefinition) {
     CohortIndicator specimentSent =
         eptsGeneralIndicator.getIndicator(
-            "CX", EptsReportUtils.map(txTbCohortQueries.getPatientWhoAreCX(), mappings));
+            "CX", EptsReportUtils.map(txTbCohortQueries.getPatientWhoAreCXR(), mappings));
 
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_CXR",
