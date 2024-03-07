@@ -108,7 +108,7 @@ public class MICategory11DataSet extends MQAbstractDataSet {
                 "CAT11Least9APSSConsultationDENOMINATOR",
                 mappings),
             mappings),
-        "ageMiNewART=LESS_5_MONTHS_LESS_9MONTHS");
+        "ageMiNewART=LESS_5_MONTHS_2-");
 
     dataSetDefinition.addColumn(
         "CAT11Least9APSSConsultationNUMERATOR",
@@ -121,7 +121,7 @@ public class MICategory11DataSet extends MQAbstractDataSet {
                 "CAT11Least9APSSConsultationNUMERATOR",
                 mappings),
             mappings),
-        "ageMiNewART=LESS_5_MONTHS_LESS_9MONTHS");
+        "ageMiNewART=LESS_5_MONTHS_2-");
 
     dataSetDefinition.addColumn(
         "CAT11Children1000CVDENOMINATOR",
