@@ -15,7 +15,7 @@ package org.openmrs.module.eptsreports.reporting.library.datasets;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.TPTCompletationCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.TB1TPTCompletationCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.TxCurrCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -27,11 +27,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TPTCompletationDataSet extends BaseDataSet {
+public class TB1TPTCompletationDataSet extends BaseDataSet {
 
   @Autowired private EptsGeneralIndicator eptsGeneralIndicator;
 
-  @Autowired private TPTCompletationCohortQueries txTPTCompletationCohortQueries;
+  @Autowired private TB1TPTCompletationCohortQueries tb1TPTCompletationCohortQueries;
 
   @Autowired private TxCurrCohortQueries txCurrCohortQueries;
 
@@ -58,7 +58,7 @@ public class TPTCompletationDataSet extends BaseDataSet {
             eptsGeneralIndicator.getIndicator(
                 "TX_CURR with TPT Completion",
                 EptsReportUtils.map(
-                    txTPTCompletationCohortQueries.findTxCurrWithTPTCompletation(), mappings)),
+                    tb1TPTCompletationCohortQueries.findTxCurrWithTPTCompletation(), mappings)),
             mappings),
         "");
 
@@ -69,7 +69,7 @@ public class TPTCompletationDataSet extends BaseDataSet {
             eptsGeneralIndicator.getIndicator(
                 "TX_CURR without TPT Completion",
                 EptsReportUtils.map(
-                    txTPTCompletationCohortQueries.findTxCurrWithoutTPTCompletation(), mappings)),
+                    tb1TPTCompletationCohortQueries.findTxCurrWithoutTPTCompletation(), mappings)),
             mappings),
         "");
 
@@ -80,7 +80,7 @@ public class TPTCompletationDataSet extends BaseDataSet {
             eptsGeneralIndicator.getIndicator(
                 "TX_CURR without TPT Completion with TB Treatment(Last 3 Years)",
                 EptsReportUtils.map(
-                    txTPTCompletationCohortQueries
+                    tb1TPTCompletationCohortQueries
                         .findTxCurrWithoutTPTCompletionWhoWereTreatedForTBForLast3Years(),
                     mappings)),
             mappings),
@@ -93,7 +93,7 @@ public class TPTCompletationDataSet extends BaseDataSet {
             eptsGeneralIndicator.getIndicator(
                 "TX_CURR without TPT Completion with Positive TB Screening",
                 EptsReportUtils.map(
-                    txTPTCompletationCohortQueries
+                    tb1TPTCompletationCohortQueries
                         .findTxCurrWithoutTPTCompletionWithPositivTBScreening(),
                     mappings)),
             mappings),
@@ -106,7 +106,7 @@ public class TPTCompletationDataSet extends BaseDataSet {
             eptsGeneralIndicator.getIndicator(
                 "TX_CURR eligible for TPT Completion",
                 EptsReportUtils.map(
-                    txTPTCompletationCohortQueries
+                    tb1TPTCompletationCohortQueries
                         .findTxCurrWithoutTPTCompletionButEligibleForTPTCompletation(),
                     mappings)),
             mappings),
@@ -119,7 +119,7 @@ public class TPTCompletationDataSet extends BaseDataSet {
             eptsGeneralIndicator.getIndicator(
                 "TX_CURR with TPT in last 7 months",
                 EptsReportUtils.map(
-                    txTPTCompletationCohortQueries
+                    tb1TPTCompletationCohortQueries
                         .findTxCurrWithoutTPTCompletionWhoInitiatedTPTInLast7Months(),
                     mappings)),
             mappings),
@@ -132,7 +132,7 @@ public class TPTCompletationDataSet extends BaseDataSet {
             eptsGeneralIndicator.getIndicator(
                 "TX_CURR eligible for TPT Initiation",
                 EptsReportUtils.map(
-                    txTPTCompletationCohortQueries
+                    tb1TPTCompletationCohortQueries
                         .findTxCurrWithoutTPTCompletionButEligibleForTPTInitiation(),
                     mappings)),
             mappings),

@@ -1,12 +1,8 @@
 package org.openmrs.module.eptsreports.reporting.library.cohorts;
 
-import java.util.Arrays;
 import java.util.Date;
 import org.openmrs.Location;
-import org.openmrs.module.eptsreports.metadata.HivMetadata;
-import org.openmrs.module.eptsreports.metadata.TbMetadata;
 import org.openmrs.module.eptsreports.reporting.library.queries.TPTCompletationQueries;
-import org.openmrs.module.eptsreports.reporting.library.queries.TXTBQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TxTbPrevQueriesInterface.QUERY.DisaggregationTypes;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -19,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TPTCompletationCohortQueries {
+public class TB1TPTCompletationCohortQueries {
 
   @Autowired private GenericCohortQueries genericCohorts;
 
@@ -28,10 +24,6 @@ public class TPTCompletationCohortQueries {
   @Autowired private TXTBCohortQueries tXTBCohortQueries;
 
   @Autowired private TxTbPrevCohortQueries txTbPrevCohortQueries;
-
-  @Autowired private TbMetadata tbMetadata;
-
-  @Autowired private HivMetadata hivMetadata;
 
   private static final String TPT_CASCADE_INICIO_INH = "TPTCOMPLETION/TPT_CASCADE_INICIO_INH.sql";
 
@@ -139,7 +131,6 @@ public class TPTCompletationCohortQueries {
     dsd.addSearch(
         "TPT-NO-COMPLETION",
         EptsReportUtils.map(this.findTxCurrWithoutTPTCompletation(), mappings));
-
     dsd.addSearch(
         "TB-POSITIVE-SCREENING",
         EptsReportUtils.map(this.getTxTBDenominatorAndPositiveScreening(), mappings));
@@ -277,99 +268,6 @@ public class TPTCompletationCohortQueries {
     return dsd;
   }
 
-  @DocumentedDefinition(value = "txTbNumerator")
-  private CohortDefinition getTxTBNumerator() {
-    final CompositionCohortDefinition cd = new CompositionCohortDefinition();
-    String generalParameterMapping =
-        "startDate=${endDate-1095d},endDate=${endDate},location=${location}";
-    String previousPeriodParameters =
-        "startDate=${endDate-6m+1d-1095d},endDate=${endDate-1095d-1d},location=${location}";
-
-    cd.setName("TxTB - Numerator");
-    final CohortDefinition A = this.generateTxTBNumerator(generalParameterMapping);
-    cd.addSearch("A", EptsReportUtils.map(A, generalParameterMapping));
-
-    cd.addSearch(
-        "A-PREVIOUS-PERIOD",
-        EptsReportUtils.map(
-            getTxTBNumeratorPreviousPeriod(
-                previousPeriodParameters,
-                "startDate=${endDate-12m-1095d},endDate=${endDate-6m-1095d-1d},location=${location}"),
-            previousPeriodParameters));
-    cd.addSearch(
-        "art-started-by-end-previous-reporting-period",
-        EptsReportUtils.map(
-            this.genericCohorts.getStartedArtBeforeDate(false),
-            "onOrBefore=${endDate-6m-1095d},location=${location}"));
-
-    cd.addSearch(
-        "started-tb-treatment-previous-period",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(),
-            previousPeriodParameters));
-
-    cd.setCompositionString(
-        "A NOT (started-tb-treatment-previous-period OR (A-PREVIOUS-PERIOD AND art-started-by-end-previous-reporting-period))");
-
-    addGeneralParameters(cd);
-    return cd;
-  }
-
-  @DocumentedDefinition(value = "txTbNumeratorPreviousPeriod")
-  private CohortDefinition getTxTBNumeratorPreviousPeriod(
-      String previousPeriodParameters, String tbTreatmentPeriod) {
-    final CompositionCohortDefinition cd = new CompositionCohortDefinition();
-
-    cd.setName("TxTB - Numerator Previous Period");
-    final CohortDefinition A = this.generateTxTBNumerator(previousPeriodParameters);
-    cd.addSearch(
-        "A-PREVIOUS-PERIOD", EptsReportUtils.map(A, "endDate=${endDate},location=${location}"));
-
-    cd.addSearch(
-        "started-tb-treatment-previous-period",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(), tbTreatmentPeriod));
-    cd.setCompositionString("A-PREVIOUS-PERIOD NOT started-tb-treatment-previous-period");
-
-    addGeneralParameters(cd);
-    return cd;
-  }
-
-  @DocumentedDefinition(value = "generateTxTBNumerator")
-  private CohortDefinition generateTxTBNumerator(String generalParameterMapping) {
-    final CompositionCohortDefinition cd = new CompositionCohortDefinition();
-
-    cd.setName("TxTB - Numerator - generating Compositions");
-    final CohortDefinition i =
-        this.genericCohorts.generalSql(
-            "onTbTreatment",
-            TXTBQueries.dateObs(
-                this.tbMetadata.getTBDrugTreatmentStartDate().getConceptId(),
-                Arrays.asList(
-                    this.hivMetadata.getAdultoSeguimentoEncounterType().getId(),
-                    this.hivMetadata.getARVPediatriaSeguimentoEncounterType().getId()),
-                true));
-    final CohortDefinition ii = this.tXTBCohortQueries.getInTBProgram();
-    this.addGeneralParameters(i);
-    cd.addSearch("i", EptsReportUtils.map(i, generalParameterMapping));
-    cd.addSearch("ii", EptsReportUtils.map(ii, generalParameterMapping));
-    cd.addSearch(
-        "iii",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getPulmonaryTBWithinReportingDate(), generalParameterMapping));
-    cd.addSearch(
-        "iv",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getTuberculosisTreatmentPlanWithinReportingDate(),
-            generalParameterMapping));
-
-    final CohortDefinition artList = tXTBCohortQueries.artList();
-    cd.addSearch("artList", EptsReportUtils.map(artList, generalParameterMapping));
-    cd.setCompositionString("(i OR ii OR iii OR iv) AND artList");
-    this.addGeneralParameters(cd);
-    return cd;
-  }
-
   @DocumentedDefinition(value = "getTxTBDenominatorAndPositiveScreening")
   private CohortDefinition getTxTBDenominatorAndPositiveScreening() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -378,213 +276,13 @@ public class TPTCompletationCohortQueries {
 
     definition.setName("TxTB - Denominator and Positive Sreening");
     definition.addSearch(
-        "denominator",
+        "denominator-positive-results",
         EptsReportUtils.map(
-            this.getTxTBDenominator(
-                generalParameterMapping,
-                "startDate=${endDate-6m-14d},endDate=${endDate-14d-1d},location=${location}"),
+            tXTBCohortQueries.getDenominatorAndPositiveScreening(generalParameterMapping),
             generalParameterMapping));
-    definition.addSearch(
-        "positive-screening",
-        EptsReportUtils.map(
-            this.getTxTBPPositiveScreening(generalParameterMapping), generalParameterMapping));
+
     this.addGeneralParameters(definition);
-    definition.setCompositionString("denominator AND positive-screening");
-    return definition;
-  }
-
-  @DocumentedDefinition(value = "getTxTBPPositiveScreening")
-  private CohortDefinition getTxTBPPositiveScreening(String generalParameterMapping) {
-    final CompositionCohortDefinition cd = new CompositionCohortDefinition();
-
-    cd.setName("TxTB - positiveScreening");
-
-    cd.addSearch(
-        "A",
-        EptsReportUtils.map(
-            tXTBCohortQueries.codedYesTbScreening(),
-            "onOrAfter=${endDate-14d},onOrBefore=${endDate},locationList=${location}"));
-    cd.addSearch(
-        "B",
-        EptsReportUtils.map(
-            tXTBCohortQueries.positiveInvestigationResultComposition(), generalParameterMapping));
-    cd.addSearch(
-        "C",
-        EptsReportUtils.map(
-            tXTBCohortQueries.negativeInvestigationResultAndAnyResultForTBScreeningComposition(),
-            generalParameterMapping));
-    cd.addSearch(
-        "D",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(),
-            generalParameterMapping));
-    cd.addSearch(
-        "E", EptsReportUtils.map(tXTBCohortQueries.getInTBProgram(), generalParameterMapping));
-    cd.addSearch(
-        "F",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getPulmonaryTBWithinReportingDate(), generalParameterMapping));
-    cd.addSearch(
-        "G",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getTuberculosisTreatmentPlanWithinReportingDate(),
-            generalParameterMapping));
-    cd.addSearch(
-        "H",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getAllTBSymptomsForDisaggregationComposition(),
-            generalParameterMapping));
-    cd.addSearch(
-        "I",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getSputumForAcidFastBacilliWithinReportingDate(),
-            generalParameterMapping));
-
-    cd.addSearch(
-        "INICIOTB",
-        EptsReportUtils.map(
-            tXTBCohortQueries.findPatientsWhoInitiatedTBTreatment(), generalParameterMapping));
-
-    cd.setCompositionString("A OR B OR C OR D OR E OR F OR G OR H OR I OR INICIOTB");
-
-    this.addGeneralParameters(cd);
-
-    return cd;
-  }
-
-  @DocumentedDefinition(value = "getTxTBDenominator")
-  private CohortDefinition getTxTBDenominator(
-      String generalParameterMapping, String previousPeriodParameterMapping) {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    this.addGeneralParameters(definition);
-    definition.setName("TxTB - Denominator");
-    definition.addSearch(
-        "art-list",
-        EptsReportUtils.map(
-            this.genericCohorts.getStartedArtBeforeDate(false),
-            "onOrBefore=${endDate},location=${location}"));
-    definition.addSearch(
-        "tb-screening",
-        EptsReportUtils.map(
-            tXTBCohortQueries.yesOrNoInvestigationResult(), generalParameterMapping));
-    definition.addSearch(
-        "tb-investigation",
-        EptsReportUtils.map(
-            tXTBCohortQueries.positiveInvestigationResultComposition(), generalParameterMapping));
-    definition.addSearch(
-        "started-tb-treatment",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(),
-            generalParameterMapping));
-    definition.addSearch(
-        "in-tb-program",
-        EptsReportUtils.map(tXTBCohortQueries.getInTBProgram(), generalParameterMapping));
-
-    definition.addSearch(
-        "started-tb-treatment-previous-period",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(),
-            previousPeriodParameterMapping));
-    definition.addSearch(
-        "in-tb-program-previous-period",
-        EptsReportUtils.map(tXTBCohortQueries.getInTBProgram(), previousPeriodParameterMapping));
-
-    definition.addSearch(
-        "transferred-out",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getPatientsWhoAreTransferredOut(), generalParameterMapping));
-
-    CohortDefinition fichaResumoMasterCard =
-        this.genericCohorts.generalSql(
-            "onFichaResumoMasterCard",
-            TXTBQueries.dateObsByObsDateTimeClausule(
-                this.tbMetadata.getPulmonaryTB().getConceptId(),
-                this.hivMetadata.getYesConcept().getConceptId(),
-                this.hivMetadata.getMasterCardEncounterType().getEncounterTypeId()));
-
-    CohortDefinition fichaClinicaMasterCard =
-        this.genericCohorts.generalSql(
-            "fichaClinicaMasterCard",
-            TXTBQueries.dateObsByObsValueDateTimeClausule(
-                this.tbMetadata.getTBTreatmentPlanConcept().getConceptId(),
-                this.hivMetadata.getStartDrugsConcept().getConceptId(),
-                this.hivMetadata.getAdultoSeguimentoEncounterType().getId()));
-
-    this.addGeneralParameters(fichaResumoMasterCard);
-    this.addGeneralParameters(fichaClinicaMasterCard);
-    definition.addSearch(
-        "ficha-resumo-master-card",
-        EptsReportUtils.map(fichaResumoMasterCard, generalParameterMapping));
-    definition.addSearch(
-        "ficha-clinica-master-card",
-        EptsReportUtils.map(fichaClinicaMasterCard, generalParameterMapping));
-    definition.addSearch(
-        "all-tb-symptoms",
-        EptsReportUtils.map(
-            this.getAllTBSymptomsForDemoninatorComposition(), generalParameterMapping));
-
-    definition.addSearch(
-        "A-PREVIOUS-PERIOD",
-        EptsReportUtils.map(
-            getTxTBNumeratorPreviousPeriod(
-                previousPeriodParameterMapping,
-                "startDate=${endDate-12m-14d},endDate=${endDate-6m-14d-1d},location=${location}"),
-            previousPeriodParameterMapping));
-
-    definition.addSearch(
-        "art-started-by-end-previous-reporting-period",
-        EptsReportUtils.map(
-            this.genericCohorts.getStartedArtBeforeDate(false),
-            "onOrBefore=${endDate-12m-14d},location=${location}"));
-
-    definition.setCompositionString(
-        "(art-list AND "
-            + " ( tb-screening OR tb-investigation OR started-tb-treatment OR in-tb-program OR ficha-resumo-master-card OR ficha-clinica-master-card OR all-tb-symptoms)) "
-            + " NOT ((transferred-out NOT (started-tb-treatment OR in-tb-program)) OR started-tb-treatment-previous-period OR in-tb-program-previous-period OR (A-PREVIOUS-PERIOD AND art-started-by-end-previous-reporting-period))");
-
-    return definition;
-  }
-
-  @DocumentedDefinition(value = "get All TB Symptoms for Denominator")
-  private CohortDefinition getAllTBSymptomsForDemoninatorComposition() {
-
-    String generalParameterMapping =
-        "startDate=${endDate-14d},endDate=${endDate},location=${location}";
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    this.addGeneralParameters(definition);
-    definition.setName("TxTB - All TB Symptoms for Denominator");
-
-    definition.addSearch(
-        "tuberculosis-symptoms",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getTuberculosisSymptoms(
-                this.hivMetadata.getYesConcept().getConceptId(),
-                this.hivMetadata.getNoConcept().getConceptId()),
-            generalParameterMapping));
-
-    definition.addSearch(
-        "active-tuberculosis",
-        EptsReportUtils.map(tXTBCohortQueries.getActiveTuberculosis(), generalParameterMapping));
-
-    definition.addSearch(
-        "tb-observations",
-        EptsReportUtils.map(tXTBCohortQueries.getTbObservations(), generalParameterMapping));
-
-    definition.addSearch(
-        "application-for-laboratory-research",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getApplicationForLaboratoryResearch(), generalParameterMapping));
-
-    definition.addSearch(
-        "tb-genexpert-or-culture-test-or-lam-test",
-        EptsReportUtils.map(
-            tXTBCohortQueries.getTbGenExpertORCultureTestOrTbLamOrBk(), generalParameterMapping));
-
-    definition.setCompositionString(
-        "tuberculosis-symptoms OR active-tuberculosis OR tb-observations OR application-for-laboratory-research OR tb-genexpert-or-culture-test-or-lam-test");
-
+    definition.setCompositionString("denominator-positive-results");
     return definition;
   }
 

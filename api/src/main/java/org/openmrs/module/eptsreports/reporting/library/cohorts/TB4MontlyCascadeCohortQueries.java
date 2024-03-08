@@ -16,8 +16,9 @@ import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.metadata.HivMetadata;
 import org.openmrs.module.eptsreports.metadata.TbMetadata;
-import org.openmrs.module.eptsreports.reporting.library.queries.TXTBMontlyCascadeReportQueries;
-import org.openmrs.module.eptsreports.reporting.library.queries.TXTBMontlyCascadeReportQueries.QUERY.DiagnosticTestTypes;
+import org.openmrs.module.eptsreports.reporting.library.queries.TB4MontlyCascadeReportQueries;
+import org.openmrs.module.eptsreports.reporting.library.queries.TB4MontlyCascadeReportQueries.QUERY.DiagnosticTestTypes;
+import org.openmrs.module.eptsreports.reporting.library.queries.TB4MontlyCascadeReportQueries.QUERY.EnrollmentPeriod;
 import org.openmrs.module.eptsreports.reporting.library.queries.TXTBQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -29,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TXTBDenominatorForTBMontlyCascadeQueries {
+public class TB4MontlyCascadeCohortQueries {
 
   @Autowired private TbMetadata tbMetadata;
 
@@ -44,23 +45,6 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
   private String generalParameterMapping =
       "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}";
 
-  @DocumentedDefinition(value = "TxTBDenominatorPositiveScreening")
-  public CohortDefinition getTxTBDenominatorAndPositiveScreening() {
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-
-    definition.setName("TxTB - Denominator Positive Screening");
-    definition.addSearch(
-        "denominator",
-        EptsReportUtils.map(this.txtbCohortQueries.getDenominator(), generalParameterMapping));
-
-    definition.addSearch(
-        "positive-screening",
-        EptsReportUtils.map(this.getTxTBPPositiveScreening(), generalParameterMapping));
-    this.addGeneralParameters(definition);
-    definition.setCompositionString("denominator AND positive-screening");
-    return definition;
-  }
-
   @DocumentedDefinition(value = "TxTBDenominatorNegativeScreening")
   public CohortDefinition getTxTBDenominatorAndNegativeScreening() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -72,186 +56,15 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
 
     definition.addSearch(
         "positive-screening",
-        EptsReportUtils.map(this.getTxTBPPositiveScreening(), generalParameterMapping));
+        EptsReportUtils.map(
+            this.txtbCohortQueries.findPatientWhoAreTBPositiveScreening(),
+            generalParameterMapping));
 
     definition.addSearch(
         "new-on-art", EptsReportUtils.map(this.getNewOnArt(), this.generalParameterMapping));
 
     this.addGeneralParameters(definition);
     definition.setCompositionString("denominator NOT positive-screening");
-    return definition;
-  }
-
-  @DocumentedDefinition(value = "get Specimen Sent")
-  public CohortDefinition getSpecimenSentCohortDefinition() {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    this.addGeneralParameters(definition);
-    definition.setName("TxTB -specimen-sent");
-
-    CohortDefinition applicationForLaboratoryResearchDataset =
-        this.genericCohortQueries.generalSql(
-            "applicationForLaboratoryResearch",
-            TXTBQueries.dateObsForEncounterAndQuestionAndAnswers(
-                this.hivMetadata.getAdultoSeguimentoEncounterType().getEncounterTypeId(),
-                Arrays.asList(
-                    this.hivMetadata.getApplicationForLaboratoryResearch().getConceptId()),
-                Arrays.asList(
-                    this.tbMetadata.getTbGenexpertTest().getConceptId(),
-                    this.tbMetadata.getCultureTest().getConceptId(),
-                    this.tbMetadata.getTbLam().getConceptId(),
-                    this.tbMetadata.getSputumForAcidFastBacilli().getConceptId())));
-
-    this.addGeneralParameters(applicationForLaboratoryResearchDataset);
-
-    definition.addSearch(
-        "application-for-laboratory-research",
-        EptsReportUtils.map(applicationForLaboratoryResearchDataset, this.generalParameterMapping));
-    definition.addSearch(
-        "tb-genexpert-culture-lam-bk-test",
-        EptsReportUtils.map(
-            txtbCohortQueries.getTbGenExpertORCultureTestOrTbLamOrBk(),
-            this.generalParameterMapping));
-    definition.addSearch(
-        "lab-results",
-        EptsReportUtils.map(this.getResultsOnFichaLaboratorio(), this.generalParameterMapping));
-
-    definition.addSearch(
-        "DENOMINATOR",
-        EptsReportUtils.map(this.txtbCohortQueries.getDenominator(), this.generalParameterMapping));
-
-    definition.setCompositionString(
-        "(application-for-laboratory-research OR tb-genexpert-culture-lam-bk-test OR lab-results) AND DENOMINATOR");
-
-    return definition;
-  }
-
-  @DocumentedDefinition(value = "getTxTBPPositiveScreening")
-  private CohortDefinition getTxTBPPositiveScreening() {
-    final CompositionCohortDefinition cd = new CompositionCohortDefinition();
-
-    cd.setName("TxTB - positiveScreening");
-
-    cd.addSearch(
-        "A",
-        EptsReportUtils.map(
-            txtbCohortQueries.codedYesTbScreening(),
-            "onOrAfter=${endDate-6m+1d},onOrBefore=${endDate},locationList=${location}"));
-    cd.addSearch(
-        "B",
-        EptsReportUtils.map(
-            txtbCohortQueries.positiveInvestigationResultComposition(), generalParameterMapping));
-    cd.addSearch(
-        "C",
-        EptsReportUtils.map(
-            txtbCohortQueries.negativeInvestigationResultAndAnyResultForTBScreeningComposition(),
-            generalParameterMapping));
-    cd.addSearch(
-        "D",
-        EptsReportUtils.map(
-            txtbCohortQueries.getTbDrugTreatmentStartDateWithinReportingDate(),
-            generalParameterMapping));
-    cd.addSearch(
-        "E", EptsReportUtils.map(txtbCohortQueries.getInTBProgram(), generalParameterMapping));
-    cd.addSearch(
-        "F",
-        EptsReportUtils.map(
-            txtbCohortQueries.getPulmonaryTBWithinReportingDate(), generalParameterMapping));
-    cd.addSearch(
-        "G",
-        EptsReportUtils.map(
-            txtbCohortQueries.getTuberculosisTreatmentPlanWithinReportingDate(),
-            generalParameterMapping));
-    cd.addSearch(
-        "H",
-        EptsReportUtils.map(
-            txtbCohortQueries.getAllTBSymptomsForDisaggregationComposition(),
-            generalParameterMapping));
-    cd.addSearch(
-        "I",
-        EptsReportUtils.map(
-            txtbCohortQueries.getSputumForAcidFastBacilliWithinReportingDate(),
-            generalParameterMapping));
-
-    cd.setCompositionString("A OR B OR C OR D OR E OR F OR G OR H OR I");
-    this.addGeneralParameters(cd);
-    return cd;
-  }
-
-  @DocumentedDefinition(value = "get All TB Symptoms for Denominator")
-  private CohortDefinition getAllTBSymptomsForDemoninatorComposition() {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    this.addGeneralParameters(definition);
-    definition.setName("TxTB - All TB Symptoms for Denominator");
-
-    definition.addSearch(
-        "tuberculosis-symptoms",
-        EptsReportUtils.map(
-            txtbCohortQueries.getTuberculosisSymptoms(
-                this.hivMetadata.getYesConcept().getConceptId(),
-                this.hivMetadata.getNoConcept().getConceptId()),
-            generalParameterMapping));
-
-    definition.addSearch(
-        "active-tuberculosis",
-        EptsReportUtils.map(txtbCohortQueries.getActiveTuberculosis(), generalParameterMapping));
-
-    definition.addSearch(
-        "tb-observations",
-        EptsReportUtils.map(txtbCohortQueries.getTbObservations(), generalParameterMapping));
-
-    definition.addSearch(
-        "application-for-laboratory-research",
-        EptsReportUtils.map(
-            txtbCohortQueries.getApplicationForLaboratoryResearch(), generalParameterMapping));
-
-    definition.addSearch(
-        "tb-genexpert-or-culture-test-or-lam-or-bk-test",
-        EptsReportUtils.map(
-            txtbCohortQueries.getTbGenExpertORCultureTestOrTbLamOrBk(), generalParameterMapping));
-
-    definition.addSearch(
-        "tb-raioxtorax",
-        EptsReportUtils.map(txtbCohortQueries.getTbRaioXTorax(), generalParameterMapping));
-
-    definition.setCompositionString(
-        "tuberculosis-symptoms OR active-tuberculosis OR tb-observations OR application-for-laboratory-research OR tb-genexpert-or-culture-test-or-lam-or-bk-test OR tb-raioxtorax");
-
-    return definition;
-  }
-
-  @DocumentedDefinition(value = "get Diagnóstico Laboratorial para TB")
-  private CohortDefinition getResultsOnFichaLaboratorio() {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    this.addGeneralParameters(definition);
-    definition.setName("TxTB -Diagnóstico Laboratorial para TB");
-
-    definition.addSearch(
-        "sputum-for-acid-fast-bacilli",
-        EptsReportUtils.map(
-            txtbCohortQueries.getSputumForAcidFastBacilliWithinReportingDate(),
-            generalParameterMapping));
-
-    definition.addSearch(
-        "genexpert-culture",
-        EptsReportUtils.map(
-            txtbCohortQueries.getGenExpertOrCulturaOnFichaLaboratorio(), generalParameterMapping));
-
-    definition.addSearch(
-        "tblam",
-        EptsReportUtils.map(
-            txtbCohortQueries.getTbLamOnFichaLaboratorio(), generalParameterMapping));
-
-    definition.addSearch(
-        "xpert-mtb",
-        EptsReportUtils.map(
-            txtbCohortQueries.getXpertMTBOnFichaLaboratorio(), generalParameterMapping));
-
-    definition.setCompositionString(
-        "sputum-for-acid-fast-bacilli OR genexpert-culture OR tblam OR xpert-mtb");
-
     return definition;
   }
 
@@ -269,19 +82,6 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     return definition;
   }
 
-  @DocumentedDefinition(value = "GenExpertTests")
-  public CohortDefinition getGenExpertTests() {
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("GeneXpert MTB/RIF");
-    this.addGeneralParameters(definition);
-    definition.addSearch(
-        "genexperts",
-        EptsReportUtils.map(
-            this.findDiagnostiTests(DiagnosticTestTypes.GENEXPERT), generalParameterMapping));
-    definition.setCompositionString("genexperts");
-    return definition;
-  }
-
   @DocumentedDefinition(value = "getGenExpertPositiveTestResults")
   public CohortDefinition getGenExpertPositiveTestResults() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -293,33 +93,6 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
             this.findDiagnosticPositiveTestResults(DiagnosticTestTypes.GENEXPERT),
             generalParameterMapping));
     definition.setCompositionString("genexperts");
-    return definition;
-  }
-
-  @DocumentedDefinition(value = "allPositiveTestResults")
-  public CohortDefinition getAllPositiveTestResults() {
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("Posetive Test Results");
-    this.addGeneralParameters(definition);
-
-    definition.addSearch(
-        "genexpertsPositiveTestResults",
-        EptsReportUtils.map(this.getGenExpertPositiveTestResults(), generalParameterMapping));
-
-    definition.addSearch(
-        "baciloscopiaPositiveTestResults",
-        EptsReportUtils.map(this.getBaciloscopiaPositiveTestResults(), generalParameterMapping));
-
-    definition.addSearch(
-        "tblamPositiveTestResults",
-        EptsReportUtils.map(this.getTBLAMPositiveTestResults(), generalParameterMapping));
-
-    definition.addSearch(
-        "otherAditionalPositiveTestResults",
-        EptsReportUtils.map(this.getAdditionalPositiveTestResults(), generalParameterMapping));
-
-    definition.setCompositionString(
-        "genexpertsPositiveTestResults OR baciloscopiaPositiveTestResults OR tblamPositiveTestResults OR otherAditionalPositiveTestResults ");
     return definition;
   }
 
@@ -366,6 +139,19 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "GenExpertTests")
+  public CohortDefinition getGenExpertTests() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("GeneXpert MTB/RIF");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    definition.setQuery(TXTBQueries.findPatientWhoAreDiagnosticTestMWRD());
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "BaciloscopiaTests")
   public CohortDefinition getBaciloscopiaTests() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -373,8 +159,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     this.addGeneralParameters(definition);
     definition.addSearch(
         "baciloscopia",
-        EptsReportUtils.map(
-            this.findDiagnostiTests(DiagnosticTestTypes.BACILOSCOPIA), generalParameterMapping));
+        EptsReportUtils.map(this.getDiagnosticTestSmearMicroscopyOnly(), generalParameterMapping));
 
     definition.addSearch(
         "genexperts", EptsReportUtils.map(this.getGenExpertTests(), generalParameterMapping));
@@ -426,9 +211,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     definition.setName("TB LAM");
     this.addGeneralParameters(definition);
     definition.addSearch(
-        "tblam",
-        EptsReportUtils.map(
-            this.findDiagnostiTests(DiagnosticTestTypes.TBLAM), generalParameterMapping));
+        "tblam", EptsReportUtils.map(this.getTBLAMTest(), generalParameterMapping));
 
     definition.addSearch(
         "genexperts", EptsReportUtils.map(this.getGenExpertTests(), generalParameterMapping));
@@ -436,6 +219,32 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
         "baciloscopia", EptsReportUtils.map(this.getBaciloscopiaTests(), generalParameterMapping));
 
     definition.setCompositionString("tblam NOT (genexperts OR baciloscopia)");
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "getDiagnosticTestSmearMicroscopyOnly")
+  private CohortDefinition getDiagnosticTestSmearMicroscopyOnly() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("Smear microscopy only");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    definition.setQuery(TXTBQueries.findPatientWhoAreDiagnosticTestSmearMicroscopyOnly());
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "getTBLAMTest")
+  private CohortDefinition getTBLAMTest() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("TB LAM Tests");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    definition.setQuery(TXTBQueries.findPatientWhoHaveTBLAMDiagnosticTest());
+
     return definition;
   }
 
@@ -445,10 +254,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     definition.setName("TB LAM Positive Test Results");
     this.addGeneralParameters(definition);
     definition.addSearch(
-        "tblam",
-        EptsReportUtils.map(
-            this.findDiagnosticPositiveTestResults(DiagnosticTestTypes.TBLAM),
-            generalParameterMapping));
+        "tblam", EptsReportUtils.map(this.getTBLAMPositiveTestsResults(), generalParameterMapping));
 
     definition.addSearch(
         "genexperts", EptsReportUtils.map(this.getGenExpertTests(), generalParameterMapping));
@@ -459,16 +265,29 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "getTBLAMPositiveTestsResults")
+  private CohortDefinition getTBLAMPositiveTestsResults() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("B LAM Positive Test Results");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    definition.setQuery(
+        TB4MontlyCascadeReportQueries.QUERY.findDiagnosticTestsWithPositiveTestResultsTBLAM());
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "getTBLAMNegativeTestResults")
   public CohortDefinition getTBLAMNegativeTestResults() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("TB LAM Negative Test Results");
     this.addGeneralParameters(definition);
+
     definition.addSearch(
         "negativeTblam",
-        EptsReportUtils.map(
-            this.findDiagnosticNegativeTestResults(DiagnosticTestTypes.TBLAM),
-            generalParameterMapping));
+        EptsReportUtils.map(this.getTBLAMNegativeTestsResults(), generalParameterMapping));
 
     definition.addSearch(
         "negativeGenexpert",
@@ -483,15 +302,28 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "getTBLAMNegativeTestsResults")
+  private CohortDefinition getTBLAMNegativeTestsResults() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("B LAM Negative Test Results");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    definition.setQuery(
+        TB4MontlyCascadeReportQueries.QUERY.findDiagnosticTestsWithNegativeTestResultsTBLAM());
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "AdditionalTests")
   public CohortDefinition getAdditionalTests() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("Additional test other than GeneXpert");
+    definition.setName("Additional test other than mWRD");
     this.addGeneralParameters(definition);
     definition.addSearch(
         "additionalTests",
-        EptsReportUtils.map(
-            this.findDiagnostiTests(DiagnosticTestTypes.CULTURA), generalParameterMapping));
+        EptsReportUtils.map(this.getAdditionalTestsCulture(), generalParameterMapping));
 
     definition.addSearch(
         "genexperts", EptsReportUtils.map(this.getGenExpertTests(), generalParameterMapping));
@@ -501,6 +333,19 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
         "tblam", EptsReportUtils.map(this.getTBLAMTests(), generalParameterMapping));
 
     definition.setCompositionString("additionalTests NOT (genexperts OR baciloscopia OR tblam)");
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "getAdditionalTestsCulture")
+  private CohortDefinition getAdditionalTestsCulture() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("Additional test other than mWRD");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+    definition.setQuery(TXTBQueries.findPatientWhoAreDiagnosticTestOtherCulture());
+
     return definition;
   }
 
@@ -590,20 +435,6 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     return cd;
   }
 
-  @DocumentedDefinition(value = "findDiagnostiTests")
-  private CohortDefinition findDiagnostiTests(DiagnosticTestTypes diagnosticTestType) {
-    final SqlCohortDefinition definition = new SqlCohortDefinition();
-
-    definition.setName("findDiagnostiTests");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
-    definition.setQuery(
-        TXTBMontlyCascadeReportQueries.QUERY.findDiagnosticTests(diagnosticTestType));
-
-    return definition;
-  }
-
   @DocumentedDefinition(value = "findDiagnosticPositiveTestResults")
   private CohortDefinition findDiagnosticPositiveTestResults(
       DiagnosticTestTypes diagnosticTestType) {
@@ -614,7 +445,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
     definition.setQuery(
-        TXTBMontlyCascadeReportQueries.QUERY.findDiagnosticTestsWithPositiveTestResults(
+        TB4MontlyCascadeReportQueries.QUERY.findDiagnosticTestsWithPositiveTestResults(
             diagnosticTestType));
 
     return definition;
@@ -630,7 +461,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
     definition.setQuery(
-        TXTBMontlyCascadeReportQueries.QUERY.findDiagnosticTestsWithNegativeTestResults(
+        TB4MontlyCascadeReportQueries.QUERY.findDiagnosticTestsWithNegativeTestResults(
             diagnosticTestType));
 
     return definition;
@@ -645,8 +476,7 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     definition.addSearch(
         "posetiveResults",
         EptsReportUtils.map(
-            txtbCohortQueries.getPositiveResultsForTXTBMontlyCascadeCohortDefinition(
-                this.txtbCohortQueries.getDenominator(), generalParameterMapping),
+            txtbCohortQueries.getDenominatorAndPositiveResults(generalParameterMapping),
             generalParameterMapping));
     definition.addSearch(
         "txtbNumerator",
@@ -692,6 +522,144 @@ public class TXTBDenominatorForTBMontlyCascadeQueries {
     cd.setCompositionString("DENOMINATOR AND all-negative-test-results ");
 
     return cd;
+  }
+
+  @DocumentedDefinition(value = "TBDenominatorAndTxCurr")
+  public CohortDefinition getTxBTDenominatorAndTxCurr() {
+    final CompositionCohortDefinition composiiton = new CompositionCohortDefinition();
+
+    composiiton.setName("TX_TB denominator in the last 6 months and TX_CURR ");
+    composiiton.addParameter(new Parameter("endDate", "End Date", Date.class));
+    composiiton.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    composiiton.addSearch(
+        "TX-CURR",
+        EptsReportUtils.map(this.txCurrCohortQueries.findPatientsWhoAreActiveOnART(), mappings));
+
+    composiiton.addSearch(
+        "TX-TB-DENOMINATOR",
+        EptsReportUtils.map(
+            this.txtbCohortQueries.getDenominator(),
+            "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}"));
+
+    composiiton.setCompositionString("TX-CURR and TX-TB-DENOMINATOR ");
+
+    return composiiton;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreCurrentyEnrolledOnArtInTheLastSixMonths")
+  public CohortDefinition getPatientsEnrollendOnARTForTheLastSixMonths() {
+    final CompositionCohortDefinition composiiton = new CompositionCohortDefinition();
+
+    composiiton.setName("Patient On ART For More Than 6 Months");
+    composiiton.addParameter(new Parameter("endDate", "End Date", Date.class));
+    composiiton.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    composiiton.addSearch(
+        "newlyOnArt",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "PatientsWithClinicalConsultationIntheLastSixMonths",
+                TB4MontlyCascadeReportQueries.QUERY
+                    .findPatientsWhoAreCurrentlyEnrolledOnARTByPeriod(EnrollmentPeriod.NEWLY)),
+            mappings));
+
+    composiiton.addSearch(
+        "previouslyOnAT",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "PatientsWithClinicalConsultationIntheLastSixMonths",
+                TB4MontlyCascadeReportQueries.QUERY
+                    .findPatientsWhoAreCurrentlyEnrolledOnARTByPeriod(EnrollmentPeriod.PREVIOUSLY)),
+            mappings));
+
+    composiiton.setCompositionString("newlyOnArt NOT previouslyOnAT");
+    return composiiton;
+  }
+
+  @DocumentedDefinition(value = "patientsWhoAreCurrentlyEnrolledOnARTInForMoreThanSixMonths")
+  public CohortDefinition getPatientsEnrolledOnArtForMoreThanSixMonths() {
+    final CompositionCohortDefinition composiiton = new CompositionCohortDefinition();
+
+    composiiton.setName("Patient On ART For More Than 6 Months");
+    composiiton.addParameter(new Parameter("endDate", "End Date", Date.class));
+    composiiton.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    composiiton.addSearch(
+        "previouslyOnAT",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "PatientsWithClinicalConsultationIntheLastSixMonths",
+                TB4MontlyCascadeReportQueries.QUERY
+                    .findPatientsWhoAreCurrentlyEnrolledOnARTByPeriod(EnrollmentPeriod.PREVIOUSLY)),
+            mappings));
+
+    composiiton.addSearch(
+        "newlyOnArt",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "newlyOnArt",
+                TB4MontlyCascadeReportQueries.QUERY
+                    .findPatientsWhoAreCurrentlyEnrolledOnARTByPeriod(EnrollmentPeriod.NEWLY)),
+            mappings));
+
+    composiiton.setCompositionString("previouslyOnAT NOT newlyOnArt");
+
+    return composiiton;
+  }
+
+  @DocumentedDefinition(value = "patientsWithClinicalConsultationsInTheLastSixMonths")
+  public CohortDefinition getClinicalConsultationsInLastSixMonths() {
+    final CompositionCohortDefinition composiiton = new CompositionCohortDefinition();
+
+    composiiton.setName("Patients with Clinical Consultations");
+    composiiton.addParameter(new Parameter("endDate", "End Date", Date.class));
+    composiiton.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    composiiton.addSearch(
+        "consultationsLast6Months",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "PatientsWithClinicalConsultationIntheLastSixMonths",
+                TB4MontlyCascadeReportQueries.QUERY
+                    .findPatientsWithClinicalConsultationIntheLastSixMonths),
+            mappings));
+
+    composiiton.setCompositionString("consultationsLast6Months");
+
+    return composiiton;
+  }
+
+  @DocumentedDefinition(value = "PatientsWithClinicalConsultationsForMoreThanSixMonths")
+  public CohortDefinition gePatientsWithClinicalConsultationsForMoreThanSixMonths() {
+    final CompositionCohortDefinition composiiton = new CompositionCohortDefinition();
+
+    composiiton.setName("Patients With Clinical Consulations For more than Six Months");
+    composiiton.addParameter(new Parameter("endDate", "End Date", Date.class));
+    composiiton.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "endDate=${endDate},location=${location}";
+
+    composiiton.addSearch(
+        "consultationsMoreThan6Months",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "PatientsWithClinicalConsultationsForMoreThanSixMonths",
+                TB4MontlyCascadeReportQueries.QUERY
+                    .findPatientsWithClinicalConsultationsForMoreThanSixMonths),
+            mappings));
+
+    composiiton.setCompositionString("consultationsMoreThan6Months ");
+
+    return composiiton;
   }
 
   private void addGeneralParameters(final CohortDefinition cd) {

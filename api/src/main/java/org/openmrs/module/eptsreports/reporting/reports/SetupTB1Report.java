@@ -8,7 +8,7 @@ import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
-import org.openmrs.module.eptsreports.reporting.library.datasets.TPTCompletationDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.TB1TPTCompletationDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -22,11 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetupTPTCompletion extends EptsDataExportManager {
+public class SetupTB1Report extends EptsDataExportManager {
 
   @Autowired private GenericCohortQueries genericCohortQueries;
 
-  @Autowired private TPTCompletationDataSet tPTCompletationDataSet;
+  @Autowired private TB1TPTCompletationDataSet tb1TPTCompletationDataSet;
 
   @Autowired private DatimCodeDataSet datimCodeDataset;
   @Autowired private SismaCodeDataSet sismaCodeDataset;
@@ -64,7 +64,7 @@ public class SetupTPTCompletion extends EptsDataExportManager {
     rd.setDescription(getDescription());
     rd.setParameters(this.getParameters());
     rd.addDataSetDefinition(
-        "TPT", Mapped.mapStraightThrough(tPTCompletationDataSet.constructDatset()));
+        "TPT", Mapped.mapStraightThrough(tb1TPTCompletationDataSet.constructDatset()));
 
     rd.addDataSetDefinition(
         "D",
@@ -89,8 +89,8 @@ public class SetupTPTCompletion extends EptsDataExportManager {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "TPT_Completion_Cascade_Report.xls",
-              "TPT Completion Cascade Report",
+              "TB1_TPT_Completion_Cascade_Report.xls",
+              this.getName(),
               getExcelDesignUuid(),
               null);
 

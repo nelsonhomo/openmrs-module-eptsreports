@@ -70,7 +70,7 @@ public class TxTBDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_CXR",
-        "TX_TB: Total Patients With CX",
+        "TX_TB: Patients screened using CXR - Total",
         EptsReportUtils.map(specimentSent, mappings),
         "");
   }
@@ -91,17 +91,20 @@ public class TxTBDataset extends BaseDataSet {
             EptsReportUtils.map(txTbCohortQueries.patientsNewOnARTNumerator(), mappings));
 
     dataSetDefinition.addColumn(
-        "TXB_NUM", "TX_TB: Numerator total", EptsReportUtils.map(numerator, mappings), "");
+        "TXB_NUM",
+        "TX_TB: Patients diagnosed with TB and started on TB treatment (Numerator total)",
+        EptsReportUtils.map(numerator, mappings),
+        "");
     addRow(
         dataSetDefinition,
         "TXB_NUM_PREV",
-        "Numerator (patientsPreviouslyOnARTNumerator)",
+        "Numerator (Patients Already on ART)",
         EptsReportUtils.map(patientsPreviouslyOnARTNumerator, mappings),
         getAdultChildrenColumns());
     addRow(
         dataSetDefinition,
         "TXB_NUM_NEW",
-        "Numerator (patientsNewOnARTNumerator)",
+        "Numerator (Patients New on ART)",
         EptsReportUtils.map(patientsNewOnARTNumerator, mappings),
         getAdultChildrenColumns());
   }
@@ -128,7 +131,7 @@ public class TxTBDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "TXB_DEN",
-        "TX_TB: Denominator total",
+        "TX_TB: Patients on ART screened for TB(Denominator Total)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Denominator Total",
@@ -139,25 +142,25 @@ public class TxTBDataset extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "TXB_DEN_NEW_POS",
-        "Denominator (newOnARTPositiveScreening)",
+        "Denominator (Patients New on ART Positive Screening)",
         EptsReportUtils.map(newOnARTPositiveScreening, mappings),
         getAdultChildrenColumns());
     addRow(
         dataSetDefinition,
         "TXB_DEN_NEW_NEG",
-        "Denominator (newOnARTNegativeScreening)",
+        "Denominator (Patients New on ART Negative Screening)",
         EptsReportUtils.map(newOnARTNegativeScreening, mappings),
         getAdultChildrenColumns());
     addRow(
         dataSetDefinition,
         "TXB_DEN_PREV_POS",
-        "Denominator (previouslyOnARTPositiveScreening)",
+        "Denominator (Patients Already on ART Positive Screening)",
         EptsReportUtils.map(previouslyOnARTPostiveScreening, mappings),
         getAdultChildrenColumns());
     addRow(
         dataSetDefinition,
         "TXB_DEN_PREV_NEG",
-        "Denominator (previouslyOnARTNegativeScreening)",
+        "Denominator (Patients Already on ART Negative Screening)",
         EptsReportUtils.map(previouslyOnARTNegativeScreening, mappings),
         getAdultChildrenColumns());
   }
@@ -168,7 +171,8 @@ public class TxTBDataset extends BaseDataSet {
     CohortIndicator specimentSent =
         eptsGeneralIndicator.getIndicator(
             "SPECIMEN-SENT",
-            EptsReportUtils.map(txTbCohortQueries.getSpecimenSentCohortDefinition(), mappings));
+            EptsReportUtils.map(
+                txTbCohortQueries.getSpecimenSentCohortDefinition(mappings), mappings));
 
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_SPECIMEN_SENT",
@@ -205,23 +209,23 @@ public class TxTBDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_GENEXPERT_DIAGNOSTIC",
-        "TX_TB: Total Gene Xpert MTB/RIF Assay (Diagnostic Test)",
+        "TX_TB: mWRD (with or without other testing)",
         EptsReportUtils.map(geneExpert, mappings),
         "");
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_SMEAR_ONLY_DIAGNOSTIC",
-        "TX_TB: Total Smear Only (Diagnostic Test)",
+        "TX_TB: Smear microscopy only ",
         EptsReportUtils.map(smearOnly, mappings),
         "");
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_OTHER-NO-EXPERT-DIAGNOSTIC",
-        "TX_TB: Total Other (No Xpert) (Diagnostic Test)",
+        "TX_TB: Additional test other than mWRD",
         EptsReportUtils.map(otherNoExpert, mappings),
         "");
 
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_SYMPTOM_SCREEN",
-        "TX_TB_TOTAL_SYMPTOM_SCREEN",
+        "Patients screened using Symptom Screen (alone) - Total",
         EptsReportUtils.map(symptomScreenAlone, mappings),
         "");
   }
@@ -232,7 +236,8 @@ public class TxTBDataset extends BaseDataSet {
     CohortIndicator positiveResults =
         eptsGeneralIndicator.getIndicator(
             "POSITIVE-RESULT",
-            EptsReportUtils.map(txTbCohortQueries.getPositiveResultCohortDefinition(), mappings));
+            EptsReportUtils.map(
+                txTbCohortQueries.getDenominatorAndPositiveResults(mappings), mappings));
 
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_POSITIVE_RESULT",

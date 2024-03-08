@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
-import org.openmrs.module.eptsreports.reporting.library.datasets.TXTBMontlyCascadeReportDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.TB4MontlyCascadeReportDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -21,13 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetupTxTBMontlyCascadeReport extends EptsDataExportManager {
+public class SetupTB4Report extends EptsDataExportManager {
 
   @Autowired private GenericCohortQueries genericCohortQueries;
 
-  @Autowired private TXTBMontlyCascadeReportDataSet txtbMontlyCascadeReportDataSet;
+  @Autowired private TB4MontlyCascadeReportDataSet tb4MontlyCascadeReportDataSet;
 
   @Autowired private DatimCodeDataSet datimCodeDataSet;
+  @Autowired private SismaCodeDataSet sismaCodeDataset;
 
   @Override
   public String getExcelDesignUuid() {
@@ -64,13 +66,17 @@ public class SetupTxTBMontlyCascadeReport extends EptsDataExportManager {
     reportDefinition.addDataSetDefinition(
         "TBM",
         Mapped.mapStraightThrough(
-            txtbMontlyCascadeReportDataSet.constructDatset(this.getParameters())));
+            tb4MontlyCascadeReportDataSet.constructDatset(this.getParameters())));
 
     reportDefinition.setBaseCohortDefinition(
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
                 "baseCohortQuery", BaseQueries.getBaseCohortQuery()),
             "endDate=${endDate},location=${location}"));
+
+    reportDefinition.addDataSetDefinition(
+        "SC",
+        Mapped.mapStraightThrough(this.sismaCodeDataset.constructDataset(this.getParameters())));
 
     reportDefinition.addDataSetDefinition(
         "D",
@@ -85,8 +91,8 @@ public class SetupTxTBMontlyCascadeReport extends EptsDataExportManager {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "TX_TB_Montly_Cascade_Report.xls",
-              "TX TB Montly Cascade Report",
+              "TB4_TX_TB_ Monthly_Cascade_Report.xls",
+              getName(),
               getExcelDesignUuid(),
               null);
       Properties props = new Properties();
