@@ -310,7 +310,8 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
 
     CohortIndicator positiveResults =
         this.getIndicator(
-            this.txtbCohortQueries.getDenominatorAndPositiveResults(
+            this.tb4MontlyCascadeCohortQuery.getDenominatorAndPositiveOrNegativeCohort(
+                this.tb4MontlyCascadeCohortQuery.getAllPositiveTestResults(),
                 "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}"));
 
     dataSetDefinition.addColumn(
@@ -344,7 +345,10 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
         "diagnostictest=additonalDiagnostic|posetiveTestResult=positiveAdditonalDiagnostic");
 
     CohortIndicator negativeResults =
-        this.getIndicator(this.tb4MontlyCascadeCohortQuery.getNegativeResultCohortDefinition());
+        this.getIndicator(
+            this.tb4MontlyCascadeCohortQuery.getDenominatorAndPositiveOrNegativeCohort(
+                this.tb4MontlyCascadeCohortQuery.getAllNegativeTestResults(),
+                "startDate=${endDate-6m+1d},endDate=${endDate},location=${location}"));
 
     dataSetDefinition.addColumn(
         "TBD-NR",

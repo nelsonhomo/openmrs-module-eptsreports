@@ -119,7 +119,7 @@ public class TB4MontlyCascadeCohortQueries {
         EptsReportUtils.map(this.getAdditionalNegativeTestResults(), generalParameterMapping));
 
     definition.setCompositionString(
-        "genexpertsNegativeTestResults OR baciloscopiaNegativeTestResults OR tblamNegativeTestResults OR otherAditionalNegativeTestResults ");
+        "genexpertsNegativeTestResults OR baciloscopiaNegativeTestResults OR tblamNegativeTestResults OR otherAditionalNegativeTestResults");
     return definition;
   }
 
@@ -135,7 +135,11 @@ public class TB4MontlyCascadeCohortQueries {
             this.findDiagnosticNegativeTestResults(DiagnosticTestTypes.GENEXPERT),
             generalParameterMapping));
 
-    definition.setCompositionString("negativeGenexperts");
+    definition.addSearch(
+        "genexpertsPositiveTestResults",
+        EptsReportUtils.map(this.getGenExpertPositiveTestResults(), generalParameterMapping));
+
+    definition.setCompositionString("negativeGenexperts NOT genexpertsPositiveTestResults");
     return definition;
   }
 
@@ -174,15 +178,15 @@ public class TB4MontlyCascadeCohortQueries {
     definition.setName("Smear microscopy only Positive Test Results");
     this.addGeneralParameters(definition);
     definition.addSearch(
-        "baciloscopia",
+        "baciloscopia-positive-test-results",
         EptsReportUtils.map(
             this.findDiagnosticPositiveTestResults(DiagnosticTestTypes.BACILOSCOPIA),
             generalParameterMapping));
 
     definition.addSearch(
-        "genexperts", EptsReportUtils.map(this.getGenExpertTests(), generalParameterMapping));
+        "genexperts-tests", EptsReportUtils.map(this.getGenExpertTests(), generalParameterMapping));
 
-    definition.setCompositionString("baciloscopia NOT genexperts");
+    definition.setCompositionString("baciloscopia-positive-test-results NOT genexperts-tests");
     return definition;
   }
 
@@ -192,16 +196,20 @@ public class TB4MontlyCascadeCohortQueries {
     definition.setName("Smear microscopy only Negative Test Results");
     this.addGeneralParameters(definition);
     definition.addSearch(
-        "negativeBaciloscopia",
+        "baciloscopia-negative-test-results",
         EptsReportUtils.map(
             this.findDiagnosticNegativeTestResults(DiagnosticTestTypes.BACILOSCOPIA),
             generalParameterMapping));
 
     definition.addSearch(
-        "negativeGenexpert",
-        EptsReportUtils.map(this.getGenExpertNegativeTestResults(), generalParameterMapping));
+        "genexperts-tests", EptsReportUtils.map(this.getGenExpertTests(), generalParameterMapping));
 
-    definition.setCompositionString("negativeBaciloscopia NOT negativeGenexpert");
+    definition.addSearch(
+        "baciloscopia-positive-test-results",
+        EptsReportUtils.map(this.getBaciloscopiaPositiveTestResults(), generalParameterMapping));
+
+    definition.setCompositionString(
+        "baciloscopia-negative-test-results NOT (genexperts-tests OR baciloscopia-positive-test-results)");
     return definition;
   }
 
@@ -220,6 +228,51 @@ public class TB4MontlyCascadeCohortQueries {
 
     definition.setCompositionString("tblam NOT (genexperts OR baciloscopia)");
     return definition;
+  }
+
+  @DocumentedDefinition(value = "allPositiveTestResults")
+  public CohortDefinition getAllPositiveTestResults() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("Posetive Test Results");
+    this.addGeneralParameters(definition);
+
+    definition.addSearch(
+        "genexpertsPositiveTestResults",
+        EptsReportUtils.map(this.getGenExpertPositiveTestResults(), generalParameterMapping));
+
+    definition.addSearch(
+        "baciloscopiaPositiveTestResults",
+        EptsReportUtils.map(this.getBaciloscopiaPositiveTestResults(), generalParameterMapping));
+
+    definition.addSearch(
+        "tblamPositiveTestResults",
+        EptsReportUtils.map(this.getTBLAMPositiveTestResults(), generalParameterMapping));
+
+    definition.addSearch(
+        "otherAditionalPositiveTestResults",
+        EptsReportUtils.map(this.getAdditionalPositiveTestResults(), generalParameterMapping));
+
+    definition.setCompositionString(
+        "genexpertsPositiveTestResults OR baciloscopiaPositiveTestResults OR tblamPositiveTestResults OR otherAditionalPositiveTestResults ");
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "getDenominatorAndPositiveOrNegativeResults")
+  public CohortDefinition getDenominatorAndPositiveOrNegativeCohort(
+      CohortDefinition positiveOrNegativeCohort, String mapping) {
+
+    final CompositionCohortDefinition cd = new CompositionCohortDefinition();
+    this.addGeneralParameters(cd);
+    cd.setName("TxTB - Positive Results");
+
+    cd.addSearch(
+        "DENOMINATOR", EptsReportUtils.map(this.txtbCohortQueries.getDenominator(), mapping));
+
+    cd.addSearch("POS-NEG-COHORT", EptsReportUtils.map(positiveOrNegativeCohort, mapping));
+
+    cd.setCompositionString("DENOMINATOR AND POS-NEG-COHORT");
+
+    return cd;
   }
 
   @DocumentedDefinition(value = "getDiagnosticTestSmearMicroscopyOnly")
@@ -286,19 +339,20 @@ public class TB4MontlyCascadeCohortQueries {
     this.addGeneralParameters(definition);
 
     definition.addSearch(
-        "negativeTblam",
+        "negative-tblam",
         EptsReportUtils.map(this.getTBLAMNegativeTestsResults(), generalParameterMapping));
 
     definition.addSearch(
-        "negativeGenexpert",
-        EptsReportUtils.map(this.getGenExpertNegativeTestResults(), generalParameterMapping));
+        "genexperts", EptsReportUtils.map(this.getGenExpertTests(), generalParameterMapping));
+    definition.addSearch(
+        "baciloscopia", EptsReportUtils.map(this.getBaciloscopiaTests(), generalParameterMapping));
 
     definition.addSearch(
-        "negativeBaciloscopia",
-        EptsReportUtils.map(this.getBaciloscopiaNegativeTestResults(), generalParameterMapping));
+        "tblam-positive-results",
+        EptsReportUtils.map(this.getTBLAMPositiveTestsResults(), generalParameterMapping));
 
     definition.setCompositionString(
-        "negativeTblam NOT (negativeGenexpert OR negativeBaciloscopia)");
+        "negative-tblam NOT (genexperts OR baciloscopia OR tblam-positive-results)");
     return definition;
   }
 
@@ -355,7 +409,7 @@ public class TB4MontlyCascadeCohortQueries {
     definition.setName("Additional test other than GeneXpert Positive Test Results");
     this.addGeneralParameters(definition);
     definition.addSearch(
-        "additionalTests",
+        "additional-tests",
         EptsReportUtils.map(
             this.findDiagnosticPositiveTestResults(DiagnosticTestTypes.CULTURA),
             generalParameterMapping));
@@ -367,7 +421,7 @@ public class TB4MontlyCascadeCohortQueries {
     definition.addSearch(
         "tblam", EptsReportUtils.map(this.getTBLAMTests(), generalParameterMapping));
 
-    definition.setCompositionString("additionalTests NOT (genexperts OR baciloscopia OR tblam)");
+    definition.setCompositionString("additional-tests NOT (genexperts OR baciloscopia OR tblam)");
     return definition;
   }
 
@@ -377,25 +431,24 @@ public class TB4MontlyCascadeCohortQueries {
     definition.setName("TB LAM Negative Test Results");
     this.addGeneralParameters(definition);
     definition.addSearch(
-        "negativeAdditionalTests",
+        "negative-additional-tests",
         EptsReportUtils.map(
             this.findDiagnosticNegativeTestResults(DiagnosticTestTypes.CULTURA),
             generalParameterMapping));
 
     definition.addSearch(
-        "negativeTBLAM",
-        EptsReportUtils.map(this.getTBLAMNegativeTestResults(), generalParameterMapping));
+        "genexperts", EptsReportUtils.map(this.getGenExpertTests(), generalParameterMapping));
+    definition.addSearch(
+        "baciloscopia", EptsReportUtils.map(this.getBaciloscopiaTests(), generalParameterMapping));
+    definition.addSearch(
+        "tblam", EptsReportUtils.map(this.getTBLAMTests(), generalParameterMapping));
 
     definition.addSearch(
-        "negativeGenexpert",
-        EptsReportUtils.map(this.getGenExpertNegativeTestResults(), generalParameterMapping));
-
-    definition.addSearch(
-        "negativeBaciloscopia",
-        EptsReportUtils.map(this.getBaciloscopiaNegativeTestResults(), generalParameterMapping));
+        "posetive-additional-tests",
+        EptsReportUtils.map(this.getAdditionalPositiveTestResults(), generalParameterMapping));
 
     definition.setCompositionString(
-        "negativeAdditionalTests NOT (negativeTBLAM OR negativeGenexpert OR negativeBaciloscopia)");
+        "negative-additional-tests NOT (genexperts OR baciloscopia OR tblam OR posetive-additional-tests)");
     return definition;
   }
 
@@ -476,8 +529,10 @@ public class TB4MontlyCascadeCohortQueries {
     definition.addSearch(
         "posetiveResults",
         EptsReportUtils.map(
-            txtbCohortQueries.getDenominatorAndPositiveResults(generalParameterMapping),
+            this.getDenominatorAndPositiveOrNegativeCohort(
+                this.getAllPositiveTestResults(), generalParameterMapping),
             generalParameterMapping));
+
     definition.addSearch(
         "txtbNumerator",
         EptsReportUtils.map(txtbCohortQueries.txTbNumerator(), generalParameterMapping));
