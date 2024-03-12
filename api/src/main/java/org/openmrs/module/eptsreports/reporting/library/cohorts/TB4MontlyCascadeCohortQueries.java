@@ -608,7 +608,7 @@ public class TB4MontlyCascadeCohortQueries {
   public CohortDefinition getPatientsEnrollendOnARTForTheLastSixMonths() {
     final CompositionCohortDefinition composiiton = new CompositionCohortDefinition();
 
-    composiiton.setName("Patient On ART For More Than 6 Months");
+    composiiton.setName("Patient On ART in the last 6 Months ");
     composiiton.addParameter(new Parameter("endDate", "End Date", Date.class));
     composiiton.addParameter(new Parameter("location", "location", Location.class));
 
@@ -623,16 +623,7 @@ public class TB4MontlyCascadeCohortQueries {
                     .findPatientsWhoAreCurrentlyEnrolledOnARTByPeriod(EnrollmentPeriod.NEWLY)),
             mappings));
 
-    composiiton.addSearch(
-        "previouslyOnAT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "PatientsWithClinicalConsultationIntheLastSixMonths",
-                TB4MontlyCascadeReportQueries.QUERY
-                    .findPatientsWhoAreCurrentlyEnrolledOnARTByPeriod(EnrollmentPeriod.PREVIOUSLY)),
-            mappings));
-
-    composiiton.setCompositionString("newlyOnArt NOT previouslyOnAT");
+    composiiton.setCompositionString("newlyOnArt");
     return composiiton;
   }
 
@@ -647,24 +638,19 @@ public class TB4MontlyCascadeCohortQueries {
     final String mappings = "endDate=${endDate},location=${location}";
 
     composiiton.addSearch(
-        "previouslyOnAT",
+        "previouslyOnArt",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "PatientsWithClinicalConsultationIntheLastSixMonths",
+                "patientsWhoAreCurrentlyEnrolledOnARTInForMoreThanSixMonths",
                 TB4MontlyCascadeReportQueries.QUERY
                     .findPatientsWhoAreCurrentlyEnrolledOnARTByPeriod(EnrollmentPeriod.PREVIOUSLY)),
             mappings));
 
     composiiton.addSearch(
         "newlyOnArt",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "newlyOnArt",
-                TB4MontlyCascadeReportQueries.QUERY
-                    .findPatientsWhoAreCurrentlyEnrolledOnARTByPeriod(EnrollmentPeriod.NEWLY)),
-            mappings));
+        EptsReportUtils.map(this.getPatientsEnrollendOnARTForTheLastSixMonths(), mappings));
 
-    composiiton.setCompositionString("previouslyOnAT NOT newlyOnArt");
+    composiiton.setCompositionString("previouslyOnArt NOT newlyOnArt");
 
     return composiiton;
   }
@@ -673,7 +659,7 @@ public class TB4MontlyCascadeCohortQueries {
   public CohortDefinition getClinicalConsultationsInLastSixMonths() {
     final CompositionCohortDefinition composiiton = new CompositionCohortDefinition();
 
-    composiiton.setName("Patients with Clinical Consultations");
+    composiiton.setName("Patients with Clinical Consultations in the last 6 months");
     composiiton.addParameter(new Parameter("endDate", "End Date", Date.class));
     composiiton.addParameter(new Parameter("location", "location", Location.class));
 
@@ -689,30 +675,6 @@ public class TB4MontlyCascadeCohortQueries {
             mappings));
 
     composiiton.setCompositionString("consultationsLast6Months");
-
-    return composiiton;
-  }
-
-  @DocumentedDefinition(value = "PatientsWithClinicalConsultationsForMoreThanSixMonths")
-  public CohortDefinition gePatientsWithClinicalConsultationsForMoreThanSixMonths() {
-    final CompositionCohortDefinition composiiton = new CompositionCohortDefinition();
-
-    composiiton.setName("Patients With Clinical Consulations For more than Six Months");
-    composiiton.addParameter(new Parameter("endDate", "End Date", Date.class));
-    composiiton.addParameter(new Parameter("location", "location", Location.class));
-
-    final String mappings = "endDate=${endDate},location=${location}";
-
-    composiiton.addSearch(
-        "consultationsMoreThan6Months",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "PatientsWithClinicalConsultationsForMoreThanSixMonths",
-                TB4MontlyCascadeReportQueries.QUERY
-                    .findPatientsWithClinicalConsultationsForMoreThanSixMonths),
-            mappings));
-
-    composiiton.setCompositionString("consultationsMoreThan6Months ");
 
     return composiiton;
   }

@@ -26,30 +26,10 @@ public interface TB4MontlyCascadeReportQueries {
 
     public static final String findPatientsWithClinicalConsultationIntheLastSixMonths =
         "																	"
-            + "select distinct lastConsultation.patient_id 																									"
-            + "from	( 																																		"
-            + "	select p.patient_id,max(e.encounter_datetime) encounter_datetime from patient p 															"
+            + "	select p.patient_id from patient p 															"
             + "		inner join encounter e on e.patient_id = p.patient_id 																					"
-            + "	where p.voided is false and e.voided is false and e.encounter_type in (6,9) and e.location_id = :location 									"
-            + "		group by p.patient_id 																													"
-            + "	) 																																			"
-            + "lastConsultation 																															"
-            + "	inner join encounter e on e.patient_id = lastConsultation.patient_id								 		"
-            + "where e.voided is false and e.location_id = :location  																						"
-            + "	and e.encounter_datetime between (:endDate - interval 6 month) and :endDate and e.encounter_type in (6,9) 																";
-
-    public static final String findPatientsWithClinicalConsultationsForMoreThanSixMonths =
-        "																"
-            + "select distinct lastConsultation.patient_id 																									"
-            + "from	( 																																		"
-            + "	select p.patient_id,max(e.encounter_datetime) encounter_datetime from patient p 															"
-            + "		inner join encounter e on e.patient_id = p.patient_id 																					"
-            + "	where p.voided is false and e.voided is false and e.encounter_type in (6,9) and e.location_id = :location 									"
-            + "		group by p.patient_id 																													"
-            + "	) 																																			"
-            + "lastConsultation 																															"
-            + "	inner join encounter e on e.patient_id = lastConsultation.patient_id 																		"
-            + "where e.voided is false and e.location_id = :location and e.encounter_datetime < (:endDate - interval 6 month + interval 1 day) and :endDate and e.encounter_type in (6,9) 								";
+            + "	where p.voided is false and e.voided is false and e.encounter_type in (6,9) and e.location_id = :location  "
+            + " 	and e.encounter_datetime between (:endDate - interval 6 month + interval 1 day)  and :endDate ";
 
     public enum EnrollmentPeriod {
       NEWLY,
@@ -64,11 +44,11 @@ public interface TB4MontlyCascadeReportQueries {
       switch (enrollmentPeriod) {
         case NEWLY:
           query +=
-              " where data_inicio between (:endDate - interval 6 month + interval 1 day) and :endDate";
+              " where data_inicio > date_add(:endDate, interval - 6 month) and data_inicio <= :endDate";
           break;
 
         case PREVIOUSLY:
-          query += " where data_inicio < (:endDate - interval 6 month + interval 1 day)";
+          query += "";
           break;
       }
       return query;

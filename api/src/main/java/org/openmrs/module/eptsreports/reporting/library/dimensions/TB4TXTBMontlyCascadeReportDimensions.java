@@ -29,13 +29,6 @@ public class TB4TXTBMontlyCascadeReportDimensions {
             txtbDenominatorForTBMontlyCascade.getClinicalConsultationsInLastSixMonths(),
             mappingsTillEndDate));
 
-    dim.addCohortDefinition(
-        "clinicalConsultationPreviously",
-        EptsReportUtils.map(
-            this.txtbDenominatorForTBMontlyCascade
-                .gePatientsWithClinicalConsultationsForMoreThanSixMonths(),
-            mappingsTillEndDate));
-
     return dim;
   }
 
