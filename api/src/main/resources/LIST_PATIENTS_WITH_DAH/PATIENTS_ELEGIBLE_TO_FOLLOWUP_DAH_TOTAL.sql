@@ -166,7 +166,7 @@ from (
 	     	)ultimo_levantamento on ultimo_levantamento.patient_id = ultimo_fila.patient_id
 		
 		) ultimo_fila on transferido_para.patient_id  = ultimo_fila.patient_id 
-				where transferido_para.data_transferencia >= ultimo_fila.max_date or ultimo_fila.max_date is null
+				where transferido_para.data_transferencia >= ultimo_fila.max_date
 	   ) saidas on inicioDAH.patient_id = saidas.patient_id 
 	   where saidas.patient_id is null
  )inicioDAH

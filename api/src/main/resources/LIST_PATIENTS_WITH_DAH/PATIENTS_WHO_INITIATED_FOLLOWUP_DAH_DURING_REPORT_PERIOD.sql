@@ -85,7 +85,7 @@ from
         ) ultimo_levantamento on lastFila.patient_id = ultimo_levantamento.patient_id 
         where ultimo_levantamento.data_ultimo_levantamento <= :endDate
         ) maxFila on maxFila.patient_id =  saidas.patient_id
-        where saidas.data_estado >= maxFila.maxFila or maxFila.patient_id is null
+        where saidas.data_estado >= maxFila.maxFila 
 
     ) transferidoPara on transferidoPara.patient_id = inicioDAH.patient_id 
     where transferidoPara.patient_id is null 

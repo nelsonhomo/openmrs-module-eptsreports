@@ -87,7 +87,7 @@ public class SetupListPatientsWithAdvancedHIVDiseaseReport extends EptsDataExpor
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "baseCohortQuery", BaseQueries.getBaseCohortQuery()),
+                "baseCohortQuery", BaseQueries.getBaseCohortQueryWithoutPrep()),
             "endDate=${endDate},location=${location}"));
     return rd;
   }
