@@ -172,15 +172,26 @@
 				                    select patient_id, max(data_ultimo_levantamento)  data_ultimo_levantamento    
 				                    from
 				                    (
-		                        		select p.patient_id, date_add(max(o.value_datetime), interval 1 day) data_ultimo_levantamento                                                                                            
-										from patient p                                                                                                                                   
-											inner join encounter e on e.patient_id= p.patient_id 
-											inner join obs o on o.encounter_id = e.encounter_id                                                                                        
-										where p.voided= 0 and e.voided=0 and o.voided = 0 and e.encounter_type=18 and o.concept_id = 5096                                                                  
-											and e.location_id=:location and e.encounter_datetime <= :endDate                                                                               
-											group by p.patient_id 
-		                        
-		                        		union
+                                        select patient_id, date_add(max(obs_fila.value_datetime), interval 1 day) data_ultimo_levantamento from ( 
+                                        select fila.patient_id,fila.data_fila data_fila,e.encounter_id from 
+                                        ( 
+                                        Select p.patient_id,max(encounter_datetime) data_fila from patient p 
+                                        inner join encounter e on e.patient_id=p.patient_id 
+                                        where p.voided=0 and e.voided=0 and e.encounter_type=18 and e.location_id=:location 
+                                        and date(e.encounter_datetime)<=:endDate 
+                                        group by p.patient_id 
+                                        )fila 
+                                         inner join encounter e on  date(e.encounter_datetime)=date(fila.data_fila) and e.encounter_type=18 and e.voided=0 and e.patient_id=fila.patient_id 
+                                         )maxFila  
+                                         left join 
+                                          obs obs_fila on obs_fila.person_id=maxFila.patient_id 
+                                          and obs_fila.voided=0 
+                                          and obs_fila.encounter_id=maxFila.encounter_id 
+                                          and obs_fila.concept_id=5096 
+                                          and obs_fila.location_id=:location 
+                                          group by maxFila.patient_id 		                        
+		                        		  
+                                          union
 		                        
 			                        	select p.patient_id, date_add(max(value_datetime), interval 31 day) data_ultimo_levantamento                                                                                     
 			                        	from patient p                                                                                                                                   

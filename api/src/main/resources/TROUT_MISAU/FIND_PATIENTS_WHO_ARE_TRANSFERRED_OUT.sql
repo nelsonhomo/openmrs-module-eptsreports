@@ -127,8 +127,7 @@ inner join
       group by patient_id
    )
    final
-   where final.data_transferidopara between :startDate
-   and :endDate
+   where final.data_transferidopara<=:endDate
 )
 TR_OUT on TR_OUT.patient_id = transferidopara.patient_id
 inner join
@@ -147,7 +146,7 @@ inner join
       and e.voided = 0
       and e.encounter_datetime <=:endDate
       and e.location_id =:location
-      and e.encounter_type in (18,6,9)
+      and e.encounter_type=18
       group by p.patient_id
    )
    consultaLev
