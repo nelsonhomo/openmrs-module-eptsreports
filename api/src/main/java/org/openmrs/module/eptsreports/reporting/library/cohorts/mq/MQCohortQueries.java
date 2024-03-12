@@ -98,6 +98,24 @@ public class MQCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientsWhoTransferedOutRF07Category7")
+  public CohortDefinition findPatientsWhoTransferedOutRF07Category7() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsWhoTransferedOutRF07Category7");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = MQQueriesInterface.QUERY.findPatientsWhoTransferedOutRF07Category7;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "getPatientsWhoDiedEndRevisioDate")
   public CohortDefinition getPatientsWhoDiedEndRevisioDate() {
 

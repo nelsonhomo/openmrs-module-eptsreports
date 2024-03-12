@@ -64,6 +64,12 @@ public class MIAgeDimentions {
             mappingsMILessTwoMonths));
 
     dimension.addCohortDefinition(
+        "15PlusOrBreastfeedingArt2MonthsAgo",
+        EptsReportUtils.map(
+            mQAgeDimensions.findPatientsWhoAreNewlyEnrolledOnARTByAdultOrBreastfeeding(15),
+            mappingsMILessTreeMonths));
+
+    dimension.addCohortDefinition(
         "15PlusOrBreastfeeding5MonthsA4Months",
         EptsReportUtils.map(
             mQAgeDimensions.findPatientsWhoAreNewlyEnrolledOnARTByAdultOrBreastfeeding(15),

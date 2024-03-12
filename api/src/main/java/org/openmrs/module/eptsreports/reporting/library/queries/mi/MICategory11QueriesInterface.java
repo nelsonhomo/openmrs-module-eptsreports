@@ -28,7 +28,8 @@ public interface MICategory11QueriesInterface {
                 + "	where p.voided=0 and e.voided=0 and e.encounter_type = 35 "
                 + "	 	and e.encounter_datetime and e.location_id=:location "
                 + "	) apss on apss.patient_id = tx_new.patient_id "
-                + "where tx_new.art_start_date between :startInclusionDate and :endInclusionDate and apss.encounter_datetime between tx_new.art_start_date and date_add(tx_new.art_start_date, INTERVAL 99 DAY) "
+                + "where tx_new.art_start_date between :startInclusionDate and :endInclusionDate  "
+                + "and apss.encounter_datetime between date_add(tx_new.art_start_date, INTERVAL 1 DAY) and date_add(tx_new.art_start_date, INTERVAL 99 DAY) "
                 + "group by tx_new.patient_id "
                 + "having apss_count >=3 "
                 + ") apss ";
