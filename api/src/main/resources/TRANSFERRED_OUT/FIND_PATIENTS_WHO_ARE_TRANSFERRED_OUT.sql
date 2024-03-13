@@ -101,7 +101,7 @@ from(
 	) 
 	ultimo_fila on transferido_para.patient_id  = ultimo_fila.patient_id 
 	where (transferido_para.data_transferido_para >= ultimo_fila.max_date or ultimo_fila.max_date is null)
-		and transferido_para.data_transferido_para between :startDate and :endDate
+		and transferido_para.data_transferido_para <= :endDate
 )
 transferido_para
 inner join
