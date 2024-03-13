@@ -23,7 +23,7 @@ public interface MICategory15QueriesInterface {
                 + "group by p.patient_id "
                 + ")maxEnc "
                 + "INNER JOIN person pe ON maxEnc.patient_id=pe.person_id "
-                + "and (TIMESTAMPDIFF(year,pe.birthdate,maxEnc.encounter_datetime)) >=2 AND pe.birthdate IS NOT NULL and pe.voided = 0 ";
+                + "and (TIMESTAMPDIFF(year,pe.birthdate,maxEnc.encounter_datetime)) >=2 AND pe.birthdate IS NOT NULL ";
 
     public static final String findPatientsWhoArePregnantSpecificForCategory15MI =
         " SELECT p.patient_id FROM person pe "
