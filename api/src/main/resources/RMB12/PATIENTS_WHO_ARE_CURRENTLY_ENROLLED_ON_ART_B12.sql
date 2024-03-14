@@ -82,7 +82,7 @@
 											) max_estado                                                                                                                        
 												inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
 												inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
-											where pp.program_id = 2 and ps.state = 10 and pp.voided = 0 and ps.voided = 0 and pp.location_id = 277  
+											where pp.program_id = 2 and ps.state = 10 and pp.voided = 0 and ps.voided = 0 and pp.location_id =:location  
 											 union
 											select  p.patient_id,max(o.obs_datetime) data_estado,2 decisao                                                                                              
 											from patient p                                                                                                                   
@@ -145,7 +145,7 @@
 			                             		) max_estado                                                                                                                        
 			                                 		inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
 			                                 		inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
-			                             		where pp.program_id = 2 and ps.state = 7 and pp.voided = 0 and ps.voided = 0 and pp.location_id = 277                 
+			                             		where pp.program_id = 2 and ps.state = 7 and pp.voided = 0 and ps.voided = 0 and pp.location_id=:location                 
 			                             
 			                             		union                                                                                                                               
 			                             		
