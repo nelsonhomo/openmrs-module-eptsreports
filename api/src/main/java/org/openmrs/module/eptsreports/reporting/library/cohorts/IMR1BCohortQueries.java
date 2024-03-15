@@ -13,8 +13,8 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts;
 
 import java.util.Date;
 import org.openmrs.Location;
-import org.openmrs.module.eptsreports.reporting.library.queries.IMR1BQueries;
 import org.openmrs.module.eptsreports.reporting.utils.AgeRange;
+import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -26,6 +26,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class IMR1BCohortQueries {
+
+  private static final String IMR1B = "IMR1B/PATIENTS_WHO_ARE_NEWLY_ENROLLED_ON_ART_IMR1B.sql";
+  private static final String IMR1B2 =
+      "IMR1B/PATIENTS_WHO_ARE_NEWLY_ENROLLED_ON_ART_CHILDREN_IMR1B2.sql";
+
+  private static final String IMR1B3 =
+      "IMR1B/PATIENTS_WHO_ARE_NEWLY_ENROLLED_ON_ART_WITH_ENROLLMENT_DATE_GREATHER_THAN_ARTSTART_DATE.sql";
 
   @Autowired private IMR1CohortQueries iMR1CohortQueries;
 
@@ -78,10 +85,25 @@ public class IMR1BCohortQueries {
     compsitionDefinition.addSearch(
         "CHILDREN",
         EptsReportUtils.map(
-            iMR1CohortQueries.findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(AgeRange.CHILDREN),
+            iMR1CohortQueries.findPatientsAgeByTheDateOfEnrollmentOnARTCare(AgeRange.CHILDREN),
             mappings));
 
-    compsitionDefinition.setCompositionString("DENOMINATOR AND CHILDREN");
+    compsitionDefinition.addSearch(
+        "ADULT",
+        EptsReportUtils.map(
+            iMR1CohortQueries.findPatientsAgeByTheDateOfEnrollmentOnARTCare(AgeRange.ADULT),
+            mappings));
+
+    compsitionDefinition.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(iMR1CohortQueries.getAllPatientsWhoArePregnantInAPeriod(), mappings));
+
+    compsitionDefinition.addSearch(
+        "BREASTFEEDING",
+        EptsReportUtils.map(iMR1CohortQueries.getAllPatientsWhoAreBreastfeeding(), mappings));
+
+    compsitionDefinition.setCompositionString(
+        "((DENOMINATOR AND CHILDREN) NOT(PREGNANT OR BREASTFEEDING)) NOT ADULT ");
 
     return compsitionDefinition;
   }
@@ -112,11 +134,11 @@ public class IMR1BCohortQueries {
     compsitionDefinition.addSearch(
         "CHILDREN",
         EptsReportUtils.map(
-            iMR1CohortQueries.findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(AgeRange.CHILDREN),
+            iMR1CohortQueries.findPatientsAgeByTheDateOfEnrollmentOnARTCare(AgeRange.CHILDREN),
             mappings));
 
     compsitionDefinition.setCompositionString(
-        "(DENOMINATOR NOT (PREGNANT OR BREASTFEEDING)) NOT CHILDREN");
+        "(DENOMINATOR NOT ((PREGNANT OR BREASTFEEDING))) NOT CHILDREN ");
 
     return compsitionDefinition;
   }
@@ -139,21 +161,13 @@ public class IMR1BCohortQueries {
             this.getPatientsNewlyEnrolledOnArtWhoInitiatedArtTreatment(), mappings));
 
     compsitionDefinition.addSearch(
-        "PREGNANT",
-        EptsReportUtils.map(iMR1CohortQueries.getAllPatientsWhoArePregnantInAPeriod(), mappings));
-
-    compsitionDefinition.addSearch(
-        "BREASTFEEDING",
-        EptsReportUtils.map(iMR1CohortQueries.getAllPatientsWhoAreBreastfeeding(), mappings));
-
-    compsitionDefinition.addSearch(
-        "CHILDREN",
+        "DENOMINATOR",
         EptsReportUtils.map(
-            iMR1CohortQueries.findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(AgeRange.CHILDREN),
+            iMR1CohortQueries
+                .getPatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreastfeedingDenominator(),
             mappings));
 
-    compsitionDefinition.setCompositionString(
-        "(NUMERATOR NOT (PREGNANT OR BREASTFEEDING)) NOT CHILDREN");
+    compsitionDefinition.setCompositionString("NUMERATOR AND DENOMINATOR");
 
     return compsitionDefinition;
   }
@@ -203,10 +217,14 @@ public class IMR1BCohortQueries {
     compsitionDefinition.addSearch(
         "CHILDREN",
         EptsReportUtils.map(
-            iMR1CohortQueries.findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(AgeRange.CHILDREN),
+            iMR1CohortQueries.findPatientsAgeByTheDateOfEnrollmentOnARTCare(AgeRange.CHILDREN),
             mappings));
 
-    compsitionDefinition.setCompositionString("NUMERATOR AND CHILDREN ");
+    compsitionDefinition.addSearch(
+        "DENOMINATOR",
+        EptsReportUtils.map(iMR1CohortQueries.getChildrenNewlyEnrolledOnArtCare(), mappings));
+
+    compsitionDefinition.setCompositionString("NUMERATOR AND CHILDREN AND DENOMINATOR  ");
 
     return compsitionDefinition;
   }
@@ -220,9 +238,7 @@ public class IMR1BCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    definition.setQuery(
-        IMR1BQueries.QUERY
-            .findPatientsNewlyEnrolledOnArtTreatmentAndInitiatedArtTreatmentAMonthPriorToTheReporingPeriod);
+    definition.setQuery(EptsQuerysUtils.loadQuery(IMR1B));
 
     return definition;
   }
@@ -239,9 +255,22 @@ public class IMR1BCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    definition.setQuery(
-        IMR1BQueries.QUERY
-            .findPatientsNewlyEnrolledOnArtTreatmentAndInitiatedArtTreatmentWithEnrollmentDateGreatherThanArtStartDateAMonthPriorToTheReporingPeriod);
+    definition.setQuery(EptsQuerysUtils.loadQuery(IMR1B3));
+
+    return definition;
+  }
+
+  public CohortDefinition findPatientsWhoAreNewlyEnrolledOnArtByAgeRange(final AgeRange ageRange) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+    definition.setName("patientsPregnantEnrolledOnARTCare");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = EptsQuerysUtils.loadQuery(IMR1B2);
+    query = String.format(query, ageRange.getMin(), ageRange.getMax());
+
+    definition.setQuery(query);
 
     return definition;
   }
