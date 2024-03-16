@@ -58,6 +58,9 @@ public class TxNewCohortQueries {
   private static final String FIND_PATIENTS_WITH_CD4_GREATER_OR_EQUAL_200 =
       "TX_NEW/PATIENTS_WITH_CD4_GREATER_OR_EQUAL_200.sql";
 
+  private static final String FIND_AGE_PATIENTS_ON_TX_NEW =
+      "TX_NEW/PATIENTS_AGE_AT_THE_DATE_OF_INITIATION_ON_ART.sql";
+
   /**
    * PATIENTS WITH UPDATED DATE OF DEPARTURE IN THE ART SERVICE Are patients with date of delivery
    * updated in the tarv service. Note that the 'Start Date' and 'End Date' parameters refer to the
@@ -370,15 +373,8 @@ public class TxNewCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    String query = TxNewQueries.QUERY.findPatientsWhoAreNewlyEnrolledOnArtByAge;
+    String query = EptsQuerysUtils.loadQuery(FIND_AGE_PATIENTS_ON_TX_NEW);
     query = String.format(query, ageRange.getMin(), ageRange.getMax());
-
-    if (AgeRange.ADULT.equals(ageRange)) {
-      query =
-          query.replace(
-              "BETWEEN " + ageRange.getMin() + " AND " + ageRange.getMax(),
-              ">= " + ageRange.getMax());
-    }
 
     definition.setQuery(query);
 

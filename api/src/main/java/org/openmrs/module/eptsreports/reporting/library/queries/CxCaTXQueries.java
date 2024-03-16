@@ -6,12 +6,13 @@ public interface CxCaTXQueries {
         final CxType cxType) {
 
       String query =
-          "select patient_id from (select patient_id, tipoTratamento from ( "
+          "select patient_id from (select * from ( "
               + "select rastreioPositivo.patient_id, "
-              + "if(o.concept_id=2149 and o.value_coded=23970,1, "
-              + "if(o.concept_id=2149 and o.value_coded=23972,2,3)) tipoTratamento from  ( "
+              + "if(o.concept_id=2149 and o.value_coded=23970 OR o.concept_id=2149 and o.value_coded=23973,1, "
+              + "if(o.concept_id=2149 and o.value_coded=23972 OR o.concept_id=1185 and o.value_coded=165439,2, "
+              + "if(o.concept_id=2149 and o.value_coded=23974 OR o.concept_id=1185 and o.value_coded=23974,3,4))) tipoTratamento from  ( "
               + "select rastreioPeriodo.patient_id,rastreioPeriodo.dataRastreio dataRastreioPositivo from ( "
-              + "Select p.patient_id,min(o.obs_datetime) dataRastreio from patient p "
+              + "Select p.patient_id,max(o.obs_datetime) dataRastreio from patient p "
               + "inner join encounter e on p.patient_id=e.patient_id "
               + "inner join obs o on e.encounter_id=o.encounter_id "
               + "where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=2094 and value_coded in (703,664,2093) and "
@@ -27,13 +28,10 @@ public interface CxCaTXQueries {
               + "inner join encounter e on e.patient_id=rastreioPositivo.patient_id "
               + "inner join obs o on e.encounter_id=o.encounter_id "
               + "where e.voided=0 and o.voided=0 and e.encounter_type=28 and ( "
-              + "(o.concept_id = 2117 and o.value_coded = 1065 "
-              + "and e.encounter_datetime between rastreioPositivo.dataRastreioPositivo and :endDate "
-              + ") or "
               + "(o.concept_id = 2149 and o.value_coded in (23974,23972,23970,23973) "
               + "and o.obs_datetime between rastreioPositivo.dataRastreioPositivo and :endDate "
               + ") or "
-              + "(o.concept_id=23967 and o.value_datetime between rastreioPositivo.dataRastreioPositivo and :endDate)) and "
+              + "(o.concept_id=1185 and o.value_coded in (23974, 165439) and o.obs_datetime between rastreioPositivo.dataRastreioPositivo and :endDate)) and "
               + "e.location_id=:location order by o.obs_datetime asc, tipoTratamento asc "
               + ") tratamento group by patient_id "
               + ")tratamento ";
