@@ -42,6 +42,28 @@ public class MICategory15CohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(
+      value = "findPatientsWhoHaveTbTreatmentMarkedEnd30DaysBeforeTheLastAppointment")
+  public CohortDefinition findPatientsWhoHaveTbTreatmentMarkedEnd30DaysBeforeTheLastAppointment() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "MI Category 15 - Get patients who are active on ART and in at least one DSD");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MICategory15QueriesInterface.QUERY
+            .findPatientsWhoHaveTbTreatmentMarkedEnd30DaysBeforeTheLastAppointment;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientsWithClinicalConsultationDuringRevisionPeriod")
   public CohortDefinition findPatientsWithClinicalConsultationDuringRevisionPeriod() {
 
@@ -339,9 +361,6 @@ public class MICategory15CohortQueries {
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
-    final String mappingsPregnant =
-        "startInclusionDate=${endRevisionDate-20m},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
-
     final String mappingsCd4 = "endRevisionDate=${endRevisionDate-1m},location=${location}";
 
     definition.addSearch(
@@ -358,8 +377,7 @@ public class MICategory15CohortQueries {
 
     definition.addSearch(
         "C",
-        EptsReportUtils.map(
-            this.findPatientOnARTMarkedPregnantOnTheLastNineMonthsRF8(), mappingsPregnant));
+        EptsReportUtils.map(this.findPatientOnARTMarkedPregnantOnTheLastNineMonthsRF8(), mappings));
 
     definition.addSearch(
         "D",
@@ -375,6 +393,12 @@ public class MICategory15CohortQueries {
     definition.addSearch(
         "J",
         EptsReportUtils.map(this.findPatientsWhoAreActiveOnArtAndInAtleastOneDSD(), mappingsMI));
+
+    definition.addSearch(
+        "TB30",
+        EptsReportUtils.map(
+            this.findPatientsWhoHaveTbTreatmentMarkedEnd30DaysBeforeTheLastAppointment(),
+            mappings));
 
     definition.addSearch(
         "TB",
@@ -407,7 +431,7 @@ public class MICategory15CohortQueries {
             mappings));
 
     definition.setCompositionString(
-        "(A AND B1) NOT (C OR D OR F OR G OR J OR TB OR ADVERSASE-REACTIONS OR SARCOMA-KAPOSI OR IIT)");
+        "(A AND B1) NOT (C OR D OR F OR G OR J OR TB OR TB30 OR ADVERSASE-REACTIONS OR SARCOMA-KAPOSI OR IIT)");
 
     return definition;
   }

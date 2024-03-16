@@ -21,12 +21,12 @@ public interface MQQueriesInterface {
             + ") art_start   "
             + "GROUP BY patient_id   "
             + ") tx_new WHERE art_start_date BETWEEN :startInclusionDate AND :endInclusionDate ";
+
     public static final String
         findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06 =
             "SELECT p.patient_id from patient p "
                 + "INNER JOIN encounter e ON p.patient_id=e.patient_id "
                 + "INNER JOIN obs obsTrans ON e.encounter_id=obsTrans.encounter_id AND obsTrans.voided=0 AND obsTrans.concept_id=1369 AND obsTrans.value_coded=1065 "
-                + "INNER JOIN obs obsTarv ON e.encounter_id=obsTarv.encounter_id AND obsTarv.voided=0 AND obsTarv.concept_id=6300 AND obsTarv.value_coded=6276 "
                 + "WHERE p.voided=0 AND e.voided=0 AND e.encounter_type=53 AND  e.location_id=:location ";
 
     public static final String findPatientsWhoWhereMarkedAsTransferedInOnMasterCardRF5Category9 =
@@ -63,6 +63,21 @@ public interface MQQueriesInterface {
             + "group by patient_id "
             + ") consultaOuARV on saida.patient_id=consultaOuARV.patient_id "
             + "where consultaOuARV.encounter_datetime <= saida.data_estado and saida.data_estado <= :endRevisionDate ";
+
+    public static final String findPatientsWhoTransferedOutRF07Category7 =
+        "select saida.patient_id from "
+            + "( "
+            + "select p.patient_id, max(o.obs_datetime) data_estado from patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs  o on e.encounter_id=o.encounter_id "
+            + "where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type in (53,6) and "
+            + "o.concept_id in(6272,6273) and o.obs_datetime<=:endRevisionDate and e.location_id=:location "
+            + "group by p.patient_id "
+            + ") saida "
+            + "inner join obs o on o.person_id = saida.patient_id "
+            + "where o.concept_id in (6272,6273) and o.value_coded = 1706 "
+            + "and o.obs_datetime = saida.data_estado and o.voided = 0 "
+            + "group by saida.patient_id ";
 
     public static final String getPatientsWhoDiedEndRevisioDate =
         "select obito.patient_id from ( "

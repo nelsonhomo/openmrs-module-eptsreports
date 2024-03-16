@@ -200,7 +200,10 @@ public class MICategory11P2CohortQueries {
     definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
     definition.addParameter(new Parameter("location", "location", Date.class));
 
-    final String mappingsMIB1 =
+    final String mappingsRF12 =
+        "startInclusionDate=${endRevisionDate-5m+1d},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    final String mappingsRF28 =
         "startInclusionDate=${endRevisionDate-4m+1d},endInclusionDate=${endRevisionDate-3m},endRevisionDate=${endRevisionDate},location=${location}";
 
     final String mappings =
@@ -209,27 +212,20 @@ public class MICategory11P2CohortQueries {
     definition.addSearch(
         "B1",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoHaveLastFirstLineTerapeutic(), mappingsMIB1));
+            this.mQCohortQueries.findPatientsWhoHaveLastFirstLineTerapeutic(), mappingsRF12));
 
     definition.addSearch(
         "PREGNANT",
         EptsReportUtils.map(
             mQCohortQueries
                 .findPatientsWhoHasCVBiggerThan50AndMarkedAsPregnantInTheSameClinicalConsultation(),
-            mappingsMIB1));
-
-    definition.addSearch(
-        "BREASTFEEDING",
-        EptsReportUtils.map(
-            mQCohortQueries
-                .findPatientsWhoHasCVBiggerThan50AndMarkedAsBreastFeedingInTheSameClinicalConsultation(),
-            mappings));
+            mappingsRF28));
 
     definition.addSearch(
         "TRANSFERED-OUT",
         EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
 
-    definition.setCompositionString("(B1 AND PREGNANT) NOT (BREASTFEEDING OR TRANSFERED-OUT)");
+    definition.setCompositionString("(B1 AND PREGNANT) NOT TRANSFERED-OUT");
 
     return definition;
   }

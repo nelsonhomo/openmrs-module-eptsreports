@@ -1906,10 +1906,9 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "TRF-IN",
         EptsReportUtils.map(
-            this.genericCohorts.generalSql(
-                "patientsWhoAreInTbTreatment",
-                DSDQueriesInterface.QUERY.findPatientsWhoWhereTransferredInPriorReportingPeriod),
-            "startDate=${endRevisionDate-3m},endDate=${endRevisionDate},location=${location}"));
+            this.mQCohortQueries
+                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+            "location=${location}"));
 
     definition.setCompositionString(
         "(B13 AND (IIT-PREVIOUS-PERIOD OR IIT-PREVIOUS-PERIOD-2)) NOT TRF-IN");
