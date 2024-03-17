@@ -63,6 +63,7 @@ public class IMR1BDataset extends BaseDataSet {
     CohortDefinition denominatorExcludingPregnantAndBreastfeedingDefinition =
         this.iMR1BCohortQueries
             .getPatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreastfeedingDenominator();
+
     CohortDefinition numeratorExcludingPregnantsAndBreastFeedingDefinition =
         this.iMR1BCohortQueries
             .getPatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreasFeedingNumerator();
@@ -91,6 +92,7 @@ public class IMR1BDataset extends BaseDataSet {
         this.eptsGeneralIndicator.getIndicator(
             "PatientsNewlyEnrolledOnArtCareNumeratorExcludingPregnantsAndBreastFeedingDenominator",
             EptsReportUtils.map(denominatorExcludingPregnantAndBreastfeedingDefinition, mappings));
+
     CohortIndicator numeratorExcludingPregnantsAndBreastFeedingIndicator =
         this.eptsGeneralIndicator.getIndicator(
             "PatientsNewlyEnrolledOnArtCareExcludingPregnantsAndBreastFeedingNumerator",
@@ -102,11 +104,13 @@ public class IMR1BDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "D1B-All", "Denominator 1B: All", EptsReportUtils.map(denominatorIndicator, mappings), "");
+
     dataSetDefinition.addColumn(
         "D1B-PREGNANT",
         "Denominator 1B Pregnant",
         EptsReportUtils.map(denominatorIndicator, mappings),
         "state=PREGNANT");
+
     dataSetDefinition.addColumn(
         "D1B-BREASTFEEDING",
         "Denominator 1B Breastfeendig",
@@ -127,11 +131,13 @@ public class IMR1BDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "N1B-All", "Numerator 1B: All", EptsReportUtils.map(numeratorIndicator, mappings), "");
+
     dataSetDefinition.addColumn(
         "N1B-PREGNANT",
         "Numerator 1B Pregnant",
         EptsReportUtils.map(numeratorIndicator, mappings),
         "state=PREGNANT");
+
     dataSetDefinition.addColumn(
         "N1B-BREASTFEEDING",
         "Numerator 1B Breastfeendig",

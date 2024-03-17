@@ -126,7 +126,7 @@ public class MICategory12P1CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${endRevisionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     final String mappingsMI =
         "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
@@ -135,7 +135,7 @@ public class MICategory12P1CohortQueries {
         "DENOMINATOR",
         EptsReportUtils.map(
             this.genericMICohortQueryCategory12
-                .findPatientOnARTdExcludingPregantAndBreastfeedingAndTransferredInTransferredOutMICategory12Section12_5(),
+                .findPatientOnARTdExcludingPregantAndBreastfeedingAndTransferredInTransferredOutMICategory12Section12_1(),
             mappings));
 
     /*Na definicao do MI a retencao 33 dias nao verifica no periodo de inclusao apenas o inicio de TARV

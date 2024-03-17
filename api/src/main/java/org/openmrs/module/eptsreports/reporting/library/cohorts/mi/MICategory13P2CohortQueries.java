@@ -28,7 +28,7 @@ public class MICategory13P2CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${endRevisionDate-4m+1d},endInclusionDate=${endRevisionDate-3m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-5m+1d},endInclusionDate=${endRevisionDate-4m},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "START-ART",
@@ -144,7 +144,7 @@ public class MICategory13P2CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappingsMI =
-        "startInclusionDate=${endRevisionDate-4m+1d},endInclusionDate=${endRevisionDate-3m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-5m+1d},endInclusionDate=${endRevisionDate-4m},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR-13-15",

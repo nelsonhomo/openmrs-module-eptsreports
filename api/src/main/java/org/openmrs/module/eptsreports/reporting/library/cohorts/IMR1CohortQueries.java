@@ -297,4 +297,19 @@ public class IMR1CohortQueries {
 
     return definition;
   }
+
+  public CohortDefinition findPatientsAgeByTheDateOfEnrollmentOnARTCare(final AgeRange ageRange) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+    definition.setName("patientsPregnantEnrolledOnARTCare");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = IMR1Queries.QUERY.findPatientsAgeByTheDateOfEnrollmentOnARTCare;
+    query = String.format(query, ageRange.getMin(), ageRange.getMax());
+
+    definition.setQuery(query);
+
+    return definition;
+  }
 }

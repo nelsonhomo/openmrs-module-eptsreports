@@ -32,6 +32,7 @@ import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinitio
 import org.openmrs.module.reporting.cohort.definition.DateObsCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.common.RangeComparator;
+import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,9 @@ public class TxNewCohortQueries {
 
   private static final String FIND_PATIENTS_WITH_CD4_GREATER_OR_EQUAL_200 =
       "TX_NEW/PATIENTS_WITH_CD4_GREATER_OR_EQUAL_200.sql";
+
+  private static final String FIND_AGE_PATIENTS_ON_TX_NEW =
+      "TX_NEW/PATIENTS_AGE_AT_THE_DATE_OF_INITIATION_ON_ART.sql";
 
   /**
    * PATIENTS WITH UPDATED DATE OF DEPARTURE IN THE ART SERVICE Are patients with date of delivery
@@ -157,6 +161,20 @@ public class TxNewCohortQueries {
         "START-ART NOT (TRANSFERED-IN OR TRANSFERED-IN-AND-IN-ART-MASTER-CARD)");
 
     return txNewCompositionCohort;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWhoAreNewEnrolmentOnARTForTxTB")
+  public CohortDefinition findPatientsWhoAreNewEnrolmentOnARTForTxTB() {
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsOnArtOnArvDispenseBetween3And5Months");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.setQuery(TxNewQueries.QUERY.findPatientsWhoAreNewlyEnrolledOnART);
+
+    return definition;
   }
 
   public CohortDefinition findPatientsWithCD4LessThan200() {
@@ -355,15 +373,8 @@ public class TxNewCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    String query = TxNewQueries.QUERY.findPatientsWhoAreNewlyEnrolledOnArtByAge;
+    String query = EptsQuerysUtils.loadQuery(FIND_AGE_PATIENTS_ON_TX_NEW);
     query = String.format(query, ageRange.getMin(), ageRange.getMax());
-
-    if (AgeRange.ADULT.equals(ageRange)) {
-      query =
-          query.replace(
-              "BETWEEN " + ageRange.getMin() + " AND " + ageRange.getMax(),
-              ">= " + ageRange.getMax());
-    }
 
     definition.setQuery(query);
 

@@ -144,10 +144,9 @@
                                  select  pg.patient_id,                                                                                                          
                                          max(ps.start_date) data_estado                                                                                          
                                  from    patient p                                                                                                               
-                                     inner join person pe on pe.person_id = p.patient_id                                                                         
                                      inner join patient_program pg on p.patient_id = pg.patient_id                                                               
                                      inner join patient_state ps on pg.patient_program_id = ps.patient_program_id                                                
-                                 where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2                                        
+                                 where pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id = 2                                        
                                      and ps.start_date<= :endDate and pg.location_id =:location group by pg.patient_id                                           
                              ) max_estado                                                                                                                        
                                  inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
@@ -166,10 +165,9 @@
 														select  pg.patient_id,                                                                                                          
 															max(ps.start_date) data_estado                                                                                          
 														from patient p                                                                                                               
-															inner join person pe on pe.person_id = p.patient_id                                                                         
 															inner join patient_program pg on p.patient_id = pg.patient_id                                                               
 															inner join patient_state ps on pg.patient_program_id = ps.patient_program_id                                                
-														where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2                                        
+														where pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id = 2                                        
 															and ps.start_date<= :endDate and pg.location_id =:location group by pg.patient_id                                           
 											) max_estado                                                                                                                        
 												inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
@@ -179,10 +177,9 @@
 											select  p.patient_id,                                                                                                               
 												max(o.obs_datetime) data_estado                                                                                             
 											from patient p                                                                                                                   
-												inner join person pe on pe.person_id = p.patient_id                                                                         
 												inner join encounter e on p.patient_id=e.patient_id                                                                         
 												inner join obs  o on e.encounter_id=o.encounter_id                                                                          
-											where e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0                                                               
+											where e.voided=0 and o.voided=0 and p.voided=0                                                                
 												and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded = 1366                         
 												and o.obs_datetime<=:endDate and e.location_id=:location                                                                        
 												group by p.patient_id                                                                                                               
@@ -194,10 +191,9 @@
 											select  p.patient_id,                                                                                                               
 												max(obsObito.obs_datetime) data_estado                                                                                      
 											from patient p                                                                                                                   
-												inner join person pe on pe.person_id = p.patient_id                                                                         
 												inner join encounter e on p.patient_id=e.patient_id                                                                         
 												inner join obs obsObito on e.encounter_id=obsObito.encounter_id                                                             
-											where e.voided=0 and p.voided=0 and pe.voided = 0 and obsObito.voided=0                                                        
+											where e.voided=0 and p.voided=0 and obsObito.voided=0                                                        
 												and e.encounter_type in (21,36,37) and  e.encounter_datetime<=:endDate and  e.location_id=:location                          
 												and obsObito.concept_id in (2031,23944,23945) and obsObito.value_coded=1366                                                     
 											group by p.patient_id                                                                                                               
@@ -209,18 +205,16 @@
 									from(
 												select p.patient_id,max(encounter_datetime) data_encountro                                                                                                
 												from    patient p                                                                                                                                   
-														inner join person pe on pe.person_id = p.patient_id                                                                                         
 														inner join encounter e on e.patient_id=p.patient_id                                                                                         
-												where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18                                                                      
+												where   p.voided=0 and e.voided=0 and e.encounter_type=18                                                                      
 														and e.location_id=:location and e.encounter_datetime<=:endDate                                                                                  
 														group by p.patient_id  
 												union
 												
 												select  p.patient_id,max(encounter_datetime) data_encountro                                                                                    
 												from patient p                                                                                                                                   
-													inner join person pe on pe.person_id = p.patient_id                                                                                         
 													inner join encounter e on e.patient_id=p.patient_id                                                                                         
-												where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type in (6,9)                                                                
+												where   p.voided=0 and e.voided=0 and e.encounter_type in (6,9)                                                                
 													and e.location_id=:location and e.encounter_datetime<=:endDate                                                                                  
 													group by p.patient_id   
 									) fila_seguimento	group by fila_seguimento.patient_id  
@@ -232,10 +226,9 @@
 							 select  p.patient_id,                                                                                                               
                                      max(o.obs_datetime) data_estado                                                                                             
                              from    patient p                                                                                                                   
-                                     inner join person pe on pe.person_id = p.patient_id                                                                         
                                      inner join encounter e on p.patient_id=e.patient_id                                                                         
                                      inner join obs  o on e.encounter_id=o.encounter_id                                                                          
-                             where   e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0 and                                                              
+                             where   e.voided=0 and o.voided=0 and p.voided=0 and                                                              
                                      e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded = 1709 and                        
                                      o.obs_datetime<=:endDate and e.location_id=:location                                                                        
                              group by p.patient_id                                                                                                               
@@ -251,10 +244,9 @@
 			                           		(                                                                
 				                                 select pg.patient_id, max(ps.start_date) data_estado                                                                                          
 				                                 from patient p                                                                                                               
-				                                 		inner join person pe on pe.person_id = p.patient_id                                                                         
-				                                     	inner join patient_program pg on p.patient_id = pg.patient_id                                                               
+				                                 		inner join patient_program pg on p.patient_id = pg.patient_id                                                               
 				                                     	inner join patient_state ps on pg.patient_program_id = ps.patient_program_id                                                
-				                                 where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2                                        
+				                                 where pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id = 2                                        
 				                                 		and ps.start_date<= :endDate and pg.location_id =:location group by pg.patient_id                                           
 			                             		) max_estado                                                                                                                        
 			                                 		inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
@@ -265,10 +257,9 @@
 			                             		
 			                             		select  p.patient_id,max(o.obs_datetime) data_estado                                                                                             
 			                             		from patient p                                                                                                                   
-			                                   	inner join person pe on pe.person_id = p.patient_id                                                                         
 			                                     	inner join encounter e on p.patient_id=e.patient_id                                                                         
-			                                     	inner join obs  o on e.encounter_id=o.encounter_id                                                                          
-			                             		where e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0                                                               
+			                                     	inner join obs o on e.encounter_id=o.encounter_id                                                                          
+			                             		where e.voided=0 and o.voided=0 and p.voided=0                                                                
 			                                   	and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded = 1706                         
 			                                     	and o.obs_datetime<=:endDate and e.location_id=:location                                                                        
 			                             			group by p.patient_id                                                                                                               
@@ -279,10 +270,9 @@
 				                             	from (                                                                                                                              
 				                                     select p.patient_id,max(e.encounter_datetime) data_estado                                                                   
 				                                     from patient p                                                                                                              
-				                                         inner join person pe on pe.person_id = p.patient_id                                                                     
 				                                         inner join encounter e on p.patient_id=e.patient_id                                                                     
 				                                         inner join obs o on o.encounter_id=e.encounter_id                                                                       
-				                                     where e.voided=0 and p.voided=0 and pe.voided = 0 and e.encounter_datetime<= :endDate                                       
+				                                     where e.voided=0 and p.voided=0 and e.encounter_datetime<= :endDate                                       
 				                                         and e.encounter_type = 21 and  e.location_id= :location                                                                 
 				                                         group by p.patient_id                                                                                                   
 				                                 ) ultimaBusca                                                                                                                   
@@ -309,10 +299,9 @@
 		                        
 			                        	select p.patient_id, date_add(max(value_datetime), interval 31 day) data_ultimo_levantamento                                                                                     
 			                        	from patient p                                                                                                                                   
-			                         	inner join person pe on pe.person_id = p.patient_id                                                                                         
-			                              inner join encounter e on p.patient_id=e.patient_id                                                                                         
+			                         	  inner join encounter e on p.patient_id=e.patient_id                                                                                         
 			                              inner join obs o on e.encounter_id=o.encounter_id                                                                                           
-			                        	where p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52                                                       
+			                        	where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52                                                       
 			                              and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime <= :endDate                                                                                        
 			                        	group by p.patient_id
 				                    	) ultimo_levantamento group by patient_id
@@ -326,9 +315,8 @@
              left join                                                                                                                                           
               ( select p.patient_id,max(encounter_datetime) data_fila                                                                                                
              from    patient p                                                                                                                                   
-                     inner join person pe on pe.person_id = p.patient_id                                                                                         
                      inner join encounter e on e.patient_id=p.patient_id                                                                                         
-             where   p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18 and                                                                     
+             where   p.voided=0 and e.voided=0 and e.encounter_type=18 and                                                                     
                      e.location_id=:location and e.encounter_datetime<=:endDate                                                                                  
              group by p.patient_id                                                                                                                               
              ) max_fila on inicio.patient_id=max_fila.patient_id  
@@ -336,10 +324,9 @@
               (                                                                                                                                                  
              select  p.patient_id,max(value_datetime) data_recepcao_levantou                                                                                     
              from    patient p                                                                                                                                   
-                     inner join person pe on pe.person_id = p.patient_id                                                                                         
                      inner join encounter e on p.patient_id=e.patient_id                                                                                         
                      inner join obs o on e.encounter_id=o.encounter_id                                                                                           
-             where   p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and                                                      
+             where   p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and                                                      
                      o.concept_id=23866 and o.value_datetime is not null and                                                                                     
                      o.value_datetime<=:endDate and e.location_id=:location                                                                                      
              group by p.patient_id                                                                                                                               

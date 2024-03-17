@@ -28,7 +28,7 @@ public class MICategory12P1Dataset extends MQAbstractDataSet {
                 "CAT12ADULTDENOMINADOR33DAYS",
                 mappings),
             mappings),
-        "ageMiNewART=LESS_3_MONTHS_15+");
+        "ageMiNewART=15PlusOrBreastfeedingArt2MonthsAgo");
 
     dataSetDefinition.addColumn(
         "CAT12ADULTNUMERATOR33DAYS",
@@ -41,7 +41,7 @@ public class MICategory12P1Dataset extends MQAbstractDataSet {
                 "CAT12ADULTNUMERATOR33DAYS",
                 mappings),
             mappings),
-        "ageMiNewART=LESS_3_MONTHS_15+");
+        "ageMiNewART=15PlusOrBreastfeedingArt2MonthsAgo");
 
     dataSetDefinition.addColumn(
         "CAT12ADULTDENOMINADOR99DAYS",
@@ -54,7 +54,7 @@ public class MICategory12P1Dataset extends MQAbstractDataSet {
                 "CAT12ADULTDENOMINADOR99DAYS",
                 mappings),
             mappings),
-        "ageMiNewART=LESS_5_MONTHS_15+");
+        "ageMiNewART=15PlusOrBreastfeeding5MonthsA4Months");
 
     dataSetDefinition.addColumn(
         "CAT12ADULTNUMERATOR99DAYS",
