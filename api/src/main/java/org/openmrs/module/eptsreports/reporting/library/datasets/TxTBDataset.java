@@ -53,13 +53,26 @@ public class TxTBDataset extends BaseDataSet {
             eptsCommonDimension.age(ageDimensionCohort), "effectiveDate=${endDate}"));
 
     addTXTBDenominator(mappings, dataSetDefinition);
-
     addTXTBNumerator(mappings, dataSetDefinition);
     addSpecimenSentDisaggregation(mappings, dataSetDefinition);
     addDiagnositcTestDisaggregation(mappings, dataSetDefinition);
     addPositiveResultsDisaggregation(mappings, dataSetDefinition);
+    addCXRDisaggregation(mappings, dataSetDefinition);
 
     return dataSetDefinition;
+  }
+
+  private void addCXRDisaggregation(
+      String mappings, CohortIndicatorDataSetDefinition dataSetDefinition) {
+    CohortIndicator specimentSent =
+        eptsGeneralIndicator.getIndicator(
+            "CX", EptsReportUtils.map(txTbCohortQueries.getPatientWhoAreCXR(), mappings));
+
+    dataSetDefinition.addColumn(
+        "TX_TB_TOTAL_CXR",
+        "TX_TB: Patients screened using CXR - Total",
+        EptsReportUtils.map(specimentSent, mappings),
+        "");
   }
 
   private void addTXTBNumerator(
@@ -67,6 +80,7 @@ public class TxTBDataset extends BaseDataSet {
     CohortIndicator numerator =
         eptsGeneralIndicator.getIndicator(
             "NUMERATOR", EptsReportUtils.map(txTbCohortQueries.txTbNumerator(), mappings));
+
     CohortIndicator patientsPreviouslyOnARTNumerator =
         eptsGeneralIndicator.getIndicator(
             "patientsPreviouslyOnARTNumerator",
@@ -77,19 +91,22 @@ public class TxTBDataset extends BaseDataSet {
             EptsReportUtils.map(txTbCohortQueries.patientsNewOnARTNumerator(), mappings));
 
     dataSetDefinition.addColumn(
-        "TXB_NUM", "TX_TB: Numerator total", EptsReportUtils.map(numerator, mappings), "");
+        "TXB_NUM",
+        "TX_TB: Patients diagnosed with TB and started on TB treatment (Numerator total)",
+        EptsReportUtils.map(numerator, mappings),
+        "");
     addRow(
         dataSetDefinition,
         "TXB_NUM_PREV",
-        "Numerator (patientsPreviouslyOnARTNumerator)",
+        "Numerator (Patients Already on ART)",
         EptsReportUtils.map(patientsPreviouslyOnARTNumerator, mappings),
-        dissagregations());
+        getAdultChildrenColumns());
     addRow(
         dataSetDefinition,
         "TXB_NUM_NEW",
-        "Numerator (patientsNewOnARTNumerator)",
+        "Numerator (Patients New on ART)",
         EptsReportUtils.map(patientsNewOnARTNumerator, mappings),
-        dissagregations());
+        getAdultChildrenColumns());
   }
 
   private void addTXTBDenominator(
@@ -106,6 +123,7 @@ public class TxTBDataset extends BaseDataSet {
         eptsGeneralIndicator.getIndicator(
             "newOnARTPositiveScreening",
             EptsReportUtils.map(txTbCohortQueries.newOnARTPositiveScreening(), mappings));
+
     CohortIndicator newOnARTNegativeScreening =
         eptsGeneralIndicator.getIndicator(
             "newOnARTNegativeScreening",
@@ -113,7 +131,7 @@ public class TxTBDataset extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "TXB_DEN",
-        "TX_TB: Denominator total",
+        "TX_TB: Patients on ART screened for TB(Denominator Total)",
         EptsReportUtils.map(
             eptsGeneralIndicator.getIndicator(
                 "Denominator Total",
@@ -124,27 +142,27 @@ public class TxTBDataset extends BaseDataSet {
     addRow(
         dataSetDefinition,
         "TXB_DEN_NEW_POS",
-        "Denominator (newOnARTPositiveScreening)",
+        "Denominator (Patients New on ART Positive Screening)",
         EptsReportUtils.map(newOnARTPositiveScreening, mappings),
-        dissagregations());
+        getAdultChildrenColumns());
     addRow(
         dataSetDefinition,
         "TXB_DEN_NEW_NEG",
-        "Denominator (newOnARTNegativeScreening)",
+        "Denominator (Patients New on ART Negative Screening)",
         EptsReportUtils.map(newOnARTNegativeScreening, mappings),
-        dissagregations());
+        getAdultChildrenColumns());
     addRow(
         dataSetDefinition,
         "TXB_DEN_PREV_POS",
-        "Denominator (previouslyOnARTPositiveScreening)",
+        "Denominator (Patients Already on ART Positive Screening)",
         EptsReportUtils.map(previouslyOnARTPostiveScreening, mappings),
-        dissagregations());
+        getAdultChildrenColumns());
     addRow(
         dataSetDefinition,
         "TXB_DEN_PREV_NEG",
-        "Denominator (previouslyOnARTNegativeScreening)",
+        "Denominator (Patients Already on ART Negative Screening)",
         EptsReportUtils.map(previouslyOnARTNegativeScreening, mappings),
-        dissagregations());
+        getAdultChildrenColumns());
   }
 
   private void addSpecimenSentDisaggregation(
@@ -153,7 +171,8 @@ public class TxTBDataset extends BaseDataSet {
     CohortIndicator specimentSent =
         eptsGeneralIndicator.getIndicator(
             "SPECIMEN-SENT",
-            EptsReportUtils.map(txTbCohortQueries.getSpecimenSentCohortDefinition(), mappings));
+            EptsReportUtils.map(
+                txTbCohortQueries.getSpecimenSentCohortDefinition(mappings), mappings));
 
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_SPECIMEN_SENT",
@@ -169,33 +188,45 @@ public class TxTBDataset extends BaseDataSet {
         eptsGeneralIndicator.getIndicator(
             "GENEXPERT-DIAGNOSTIC-TEST",
             EptsReportUtils.map(
-                txTbCohortQueries.getGeneXpertMTBDiagnosticTestCohortDefinition(), mappings));
+                txTbCohortQueries.getDiagnosticTestCohortDefinitionMWRS(), mappings));
 
     CohortIndicator smearOnly =
         eptsGeneralIndicator.getIndicator(
             "SMEAR-ONLY-DIAGNOSTIC-TEST",
             EptsReportUtils.map(
-                txTbCohortQueries.getSmearMicroscopyOnlyDiagnosticTestCohortDefinition(),
-                mappings));
+                txTbCohortQueries.getDiagnosticTestSmearMicroscopyOnly(), mappings));
+
     CohortIndicator otherNoExpert =
         eptsGeneralIndicator.getIndicator(
             "OTHER-NO-EXPERT-DIAGNOSTIC-TEST",
             EptsReportUtils.map(
-                txTbCohortQueries.getAdditionalOtherThanGenExpertTestCohortDefinition(), mappings));
+                txTbCohortQueries.getDiagnosticTestCohortDefinitionOther(), mappings));
+
+    CohortIndicator symptomScreenAlone =
+        eptsGeneralIndicator.getIndicator(
+            "OTHER-NO-EXPERT-DIAGNOSTIC-TEST",
+            EptsReportUtils.map(txTbCohortQueries.getSymptomScreenAlone(), mappings));
+
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_GENEXPERT_DIAGNOSTIC",
-        "TX_TB: Total Gene Xpert MTB/RIF Assay (Diagnostic Test)",
+        "TX_TB: mWRD (with or without other testing)",
         EptsReportUtils.map(geneExpert, mappings),
         "");
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_SMEAR_ONLY_DIAGNOSTIC",
-        "TX_TB: Total Smear Only (Diagnostic Test)",
+        "TX_TB: Smear microscopy only ",
         EptsReportUtils.map(smearOnly, mappings),
         "");
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_OTHER-NO-EXPERT-DIAGNOSTIC",
-        "TX_TB: Total Other (No Xpert) (Diagnostic Test)",
+        "TX_TB: Additional test other than mWRD",
         EptsReportUtils.map(otherNoExpert, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "TX_TB_TOTAL_SYMPTOM_SCREEN",
+        "Patients screened using Symptom Screen (alone) - Total",
+        EptsReportUtils.map(symptomScreenAlone, mappings),
         "");
   }
 
@@ -206,9 +237,7 @@ public class TxTBDataset extends BaseDataSet {
         eptsGeneralIndicator.getIndicator(
             "POSITIVE-RESULT",
             EptsReportUtils.map(
-                txTbCohortQueries.getPositiveResultCohortDefinition(
-                    txTbCohortQueries.getDenominator(), mappings),
-                mappings));
+                txTbCohortQueries.getDenominatorAndPositiveResults(mappings), mappings));
 
     dataSetDefinition.addColumn(
         "TX_TB_TOTAL_POSITIVE_RESULT",
@@ -217,13 +246,116 @@ public class TxTBDataset extends BaseDataSet {
         "");
   }
 
-  private List<ColumnParameters> dissagregations() {
+  private List<ColumnParameters> getAdultChildrenColumns() {
+    // Male
+    ColumnParameters under1M =
+        new ColumnParameters("under1M", "under 1 year male", "gender=M|age=<1", "01");
+    ColumnParameters oneTo4M =
+        new ColumnParameters("oneTo4M", "1 - 4 years male", "gender=M|age=1-4", "02");
+    ColumnParameters fiveTo9M =
+        new ColumnParameters("fiveTo9M", "5 - 9 years male", "gender=M|age=5-9", "03");
+    ColumnParameters tenTo14M =
+        new ColumnParameters("tenTo14M", "10 - 14 male", "gender=M|age=10-14", "04");
+    ColumnParameters fifteenTo19M =
+        new ColumnParameters("fifteenTo19M", "15 - 19 male", "gender=M|age=15-19", "05");
+    ColumnParameters twentyTo24M =
+        new ColumnParameters("twentyTo24M", "20 - 24 male", "gender=M|age=20-24", "06");
+    ColumnParameters twenty5To29M =
+        new ColumnParameters("twenty4To29M", "25 - 29 male", "gender=M|age=25-29", "07");
+    ColumnParameters thirtyTo34M =
+        new ColumnParameters("thirtyTo34M", "30 - 34 male", "gender=M|age=30-34", "08");
+    ColumnParameters thirty5To39M =
+        new ColumnParameters("thirty5To39M", "35 - 39 male", "gender=M|age=35-39", "09");
+    ColumnParameters foutyTo44M =
+        new ColumnParameters("foutyTo44M", "40 - 44 male", "gender=M|age=40-44", "10");
+    ColumnParameters fouty5To49M =
+        new ColumnParameters("fouty5To49M", "45 - 49 male", "gender=M|age=45-49", "11");
+
+    ColumnParameters fiftyT054 =
+        new ColumnParameters("fiftyT054", "50 - 54 male", "gender=M|age=50-54", "12");
+
+    ColumnParameters fiftyfiveT059 =
+        new ColumnParameters("fouty5To49M", "55 - 59 male", "gender=M|age=55-59", "13");
+
+    ColumnParameters sixtyT064 =
+        new ColumnParameters("fiftyfiveT059", "60 - 64 male", "gender=M|age=60-64", "14");
+
+    ColumnParameters above65 =
+        new ColumnParameters("above65", "65+  male", "gender=M|age=65+", "15");
+    ColumnParameters unknownM =
+        new ColumnParameters("unknownM", "Unknown age male", "gender=M|age=UK", "16");
+
+    // Female
+    ColumnParameters under1F =
+        new ColumnParameters("under1F", "under 1 year female", "gender=F|age=<1", "17");
+    ColumnParameters oneTo4F =
+        new ColumnParameters("oneTo4F", "1 - 4 years female", "gender=F|age=1-4", "18");
+    ColumnParameters fiveTo9F =
+        new ColumnParameters("fiveTo9F", "5 - 9 years female", "gender=F|age=5-9", "19");
+    ColumnParameters tenTo14F =
+        new ColumnParameters("tenTo14F", "10 - 14 female", "gender=F|age=10-14", "20");
+    ColumnParameters fifteenTo19F =
+        new ColumnParameters("fifteenTo19F", "15 - 19 female", "gender=F|age=15-19", "21");
+    ColumnParameters twentyTo24F =
+        new ColumnParameters("twentyTo24F", "20 - 24 female", "gender=F|age=20-24", "22");
+    ColumnParameters twenty5To29F =
+        new ColumnParameters("twenty4To29F", "25 - 29 female", "gender=F|age=25-29", "23");
+    ColumnParameters thirtyTo34F =
+        new ColumnParameters("thirtyTo34F", "30 - 34 female", "gender=F|age=30-34", "24");
+    ColumnParameters thirty5To39F =
+        new ColumnParameters("thirty5To39F", "35 - 39 female", "gender=F|age=35-39", "25");
+    ColumnParameters foutyTo44F =
+        new ColumnParameters("foutyTo44F", "40 - 44 female", "gender=F|age=40-44", "26");
+    ColumnParameters fouty5To49F =
+        new ColumnParameters("fouty5To49F", "45 - 49 female", "gender=F|age=45-49", "27");
+
+    ColumnParameters fiftyT054F =
+        new ColumnParameters("fiftyT054F", "50 - 54 female", "gender=F|age=50-54", "28");
+
+    ColumnParameters fiftyfiveT059F =
+        new ColumnParameters("fiftyfiveT059F", "55 - 59 female", "gender=F|age=55-59", "29");
+
+    ColumnParameters sixtyT064F =
+        new ColumnParameters("sixtyT064F", "60 - 64 female", "gender=F|age=60-64", "30");
+
+    ColumnParameters above65F =
+        new ColumnParameters("above65", "65+ female", "gender=F|age=65+", "31");
+
+    ColumnParameters unknownF =
+        new ColumnParameters("unknownF", "Unknown age female", "gender=F|age=UK", "32");
+
     return Arrays.asList(
-        new ColumnParameters("<15Females", "<15 anos - Feminino", "gender=F|age=<15", "F1"),
-        new ColumnParameters(">=15Females", "15+ anos Feminino", "gender=F|age=15+", "F2"),
-        new ColumnParameters("UnknownFemales", "Unknown anos Feminino", "gender=F|age=UK", "F3"),
-        new ColumnParameters("<15Males", "<15 anos - Masculino", "gender=M|age=<15", "M1"),
-        new ColumnParameters(">=15Males", "15+ anos Masculino", "gender=M|age=15+", "M2"),
-        new ColumnParameters("UnknownMales", "Unknown anos Masculino", "gender=M|age=UK", "M3"));
+        unknownM,
+        under1M,
+        oneTo4M,
+        fiveTo9M,
+        tenTo14M,
+        fifteenTo19M,
+        twentyTo24M,
+        twenty5To29M,
+        thirtyTo34M,
+        thirty5To39M,
+        foutyTo44M,
+        fouty5To49M,
+        unknownF,
+        under1F,
+        oneTo4F,
+        fiveTo9F,
+        tenTo14F,
+        fifteenTo19F,
+        twentyTo24F,
+        twenty5To29F,
+        thirtyTo34F,
+        thirty5To39F,
+        foutyTo44F,
+        fouty5To49F,
+        fiftyT054,
+        fiftyfiveT059,
+        sixtyT064,
+        above65,
+        fiftyT054F,
+        fiftyfiveT059F,
+        sixtyT064F,
+        above65F);
   }
 }
