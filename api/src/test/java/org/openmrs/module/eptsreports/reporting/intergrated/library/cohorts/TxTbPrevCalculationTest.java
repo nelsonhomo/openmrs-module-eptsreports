@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.eptsreports.reporting.intergrated.utils.DefinitionsFGHLiveTest;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.TPTCompletationCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.TB1TPTCompletationCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.TxTbPrevCohortQueries;
 import org.openmrs.module.reporting.cohort.EvaluatedCohort;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class TxTbPrevCalculationTest extends DefinitionsFGHLiveTest {
   @Autowired private TxTbPrevCohortQueries txTbPrevCohortQueries;
-  @Autowired private TPTCompletationCohortQueries tPTCompletationCohortQueries;
+  @Autowired private TB1TPTCompletationCohortQueries tPTCompletationCohortQueries;
 
   @Test
   public void shouldFindPatientsWhoAre3HP() throws EvaluationException {
