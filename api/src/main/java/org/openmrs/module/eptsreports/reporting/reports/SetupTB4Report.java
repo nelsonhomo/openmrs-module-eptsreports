@@ -91,7 +91,7 @@ public class SetupTB4Report extends EptsDataExportManager {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "TB4_TX_TB_ Monthly_Cascade_Report.xls",
+              "TB4_TX_TB_Monthly_Cascade_Report.xls",
               getName(),
               getExcelDesignUuid(),
               null);
