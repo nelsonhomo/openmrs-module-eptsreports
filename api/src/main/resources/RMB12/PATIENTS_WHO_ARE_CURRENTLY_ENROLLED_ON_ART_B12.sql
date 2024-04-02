@@ -126,7 +126,7 @@
 
 							union
 
-				         select saidas_por_transferencia.patient_id, data_estado, 2 decisao 
+				         select saidas_por_transferencia.patient_id,ultimo_levantamento.data_ultimo_levantamento data_estado, 2 decisao 
 	                         from
 	                        	(
 		                            select saidas_por_transferencia.patient_id, max(data_estado) data_estado
@@ -257,6 +257,8 @@
                          ) inicio_fila_seg_prox 
                              group by patient_id 
                         ) coorte12meses_final 
-                        	   WHERE
-                           ((data_estado is null or ((data_estado is not null and decisao=2) and  data_usar_c>data_estado))  and date_add(data_usar, interval 60 day) >=(:startDate - interval 1 day) ) 
+                       WHERE
+                           ((data_estado is null or ((data_estado is not null and decisao=2) and  data_usar_c>=data_estado))  and date_add(data_usar, interval 60 day) >=(:startDate - interval 1 day) ) 
                         OR ((decisao=1 and data_estado<data_fila) and date_add(data_usar, interval 60 day) >=(:startDate - interval 1 day))
+
+                        
