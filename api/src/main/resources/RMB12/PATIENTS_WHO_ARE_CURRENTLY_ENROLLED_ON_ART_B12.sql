@@ -160,7 +160,22 @@
 			                             			group by p.patient_id                                                                                                               
 			     
 		                                ) saidas_por_transferencia 
-	                                	group by patient_id 
+
+		                                 left join
+		                                (
+									      select p.patient_id,max(e.encounter_datetime) encounter_datetime
+									      from patient p
+									      inner join encounter e on e.patient_id = p.patient_id
+									      where p.voided = 0
+									      and e.voided = 0
+									      and e.encounter_datetime <:startDate
+									      and e.location_id =:location
+									      and e.encounter_type=18
+									      group by p.patient_id
+		                                )lev on saidas_por_transferencia.patient_id=lev.patient_id
+	                                	where lev.encounter_datetime<=saidas_por_transferencia.data_estado
+	                                	group by saidas_por_transferencia.patient_id 
+	                                	
                                	) saidas_por_transferencia
                                 left join
 			                 	(  
@@ -168,7 +183,7 @@
 				                    from
 				                    (
 	                    
-	                                  select patient_id, date_add(max(obs_fila.value_datetime), interval 1 day) data_ultimo_levantamento 
+	                                  select maxFila.patient_id, date_add(max(obs_fila.value_datetime), interval 1 day) data_ultimo_levantamento 
 	                                  from ( 
 	                                  select fila.patient_id,fila.data_fila data_fila,e.encounter_id 
 	                                  from ( 
@@ -180,13 +195,19 @@
 	                                         )fila 
 	                                  inner join encounter e on  date(e.encounter_datetime)=date(fila.data_fila) and e.encounter_type=18 and e.voided=0 and e.patient_id=fila.patient_id 
 	                                      )maxFila  
-	                                  left join 
-	                                  obs obs_fila on obs_fila.person_id=maxFila.patient_id 
-	                                  and obs_fila.voided=0 
-	                                  and obs_fila.encounter_id=maxFila.encounter_id 
-	                                  and obs_fila.concept_id=5096 
-	                                  and obs_fila.location_id=:location 
-	                                  group by maxFila.patient_id 
+	                                  
+	                                 left join encounter ultimo_fila_data_criacao on ultimo_fila_data_criacao.patient_id=maxFila.patient_id 
+									   and ultimo_fila_data_criacao.voided=0 
+									   and ultimo_fila_data_criacao.encounter_type = 18 
+									   and date(ultimo_fila_data_criacao.encounter_datetime) = date(maxFila.data_fila) 
+									   and ultimo_fila_data_criacao.location_id=:location 
+									   left join 
+									   obs obs_fila on obs_fila.person_id=maxFila.patient_id 
+									   and obs_fila.voided=0 
+									   and (date(obs_fila.obs_datetime)=date(maxFila.data_fila)  or (date(ultimo_fila_data_criacao.date_created) = date(obs_fila.date_created) and ultimo_fila_data_criacao.encounter_id = obs_fila.encounter_id )) 
+									   and obs_fila.concept_id=5096 
+									   and obs_fila.location_id=:location 
+			                           group by maxFila.patient_id 
 
 		                        		union
 
@@ -200,12 +221,13 @@
 			                        	group by p.patient_id
 				                    	) ultimo_levantamento group by patient_id
 			                		) ultimo_levantamento on saidas_por_transferencia.patient_id = ultimo_levantamento.patient_id 
-			               		where ultimo_levantamento.data_ultimo_levantamento <= :startDate	
+			               		where ultimo_levantamento.data_ultimo_levantamento < :startDate	
                                         ) 
                                          saida on inicio.patient_id=saida.patient_id 
                                          left join 
                                          ( 
-                                             select patient_id, max(obs_fila.value_datetime) data_proximo_lev, data_fila from ( 
+                                             select maxFila.patient_id, max(obs_fila.value_datetime) data_proximo_lev, data_fila from 
+                                             ( 
                                                   select fila.patient_id,fila.data_fila data_fila,e.encounter_id from 
                                                   ( 
                                                   Select p.patient_id,max(encounter_datetime) data_fila from patient p 
@@ -215,14 +237,19 @@
                                                   group by p.patient_id 
                                                   )fila 
                                                   inner join encounter e on  date(e.encounter_datetime)=date(fila.data_fila) and e.encounter_type=18 and e.voided=0 and e.patient_id=fila.patient_id 
-                                                  )maxFila 
-                                                       left join 
-                                                  obs obs_fila on obs_fila.person_id=maxFila.patient_id 
-                                                  and obs_fila.voided=0 
-                                                  and obs_fila.encounter_id=maxFila.encounter_id 
-                                                  and obs_fila.concept_id=5096 
-                                                  and obs_fila.location_id=:location 
-                                                  group by maxFila.patient_id 
+                                             )maxFila 
+                                            left join encounter ultimo_fila_data_criacao on ultimo_fila_data_criacao.patient_id=maxFila.patient_id 
+											and ultimo_fila_data_criacao.voided=0 
+											and ultimo_fila_data_criacao.encounter_type = 18 
+										    and date(ultimo_fila_data_criacao.encounter_datetime) = date(maxFila.data_fila) 
+											and ultimo_fila_data_criacao.location_id=:location 
+											left join 
+											obs obs_fila on obs_fila.person_id=maxFila.patient_id 
+											and obs_fila.voided=0 
+											and (date(obs_fila.obs_datetime)=date(maxFila.data_fila)  or (date(ultimo_fila_data_criacao.date_created) = date(obs_fila.date_created) and ultimo_fila_data_criacao.encounter_id = obs_fila.encounter_id )) 
+											and obs_fila.concept_id=5096 
+											and obs_fila.location_id=:location 
+											group by maxFila.patient_id 
 
                                          ) 
                                          max_fila on inicio.patient_id=max_fila.patient_id 
@@ -257,8 +284,6 @@
                          ) inicio_fila_seg_prox 
                              group by patient_id 
                         ) coorte12meses_final 
-                       WHERE
-                           ((data_estado is null or ((data_estado is not null and decisao=2) and  data_usar_c>=data_estado))  and date_add(data_usar, interval 60 day) >=(:startDate - interval 1 day) ) 
-                        OR ((decisao=1 and data_estado<data_fila) and date_add(data_usar, interval 60 day) >=(:startDate - interval 1 day))
-
-                        
+                       WHERE  
+                          ((data_estado is null or ((data_estado is not null and decisao=2) and  data_usar_c>=data_estado))  and date_add(data_usar, interval 60 day) >=(:startDate - interval 1 day) ) 
+                       OR ((decisao=1 and data_estado<data_fila) and date_add(data_usar, interval 60 day) >=(:startDate - interval 1 day))         
