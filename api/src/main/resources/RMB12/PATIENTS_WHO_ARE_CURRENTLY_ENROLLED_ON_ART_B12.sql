@@ -122,7 +122,7 @@
 													group by p.patient_id   
 									) fila_seguimento	group by fila_seguimento.patient_id  
 							 ) fila_seguimento on dead_state.patient_id = fila_seguimento.patient_id
-								where fila_seguimento.data_encountro is null or  fila_seguimento.data_encountro <= dead_state.data_estado
+								where fila_seguimento.data_encountro is null or  fila_seguimento.data_encountro < dead_state.data_estado
 
 							union
 
