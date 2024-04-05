@@ -2,7 +2,7 @@ select
 transferidopara.patient_id
 from
 (
-   select
+select
    patient_id,
    max(data_transferidopara) data_transferidopara
    from
@@ -23,10 +23,9 @@ from
          and p.voided = 0
          and pg.program_id = 2
          and ps.start_date <= :endDate
-         and pg.location_id = :location
+         and pg.location_id =:location
          group by p.patient_id
-      )
-      maxEstado
+      )maxEstado
       inner join patient_program pg2 on pg2.patient_id = maxEstado.patient_id
       inner join patient_state ps2 on pg2.patient_program_id = ps2.patient_program_id
       where pg2.voided = 0
@@ -70,19 +69,17 @@ from
    )
    transferido
    group by patient_id
-)
-transferidopara
+)transferidopara
 inner join
 (
    select
    *
    from
    (
-      select patient_id, max(data_ultimo_levantamento) data_transferidopara from
+      select patient_id, max(data_ultimo_levantamento) data_ultimo_levantamento from
       (
          select
-         ultimo_fila.patient_id,
-         date_add(obs_fila.value_datetime , interval 1 day ) data_ultimo_levantamento from
+         ultimo_fila.patient_id,date_add(obs_fila.value_datetime , interval 1 day ) data_ultimo_levantamento from
          (
             select
             p.patient_id,
@@ -97,13 +94,18 @@ inner join
             and e.location_id =:location
             and e.encounter_datetime <= :endDate
             group by p.patient_id
-         )
-         ultimo_fila
-         left join obs obs_fila on obs_fila.person_id = ultimo_fila.patient_id
-         and obs_fila.voided = 0
-         and obs_fila.obs_datetime = ultimo_fila.data_fila
-         and obs_fila.concept_id = 5096
-         and obs_fila.location_id =:location
+         )ultimo_fila
+	left join encounter ultimo_fila_data_criacao on ultimo_fila_data_criacao.patient_id=ultimo_fila.patient_id 
+	 and ultimo_fila_data_criacao.voided=0 
+	 and ultimo_fila_data_criacao.encounter_type = 18 
+	 and date(ultimo_fila_data_criacao.encounter_datetime) = date(ultimo_fila.data_fila) 
+	 and ultimo_fila_data_criacao.location_id=:location 
+	 left join 
+	 obs obs_fila on obs_fila.person_id=ultimo_fila.patient_id 
+	 and obs_fila.voided=0 
+	 and (date(obs_fila.obs_datetime)=date(ultimo_fila.data_fila)  or (date(ultimo_fila_data_criacao.date_created) = date(obs_fila.date_created) and ultimo_fila_data_criacao.encounter_id = obs_fila.encounter_id )) 
+	 and obs_fila.concept_id=5096 
+	 and obs_fila.location_id=:location 
          union
          select
          p.patient_id,
@@ -122,14 +124,11 @@ inner join
          and e.location_id =:location
          and o.value_datetime <= :endDate
          group by p.patient_id
-      )
-      ultimo_levantamento
-      group by patient_id
-   )
-   final
-   where final.data_transferidopara<=:endDate
-)
-TR_OUT on TR_OUT.patient_id = transferidopara.patient_id
+      )ultimo_levantamento
+	  group by patient_id
+   )final
+   where final.data_ultimo_levantamento<=:endDate
+)TR_OUT on TR_OUT.patient_id = transferidopara.patient_id
 inner join
 (
    select
@@ -148,11 +147,9 @@ inner join
       and e.location_id =:location
       and e.encounter_type=18
       group by p.patient_id
-   )
-   consultaLev
+   )consultaLev
    group by patient_id
-)
-consultaOuARV on transferidopara.patient_id = consultaOuARV.patient_id
-where consultaOuARV.encounter_datetime <= transferidopara.data_transferidopara
-and transferidopara.data_transferidopara between :startDate
-AND :endDate
+)consultaOuARV on transferidopara.patient_id = consultaOuARV.patient_id
+where 
+consultaOuARV.encounter_datetime <= transferidopara.data_transferidopara
+ and TR_OUT.data_ultimo_levantamento between :startDate AND :endDate
