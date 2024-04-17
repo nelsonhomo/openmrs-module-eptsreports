@@ -296,5 +296,5 @@
                          ) inicio_fila_seg_prox 
                              group by patient_id 
                         ) coorte12meses_final 
-                     where (((data_estado is null or ((data_estado is not null and decisao=2) and  data_usar_c>data_estado))  and date_add(data_usar, interval 60 day) >=:endDate) 
-                         OR    ((decisao=1 and data_estado<data_fila) and date_add(data_usar, interval 60 day) >=:endDate))
+                     where (((data_estado is null or ((data_estado is not null and decisao=2) and  data_usar_c>data_estado))  and date_add(data_usar, interval 59 day) >=:endDate) 
+                         OR    ((decisao=1 and data_estado<data_fila) and date_add(data_usar, interval 59 day) >=:endDate))

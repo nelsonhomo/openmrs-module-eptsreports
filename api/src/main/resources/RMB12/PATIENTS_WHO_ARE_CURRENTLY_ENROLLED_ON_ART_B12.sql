@@ -298,5 +298,5 @@
                              group by patient_id 
                         ) coorte12meses_final 
                      WHERE  
-                          ((data_estado is null or ((data_estado is not null and decisao=2) and  data_usar_c>data_estado))  and date_add(data_usar, interval 60 day) >=(:startDate - interval 1 day) ) 
-                       OR ((decisao=1 and data_estado<data_fila) and date_add(data_usar, interval 60 day) >=(:startDate - interval 1 day))         
+                          ((data_estado is null or ((data_estado is not null and decisao=2) and  data_usar_c>data_estado))  and date_add(data_usar, interval 59 day) >=(:startDate - interval 1 day) ) 
+                       OR ((decisao=1 and data_estado<data_fila) and date_add(data_usar, interval 59 day) >=(:startDate - interval 1 day))         
