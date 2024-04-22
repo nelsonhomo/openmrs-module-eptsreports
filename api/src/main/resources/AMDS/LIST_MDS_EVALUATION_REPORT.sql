@@ -10,7 +10,7 @@
            tptFinal.dataInicioTPI data_inicio_tpt,
            
            DATE_FORMAT(DATE(resultadoCd4Inicial.data_cd4_12_meses), '%d-%m-%Y')  as data_resultado_cd4,
-           DATE_FORMAT(DATE(resultadoCd4Inicial.resultado_cd4_12_meses), '%d-%m-%Y') as resultado_cd4_12_meses,
+           resultadoCd4Inicial.resultado_cd4_12_meses as resultado_cd4_12_meses,
 
            -- COLUNAS 12 MESES
            DATE_FORMAT(DATE(primeiroPedidoCV.data_primeiro_pedido_cv_12_meses),'%d-%m-%Y') data_primeiro_pedido_cv_12_meses,
