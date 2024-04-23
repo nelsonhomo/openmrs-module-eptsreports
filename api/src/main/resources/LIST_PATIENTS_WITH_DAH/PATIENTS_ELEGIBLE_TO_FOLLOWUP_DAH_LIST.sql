@@ -34,7 +34,7 @@ inicioDAH.patient_id, pid.identifier as NID, concat(ifnull(pn.given_name,''),' '
       @motivoIndice := 1 + LENGTH(estadiamentoClinico.motivoEstadio) - LENGTH(REPLACE(estadiamentoClinico.motivoEstadio, ',', '')) AS motivoIndice, 
       IF(ISNULL(SUBSTRING_INDEX(estadiamentoClinico.motivoEstadio, ',', 1)), 'N/A', SUBSTRING_INDEX(estadiamentoClinico.motivoEstadio, ',', 1)) AS motivoEstadio1, 
       IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(estadiamentoClinico.motivoEstadio, ',', 2), ',', -1), '') = '', 'N/A', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(estadiamentoClinico.motivoEstadio, ',', 2), ',', -1), '')) AS motivoEstadio2, 
-      IF(ISNULL( maxCD4.value_numeric), 'N/A', maxCD4.value_numeric) AS lastCd4Result, 
+      IF(ISNULL(maxCD4.value_numeric), 'N/A', maxCD4.value_numeric) AS lastCd4Result, 
       IF(ISNULL(maxCD4.max_data_cd4), 'N/A',  DATE_FORMAT(maxCD4.max_data_cd4, '%d-%m-%Y')) AS ultimoDataCd4,
       IF(ISNULL(penultimoCd4.value_numeric), 'N/A',penultimoCd4.value_numeric) AS penultimoResultadoCd4,
       IF(ISNULL(penultimoCd4.dataCd4Anterior), 'N/A',DATE_FORMAT(penultimoCd4.dataCd4Anterior, '%d-%m-%Y') ) AS penultimoCd4Data,
@@ -2102,7 +2102,7 @@ left join
     			inner join person per on per.person_id=max_cd4.patient_id 
     			inner join obs o on o.person_id=max_cd4.patient_id and max_cd4.max_data_cd4=o.obs_datetime and o.voided=0  
     			and per.voided=0 and timestampdiff(month,per.birthdate,:endDate)<12 and o.concept_id = 1695 and o.value_numeric<750 and o.location_id=:location 
-    	) cd4 group by patient_id 
+    	) cd4 group by patient_id
 ) cd4EligibilidadeMDSDAH on inicioDAH.patient_id = cd4EligibilidadeMDSDAH.patient_id  
 left join( 
 select patient_id, encounter_datetime, group_concat(motivoEstadioClinico) motivoEstadio, tipoEstadio 
@@ -2476,7 +2476,7 @@ left join
       From patient p 
     inner join encounter e on p.patient_id=e.patient_id 
     inner join obs o on e.encounter_id=o.encounter_id 
-    where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 23952 and  e.encounter_type in (6,13,90) and p.patient_id = 43169
+    where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 23952 and  e.encounter_type in (6,13,90)
     and o.obs_datetime <= :endDate and e.location_id=:location 
     order by o.obs_datetime desc
     ) cragSoro
