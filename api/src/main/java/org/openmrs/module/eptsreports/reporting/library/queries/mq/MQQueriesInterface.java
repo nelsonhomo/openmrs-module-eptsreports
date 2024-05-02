@@ -983,7 +983,7 @@ public interface MQQueriesInterface {
                 + "and date(obsEstado.obs_datetime) BETWEEN :startInclusionDate and :endRevisionDate "
                 + "group by p.patient_id "
                 + ") obsFimTPI on obsFimTPI.patient_id = B4_1_2.patient_id "
-                + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 80 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 190 DAY) "
+                + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 80 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 198 DAY) "
                 + "group by B4_1_2.patient_id ";
 
     public static final String findAllPatientWhoAreDeadByEndOfRevisonPeriod =
