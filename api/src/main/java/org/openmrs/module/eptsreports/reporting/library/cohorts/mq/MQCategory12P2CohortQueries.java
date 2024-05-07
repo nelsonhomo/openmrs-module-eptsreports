@@ -69,10 +69,11 @@ public class MQCategory12P2CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mqCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mqCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString(
-        "(START-ART AND B1-FIRSTLINE) NOT (B1E-NOTFIRSTLINE OR PREGNANT OR BREASTFEEDING OR TRANSFERED-OUT)");
+        "((START-ART OR BREASTFEEDING) AND B1-FIRSTLINE) NOT (B1E-NOTFIRSTLINE OR PREGNANT OR TRANSFERED-OUT)");
 
     return definition;
   }
@@ -166,10 +167,11 @@ public class MQCategory12P2CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mqCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mqCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString(
-        "(START-ART AND B2-SECONDLINE) NOT (B2E-NOTSECONDLINE OR PREGNANT OR BREASTFEEDING OR TRANSFERED-OUT)");
+        "((START-ART OR BREASTFEEDING) AND B2-SECONDLINE) NOT (B2E-NOTSECONDLINE OR PREGNANT OR TRANSFERED-OUT)");
 
     return definition;
   }
@@ -266,7 +268,7 @@ public class MQCategory12P2CohortQueries {
         EptsReportUtils.map(this.mqCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
 
     definition.setCompositionString(
-        "(START-ART AND  PREGNANT AND B1-FIRSTLINE) NOT (B1E-NOTFIRSTLINE OR BREASTFEEDING OR TRANSFERED-OUT)");
+        "(START-ART AND  PREGNANT AND B1-FIRSTLINE) NOT (B1E-NOTFIRSTLINE OR TRANSFERED-OUT)");
 
     return definition;
   }

@@ -14,7 +14,6 @@ public class MQCategory12P1CohortQueries {
 
   @Autowired private MQCohortQueries mqCohortQueries;
   @Autowired private MQGenericCohortQueries mQGenericCohortQueries;
-  private final boolean EXCLUDING_BREASTFEEDING = true;
 
   @DocumentedDefinition(
       value =
@@ -45,11 +44,6 @@ public class MQCategory12P1CohortQueries {
             this.mqCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
 
     definition.addSearch(
-        "BREASTFEEDING",
-        EptsReportUtils.map(
-            this.mqCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
-
-    definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
             this.mqCohortQueries
@@ -58,10 +52,10 @@ public class MQCategory12P1CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mqCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mqCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
-    definition.setCompositionString(
-        "(RF5 AND PREGNANT)  NOT (BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)");
+    definition.setCompositionString("(RF5 AND PREGNANT) NOT (TRANSFERED-IN OR TRANSFERED-OUT)");
 
     return definition;
   }
@@ -88,8 +82,44 @@ public class MQCategory12P1CohortQueries {
         "DENOMINATOR",
         EptsReportUtils.map(
             this.mQGenericCohortQueries
-                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(
-                    EXCLUDING_BREASTFEEDING),
+                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(),
+            mappings));
+
+    definition.addSearch(
+        "RET99DAYS",
+        EptsReportUtils.map(
+            this.mqCohortQueries
+                .findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation99DaysAfterAtartingARTCategory12(),
+            mappings));
+
+    definition.setCompositionString("DENOMINATOR AND RET99DAYS");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value =
+          "findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation99DaysAfterAtartingARTCategory12Line63ColumnDInTheTemplateNumerator2(")
+  public CohortDefinition
+      findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation99DaysAfterAtartingARTCategory12Line63ColumnDInTheTemplateNumerator12_6() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName(
+        "findAdultsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation99DaysAfterAtartingARTCategory12Line63ColumnDInTheTemplateNumerator2");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR",
+        EptsReportUtils.map(
+            this.mQGenericCohortQueries
+                .findPatientOnARTdExcludingBreastfeedingPregantAndTransferredInTransferredOut(),
             mappings));
 
     definition.addSearch(
@@ -127,8 +157,45 @@ public class MQCategory12P1CohortQueries {
         "DENOMINATOR",
         EptsReportUtils.map(
             this.mQGenericCohortQueries
-                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(
-                    EXCLUDING_BREASTFEEDING),
+                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(),
+            mappings));
+
+    definition.addSearch(
+        "RET33DAYS",
+        EptsReportUtils.map(
+            this.mqCohortQueries
+                .findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation33DaysAfterAtartingARTCategory12(),
+            mappings));
+
+    definition.setCompositionString("DENOMINATOR AND RET33DAYS");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value =
+          "findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation33DaysAfterAtartingARTCategory12Line62ColumnDInTheTemplateNumerator12_5(")
+  public CohortDefinition
+      findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation33DaysAfterAtartingARTCategory12Line62ColumnDInTheTemplateNumerator12_5() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName(
+        "findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation33DaysAfterAtartingARTCategory12Line62ColumnDInTheTemplateNumerator12_5");
+
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR",
+        EptsReportUtils.map(
+            this.mQGenericCohortQueries
+                .findPatientOnARTdExcludingBreastfeedingPregantAndTransferredInTransferredOut(),
             mappings));
 
     definition.addSearch(

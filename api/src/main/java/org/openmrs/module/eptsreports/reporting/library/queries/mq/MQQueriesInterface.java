@@ -71,7 +71,7 @@ public interface MQQueriesInterface {
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs  o on e.encounter_id=o.encounter_id "
             + "where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type in (53,6) and "
-            + "o.concept_id in(6272,6273) and o.obs_datetime<=:endRevisionDate and e.location_id=:location "
+            + "o.concept_id in(6272,6273) and o.obs_datetime>=:startInclusionDate and o.obs_datetime<=:endRevisionDate and e.location_id=:location "
             + "group by p.patient_id "
             + ") saida "
             + "inner join obs o on o.person_id = saida.patient_id "
