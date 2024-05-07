@@ -508,7 +508,7 @@ public class ResumoMensalQueries {
             + "where obs_fila.voided=0 and obs_fila.concept_id=5096 and fila.data_levantamento=obs_fila.obs_datetime "
             + ") maxFilaRecepcao "
             + "group by patient_id "
-            + "having date_add(max(data_proximo_levantamento), INTERVAL 60 day )< :endDate  "
+            + "having date_add(max(data_proximo_levantamento), INTERVAL 59 day )< :endDate  "
             + ")B7 ";
 
     return query;
@@ -551,7 +551,7 @@ public class ResumoMensalQueries {
             + ") proximoLevantamento on proximoLevantamento.patient_id=fila.patient_id  "
             + ") maxFilaRecepcao  "
             + "group by patient_id  "
-            + "having date_add(max(data_proximo_levantamento), INTERVAL 60 day )< (:endDate -interval 1 month)   "
+            + "having date_add(max(data_proximo_levantamento), INTERVAL 59 day )< (:endDate -interval 1 month)   "
             + ")B7 ";
 
     return query;
@@ -577,7 +577,7 @@ public class ResumoMensalQueries {
             + "where obs_fila.voided=0 and obs_fila.concept_id=5096 and fila.data_levantamento=obs_fila.obs_datetime "
             + ") maxFilaRecepcao "
             + "group by patient_id "
-            + "having date_add(max(data_proximo_levantamento), INTERVAL 60 day )< (:startDate - INTERVAL 1 day) "
+            + "having date_add(max(data_proximo_levantamento), INTERVAL 59 day )< (:startDate - INTERVAL 1 day) "
             + ")B7 ";
 
     return query;
