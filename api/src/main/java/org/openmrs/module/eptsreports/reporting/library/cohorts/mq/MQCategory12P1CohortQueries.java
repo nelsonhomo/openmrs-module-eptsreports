@@ -17,7 +17,7 @@ public class MQCategory12P1CohortQueries {
 
   @DocumentedDefinition(
       value =
-          "findPregnantWhoStartedARTInTheInclusionPeriodCategory12ExcludingBreastfeedingAndTrasferedInOrOut(")
+          "findPregnantWhoStartedARTInTheInclusionPeriodCategory12ExcludingBreastfeedingAndTrasferedInOrOut")
   public CohortDefinition
       findPregnantWhoStartedARTInTheInclusionPeriodCategory12ExcludingBreastfeedingAndTrasferedInOrOut() {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -32,6 +32,9 @@ public class MQCategory12P1CohortQueries {
 
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    final String mappingsTrfOutCat12 =
+        "startInclusionDate=${endRevisionDate-14m},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "RF5",
@@ -53,7 +56,7 @@ public class MQCategory12P1CohortQueries {
     definition.addSearch(
         "TRANSFERED-OUT",
         EptsReportUtils.map(
-            this.mqCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
+            this.mqCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappingsTrfOutCat12));
 
     definition.setCompositionString("(RF5 AND PREGNANT) NOT (TRANSFERED-IN OR TRANSFERED-OUT)");
 
@@ -64,7 +67,8 @@ public class MQCategory12P1CohortQueries {
       value =
           "findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation99DaysAfterAtartingARTCategory12Line63ColumnDInTheTemplateNumerator2(")
   public CohortDefinition
-      findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation99DaysAfterAtartingARTCategory12Line63ColumnDInTheTemplateNumerator2() {
+      findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation99DaysAfterAtartingARTCategory12Line63ColumnDInTheTemplateNumerator2(
+          boolean use14MonthsBeforePeriod) {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
@@ -82,7 +86,8 @@ public class MQCategory12P1CohortQueries {
         "DENOMINATOR",
         EptsReportUtils.map(
             this.mQGenericCohortQueries
-                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(),
+                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(
+                    use14MonthsBeforePeriod),
             mappings));
 
     definition.addSearch(
@@ -138,7 +143,8 @@ public class MQCategory12P1CohortQueries {
       value =
           "findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation33DaysAfterAtartingARTCategory12Line62ColumnDInTheTemplateNumerator(")
   public CohortDefinition
-      findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation33DaysAfterAtartingARTCategory12Line62ColumnDInTheTemplateNumerator1() {
+      findPatientsWhoStartedARTInTheInclusionPeriodAndReturnedForClinicalConsultation33DaysAfterAtartingARTCategory12Line62ColumnDInTheTemplateNumerator1(
+          boolean use14MonthsBeforePeriod) {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
@@ -157,7 +163,8 @@ public class MQCategory12P1CohortQueries {
         "DENOMINATOR",
         EptsReportUtils.map(
             this.mQGenericCohortQueries
-                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(),
+                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(
+                    use14MonthsBeforePeriod),
             mappings));
 
     definition.addSearch(

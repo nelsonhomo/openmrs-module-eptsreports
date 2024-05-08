@@ -36,6 +36,9 @@ public class MQCategory12P2CohortQueries {
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
+    final String mappingsTrfOutCat12 =
+        "startInclusionDate=${endRevisionDate-14m},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
     definition.addSearch(
         "START-ART",
         EptsReportUtils.map(
@@ -63,17 +66,12 @@ public class MQCategory12P2CohortQueries {
             this.mqCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
 
     definition.addSearch(
-        "BREASTFEEDING",
-        EptsReportUtils.map(
-            this.mqCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
-
-    definition.addSearch(
         "TRANSFERED-OUT",
         EptsReportUtils.map(
-            this.mqCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
+            this.mqCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappingsTrfOutCat12));
 
     definition.setCompositionString(
-        "((START-ART OR BREASTFEEDING) AND B1-FIRSTLINE) NOT (B1E-NOTFIRSTLINE OR PREGNANT OR TRANSFERED-OUT)");
+        "(START-ART AND B1-FIRSTLINE) NOT (B1E-NOTFIRSTLINE OR PREGNANT OR TRANSFERED-OUT)");
 
     return definition;
   }
@@ -134,6 +132,9 @@ public class MQCategory12P2CohortQueries {
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
+    final String mappingsTrfOutCat12 =
+        "startInclusionDate=${endRevisionDate-14m},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
     definition.addSearch(
         "START-ART",
         EptsReportUtils.map(
@@ -168,10 +169,10 @@ public class MQCategory12P2CohortQueries {
     definition.addSearch(
         "TRANSFERED-OUT",
         EptsReportUtils.map(
-            this.mqCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
+            this.mqCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappingsTrfOutCat12));
 
     definition.setCompositionString(
-        "((START-ART OR BREASTFEEDING) AND B2-SECONDLINE) NOT (B2E-NOTSECONDLINE OR PREGNANT OR TRANSFERED-OUT)");
+        "(START-ART AND B2-SECONDLINE) NOT (B2E-NOTSECONDLINE OR PREGNANT OR TRANSFERED-OUT)");
 
     return definition;
   }
@@ -232,6 +233,9 @@ public class MQCategory12P2CohortQueries {
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
+    final String mappingsTrfOutCat12 =
+        "startInclusionDate=${endRevisionDate-14m},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
     definition.addSearch(
         "START-ART",
         EptsReportUtils.map(
@@ -265,7 +269,8 @@ public class MQCategory12P2CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mqCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mqCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappingsTrfOutCat12));
 
     definition.setCompositionString(
         "(START-ART AND  PREGNANT AND B1-FIRSTLINE) NOT (B1E-NOTFIRSTLINE OR TRANSFERED-OUT)");

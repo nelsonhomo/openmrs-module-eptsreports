@@ -119,7 +119,8 @@ public class MQCategory11CohortQueries {
       value =
           "findAdultsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATOR")
   public CohortDefinition
-      findPatientsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATOR() {
+      findPatientsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATOR(
+          boolean use14MonthsBeforePeriod) {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
@@ -137,7 +138,8 @@ public class MQCategory11CohortQueries {
         "DENOMINATOR",
         EptsReportUtils.map(
             this.mQGenericCohortQueries
-                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(),
+                .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(
+                    use14MonthsBeforePeriod),
             mappings));
 
     definition.addSearch(
