@@ -24,7 +24,7 @@ public class MQCategory12P2DataSet extends MQAbstractDataSet {
                 "CAT12ADULTDENOMINATORFIRSTLINE",
                 mappings),
             mappings),
-        "ageMqNewART=15PlusOrBreastfeeding");
+        "ageMqNewART=15PlusOnART12mAgoOrBreastfeeding");
 
     dataSetDefinition.addColumn(
         "CAT12ADULTNUMERATORFIRSTLINE",
@@ -36,7 +36,7 @@ public class MQCategory12P2DataSet extends MQAbstractDataSet {
                 "CAT12ADULTNUMERATORFIRSTLINE",
                 mappings),
             mappings),
-        "ageMqNewART=15PlusOrBreastfeeding");
+        "ageMqNewART=15PlusOnART12mAgoOrBreastfeeding");
 
     dataSetDefinition.addColumn(
         "CAT12ADULTDENOMINATORSECONDLINE",
@@ -48,7 +48,7 @@ public class MQCategory12P2DataSet extends MQAbstractDataSet {
                 "CAT12ADULTDENOMINATORSECONDLINE",
                 mappings),
             mappings),
-        "ageMqNewART=15PlusOrBreastfeeding");
+        "ageMqNewART=15PlusOnART12mAgoOrBreastfeeding");
 
     dataSetDefinition.addColumn(
         "CAT12ADULTNUMERATORSECONDLINE",
@@ -60,7 +60,7 @@ public class MQCategory12P2DataSet extends MQAbstractDataSet {
                 "CAT12ADULTNUMERATORSECONDLINE",
                 mappings),
             mappings),
-        "ageMqNewART=15PlusOrBreastfeeding");
+        "ageMqNewART=15PlusOnART12mAgoOrBreastfeeding");
 
     dataSetDefinition.addColumn(
         "CAT12CHILDRENDENOMINATORFIRSTLINE",

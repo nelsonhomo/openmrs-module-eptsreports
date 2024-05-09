@@ -130,6 +130,38 @@ public interface GenericMQQueryIntarface {
       return String.format(sql, startAge);
     }
 
+    public static final String findPatientsWhoAreNewlyEnrolledOnART12MonthsAgoOrBreastfeeding(
+        int startAge) {
+
+      final String sql =
+          " select f.patient_id from   ( "
+              + "SELECT patient_id FROM ( "
+              + "SELECT patient_id, MIN(art_start_date) art_start_date FROM ( "
+              + "SELECT p.patient_id, MIN(value_datetime) art_start_date FROM patient p "
+              + "INNER JOIN encounter e ON p.patient_id=e.patient_id "
+              + "INNER JOIN obs o ON e.encounter_id=o.encounter_id "
+              + "WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.encounter_type=53 "
+              + "AND o.concept_id=1190 AND o.value_datetime is NOT NULL AND o.value_datetime<=:endRevisionDate AND e.location_id=:location "
+              + "GROUP BY p.patient_id "
+              + ") art_start GROUP "
+              + "BY patient_id "
+              + ") tx_new "
+              + "INNER JOIN person pe ON tx_new.patient_id=pe.person_id "
+              + "WHERE (TIMESTAMPDIFF(year,pe.birthdate,art_start_date)) >= %s AND pe.birthdate IS NOT NULL and pe.voided = 0 "
+              + "and art_start_date BETWEEN date_add(:endRevisionDate, interval -14 MONTH) AND  date_add(:endRevisionDate, interval -11 MONTH) "
+              + ")f "
+              + "union "
+              + "Select p.patient_id from person pe "
+              + "inner join patient p on pe.person_id=p.patient_id "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs o on e.encounter_id=o.encounter_id "
+              + "inner join obs obsLactante on e.encounter_id=obsLactante.encounter_id "
+              + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsLactante.voided=0 and e.encounter_type=53 and e.location_id=:location and "
+              + "o.concept_id=1190 and o.value_datetime is not null and "
+              + "obsLactante.concept_id=6332 and obsLactante.value_coded=1065 and pe.gender='F' ";
+      return String.format(sql, startAge);
+    }
+
     public static final String findPatientsWhoAreNewlyEnrolledOnARTLessThanParam(int startAge) {
 
       final String sql =
