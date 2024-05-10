@@ -2373,11 +2373,20 @@ left join
 ( 
 	select patient_id, max(data_cd4) max_data_cd4 
 	from ( 
+		select p.patient_id, e.encounter_datetime data_cd4  
+		From patient p 
+			inner join encounter e on p.patient_id=e.patient_id 
+			inner join obs o on e.encounter_id=o.encounter_id 
+		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type = 6
+			and e.encounter_datetime <= :endDate and e.location_id=:location
+			
+			union
+			
 		select p.patient_id, o.obs_datetime data_cd4  
 		From patient p 
 			inner join encounter e on p.patient_id=e.patient_id 
 			inner join obs o on e.encounter_id=o.encounter_id 
-		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type in (6,51,13,90) 
+		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type in (51,13,90) 
 			and o.obs_datetime <= :endDate and e.location_id=:location
 	
 	union
@@ -2397,11 +2406,20 @@ left join
 	from ( 
 		select patient_id, max(data_cd4) max_data_cd4 
 		from ( 
+			select p.patient_id, e.encounter_datetime data_cd4  
+			From patient p 
+				inner join encounter e on p.patient_id=e.patient_id 
+				inner join obs o on e.encounter_id=o.encounter_id 
+			where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type = 6
+				and e.encounter_datetime <= :endDate and e.location_id=:location
+			
+			union
+			
 			select p.patient_id, o.obs_datetime data_cd4  
 			From patient p 
 				inner join encounter e on p.patient_id=e.patient_id 
 				inner join obs o on e.encounter_id=o.encounter_id 
-			where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type in (6,51,13,90) 
+			where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type in (51,13,90) 
 				and o.obs_datetime <= :endDate and e.location_id=:location
 		
 		union
@@ -2429,11 +2447,20 @@ left join
 		
 	    		select patient_id, max(data_cd4) max_data_cd4 
 			from ( 
+				select p.patient_id, e.encounter_datetime data_cd4  
+				From patient p 
+					inner join encounter e on p.patient_id=e.patient_id 
+					inner join obs o on e.encounter_id=o.encounter_id 
+				where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type = 6
+					and e.encounter_datetime <= :endDate and e.location_id=:location
+			
+			union
+			
 				select p.patient_id, o.obs_datetime data_cd4  
 				From patient p 
 					inner join encounter e on p.patient_id=e.patient_id 
 					inner join obs o on e.encounter_id=o.encounter_id 
-				where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type in (6,51,13,90) 
+				where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type in (51,13,90) 
 					and o.obs_datetime <= :endDate and e.location_id=:location
 			
 			union
@@ -2449,11 +2476,20 @@ left join
 	    ) ultimoCd4 
 	    inner join 
 	    ( 
+	    		select p.patient_id, e.encounter_datetime obs_datetime, o.value_numeric  
+				From patient p 
+					inner join encounter e on p.patient_id=e.patient_id 
+					inner join obs o on e.encounter_id=o.encounter_id 
+				where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type = 6
+					and e.encounter_datetime <= :endDate and e.location_id=:location
+			
+			union
+			
 			Select p.patient_id, o.obs_datetime, o.value_numeric  
 			From patient p 
 	    			inner join encounter e on p.patient_id=e.patient_id 
 	    			inner join obs o on e.encounter_id=o.encounter_id 
-	    		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,90) 
+	    		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (51,13,90) 
 	    			and o.obs_datetime <= :endDate and e.location_id=:location
 
 	    		union
@@ -2482,11 +2518,19 @@ left join
 			
 		    		select patient_id, max(data_cd4) max_data_cd4 
 				from ( 
+				select p.patient_id, e.encounter_datetime data_cd4  
+				From patient p 
+					inner join encounter e on p.patient_id=e.patient_id 
+					inner join obs o on e.encounter_id=o.encounter_id 
+				where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type = 6
+					and e.encounter_datetime <= :endDate and e.location_id=:location
+			
+			union
 					select p.patient_id, o.obs_datetime data_cd4  
 					From patient p 
 						inner join encounter e on p.patient_id=e.patient_id 
 						inner join obs o on e.encounter_id=o.encounter_id 
-					where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type in (6,51,13,90) 
+					where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type in (51,13,90) 
 						and o.obs_datetime <= :endDate and e.location_id=:location
 				
 				union
@@ -2502,11 +2546,20 @@ left join
 		    ) ultimoCd4 
 		    inner join 
 		    ( 
+		    	select p.patient_id, e.encounter_datetime obs_datetime, o.value_numeric  
+				From patient p 
+					inner join encounter e on p.patient_id=e.patient_id 
+					inner join obs o on e.encounter_id=o.encounter_id 
+				where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and e.encounter_type = 6
+					and e.encounter_datetime <= :endDate and e.location_id=:location
+			
+			union
+			
 				Select p.patient_id, o.obs_datetime, o.value_numeric  
 				From patient p 
 		    			inner join encounter e on p.patient_id=e.patient_id 
 		    			inner join obs o on e.encounter_id=o.encounter_id 
-		    		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,90) 
+		    		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (51,13,90) 
 		    			and o.obs_datetime <= :endDate and e.location_id=:location
 	
 		    		union
