@@ -2436,7 +2436,8 @@ left join
 		inner join encounter e on e.patient_id = maxCD4.patient_id 
 		inner join obs o on e.encounter_id=o.encounter_id 
 	where e.voided = 0 and o.voided = 0 and  o.concept_id = 1695
-	 and (( e.encounter_type in (6,51,13,90) and e.encounter_datetime = maxCD4.max_data_cd4) or ( e.encounter_type = 53 and o.obs_datetime = maxCD4.max_data_cd4))
+	 and (( e.encounter_type in (51,13,90) and o.obs_datetime = maxCD4.max_data_cd4) or ( e.encounter_type = 53 and o.obs_datetime = maxCD4.max_data_cd4)
+	 or ( e.encounter_type = 6 and e.encounter_datetime = maxCD4.max_data_cd4))
  ) valor_ultimo_cd4 on  valor_ultimo_cd4.patient_id = inicioDAH.patient_id 
 left join
 ( 
@@ -2579,7 +2580,8 @@ left join
 		inner join encounter e on e.patient_id = valor_penultimo_cd4.patient_id 
 		inner join obs o on e.encounter_id=o.encounter_id 
 	where e.voided = 0 and o.voided = 0 and  o.concept_id = 1695
-	 and (( e.encounter_type in (6,51,13,90) and o.obs_datetime = valor_penultimo_cd4.dataCd4Anterior) or ( e.encounter_type = 53 and o.obs_datetime = valor_penultimo_cd4.dataCd4Anterior))
+	 and (( e.encounter_type in (51,13,90) and o.obs_datetime = valor_penultimo_cd4.dataCd4Anterior) or ( e.encounter_type = 53 and o.obs_datetime = valor_penultimo_cd4.dataCd4Anterior)
+	 or ( e.encounter_type = 6 and e.encounter_datetime = valor_penultimo_cd4.dataCd4Anterior))
 )
 valor_penultimo_cd4 on inicioDAH.patient_id = valor_penultimo_cd4.patient_id 
     left join ( 
