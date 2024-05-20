@@ -32,7 +32,7 @@ public class ResumoMensalDAHCohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("NumberOfPatientsActiveInDAHWhoAreInTARVByEndOfPreviousMonthIndicator0");
-    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${startDate-1d},endDate=${endDate},location=${location}";
 
     definition.setName("getNumberOfPatientsActiveInDAHWhoAreInTARVByEndOfPreviousMonthIndicator0");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
