@@ -157,7 +157,7 @@
 			     
 		                                ) saidas_por_transferencia 
 
-		                                 inner join
+		                                 left join
 		                                (
 									      select p.patient_id,max(e.encounter_datetime) encounter_datetime
 									      from patient p
@@ -169,7 +169,7 @@
 									      and e.encounter_type=18
 									      group by p.patient_id
 		                                )lev on saidas_por_transferencia.patient_id=lev.patient_id
-	                                	where lev.encounter_datetime<=saidas_por_transferencia.data_estado
+	                                	where lev.encounter_datetime<=saidas_por_transferencia.data_estado or lev.encounter_datetime is null
 	                                	group by saidas_por_transferencia.patient_id 
 	                                	
                                	) saidas_por_transferencia
