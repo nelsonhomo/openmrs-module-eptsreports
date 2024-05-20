@@ -56,7 +56,7 @@
              when estadioDePermanencia.tipo_saida = 2 then 'OBITO' 
              when estadioDePermanencia.tipo_saida = 3 then 'SUSPENSO' 
              when estadioDePermanencia.tipo_saida = 4 then 'TRANSFERIDO PARA' 
-             when (ISNULL(estadioDePermanencia36Meses.tipo_saida) OR estadioDePermanencia36Meses.tipo_saida='') then 'ACTIVO' 
+             when (ISNULL(estadioDePermanencia.tipo_saida) OR estadioDePermanencia.tipo_saida='') then 'ACTIVO' 
              end as estado_permanencia_12_meses, 
 
            -- COLUNAS 24 MESES
@@ -103,11 +103,11 @@
            if(todasConsultasFichaApss24Meses.total_apss_24_meses is not null, todasConsultasFichaApss24Meses.total_apss_24_meses,'0')  total_consultas_apss_24_meses,
 
              case 
-             when estadioDePermanencia.tipo_saida = 1 then 'ABANDONO' 
-             when estadioDePermanencia.tipo_saida = 2 then 'OBITO' 
-             when estadioDePermanencia.tipo_saida = 3 then 'SUSPENSO' 
-             when estadioDePermanencia.tipo_saida = 4 then 'TRANSFERIDO PARA' 
-             when (ISNULL(estadioDePermanencia36Meses.tipo_saida) OR estadioDePermanencia36Meses.tipo_saida='') then 'ACTIVO' 
+             when estadioDePermanencia24Meses.tipo_saida = 1 then 'ABANDONO' 
+             when estadioDePermanencia24Meses.tipo_saida = 2 then 'OBITO' 
+             when estadioDePermanencia24Meses.tipo_saida = 3 then 'SUSPENSO' 
+             when estadioDePermanencia24Meses.tipo_saida = 4 then 'TRANSFERIDO PARA' 
+             when (ISNULL(estadioDePermanencia24Meses.tipo_saida) OR estadioDePermanencia24Meses.tipo_saida='') then 'ACTIVO' 
              else 'ACTIVO'
              end as estado_permanencia_24_meses, 
 
@@ -1241,7 +1241,7 @@
                             Select person_id,death_date from person p where p.dead=1 
                             --and p.death_date<=NOW()  
                             )transferido 
-                            --group by patient_id 
+                            group by patient_id 
                             ) obito on obito.patient_id=tx_new.patient_id
                             inner join 
                             ( 
@@ -1362,7 +1362,7 @@
                             Select person_id,death_date from person p where p.dead=1 
                             --and p.death_date<=NOW()  
                             )transferido 
-                            --group by patient_id 
+                             group by patient_id 
                             ) obito on obito.patient_id=tx_new.patient_id
                             inner join 
                             ( 
@@ -2532,7 +2532,7 @@
                             Select person_id,death_date from person p where p.dead=1 
                             --and p.death_date<=NOW()  
                             )transferido 
-                            --group by patient_id 
+                             group by patient_id 
                             ) obito on obito.patient_id=tx_new.patient_id
                             inner join 
                             ( 
@@ -3837,7 +3837,7 @@
                             Select person_id,death_date from person p where p.dead=1 
                             --and p.death_date<=NOW()  
                             )transferido 
-                            --group by patient_id 
+                             group by patient_id 
                             ) obito on obito.patient_id=tx_new.patient_id
                             inner join 
                             ( 
@@ -3957,7 +3957,7 @@
                             Select person_id,death_date from person p where p.dead=1 
                             --and p.death_date<=NOW()  
                             )transferido 
-                            --group by patient_id 
+                            group by patient_id 
                             ) obito on obito.patient_id=tx_new.patient_id
                             inner join 
                             ( 
