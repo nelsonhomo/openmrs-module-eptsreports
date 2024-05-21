@@ -56,21 +56,21 @@ public class MICategory7CohortQueries {
         "TB-ACTIVE-CAT7-B1",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPICategory7(),
+                .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7(),
             mappingsMI));
 
     definition.addSearch(
         "TB-SCREENING-CAT7-B2",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsWithPositiveTBScreeningDuring9MonthsAfterInitiatedINHCategory7(),
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7(),
             mappingsMI));
 
     definition.addSearch(
         "TB-TREATMENT-CAT7-B3",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .finPatientsWhoHadTBTreatmentDuring9MonthsAfterInitiatedINHCategory7(),
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7(),
             mappingsMI));
 
     definition.addSearch(
@@ -250,21 +250,21 @@ public class MICategory7CohortQueries {
         "TB-ACTIVE-CAT7-B1",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPICategory7(),
+                .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7(),
             mappingsMI));
 
     definition.addSearch(
         "TB-SCREENING-CAT7-B2",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsWithPositiveTBScreeningDuring9MonthsAfterInitiatedINHCategory7(),
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7(),
             mappingsMI));
 
     definition.addSearch(
         "TB-TREATMENT-CAT7-B3",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .finPatientsWhoHadTBTreatmentDuring9MonthsAfterInitiatedINHCategory7(),
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7(),
             mappingsMI));
 
     definition.addSearch(

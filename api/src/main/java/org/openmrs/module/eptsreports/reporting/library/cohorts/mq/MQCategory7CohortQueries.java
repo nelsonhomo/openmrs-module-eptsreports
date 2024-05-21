@@ -161,18 +161,39 @@ public class MQCategory7CohortQueries {
         "TB-ACTIVE-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPICategory7(),
+                .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7(),
             mappings));
 
     definition.addSearch(
         "TB-SCREENING-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsWithPositiveTBScreeningDuring9MonthsAfterInitiatedINHCategory7(),
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7(),
             mappings));
 
     definition.addSearch(
         "TB-TREATMENT-CAT7",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7(),
+            mappings));
+
+    definition.addSearch(
+        "TB-ACTIVE-CAT7-INH",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPIINHCategory7(),
+            mappings));
+
+    definition.addSearch(
+        "TB-SCREENING-CAT7-INH",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .findPatientsWithPositiveTBScreeningDuring9MonthsAfterInitiatedINHCategory7(),
+            mappings));
+
+    definition.addSearch(
+        "TB-TREATMENT-CAT7-INH",
         EptsReportUtils.map(
             this.mQCohortQueries
                 .finPatientsWhoHadTBTreatmentDuring9MonthsAfterInitiatedINHCategory7(),
@@ -233,6 +254,9 @@ public class MQCategory7CohortQueries {
             + "NOT (TB-ACTIVE-CAT7  "
             + "OR TB-SCREENING-CAT7 "
             + "OR TB-TREATMENT-CAT7 "
+            + "OR TB-ACTIVE-CAT7-INH  "
+            + "OR TB-SCREENING-CAT7-INH "
+            + "OR TB-TREATMENT-CAT7-INH "
             + "OR TRANSFERED-IN "
             + "OR TRANSFERED-OUT "
             + "OR PREGNANT "
@@ -347,18 +371,39 @@ public class MQCategory7CohortQueries {
         "TB-ACTIVE-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPICategory7(),
+                .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7(),
             mappings));
 
     definition.addSearch(
         "TB-SCREENING-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsWithPositiveTBScreeningDuring9MonthsAfterInitiatedINHCategory7(),
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7(),
             mappings));
 
     definition.addSearch(
         "TB-TREATMENT-CAT7",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7(),
+            mappings));
+
+    definition.addSearch(
+        "TB-ACTIVE-CAT7-INH",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPIINHCategory7(),
+            mappings));
+
+    definition.addSearch(
+        "TB-SCREENING-CAT7-INH",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .findPatientsWithPositiveTBScreeningDuring9MonthsAfterInitiatedINHCategory7(),
+            mappings));
+
+    definition.addSearch(
+        "TB-TREATMENT-CAT7-INH",
         EptsReportUtils.map(
             this.mQCohortQueries
                 .finPatientsWhoHadTBTreatmentDuring9MonthsAfterInitiatedINHCategory7(),
@@ -383,7 +428,7 @@ public class MQCategory7CohortQueries {
             mappings));
 
     definition.setCompositionString(
-        "((PREGNANT AND START-ART) AND (START-TPI-INH OR START-TPI-3HP)) NOT (TB-ACTIVE-CAT7 OR TB-SCREENING-CAT7 OR TB-TREATMENT-CAT7 OR TRANSFERED-IN OR TRANSFERED-OUT OR A OR B OR C OR BREASTFEEDING)");
+        "((PREGNANT AND START-ART) AND (START-TPI-INH OR START-TPI-3HP)) NOT (TB-ACTIVE-CAT7-INH OR TB-SCREENING-CAT7-INH OR TB-TREATMENT-CAT7-INH OR TB-ACTIVE-CAT7 OR TB-SCREENING-CAT7 OR TB-TREATMENT-CAT7 OR TRANSFERED-IN OR TRANSFERED-OUT OR A OR B OR C OR BREASTFEEDING)");
 
     return definition;
   }
