@@ -572,5 +572,126 @@ public interface GenericMQQueryIntarface {
 
       return String.format(sql, startAge, endAge);
     }
+
+    public static final String calculateAgeOnPrensutiveTBLessThanParamByAgeRenge(int age) {
+
+      final String sql =
+          "select presuntivo.patient_id "
+              + "from ( "
+              + "select  p.patient_id,min(e.encounter_datetime) data_presuntivo_tb  "
+              + "from  patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs o on o.encounter_id=e.encounter_id "
+              + "where  e.voided=0  "
+              + "and o.voided=0  "
+              + "and p.voided=0  "
+              + "and e.encounter_type=6  "
+              + "and o.concept_id=23758  "
+              + "and o.value_coded=1065   "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id "
+              + "union "
+              + "select  p.patient_id,min(e.encounter_datetime) data_presuntivo_tb "
+              + "from  patient p  "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs o on o.encounter_id=e.encounter_id "
+              + "where  e.voided=0 "
+              + "and o.voided=0  "
+              + "and p.voided=0  "
+              + "and e.encounter_type=6  "
+              + "and o.concept_id=1766  "
+              + "and o.value_coded in(1763,1764,1762,1760,23760,1765)      "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id "
+              + ")presuntivo "
+              + "inner join person pe on pe.person_id=presuntivo.patient_id "
+              + "where TIMESTAMPDIFF(year,pe.birthdate,presuntivo.data_presuntivo_tb) < %s  and  birthdate IS NOT NULL ";
+
+      return String.format(sql, age);
+    }
+
+    public static final String calculateAgeOnPrensutiveBiggerThanParam(int age) {
+
+      final String sql =
+          "select presuntivo.patient_id "
+              + "from ( "
+              + "select  p.patient_id,min(e.encounter_datetime) data_presuntivo_tb  "
+              + "from  patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs o on o.encounter_id=e.encounter_id "
+              + "where  e.voided=0  "
+              + "and o.voided=0  "
+              + "and p.voided=0  "
+              + "and e.encounter_type=6  "
+              + "and o.concept_id=23758  "
+              + "and o.value_coded=1065   "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id "
+              + "union "
+              + "select  p.patient_id,min(e.encounter_datetime) data_presuntivo_tb "
+              + "from  patient p  "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs o on o.encounter_id=e.encounter_id "
+              + "where  e.voided=0 "
+              + "and o.voided=0  "
+              + "and p.voided=0  "
+              + "and e.encounter_type=6  "
+              + "and o.concept_id=1766  "
+              + "and o.value_coded in(1763,1764,1762,1760,23760,1765)      "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id "
+              + ")presuntivo "
+              + "inner join person pe on pe.person_id=presuntivo.patient_id "
+              + "where TIMESTAMPDIFF(year,pe.birthdate,presuntivo.data_presuntivo_tb) >= %s  and  birthdate IS NOT NULL ";
+      return String.format(sql, age);
+    }
+
+    public static final String calculateAgeOnPrensutiveTBByAgeRenge(int startAge, int endAge) {
+
+      final String sql =
+          "select presuntivo.patient_id "
+              + "from ( "
+              + "select  p.patient_id,min(e.encounter_datetime) data_presuntivo_tb  "
+              + "from  patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs o on o.encounter_id=e.encounter_id "
+              + "where  e.voided=0  "
+              + "and o.voided=0  "
+              + "and p.voided=0  "
+              + "and e.encounter_type=6  "
+              + "and o.concept_id=23758  "
+              + "and o.value_coded=1065   "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id "
+              + "union "
+              + "select  p.patient_id,min(e.encounter_datetime) data_presuntivo_tb "
+              + "from  patient p  "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs o on o.encounter_id=e.encounter_id "
+              + "where  e.voided=0 "
+              + "and o.voided=0  "
+              + "and p.voided=0  "
+              + "and e.encounter_type=6  "
+              + "and o.concept_id=1766  "
+              + "and o.value_coded in(1763,1764,1762,1760,23760,1765)      "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id "
+              + ")presuntivo "
+              + "inner join person pe on pe.person_id=presuntivo.patient_id "
+              + "where TIMESTAMPDIFF(year,pe.birthdate,presuntivo.data_presuntivo_tb) BETWEEN %s AND %s  and  birthdate IS NOT NULL ";
+      return String.format(sql, startAge, endAge);
+    }
   }
 }
