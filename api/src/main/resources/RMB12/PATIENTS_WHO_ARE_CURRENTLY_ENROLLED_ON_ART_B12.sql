@@ -269,7 +269,7 @@
 											group by maxFila.patient_id 
 
                                      		 union
-									select patient_id,  dat_fila, date_add(dat_fila, interval 30 day) data_proximo_lev from (
+									select patient_id,dat_fila, date_add(dat_fila, interval 30 day) data_proximo_lev from (
                                              Select p.patient_id, max(value_datetime) as  dat_fila
                                              from patient p 
                                                  inner join encounter e on p.patient_id=e.patient_id 

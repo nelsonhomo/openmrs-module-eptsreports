@@ -180,13 +180,11 @@
 									      and e.voided = 0
 									      and e.encounter_datetime <:endDate
 									      and e.location_id =:location
-									      
 									      and e.encounter_type=18
 									      group by p.patient_id
 		                                )lev on saidas_por_transferencia.patient_id=lev.patient_id
 	                                	where lev.encounter_datetime<=saidas_por_transferencia.data_estado or lev.encounter_datetime is null
 	                                	group by saidas_por_transferencia.patient_id 
-	                                	
                                	) saidas_por_transferencia
                                 inner join
 			                 	(  
