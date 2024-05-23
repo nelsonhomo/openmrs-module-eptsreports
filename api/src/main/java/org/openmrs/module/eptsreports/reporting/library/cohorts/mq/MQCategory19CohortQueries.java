@@ -149,6 +149,27 @@ public class MQCategory19CohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(
+      value = "findAllPatientsWhoHaveTBDiagnosticActiveAndTheSomeDateHaveTBTratment")
+  public CohortDefinition findAllPatientsWhoHaveTBDiagnosticActiveAndTheSomeDateHaveTBTratment() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findAllPatientsWhoHavePresumptiveTBAndGeneXpertRequest");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory19QueriesInterface.QUERY
+            .findAllPatientsWhoHaveTBDiagnosticActiveAndTheSomeDateHaveTBTratment;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientsWithGeneXpertRequestExcludingTransferedOutDenominator")
   public CohortDefinition findPatientsWithGeneXpertRequestExcludingTransferedOutDenominator() {
 
@@ -225,14 +246,102 @@ public class MQCategory19CohortQueries {
 
     definition.addSearch(
         "GENEXPERTREQUEST",
-        EptsReportUtils.map(
-            this.findPatientsWithGeneXpertRequestExcludingTransferedOutDenominator(), mappings));
+        EptsReportUtils.map(this.findAllPatientsWhoHaveGeneXpertRequest(), mappings));
     definition.addSearch(
         "GENEXPERTRESULT",
         EptsReportUtils.map(
             this.findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequest(), mappings));
+    definition.addSearch(
+        "TROUT", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
 
-    definition.setCompositionString("GENEXPERTREQUEST AND GENEXPERTRESULT");
+    definition.setCompositionString("(GENEXPERTREQUEST AND GENEXPERTRESULT) NOT TROUT");
+
+    return definition;
+  }
+
+  public CohortDefinition
+      findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequestNumerator() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequestNumerator");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR",
+        EptsReportUtils.map(
+            this.findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequestDenominator(),
+            mappings));
+
+    definition.addSearch(
+        "GENEXPERTRESULT",
+        EptsReportUtils.map(
+            this.findAllPatientsWithGeneXpertResultAfterSevenDaysGeneXpertRequest(), mappings));
+
+    definition.setCompositionString("DENOMINATOR AND GENEXPERTRESULT");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findAllPatientsWhoHaveTBDiagnosticActiveDenominator")
+  public CohortDefinition findAllPatientsWhoHaveTBDiagnosticActiveDenominator() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findAllPatientsWhoHaveTBDiagnosticActiveDenominator");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "TBDIAGNOSTIC",
+        EptsReportUtils.map(this.findAllPatientsWhoHaveTBDiagnosticActive(), mappings));
+
+    definition.addSearch(
+        "TROUT", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+
+    definition.setCompositionString("TBDIAGNOSTIC NOT TROUT");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findAllPatientsWhoHaveTBDiagnosticActiveNumerator")
+  public CohortDefinition findAllPatientsWhoHaveTBDiagnosticActiveNumerator() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findAllPatientsWhoHaveTBDiagnosticActiveNumerator");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR",
+        EptsReportUtils.map(this.findAllPatientsWhoHaveTBDiagnosticActiveDenominator(), mappings));
+
+    definition.addSearch(
+        "TB",
+        EptsReportUtils.map(
+            findAllPatientsWhoHaveTBDiagnosticActiveAndTheSomeDateHaveTBTratment(), mappings));
+
+    definition.setCompositionString("DENOMINATOR AND TB");
 
     return definition;
   }

@@ -69,5 +69,13 @@ public class MQCommonsDementions {
     dataSetDefinition.addDimension(
         "ageOnPresuntiveTB",
         EptsReportUtils.map(this.mQAgeDimensions.getDimensionAgeOnThePresuntiveTB(), mappings));
+
+    dataSetDefinition.addDimension(
+        "ageOnGeneXpertRequest",
+        EptsReportUtils.map(this.mQAgeDimensions.getDimensionAgeOnGeneXpertRequest(), mappings));
+
+    dataSetDefinition.addDimension(
+        "ageOnTBDiagnostic",
+        EptsReportUtils.map(this.mQAgeDimensions.getDimensionAgeOnTBDiagnostic(), mappings));
   }
 }

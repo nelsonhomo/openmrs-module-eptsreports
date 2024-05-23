@@ -40,7 +40,8 @@ public interface MQCategory19QueriesInterface {
             + "group by final.patient_id ";
 
     public static final String findAllPatientsWhoHaveGeneXpertRequest =
-        "select  p.patient_id,min(e.encounter_datetime) data_presuntivo_tb  "
+        "select final.patient_id from ( "
+            + "select  p.patient_id,min(e.encounter_datetime) data_presuntivo_tb  "
             + "from  patient p  "
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs o on o.encounter_id=e.encounter_id "
@@ -53,10 +54,12 @@ public interface MQCategory19QueriesInterface {
             + "and e.location_id=:location   "
             + "and e.encounter_datetime>=:startInclusionDate  "
             + "and e.encounter_datetime<=:endRevisionDate "
-            + "group by p.patient_id ";
+            + "group by p.patient_id "
+            + ")final ";
     public static final String findAllPatientsWhoHaveTBDiagnosticActive =
-        "select  p.patient_id,min(e.encounter_datetime) data_presuntivo_tb  "
-            + "from    patient p "
+        "select final.patient_id from ( "
+            + "select  p.patient_id,min(e.encounter_datetime) data_presuntivo_tb  "
+            + "from  patient p "
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs o on o.encounter_id=e.encounter_id   "
             + "where  e.voided=0  "
@@ -68,7 +71,45 @@ public interface MQCategory19QueriesInterface {
             + "and e.location_id=:location   "
             + "and e.encounter_datetime>=:startInclusionDate  "
             + "and e.encounter_datetime<=:endRevisionDate "
-            + "group by p.patient_id ";
+            + "group by p.patient_id "
+            + ") final ";
+
+    public static final String
+        findAllPatientsWhoHaveTBDiagnosticActiveAndTheSomeDateHaveTBTratment =
+            "select tbDiagnostic.patient_id from  "
+                + "( "
+                + "select  p.patient_id,min(e.encounter_datetime) data_tb_diagnostic  from patient p  "
+                + "inner join encounter e on p.patient_id=e.patient_id  "
+                + "inner join obs o on o.encounter_id=e.encounter_id  "
+                + "where  e.voided=0  "
+                + "and o.voided=0  "
+                + "and p.voided=0  "
+                + "and e.encounter_type=6  "
+                + "and o.concept_id=23761  "
+                + "and o.value_coded=1065  "
+                + "and e.location_id=:location   "
+                + "and e.encounter_datetime>=:startInclusionDate  "
+                + "and e.encounter_datetime<=:endRevisionDate "
+                + "group by p.patient_id "
+                + ")tbDiagnostic "
+                + "left join "
+                + "( "
+                + "select  p.patient_id,min(o.obs_datetime) data_tb_treatment "
+                + "from patient p  "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "inner join obs o on o.encounter_id=e.encounter_id "
+                + "where  e.voided=0   "
+                + "and o.voided=0  "
+                + "and p.voided=0  "
+                + "and e.encounter_type=6  "
+                + "and o.concept_id=1268  "
+                + "and o.value_coded=1256  "
+                + "and e.location_id=:location   "
+                + "and e.encounter_datetime>=:startInclusionDate  "
+                + "and e.encounter_datetime<=:endRevisionDate "
+                + "group by p.patient_id "
+                + ")tbTreatment on tbDiagnostic.patient_id=tbTreatment.patient_id "
+                + "where tbDiagnostic.data_tb_diagnostic=tbTreatment.data_tb_treatment ";
 
     public static final String findAllPatientsWhoHavePresumptiveTBAndGeneXpertRequest =
         "select presuntivo.patient_id from "
@@ -103,7 +144,7 @@ public interface MQCategory19QueriesInterface {
             + "and e.encounter_datetime<=:endRevisionDate "
             + "group by p.patient_id "
             + ")presuntivo "
-            + "inner join "
+            + "left join "
             + "( "
             + "select  p.patient_id,min(e.encounter_datetime) data_genexpert "
             + "from    patient p  "
@@ -124,7 +165,7 @@ public interface MQCategory19QueriesInterface {
             + "group by presuntivo.patient_id ";
 
     public static final String findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequest =
-        "select geneXertRequest.patient_id "
+        "select geneXertRequest.patient_id from "
             + "( "
             + "select  p.patient_id,min(e.encounter_datetime) data_genexpert_request  "
             + "from  patient p "
@@ -160,7 +201,7 @@ public interface MQCategory19QueriesInterface {
             + "where  geneXertResult.data_genexpert_result=geneXertRequest.data_genexpert_request ";
 
     public static final String findAllPatientsWithGeneXpertResultAfterGeneXpertRequest =
-        "select geneXertRequest.patient_id "
+        "select geneXertRequest.patient_id from "
             + "( "
             + "select  p.patient_id,min(e.encounter_datetime) data_genexpert_request  "
             + "from  patient p "
@@ -196,7 +237,7 @@ public interface MQCategory19QueriesInterface {
             + "where  geneXertResult.data_genexpert_result>geneXertRequest.data_genexpert_request ";
 
     public static final String findAllPatientsWithGeneXpertResultAfterSevenDaysGeneXpertRequest =
-        "select geneXertRequest.patient_id "
+        "select geneXertRequest.patient_id from "
             + "( "
             + "select  p.patient_id,min(e.encounter_datetime) data_genexpert_request  "
             + "from  patient p "

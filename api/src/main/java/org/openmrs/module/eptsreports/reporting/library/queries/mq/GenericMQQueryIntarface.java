@@ -693,5 +693,159 @@ public interface GenericMQQueryIntarface {
               + "where TIMESTAMPDIFF(year,pe.birthdate,presuntivo.data_presuntivo_tb) BETWEEN %s AND %s  and  birthdate IS NOT NULL ";
       return String.format(sql, startAge, endAge);
     }
+
+    public static final String calculateAgeOnGeneXpertRequestLessThanParamByAgeRenge(int age) {
+
+      final String sql =
+          "select geneXertRequest.patient_id from "
+              + "( "
+              + "select  p.patient_id,min(e.encounter_datetime) data_genexpert_request   "
+              + "from  patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id  "
+              + "inner join obs o on o.encounter_id=e.encounter_id  "
+              + "where  e.voided=0  "
+              + "and o.voided=0   "
+              + "and p.voided=0   "
+              + "and e.encounter_type=6   "
+              + "and o.concept_id=23722   "
+              + "and o.value_coded=23723   "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id  "
+              + ")geneXertRequest  "
+              + "inner join person pe on pe.person_id=geneXertRequest.patient_id "
+              + "where TIMESTAMPDIFF(year,pe.birthdate,geneXertRequest.data_genexpert_request)< %s  and  birthdate IS NOT NULL ";
+
+      return String.format(sql, age);
+    }
+
+    public static final String calculateAgeOnGeneXpertRequestBiggerThanParam(int age) {
+
+      final String sql =
+          "select geneXertRequest.patient_id from "
+              + "( "
+              + "select  p.patient_id,min(e.encounter_datetime) data_genexpert_request   "
+              + "from  patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id  "
+              + "inner join obs o on o.encounter_id=e.encounter_id  "
+              + "where  e.voided=0  "
+              + "and o.voided=0   "
+              + "and p.voided=0   "
+              + "and e.encounter_type=6   "
+              + "and o.concept_id=23722   "
+              + "and o.value_coded=23723   "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id  "
+              + ")geneXertRequest  "
+              + "inner join person pe on pe.person_id=geneXertRequest.patient_id "
+              + "where TIMESTAMPDIFF(year,pe.birthdate,geneXertRequest.data_genexpert_request)>= %s  and  birthdate IS NOT NULL ";
+
+      return String.format(sql, age);
+    }
+
+    public static final String calculateAgeOnGeneXpertRequestByAgeRange(int startAge, int endAge) {
+
+      final String sql =
+          "select geneXertRequest.patient_id from "
+              + "( "
+              + "select  p.patient_id,min(e.encounter_datetime) data_genexpert_request   "
+              + "from  patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id  "
+              + "inner join obs o on o.encounter_id=e.encounter_id  "
+              + "where  e.voided=0  "
+              + "and o.voided=0   "
+              + "and p.voided=0   "
+              + "and e.encounter_type=6   "
+              + "and o.concept_id=23722   "
+              + "and o.value_coded=23723   "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id  "
+              + ")geneXertRequest  "
+              + "inner join person pe on pe.person_id=geneXertRequest.patient_id "
+              + "where TIMESTAMPDIFF(year,pe.birthdate,geneXertRequest.data_genexpert_request) BETWEEN %s AND %s  and  birthdate IS NOT NULL ";
+      ;
+      return String.format(sql, startAge, endAge);
+    }
+
+    public static final String calculateAgeOnTBDiagnosticLessThanParamByAgeRenge(int age) {
+
+      final String sql =
+          "select tbDiagnostic.patient_id from  "
+              + "( "
+              + "select  p.patient_id,min(e.encounter_datetime) data_tb_diagnostic  "
+              + "from  patient p  "
+              + "inner join encounter e on p.patient_id=e.patient_id  "
+              + "inner join obs o on o.encounter_id=e.encounter_id    "
+              + "where  e.voided=0   "
+              + "and o.voided=0  "
+              + "and p.voided=0  "
+              + "and e.encounter_type=6  "
+              + "and o.concept_id=23761  "
+              + "and o.value_coded=1065  "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id "
+              + ")tbDiagnostic "
+              + "inner join person pe on pe.person_id=tbDiagnostic.patient_id "
+              + "where TIMESTAMPDIFF(year,pe.birthdate,tbDiagnostic.data_tb_diagnostic )< %s  and  birthdate IS NOT NULL ";
+      return String.format(sql, age);
+    }
+
+    public static final String calculateAgeOnTBDiagnosticBiggerThanParam(int age) {
+
+      final String sql =
+          "select tbDiagnostic.patient_id from  "
+              + "( "
+              + "select  p.patient_id,min(e.encounter_datetime) data_tb_diagnostic  "
+              + "from  patient p  "
+              + "inner join encounter e on p.patient_id=e.patient_id  "
+              + "inner join obs o on o.encounter_id=e.encounter_id    "
+              + "where  e.voided=0   "
+              + "and o.voided=0  "
+              + "and p.voided=0  "
+              + "and e.encounter_type=6  "
+              + "and o.concept_id=23761  "
+              + "and o.value_coded=1065  "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id "
+              + ")tbDiagnostic "
+              + "inner join person pe on pe.person_id=tbDiagnostic.patient_id "
+              + "where TIMESTAMPDIFF(year,pe.birthdate,tbDiagnostic.data_tb_diagnostic )>= %s  and  birthdate IS NOT NULL ";
+      return String.format(sql, age);
+    }
+
+    public static final String calculateAgeOnTBDiagnosticByAgeRange(int startAge, int endAge) {
+
+      final String sql =
+          "select tbDiagnostic.patient_id from  "
+              + "( "
+              + "select  p.patient_id,min(e.encounter_datetime) data_tb_diagnostic  "
+              + "from  patient p  "
+              + "inner join encounter e on p.patient_id=e.patient_id  "
+              + "inner join obs o on o.encounter_id=e.encounter_id    "
+              + "where  e.voided=0   "
+              + "and o.voided=0  "
+              + "and p.voided=0  "
+              + "and e.encounter_type=6  "
+              + "and o.concept_id=23761  "
+              + "and o.value_coded=1065  "
+              + "and e.location_id=:location   "
+              + "and e.encounter_datetime>=:startInclusionDate  "
+              + "and e.encounter_datetime<=:endRevisionDate "
+              + "group by p.patient_id "
+              + ")tbDiagnostic "
+              + "inner join person pe on pe.person_id=tbDiagnostic.patient_id "
+              + "where TIMESTAMPDIFF(year,pe.birthdate,tbDiagnostic.data_tb_diagnostic ) BETWEEN %s AND %s   and  birthdate IS NOT NULL ";
+      ;
+      return String.format(sql, startAge, endAge);
+    }
   }
 }
