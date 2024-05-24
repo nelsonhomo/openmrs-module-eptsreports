@@ -87,7 +87,7 @@ public class SetupMDSEvaluationReport extends EptsDataExportManager {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "MDSV2.xls",
+              "AMDS.xls",
               "Relatório de Avaliação de MDS",
               getExcelDesignUuid(),
               null);

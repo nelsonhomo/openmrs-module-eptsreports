@@ -314,6 +314,87 @@ public class ResumoMensalCohortQueries {
     return definition;
   }
 
+  public CohortDefinition
+      getSumNumberOfPatientsTransferredOutFromOtherHealthFacilitiesDuringCurrentMonthB5() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("Number Of Patients Transferred In From Other Health Facilities");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "B12",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "B12",
+                ResumoMensalQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHLastMonthB12()),
+            mappings));
+
+    definition.addSearch(
+        "B5",
+        EptsReportUtils.map(
+            this.getNumberOfPatientsTransferredOutFromOtherHealthFacilitiesDuringCurrentMonthB5(),
+            mappings));
+
+    definition.setCompositionString("B12 AND B5 ");
+
+    return definition;
+  }
+
+  public CohortDefinition getSumNumberOfPatientsWhoAreDiedDuringCurrentMonthB5() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("Number Of Patients Transferred In From Other Health Facilities");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "B12",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "B12",
+                ResumoMensalQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHLastMonthB12()),
+            mappings));
+
+    definition.addSearch("B6", EptsReportUtils.map(this.getPatientsWhoDiedTratmentB8(), mappings));
+
+    definition.setCompositionString("B12 AND B6 ");
+
+    return definition;
+  }
+
+  public CohortDefinition getSumNumberOfPatientsWhoAreSuspendDuringCurrentMonthB5() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("Number Of Patients Transferred In From Other Health Facilities");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.addSearch(
+        "B12",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "B12",
+                ResumoMensalQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHLastMonthB12()),
+            mappings));
+
+    definition.addSearch(
+        "B6", EptsReportUtils.map(this.getPatientsWhoSuspendTratmentB6(), mappings));
+
+    definition.setCompositionString("B12 AND B6 ");
+
+    return definition;
+  }
+
   public CohortDefinition getTrfOutB5() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -545,15 +626,19 @@ public class ResumoMensalCohortQueries {
     definition.addSearch(
         "B5",
         EptsReportUtils.map(
-            getNumberOfPatientsTransferredOutFromOtherHealthFacilitiesDuringCurrentMonthB5(),
+            getSumNumberOfPatientsTransferredOutFromOtherHealthFacilitiesDuringCurrentMonthB5(),
             mappings));
 
-    definition.addSearch("B6", EptsReportUtils.map(getPatientsWhoSuspendTratmentB6(), mappings));
+    definition.addSearch(
+        "B6",
+        EptsReportUtils.map(getSumNumberOfPatientsWhoAreSuspendDuringCurrentMonthB5(), mappings));
 
     definition.addSearch(
         "B7", EptsReportUtils.map(this.getPatientsWhoAbandonedTratmentUpB7(), mappings));
 
-    definition.addSearch("B8", EptsReportUtils.map(getPatientsWhoDiedTratmentB8(), mappings));
+    definition.addSearch(
+        "B8",
+        EptsReportUtils.map(getSumNumberOfPatientsWhoAreDiedDuringCurrentMonthB5(), mappings));
 
     definition.setCompositionString("B5 OR B6 OR B7 OR B8 ");
 
