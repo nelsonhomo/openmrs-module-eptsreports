@@ -64,5 +64,10 @@ public class MQCommonsDementions {
         "ageOnTheFirstConsultationDuringInclusionPeriod",
         EptsReportUtils.map(
             this.mQAgeDimensions.getDimensionAgeOnTheFirstConsultation(), mappings));
+    
+    dataSetDefinition.addDimension(
+            "ageOnReinicio",
+            EptsReportUtils.map(
+                this.mQAgeDimensions.getDimensionForPatientsWhoReinitiatedTreatmentInClinicalConsultation(), mappings));
   }
 }
