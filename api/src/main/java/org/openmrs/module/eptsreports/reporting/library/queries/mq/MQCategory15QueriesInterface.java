@@ -1687,5 +1687,34 @@ public interface MQCategory15QueriesInterface {
             + "group by p.patient_id "
             + ") maxdiagnostico "
             + ") tb group by tb.patient_id ";
+
+    public static final String
+        findPatientsWhoFinishedTBTreatmentLessThan30DayBeforeTheLastClinicalConsultation =
+            "select f.patient_id from "
+                + "( "
+                + "select lastEnc.patient_id,tb.data_fim_tb,lastEnc.enc, DATEDIFF(lastEnc.enc,tb.data_fim_tb) "
+                + "from "
+                + "( "
+                + "Select p.patient_id,max(e.encounter_datetime) enc from patient p "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "where p.voided=0 and e.voided=0 and e.encounter_type=6 and "
+                + "e.encounter_datetime BETWEEN '2023-09-21' AND  :endRevisionDate  and e.location_id=:location "
+                + "group by p.patient_id "
+                + ")lastEnc "
+                + "inner join "
+                + "( "
+                + "select p.patient_id,max(o.obs_datetime) as data_fim_tb, e.encounter_id "
+                + "from patient p "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "inner join obs o on o.encounter_id=e.encounter_id "
+                + "where e.encounter_type=6 and e.voided=0 and o.voided=0 and p.voided=0 and o.concept_id=1268 "
+                + "and o.value_coded=1267 "
+                + "and e.location_id=:location "
+                + "and o.obs_datetime  <= :endRevisionDate "
+                + "group by p.patient_id "
+                + ")tb on lastEnc.patient_id=tb.patient_id "
+                + "WHERE tb.data_fim_tb <= lastEnc.enc AND DATEDIFF(lastEnc.enc,tb.data_fim_tb) <= 30 "
+                + " order by lastEnc.enc desc "
+                + " )f ";
   }
 }
