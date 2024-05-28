@@ -231,7 +231,7 @@
 				                    	) ultimo_levantamento 
 				                    	group by patient_id
 			                		) ultimo_levantamento on saidas_por_transferencia.patient_id = ultimo_levantamento.patient_id 
-			               		      where (ultimo_levantamento.data_ultimo_levantamento < :endDate	and saidas_por_transferencia.data_estado<:endDate)
+			               		      where (ultimo_levantamento.data_ultimo_levantamento <= :endDate	and saidas_por_transferencia.data_estado<=:endDate)
                                         ) 
                                          saida on inicio.patient_id=saida.patient_id 
                                         

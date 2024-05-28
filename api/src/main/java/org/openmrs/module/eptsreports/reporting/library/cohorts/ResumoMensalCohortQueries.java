@@ -334,12 +334,25 @@ public class ResumoMensalCohortQueries {
             mappings));
 
     definition.addSearch(
+        "B1",
+        EptsReportUtils.map(
+            this.txNewCohortQueries.getTxNewCompositionCohortMISAU("TX_NEW_MISAU"), mappings));
+
+    definition.addSearch(
+        "B2",
+        EptsReportUtils.map(
+            this.getNumberOfPatientsTransferredInFromOtherHealthFacilitiesDuringCurrentMonthB2(),
+            mappings));
+
+    definition.addSearch("B3", EptsReportUtils.map(this.getSumB3(), mappings));
+
+    definition.addSearch(
         "B5",
         EptsReportUtils.map(
             this.getNumberOfPatientsTransferredOutFromOtherHealthFacilitiesDuringCurrentMonthB5(),
             mappings));
 
-    definition.setCompositionString("B12 AND B5 ");
+    definition.setCompositionString("(B12 OR B1 OR B2 OR B3) AND B5 ");
 
     return definition;
   }
@@ -388,9 +401,22 @@ public class ResumoMensalCohortQueries {
             mappings));
 
     definition.addSearch(
-        "B6", EptsReportUtils.map(this.getPatientsWhoSuspendTratmentB6(), mappings));
+        "B1",
+        EptsReportUtils.map(
+            this.txNewCohortQueries.getTxNewCompositionCohortMISAU("TX_NEW_MISAU"), mappings));
 
-    definition.setCompositionString("B12 AND B6 ");
+    definition.addSearch(
+        "B2",
+        EptsReportUtils.map(
+            this.getNumberOfPatientsTransferredInFromOtherHealthFacilitiesDuringCurrentMonthB2(),
+            mappings));
+
+    definition.addSearch("B3", EptsReportUtils.map(this.getSumB3(), mappings));
+
+    definition.addSearch(
+        "SUSPEND", EptsReportUtils.map(this.getPatientsWhoSuspendTratmentB6(), mappings));
+
+    definition.setCompositionString("(B12 OR B1 OR B2) AND SUSPEND");
 
     return definition;
   }
@@ -636,11 +662,9 @@ public class ResumoMensalCohortQueries {
     definition.addSearch(
         "B7", EptsReportUtils.map(this.getPatientsWhoAbandonedTratmentUpB7(), mappings));
 
-    definition.addSearch(
-        "B8",
-        EptsReportUtils.map(getSumNumberOfPatientsWhoAreDiedDuringCurrentMonthB5(), mappings));
+    definition.addSearch("B8", EptsReportUtils.map(getDiedB8(), mappings));
 
-    definition.setCompositionString("B5 OR B6 OR B7 OR B8 ");
+    definition.setCompositionString("B5 OR B6 OR B7 B8");
 
     return definition;
   }
