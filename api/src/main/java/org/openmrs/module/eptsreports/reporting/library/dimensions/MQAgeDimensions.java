@@ -431,7 +431,7 @@ public class MQAgeDimensions {
 
     return definition;
   }
-  
+
   @DocumentedDefinition(value = "findPatientsWhoReinitiatedTreatmentInClinicalConsultation")
   public CohortDefinition findAdultPatientsWhoReinitiatedTreatmentInClinicalConsultation(int age) {
 
@@ -444,32 +444,63 @@ public class MQAgeDimensions {
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
     String query =
-        GenericMQQueryIntarface.QUERY.findPatientsWhoReinitiatedTreatmentInClinicalConsultation(age);
+        GenericMQQueryIntarface.QUERY.findPatientsWhoReinitiatedTreatmentInClinicalConsultation(
+            age);
     definition.setQuery(query);
 
     return definition;
   }
-  
-  @DocumentedDefinition(value = "findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4")
-  public CohortDefinition findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(int age) {
+
+  @DocumentedDefinition(
+      value = "findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4")
+  public CohortDefinition
+      findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(int age) {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4");
+    definition.setName(
+        "findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
     String query =
-        GenericMQQueryIntarface.QUERY.findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(age);
+        GenericMQQueryIntarface.QUERY
+            .findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(
+                age);
     definition.setQuery(query);
 
     return definition;
   }
-  
+
+  @DocumentedDefinition(
+      value = "findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4")
+  public CohortDefinition
+      findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(
+          int startAge, int endAge) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY
+            .findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(
+                startAge, endAge);
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientsWhoReinitiatedTreatmentInClinicalConsultation")
-  public CohortDefinition findChildrenPatientsWhoReinitiatedTreatmentInClinicalConsultation(int age) {
+  public CohortDefinition findChildrenPatientsWhoReinitiatedTreatmentInClinicalConsultation(
+      int age) {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
@@ -480,7 +511,8 @@ public class MQAgeDimensions {
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
     String query =
-        GenericMQQueryIntarface.QUERY.findPatientsWhoReinitiatedTreatmentInClinicalConsultation(age);
+        GenericMQQueryIntarface.QUERY.findPatientsWhoReinitiatedTreatmentInClinicalConsultation(
+            age);
     definition.setQuery(query);
 
     return definition;
@@ -1035,28 +1067,44 @@ public class MQAgeDimensions {
 
     return dimension;
   }
-  
-  public CohortDefinitionDimension getDimensionForPatientsWhoReinitiatedTreatmentInClinicalConsultation() {
-	    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
 
-	    dimension.setName("patientsPregnantEnrolledOnART");
-	    dimension.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
-	    dimension.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
-	    dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
-	    dimension.addParameter(new Parameter("location", "Location", Location.class));
+  public CohortDefinitionDimension
+      getDimensionForPatientsWhoReinitiatedTreatmentInClinicalConsultation() {
+    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
 
-	    final String mappings =
-	        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+    dimension.setName("patientsPregnantEnrolledOnART");
+    dimension.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    dimension.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    dimension.addParameter(new Parameter("location", "Location", Location.class));
 
-	    dimension.addCohortDefinition(
-	        "15+", EptsReportUtils.map(this.findAdultPatientsWhoReinitiatedTreatmentInClinicalConsultation(15), mappings));
-	    
-	    dimension.addCohortDefinition(
-		        "CD4-15+", EptsReportUtils.map(this.findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(15), mappings));
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
-	    dimension.addCohortDefinition(
-	        "15-", EptsReportUtils.map(this.findChildrenPatientsWhoReinitiatedTreatmentInClinicalConsultation(15), mappings));
+    dimension.addCohortDefinition(
+        "15+",
+        EptsReportUtils.map(
+            this.findAdultPatientsWhoReinitiatedTreatmentInClinicalConsultation(15), mappings));
 
-	    return dimension;
-	  }
+    dimension.addCohortDefinition(
+        "CD4-15+",
+        EptsReportUtils.map(
+            this.findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(
+                15),
+            mappings));
+
+    dimension.addCohortDefinition(
+        "CD4-15-",
+        EptsReportUtils.map(
+            this.findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(
+                0, 14),
+            mappings));
+
+    dimension.addCohortDefinition(
+        "15-",
+        EptsReportUtils.map(
+            this.findChildrenPatientsWhoReinitiatedTreatmentInClinicalConsultation(15), mappings));
+
+    return dimension;
+  }
 }

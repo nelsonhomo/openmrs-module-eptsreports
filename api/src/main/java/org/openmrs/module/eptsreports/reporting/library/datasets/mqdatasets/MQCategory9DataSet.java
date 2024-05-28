@@ -17,7 +17,7 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
     // Adultos
     dataSetDefinition.addColumn(
         "CAT9ADUL01TNUMERATOR",
-        "9.1. % de adultos  (15/+anos) com pedido de CD4 na primeira consulta clínica depois do diagnóstico de HIV+ - Numerador",
+        "9.1 % de adultos  (15/+anos) com pedido de CD4 na primeira consulta clínica depois do diagnóstico de HIV+ - Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory9CohortQueries
@@ -29,7 +29,7 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT9ADUL01TDENOMINATOR",
-        "9.1. % de adultos  (15/+anos) com pedido de CD4 na primeira consulta clínica depois do diagnóstico de HIV+ - Denominador",
+        "9.1 % de adultos (15/+anos) com pedido de CD4 na primeira consulta clínica depois do diagnóstico de HIV+ - Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory9CohortQueries
@@ -62,85 +62,108 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
                 mappings),
             mappings),
         "ageOnTheFirstConsultationDuringInclusionPeriod=15+");
-    
-    
+
     dataSetDefinition.addColumn(
-            "CAT9ADULTOS93DENOMINADOR",
-            "9.3 % de adultos  (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV (1ª consulta clínica realizada após abandono) - Denomindaor ",
-            EptsReportUtils.map(
-                this.setIndicatorWithAllParameters(
-                    this.mQCategory9CohortQueries
-                        .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioDenominator9_3(),
-                    "CAT9ADULTOS93DENOMINADOR",
-                    mappings),
+        "CAT9ADULTOS93DENOMINADOR",
+        "9.3 % de adultos  (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV (1ª consulta clínica realizada após abandono) - Denomindaor ",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                this.mQCategory9CohortQueries
+                    .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioDenominator9_3(),
+                "CAT9ADULTOS93DENOMINADOR",
                 mappings),
-            "ageOnReinicio=15+");
+            mappings),
+        "ageOnReinicio=15+");
 
-        dataSetDefinition.addColumn(
-            "CAT9ADULTOS93NUMERADOR",
-            "“9.3 % de adultos  (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV (1ª consulta clínica realizada após abandono) - Numerador",
-            EptsReportUtils.map(
-                this.setIndicatorWithAllParameters(
-                    mQCategory9CohortQueries
-                        .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioAfterAbandonedTreatmentNumerator9_3(),
-                    "CAT9ADULTOS93NUMERADOR",
-                    mappings),
-                mappings),
-            "ageOnReinicio=15+");
-        
-        dataSetDefinition.addColumn(
-                "CAT9ADULTOS97DENOMINADOR",
-                "9.7 % de crianças (0-14 anos) com pedido de CD4 na consulta clínica de reinício do TARV (1ª consulta clínica realizada após abandono) - Denomindaor ",
-                EptsReportUtils.map(
-                    this.setIndicatorWithAllParameters(
-                        this.mQCategory9CohortQueries
-                            .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioDenominator9_3(),
-                        "CAT9ADULTOS93DENOMINADOR",
-                        mappings),
-                    mappings),
-                "ageOnReinicio=15-");
-
-            dataSetDefinition.addColumn(
+    dataSetDefinition.addColumn(
+        "CAT9ADULTOS93NUMERADOR",
+        "“9.3 % de adultos  (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV (1ª consulta clínica realizada após abandono) - Numerador",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                mQCategory9CohortQueries
+                    .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioAfterAbandonedTreatmentNumerator9_3(),
                 "CAT9ADULTOS93NUMERADOR",
-                "9.7 % % de crianças (0-14 anos) com pedido de CD4 na consulta clínica de reinício do TARV - Numerador",
-                EptsReportUtils.map(
-                    this.setIndicatorWithAllParameters(
-                        mQCategory9CohortQueries
-                            .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioAfterAbandonedTreatmentNumerator9_3(),
-                        "CAT9ADULTOS97NUMERADOR",
-                        mappings),
-                    mappings),
-                "ageOnReinicio=15-");
-            
-            dataSetDefinition.addColumn(
-                    "CAT9ADULTOS94DENOMINADOR",
-                    "9.4 % de adultos (15/+anos) que receberam o resultado do CD4 dentro de 33 dias após consulta clínica de reinício do TARV - Denomindaor ",
-                    EptsReportUtils.map(
-                        this.setIndicatorWithAllParameters(
-                            this.mQCategory9CohortQueries
-                                .findAdultPatientsWhoReceivedCd4Result33daysAfterReinitiatedTreatmentDenominator9_4(),
-                            "CAT9ADULTOS94DENOMINADOR",
-                            mappings),
-                        mappings),
-                    "ageOnReinicio=CD4-15+");
+                mappings),
+            mappings),
+        "ageOnReinicio=15+");
 
-                dataSetDefinition.addColumn(
-                    "CAT9ADULTOS94NUMERADOR",
-                    "9.4 % de adultos (15/+anos) que receberam o resultado do CD4 dentro de 33 dias após  consulta clínica de reinício do TARV - Numerador",
-                    EptsReportUtils.map(
-                        this.setIndicatorWithAllParameters(
-                            mQCategory9CohortQueries
-                                .findAdultPatientsWithCD4Result33DaysAfterClinicalConsultationMarkedWithReinicioARTAndPedidoCd4Numerator9_4(),
-                            "CAT9ADULTOS94NUMERADOR",
-                            mappings),
-                        mappings),
-                    "ageOnReinicio=CD4-15+");
+    dataSetDefinition.addColumn(
+        "CAT9ADULTOS97DENOMINADOR",
+        "9.7 % de crianças (0-14 anos) com pedido de CD4 na consulta clínica de reinício do TARV (1ª consulta clínica realizada após abandono) - Denomindaor ",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                this.mQCategory9CohortQueries
+                    .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioDenominator9_3(),
+                "CAT9ADULTOS93DENOMINADOR",
+                mappings),
+            mappings),
+        "ageOnReinicio=15-");
+
+    dataSetDefinition.addColumn(
+        "CAT9ADULTOS93NUMERADOR",
+        "9.7 % % de crianças (0-14 anos) com pedido de CD4 na consulta clínica de reinício do TARV - Numerador",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                mQCategory9CohortQueries
+                    .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioAfterAbandonedTreatmentNumerator9_3(),
+                "CAT9ADULTOS97NUMERADOR",
+                mappings),
+            mappings),
+        "ageOnReinicio=15-");
+
+    dataSetDefinition.addColumn(
+        "CAT9ADULTOS94DENOMINADOR",
+        "9.4 % de adultos (15/+anos) que receberam o resultado do CD4 dentro de 33 dias após consulta clínica de reinício do TARV - Denomindaor ",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                this.mQCategory9CohortQueries
+                    .findAdultPatientsWhoReceivedCd4Result33daysAfterReinitiatedTreatmentDenominator9_4(),
+                "CAT9ADULTOS94DENOMINADOR",
+                mappings),
+            mappings),
+        "ageOnReinicio=CD4-15+");
+
+    dataSetDefinition.addColumn(
+        "CAT9ADULTOS94NUMERADOR",
+        "9.4 % de adultos (15/+anos) que receberam o resultado do CD4 dentro de 33 dias após  consulta clínica de reinício do TARV - Numerador",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                mQCategory9CohortQueries
+                    .findAdultPatientsWithCD4Result33DaysAfterClinicalConsultationMarkedWithReinicioARTAndPedidoCd4Numerator9_4(),
+                "CAT9ADULTOS94NUMERADOR",
+                mappings),
+            mappings),
+        "ageOnReinicio=CD4-15+");
+
+    dataSetDefinition.addColumn(
+        "CAT9ADULTOS94DENOMINADOR",
+        "9.8 % de crianças (0-14 anos) que receberam o resultado do CD4 dentro de 33 dias após consulta clínica de reinício do TARV - Denomindaor ",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                this.mQCategory9CohortQueries
+                    .findAdultPatientsWhoReceivedCd4Result33daysAfterReinitiatedTreatmentDenominator9_4(),
+                "CAT9ADULTOS94DENOMINADOR",
+                mappings),
+            mappings),
+        "ageOnReinicio=CD4-15-");
+
+    dataSetDefinition.addColumn(
+        "CAT9ADULTOS94NUMERADOR",
+        "9.8 % de crianças (0-14 anos) que receberam o resultado do CD4 dentro de 33 dias após consulta clínica de reinício do TARV - Numerador",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                mQCategory9CohortQueries
+                    .findAdultPatientsWithCD4Result33DaysAfterClinicalConsultationMarkedWithReinicioARTAndPedidoCd4Numerator9_4(),
+                "CAT9ADULTOS94NUMERADOR",
+                mappings),
+            mappings),
+        "ageOnReinicio=CD4-15-");
 
     // Criancas
 
     dataSetDefinition.addColumn(
         "CAT9CHILDREN01TNUMERATOR",
-        "9.5. % de crianças  (0-14 anos) com pedido de CD4 na primeira consulta clínica depois do diagnóstico de HIV+. - Numerador",
+        "9.5. % de crianças  (0-14 anos) com pedido de CD4 na primeira consulta clínica depois do diagnóstico de HIV+ - Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory9CohortQueries
@@ -152,7 +175,7 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT9ACHILDREN01TDENOMINATOR",
-        "9.5. % de crianças  (0-14 anos) com pedido de CD4 na primeira consulta clínica depois do diagnóstico de HIV+. - Denominador",
+        "9.5 % de crianças  (0-14 anos) com pedido de CD4 na primeira consulta clínica depois do diagnóstico de HIV+ - Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory9CohortQueries
@@ -176,7 +199,7 @@ public class MQCategory9DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT9ACHILDREN02TDENOMINATOR",
-        "9.6. % de crianças  (0-14 anos) HIV+ que receberam o resultado do primeiro CD4 dentro de 33 dias  após a primeira consulta clínica - Denominador",
+        "9.6 % de crianças  (0-14 anos) HIV+ que receberam o resultado do primeiro CD4 dentro de 33 dias  após a primeira consulta clínica - Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 mQCategory9CohortQueries
