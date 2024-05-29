@@ -1,60 +1,50 @@
 package org.openmrs.module.eptsreports.reporting.library.datasets;
 
-import java.util.ArrayList;
 import java.util.List;
-import org.openmrs.module.eptsreports.reporting.library.cohorts.ListPatientsCurrentlyARTNoTBScreeningCohortQueries;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.ListPatientsCurrentlyARTWithoutTBScreeningCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
-import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
-import org.openmrs.module.reporting.ReportingConstants;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
 import org.openmrs.module.reporting.dataset.definition.DataSetDefinition;
-import org.openmrs.module.reporting.dataset.definition.SqlDataSetDefinition;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ListPatientsCurrentlyARTNoTBScreeningDataSet extends BaseDataSet {
-
-  private static final String TB5 = "TB5/ListPatientsCurrentlyARTNoTBScreening.sql";
+public class ListPatientsCurrentlyARWithoutTBScreeningDataSet extends BaseDataSet {
 
   @Autowired private EptsGeneralIndicator eptsGeneralIndicator;
 
   @Autowired
-  private ListPatientsCurrentlyARTNoTBScreeningCohortQueries
-      listPatientsCurrentlyARTNoTBScreeningCohortQueries;
+  private ListPatientsCurrentlyARTWithoutTBScreeningCohortQueries
+      patientsCurrentlyARTWithoutTBScreeningCohortQueries;
 
-  public DataSetDefinition constructDataset(List<Parameter> list) {
+  public DataSetDefinition getPatientsOnArtWithoutTBScreenedList(List<Parameter> parameters) {
 
-    SqlDataSetDefinition dsd = new SqlDataSetDefinition();
-    dsd.setName("Lista de Pacientes Actualmente Em TARV Sem Rastreio de Tuberculose");
-    dsd.addParameters(list);
-    dsd.setSqlQuery(EptsQuerysUtils.loadQuery(TB5));
-
-    return dsd;
+    return this.patientsCurrentlyARTWithoutTBScreeningCohortQueries
+        .findPatientsWhoActiveOnARTAndNotHaveTBScreeningList(parameters);
   }
 
-  public DataSetDefinition getTotalPatientsWhoOnTB5() {
+  public DataSetDefinition getTotalPatientsWhoOnTB5(List<Parameter> parameters) {
 
     final CohortIndicatorDataSetDefinition dataSetDefinition =
         new CohortIndicatorDataSetDefinition();
 
-    dataSetDefinition.setParameters(this.getParameters());
+    dataSetDefinition.setParameters(parameters);
 
     final String mappings = "endDate=${endDate},location=${location}";
 
     final CohortDefinition TB5 =
-        this.listPatientsCurrentlyARTNoTBScreeningCohortQueries
-            .findPatientsWhoActiveOnARTAndNotHaveTBScreening();
+        this.patientsCurrentlyARTWithoutTBScreeningCohortQueries
+            .findPatientsWhoActiveOnARTAndNotHaveTBScreeningSummary();
 
     final CohortDefinition TB5_WITH_CLINICAL_CONSULTATION =
-        this.listPatientsCurrentlyARTNoTBScreeningCohortQueries
+        this.patientsCurrentlyARTWithoutTBScreeningCohortQueries
             .findPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithOneConsultation();
 
     final CohortDefinition TB5_WITHOUT_CLINICAL_CONSULTATION =
-        this.listPatientsCurrentlyARTNoTBScreeningCohortQueries
+        this.patientsCurrentlyARTWithoutTBScreeningCohortQueries
             .getPatientsWhoActiveOnARTAndNotHaveTBScreeningInLast6MonthsWithoutOneConsultation();
 
     dataSetDefinition.addColumn(
@@ -88,12 +78,5 @@ public class ListPatientsCurrentlyARTNoTBScreeningDataSet extends BaseDataSet {
         "");
 
     return dataSetDefinition;
-  }
-
-  public List<Parameter> getParameters() {
-    List<Parameter> parameters = new ArrayList<Parameter>();
-    parameters.add(ReportingConstants.END_DATE_PARAMETER);
-    parameters.add(ReportingConstants.LOCATION_PARAMETER);
-    return parameters;
   }
 }
