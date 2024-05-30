@@ -536,5 +536,34 @@ public interface MQCategory13Section1QueriesInterface {
                 + " and obsDiferenteLinha.location_id = :location "
                 + " where (TIMESTAMPDIFF(MONTH,linhaAlternativa.dataLinha,linhaAlternativa.ultimaConsulta)) >= 6 and obsDiferenteLinha.obs_datetime is null "
                 + " group by linhaAlternativa.patient_id ";
+
+    public static final String findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod =
+        "select maxdiagnostico.patient_id from ( "
+            + "select p.patient_id,max(e.encounter_datetime) max_datadiagnostico from patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on o.encounter_id=e.encounter_id "
+            + "where e.encounter_type=6 and e.voided=0 and o.voided=0 and p.voided=0 and o.concept_id=23761 and o.value_coded=1065 "
+            + "and e.encounter_datetime between :startInclusionDate and :endRevisionDate and e.location_id=:location "
+            + "group by p.patient_id "
+            + ") maxdiagnostico ";
+
+    public static final String
+        findPatientsWithRequestCVInTheLastClinicalConsultationDuringRevisionPeriod =
+            "Select final.patient_id from ( "
+                + "Select cvPedido.patient_id,enc.encounter_datetime ultimaConsulta,min(cvPedido.dataPedidoCV) dataPedidoCV from ( "
+                + "Select p.patient_id,max(e.encounter_datetime) encounter_datetime from patient p "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "where p.voided=0 and e.voided=0 and e.encounter_type=6 and "
+                + "e.encounter_datetime >=:startInclusionDate and e.encounter_datetime<=:endRevisionDate   and e.location_id=:location "
+                + "group by p.patient_id "
+                + ") enc inner join ( "
+                + "Select p.patient_id,o.obs_datetime as dataPedidoCV from patient p "
+                + "inner join encounter  e on e.patient_id=p.patient_id "
+                + "inner join obs o on o.encounter_id=e.encounter_id	 "
+                + "where  e.voided=0 and o.concept_id = 23722 and o.value_coded=856 and e.encounter_type=6 and o.voided=0 and e.location_id=:location "
+                + ") cvPedido on cvPedido.patient_id=enc.patient_id "
+                + "where date(cvPedido.dataPedidoCV) = date(enc.encounter_datetime) "
+                + "group by patient_id "
+                + ") final";
   }
 }

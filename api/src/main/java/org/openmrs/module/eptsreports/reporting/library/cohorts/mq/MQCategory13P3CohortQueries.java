@@ -3,6 +3,7 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts.mq;
 import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory13P3QueriesInterface;
+import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 public class MQCategory13P3CohortQueries {
 
   @Autowired private MQCohortQueries mQCohortQueries;
+
+  @Autowired private MQCategory13Section1CohortQueries mQCategory13Section1CohortQueries;
 
   @DocumentedDefinition(
       value =
@@ -323,6 +326,26 @@ public class MQCategory13P3CohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "calculateDefaulteAgeByAgeRenge")
+  public CohortDefinition findPatientsAgeRangeEndRevisionDate(int startAge, int endAge) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = MQQueriesInterface.QUERY.findPatientsAgeRangeEndRevisionDate;
+
+    String finalQuery = String.format(query, startAge, endAge);
+
+    definition.setQuery(finalQuery);
+
+    return definition;
+  }
+
   // Implementação de DENOMINADORES Categoria13.3
   // ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -391,8 +414,15 @@ public class MQCategory13P3CohortQueries {
                 .findAllPatientsWhoDroppedOutARTInFirstSixMonthsBeforeInitiatedTreatment(),
             mappings));
 
+    definition.addSearch(
+        "TB-ACTIVA",
+        EptsReportUtils.map(
+            mQCategory13Section1CohortQueries
+                .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
+            mappings));
+
     definition.setCompositionString(
-        "((START-ART NOT PREGNANT) OR (BI1 NOT B1E)) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD OR DROPPED-OUT)");
+        "((START-ART NOT PREGNANT) OR (BI1 NOT B1E)) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD OR DROPPED-OUT OR TB-ACTIVA)");
 
     return definition;
   }
@@ -462,8 +492,15 @@ public class MQCategory13P3CohortQueries {
                 .findAllPatientsWhoDroppedOutARTInFirstSixMonthsBeforeInitiatedTreatment(),
             mappings));
 
+    definition.addSearch(
+        "TB-ACTIVA",
+        EptsReportUtils.map(
+            mQCategory13Section1CohortQueries
+                .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
+            mappings));
+
     definition.setCompositionString(
-        "((START-ART NOT (PREGNANT OR BREASTFEEDING)) OR (BI1 NOT B1E)) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD OR DROPPED-OUT)");
+        "((START-ART NOT (PREGNANT OR BREASTFEEDING)) OR (BI1 NOT B1E)) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD OR DROPPED-OUT OR TB-ACTIVA)");
 
     return definition;
   }
@@ -477,7 +514,8 @@ public class MQCategory13P3CohortQueries {
       value =
           "findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5")
   public CohortDefinition
-      findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5() {
+      findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5(
+          boolean excludeTBActiveDiagnostic) {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName("Patients in second line who dropped out ART");
@@ -489,6 +527,7 @@ public class MQCategory13P3CohortQueries {
 
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+    String compositionString = "";
 
     definition.addSearch(
         "TRANSFERED-IN",
@@ -518,8 +557,21 @@ public class MQCategory13P3CohortQueries {
                 .findAllPatientsWhoDroppedOutARTInFirstSixMonthsBeforeInitiatedTreatment(),
             mappings));
 
-    definition.setCompositionString(
-        "B2 NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD OR DROPPED-OUT)");
+    definition.addSearch(
+        "TB-ACTIVA",
+        EptsReportUtils.map(
+            mQCategory13Section1CohortQueries
+                .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
+            mappings));
+
+    if (excludeTBActiveDiagnostic) {
+      compositionString =
+          "B2 NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD OR DROPPED-OUT OR TB-ACTIVA)";
+    } else {
+      compositionString = "B2 NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD OR DROPPED-OUT)";
+    }
+
+    definition.setCompositionString(compositionString);
 
     return definition;
   }
@@ -615,8 +667,15 @@ public class MQCategory13P3CohortQueries {
                 .findAllPatientsWhoDroppedOutARTInFirstSixMonthsBeforeInitiatedTreatment(),
             mappings));
 
+    definition.addSearch(
+        "TB-ACTIVA",
+        EptsReportUtils.map(
+            mQCategory13Section1CohortQueries
+                .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
+            mappings));
+
     definition.setCompositionString(
-        "(((START-ART AND (G OR J)) NOT PREGNANT NOT DD) OR ((BI1 NOT B1E) AND (H OR K ))) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DD OR DROPPED-OUT)");
+        "(((START-ART AND (G OR J)) NOT PREGNANT NOT DD) OR ((BI1 NOT B1E) AND (H OR K ))) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DD OR DROPPED-OUT OR TB-ACTIVA)");
 
     return definition;
   }
@@ -710,8 +769,15 @@ public class MQCategory13P3CohortQueries {
                 .findAllPatientsWhoDroppedOutARTInFirstSixMonthsBeforeInitiatedTreatment(),
             mappings));
 
+    definition.addSearch(
+        "TB-ACTIVA",
+        EptsReportUtils.map(
+            mQCategory13Section1CohortQueries
+                .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
+            mappings));
+
     definition.setCompositionString(
-        "(((START-ART AND (G OR J)) NOT PREGNANT NOT BREASTFEEDING NOT DD) OR ((BI1 NOT B1E) AND (H OR K ))) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DD OR DROPPED-OUT)");
+        "(((START-ART AND (G OR J)) NOT PREGNANT NOT BREASTFEEDING NOT DD) OR ((BI1 NOT B1E) AND (H OR K ))) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DD OR DROPPED-OUT OR TB-ACTIVA)");
 
     return definition;
   }
@@ -831,7 +897,8 @@ public class MQCategory13P3CohortQueries {
       value =
           "findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Numerador_13_5")
   public CohortDefinition
-      findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Numerador_13_5() {
+      findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Numerador_13_5(
+          boolean excludeTBActiveDiagnostic) {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName("Category13_3_Numerador_13_5");
@@ -848,7 +915,8 @@ public class MQCategory13P3CohortQueries {
         "DENOMINATOR-B2",
         EptsReportUtils.map(
             this
-                .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5(),
+                .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5(
+                    excludeTBActiveDiagnostic),
             mappings));
 
     definition.addSearch(
@@ -866,6 +934,241 @@ public class MQCategory13P3CohortQueries {
             mappings));
 
     definition.setCompositionString("DENOMINATOR-B2 AND (I OR L)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findDenominatorTBHIVIndicator13_5")
+  public CohortDefinition findDenominatorTBHIVIndicator13_5() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findDenominatorTBHIVIndicator13_5");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR-13-5",
+        EptsReportUtils.map(
+            this
+                .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5(
+                    false),
+            mappings));
+
+    definition.addSearch(
+        "TB-ACTIVA",
+        EptsReportUtils.map(
+            mQCategory13Section1CohortQueries
+                .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
+            mappings));
+
+    definition.setCompositionString("DENOMINATOR-13-5 AND TB-ACTIVA");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findNumeratorTBHIVIndicator13_5")
+  public CohortDefinition findNumeratorTBHIVIndicator13_5() {
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findNumeratorTBHIVIndicator13_5");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR-13-5-RF56",
+        EptsReportUtils.map(this.findDenominatorTBHIVIndicator13_5(), mappings));
+
+    definition.addSearch(
+        "I",
+        EptsReportUtils.map(
+            this
+                .findPatientsFromClinicalConsultationWhoHaveViralChargeSecondLineDateCategory13_3_I(),
+            mappings));
+
+    definition.addSearch(
+        "L",
+        EptsReportUtils.map(
+            this
+                .findAllPatientsWhoHaveClinicalConsultationAndEncounterDateTimeBetweenSecondTherapheuticLineDateCategory13_3_L_Numerator(),
+            mappings));
+
+    definition.setCompositionString("DENOMINATOR-13-5-RF56 AND (I OR L)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findDenominatorResultadoCVRF34_Indicator_13_2")
+  public CohortDefinition findDenominatorResultadoCVRF34_Indicator_13_2(
+      boolean excludeTbActiveDiagnostic) {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findDenominatorResultadoCVRF34_Indicator_13_2");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR-13-2-OLD",
+        EptsReportUtils.map(
+            this
+                .findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13Denominador(),
+            mappings));
+
+    definition.addSearch(
+        "DENOMINATOR-13-5-OLD",
+        EptsReportUtils.map(
+            this
+                .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5(
+                    excludeTbActiveDiagnostic),
+            mappings));
+
+    definition.setCompositionString("(DENOMINATOR-13-2-OLD OR DENOMINATOR-13-5-OLD)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findNumeratorResultadoCVRF34_Indicator_13_2")
+  public CohortDefinition findNumeratorResultadoCVRF34_Indicator_13_2(
+      boolean excludeTbActiveDiagnostic) {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findNumeratorResultadoCVRF34_Indicator_13_2");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "NUMERATOR-13-2-OLD",
+        EptsReportUtils.map(
+            this
+                .findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13Numerador(),
+            mappings));
+
+    definition.addSearch(
+        "NUMERATOR-13-5-OLD",
+        EptsReportUtils.map(
+            this
+                .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Numerador_13_5(
+                    excludeTbActiveDiagnostic),
+            mappings));
+
+    definition.setCompositionString("(NUMERATOR-13-2-OLD OR NUMERATOR-13-5-OLD)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findDenominatorResultadoCVRF40_Indicator_13_11")
+  public CohortDefinition findDenominatorResultadoCVRF40_Indicator_13_11(
+      boolean excludeTbActiveDiagnostic) {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findDenominatorResultadoCVRF40_Indicator_13_11");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR-13-11-OLD",
+        EptsReportUtils.map(
+            this
+                .findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13DenominadorChildrens(),
+            mappings));
+
+    definition.addSearch(
+        "TEN-FOURTEEN",
+        EptsReportUtils.map(this.findPatientsAgeRangeEndRevisionDate(10, 14), mappings));
+
+    definition.addSearch(
+        "DENOMINATOR-13-14-OLD",
+        EptsReportUtils.map(
+            this
+                .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Denominador_13_5(
+                    excludeTbActiveDiagnostic),
+            mappings));
+
+    definition.addSearch(
+        "TWO-FOURTEEN",
+        EptsReportUtils.map(
+            mQCohortQueries.calculateDefaulteAgeSecondLineByAgeRenge(2, 14), mappings));
+
+    definition.setCompositionString(
+        "(DENOMINATOR-13-11-OLD AND TEN-FOURTEEN) OR (DENOMINATOR-13-14-OLD AND TWO-FOURTEEN)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findNumeratorResultadoCVRF40_Indicator_13_11")
+  public CohortDefinition findNumeratorResultadoCVRF40_Indicator_13_11(
+      boolean excludeTbActiveDiagnostic) {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findNumeratorResultadoCVRF40_Indicator_13_11");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "NUMERATOR-13-11-OLD",
+        EptsReportUtils.map(
+            this
+                .findPatientsInFirstLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13NumeradorChildrens(),
+            mappings));
+
+    definition.addSearch(
+        "TEN-FOURTEEN",
+        EptsReportUtils.map(this.findPatientsAgeRangeEndRevisionDate(10, 14), mappings));
+
+    definition.addSearch(
+        "NUMERATOR-13-14-OLD",
+        EptsReportUtils.map(
+            this
+                .findPatientsInSecondLineTherapheuticWhoReceivedViralChargeBetweenSixthAndNinthMonthAfterARTStartCategory13_3_Numerador_13_5(
+                    excludeTbActiveDiagnostic),
+            mappings));
+
+    definition.addSearch(
+        "TWO-FOURTEEN",
+        EptsReportUtils.map(
+            mQCohortQueries.calculateDefaulteAgeSecondLineByAgeRenge(2, 14), mappings));
+
+    definition.setCompositionString(
+        "(NUMERATOR-13-11-OLD AND TEN-FOURTEEN) OR (NUMERATOR-13-14-OLD AND TWO-FOURTEEN)");
 
     return definition;
   }
