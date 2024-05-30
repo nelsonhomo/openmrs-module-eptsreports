@@ -190,7 +190,8 @@ public class MQCategory19CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString("PRESUNTIVETB NOT TRANSFERED-OUT");
 
@@ -252,7 +253,8 @@ public class MQCategory19CohortQueries {
         EptsReportUtils.map(
             this.findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequest(), mappings));
     definition.addSearch(
-        "TROUT", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "TROUT",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString("(GENEXPERTREQUEST AND GENEXPERTRESULT) NOT TROUT");
 
@@ -310,7 +312,8 @@ public class MQCategory19CohortQueries {
         EptsReportUtils.map(this.findAllPatientsWhoHaveTBDiagnosticActive(), mappings));
 
     definition.addSearch(
-        "TROUT", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "TROUT",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString("TBDIAGNOSTIC NOT TROUT");
 

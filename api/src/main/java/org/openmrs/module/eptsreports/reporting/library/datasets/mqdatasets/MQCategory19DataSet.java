@@ -16,7 +16,7 @@ public class MQCategory19DataSet extends MQAbstractDataSet {
     // 19.1:pedido de teste molecular Xpert para os adultos HIV+ (≥ 15 anos)
     dataSetDefinition.addColumn(
         "CAT191TOTALDENOMINATORADULT",
-        "19.1: % pedido de teste molecular Xpert para os adultos HIV+ (≥ 15 anos): Denominador",
+        "19.1: %  de adultos (>=15 anos) presuntivos de TB com pedido de teste molecular (Xpert/Truenat) na data da 1ª consulta: Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.category19CohortQueries
@@ -28,7 +28,7 @@ public class MQCategory19DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT191TOTALNUMERATORADULT",
-        "19.1: % pedido de teste molecular Xpert para os adultos HIV+ (≥ 15 anos): Numerator",
+        "19.1: % de adultos (>=15 anos) presuntivos de TB com pedido de teste molecular (Xpert/Truenat) na data da 1ª consulta: Numerator",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.category19CohortQueries
@@ -38,37 +38,32 @@ public class MQCategory19DataSet extends MQAbstractDataSet {
             mappings),
         "ageOnPresuntiveTB=15+");
 
-    // 19.2:pedido de teste molecular Xpert para crianças HIV+ (0-14 anos)
-
     dataSetDefinition.addColumn(
-        "CAT192TOTALDENOMINATORCHILDREN",
-        "19.2: % pedido de teste molecular Xpert para crianças HIV+ (0-14 anos): Denominador",
+        "CAT194TOTALDENOMINATORCHILDREN",
+        "19.4: %  de crianças (0-14 anos) presuntivos de TB com pedido de teste molecular (Xpert/Truenat) na data da 1ª consulta:  Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.category19CohortQueries
                     .findPatientsWithGeneXpertRequestExcludingTransferedOutDenominator(),
-                "CAT192TOTALDENOMINATORCHILDREN",
+                "CAT194TOTALDENOMINATORCHILDREN",
                 mappings),
             mappings),
         "ageOnPresuntiveTB=0-14");
-
     dataSetDefinition.addColumn(
-        "CAT192TOTALNUMERATORCHILDREN",
-        "19.2: % pedido de teste molecular Xpert para crianças HIV+ (0-14 anos): Numerator",
+        "CAT194TOTALNUMERATORCHILDREN",
+        "19.4: %  de crianças (0-14 anos) presuntivos de TB com pedido de teste molecular (Xpert/Truenat) na data da 1ª consulta:  Numerator",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.category19CohortQueries
                     .findPatientsWithGeneXpertRequestExcludingTransferedOutNumerator(),
-                "CAT192TOTALNUMERATORCHILDREN",
+                "CAT194TOTALNUMERATORCHILDREN",
                 mappings),
             mappings),
         "ageOnPresuntiveTB=0-14");
 
-    // 19.3: % entrega do resultado do teste molecular Xpert para os adultos HIV+ (≥ 15 anos):
-
     dataSetDefinition.addColumn(
-        "CAT193TOTALDENOMINATORADULT",
-        "19.3: % entrega do resultado do teste molecular Xpert para os adultos HIV+ (≥ 15 anos): Denominador",
+        "CAT192TOTALDENOMINATORADULT",
+        "19.2: % de adultos (>=15 anos) HIV+ presuntivos de TB que receberam resultado do teste molecular (Xpert/Truenat) dentro de 7 dias após o pedido: Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.category19CohortQueries
@@ -79,8 +74,8 @@ public class MQCategory19DataSet extends MQAbstractDataSet {
         "ageOnGeneXpertRequest=15+");
 
     dataSetDefinition.addColumn(
-        "CAT193TOTALNUMERATORADULT",
-        "19.3: % entrega do resultado do teste molecular Xpert para os adultos HIV+ (≥ 15 anos): Numerator",
+        "CAT192TOTALNUMERATORADULT",
+        "19.2: % de adultos (>=15 anos) HIV+ presuntivos de TB que receberam resultado do teste molecular (Xpert/Truenat) dentro de 7 dias após o pedido: Numerator",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.category19CohortQueries
@@ -90,65 +85,58 @@ public class MQCategory19DataSet extends MQAbstractDataSet {
             mappings),
         "ageOnGeneXpertRequest=15+");
 
-    // 19.4: % entrega do resultado do teste molecular Xpert para crianças HIV+ (0-14 anos):
-
     dataSetDefinition.addColumn(
-        "CAT194TOTALDENOMINATORCHILDREN",
-        "19.4: % entrega do resultado do teste molecular Xpert para crianças HIV+ (0-14 anos):  Denominador",
+        "CAT195TOTALDENOMINATORCHILDREN",
+        "19.5: % de crianças (0-14 anos) HIV+ presuntivos de TB que receberam resultado do teste molecular (Xpert/Truenat) dentro de 7 dias após o pedido:  Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.category19CohortQueries
                     .findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequestDenominator(),
-                "CAT194TOTALDENOMINATORCHILDREN",
+                "CAT195TOTALDENOMINATORCHILDREN",
                 mappings),
             mappings),
         "ageOnGeneXpertRequest=0-14");
 
     dataSetDefinition.addColumn(
-        "CAT194TOTALNUMERATORCHILDREN",
-        "19.4: % entrega do resultado do teste molecular Xpert para crianças HIV+ (0-14 anos):  Numerator",
+        "CAT195TOTALNUMERATORCHILDREN",
+        "19.5: % de crianças (0-14 anos) HIV+ presuntivos de TB que receberam resultado do teste molecular (Xpert/Truenat) dentro de 7 dias após o pedido:  Numerator",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.category19CohortQueries
                     .findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequestNumerator(),
-                "CAT194TOTALNUMERATORCHILDREN",
+                "CAT195TOTALNUMERATORADULT",
                 mappings),
             mappings),
         "ageOnGeneXpertRequest=0-14");
 
-    // 19.5: % avaliação do início atempado do Tratamento de TB para os adultos HIV+ (≥ 15 anos):
-
     dataSetDefinition.addColumn(
-        "CAT195TOTALDENOMINATORADULT",
-        "19.5: % avaliação do início atempado do Tratamento de TB para os adultos HIV+ (≥ 15 anos):  Denominador",
+        "CAT193TOTALDENOMINATORADULT",
+        "19.3: % de adultos (>=15 anos) HIV+ diagnosticados com TB e que iniciaram tratamento de TB na data do diagnóstico de TB: Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.category19CohortQueries.findAllPatientsWhoHaveTBDiagnosticActiveDenominator(),
-                "CAT195TOTALDENOMINATORADULT",
+                "CAT192TOTALDENOMINATORADULT",
                 mappings),
             mappings),
         "ageOnTBDiagnostic=15+");
 
     dataSetDefinition.addColumn(
-        "CAT195TOTALNUMERATORADULT",
-        "19.5: % avaliação do início atempado do Tratamento de TB para os adultos HIV+ (≥ 15 anos):  Numerator",
+        "CAT193TOTALNUMERATORADULT",
+        "19.3: % de adultos (>=15 anos) HIV+ diagnosticados com TB e que iniciaram tratamento de TB na data do diagnóstico de TB: Numerator",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.category19CohortQueries.findAllPatientsWhoHaveTBDiagnosticActiveNumerator(),
-                "CAT195TOTALNUMERATORADULT",
+                "CAT192TOTALNUMERATORADULT",
                 mappings),
             mappings),
         "ageOnTBDiagnostic=15+");
 
-    // 19.6:  % avaliação do início atempado do Tratamento de TB para crianças HIV+ (0-14 anos):
-
     dataSetDefinition.addColumn(
         "CAT196TOTALDENOMINATORCHILDREN",
-        "19.6: % avaliação do início atempado do Tratamento de TB para crianças HIV+ (0-14 anos):   Denominador",
+        "19.6: % de crianças (0-14 anos) HIV+ diagnosticados com TB e que iniciaram tratamento de TB na data do diagnóstico de TB:   Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
-                this.category19CohortQueries
-                    .findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequestDenominator(),
+                this.category19CohortQueries.findAllPatientsWhoHaveTBDiagnosticActiveDenominator(),
                 "CAT196TOTALDENOMINATORCHILDREN",
                 mappings),
             mappings),
@@ -156,11 +144,10 @@ public class MQCategory19DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT196TOTALNUMERATORCHILDREN",
-        "19.6: % avaliação do início atempado do Tratamento de TB para crianças HIV+ (0-14 anos):   Numerator",
+        "19.6: % de crianças (0-14 anos) HIV+ diagnosticados com TB e que iniciaram tratamento de TB na data do diagnóstico de TB:   Numerator",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
-                this.category19CohortQueries
-                    .findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequestNumerator(),
+                this.category19CohortQueries.findAllPatientsWhoHaveTBDiagnosticActiveNumerator(),
                 "CAT196TOTALNUMERATORCHILDREN",
                 mappings),
             mappings),

@@ -226,7 +226,7 @@
 			                              inner join encounter e on p.patient_id=e.patient_id                                                                                         
 			                              inner join obs o on e.encounter_id=o.encounter_id                                                                                           
 			                        	where p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52                                                       
-			                              and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime < :endDate                                                                                        
+			                              and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime<=:endDate                                                                                        
 			                        	group by p.patient_id
 				                    	) ultimo_levantamento 
 				                    	group by patient_id
