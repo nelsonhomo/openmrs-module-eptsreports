@@ -24,92 +24,87 @@ import org.springframework.stereotype.Component;
 @Component
 public class SetupTB7AdvancedDiseaseAndTBCascadeReport extends EptsDataExportManager {
 
-  @Autowired private GenericCohortQueries genericCohortQueries;
+	@Autowired
+	private GenericCohortQueries genericCohortQueries;
 
-  @Autowired private DatimCodeDataSet datimCodeDataSet;
+	@Autowired
+	private DatimCodeDataSet datimCodeDataSet;
 
-  @Autowired private SismaCodeDataSet sismaCodeDataSet;
+	@Autowired
+	private SismaCodeDataSet sismaCodeDataSet;
 
-  @Autowired private TB7AdvancedDiseaseAndTBDataSet tb7AdvancedDiseaseAndTBDataSet;
+	@Autowired
+	private TB7AdvancedDiseaseAndTBDataSet tb7AdvancedDiseaseAndTBDataSet;
 
-  @Override
-  public String getExcelDesignUuid() {
-    return "6048b366-36c6-11ee-9f91-b7c3d375b234";
-  }
+	@Override
+	public String getExcelDesignUuid() {
+		return "6048b366-36c6-11ee-9f91-b7c3d375b234";
+	}
 
-  @Override
-  public String getUuid() {
-    return "689ec2f8-36c6-11ee-9bda-a37b135a5c96";
-  }
+	@Override
+	public String getUuid() {
+		return "689ec2f8-36c6-11ee-9bda-a37b135a5c96";
+	}
 
-  @Override
-  public String getVersion() {
-    return "1.0-SNAPSHOT";
-  }
+	@Override
+	public String getVersion() {
+		return "1.0-SNAPSHOT";
+	}
 
-  @Override
-  public String getName() {
-    return "TB7: Relatório da Cascata de Doença Avançada por HIV e TB";
-  }
+	@Override
+	public String getName() {
+		return "TB7: Relatório Cascatas de Doença Avançada por HIV e TB";
+	}
 
-  @Override
-  public String getDescription() {
-    return "Relatório da Cascata de Doença Avançada por HIV e TB";
-  }
+	@Override
+	public String getDescription() {
+		return "O Relatório Cascatas de Doença Avançada e TB gera o número de utentes de acordo com duas cascatas clínicas pré-definidas de Doença Avançada por HIV e TB. O período de inclusão é calculado com base na data de fim do relatório. A data de geração do relatório e também usado como parâmetro";
+	}
 
-  @Override
-  public ReportDefinition constructReportDefinition() {
-    ReportDefinition reportDefinition = new ReportDefinition();
-    reportDefinition.setUuid(getUuid());
-    reportDefinition.setName(getName());
-    reportDefinition.setDescription(getDescription());
-    reportDefinition.setParameters(this.getParameters());
+	@Override
+	public ReportDefinition constructReportDefinition() {
+		ReportDefinition reportDefinition = new ReportDefinition();
+		reportDefinition.setUuid(getUuid());
+		reportDefinition.setName(getName());
+		reportDefinition.setDescription(getDescription());
+		reportDefinition.setParameters(this.getParameters());
 
-    reportDefinition.addDataSetDefinition(
-        "TB7", Mapped.mapStraightThrough(tb7AdvancedDiseaseAndTBDataSet.constructDataset()));
+		reportDefinition.addDataSetDefinition("TB7",
+				Mapped.mapStraightThrough(tb7AdvancedDiseaseAndTBDataSet.constructDataset()));
 
-    reportDefinition.addDataSetDefinition(
-        "D",
-        Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
+		reportDefinition.addDataSetDefinition("D",
+				Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
 
-    reportDefinition.addDataSetDefinition(
-        "SC",
-        Mapped.mapStraightThrough(this.sismaCodeDataSet.constructDataset(this.getParameters())));
+		reportDefinition.addDataSetDefinition("SC",
+				Mapped.mapStraightThrough(this.sismaCodeDataSet.constructDataset(this.getParameters())));
 
-    reportDefinition.setBaseCohortDefinition(
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "baseCohortQuery", BaseQueries.getBaseCohortQuery()),
-            "endDate=${endDate},location=${location}"));
+		reportDefinition.setBaseCohortDefinition(EptsReportUtils.map(
+				this.genericCohortQueries.generalSql("baseCohortQuery", BaseQueries.getBaseCohortQuery()),
+				"endDate=${endDate},location=${location}"));
 
-    return reportDefinition;
-  }
+		return reportDefinition;
+	}
 
-  @Override
-  public List<ReportDesign> constructReportDesigns(ReportDefinition reportDefinition) {
-    ReportDesign reportDesign = null;
-    try {
-      reportDesign =
-          createXlsReportDesign(
-              reportDefinition,
-              "TB7DAH_TB_v12.xls",
-              "TB7: Relatorio da Cascata de Doenca Avancada por HIV e TB",
-              getExcelDesignUuid(),
-              null);
-      Properties props = new Properties();
-      props.put("sortWeight", "5000");
-      reportDesign.setProperties(props);
-    } catch (IOException e) {
-      throw new ReportingException(e.toString());
-    }
+	@Override
+	public List<ReportDesign> constructReportDesigns(ReportDefinition reportDefinition) {
+		ReportDesign reportDesign = null;
+		try {
+			reportDesign = createXlsReportDesign(reportDefinition, "TB7_Relatorio_Cascata_DAH_TB.xls", this.getName(),
+					getExcelDesignUuid(), null);
+			Properties props = new Properties();
+			props.put("sortWeight", "5000");
+			reportDesign.setProperties(props);
+		} catch (IOException e) {
+			throw new ReportingException(e.toString());
+		}
 
-    return Arrays.asList(reportDesign);
-  }
+		return Arrays.asList(reportDesign);
+	}
 
-  public List<Parameter> getParameters() {
-    List<Parameter> parameters = new ArrayList<Parameter>();
-    parameters.add(ReportingConstants.END_DATE_PARAMETER);
-    parameters.add(ReportingConstants.LOCATION_PARAMETER);
-    return parameters;
-  }
+	public List<Parameter> getParameters() {
+		List<Parameter> parameters = new ArrayList<Parameter>();
+		parameters.add(ReportingConstants.END_DATE_PARAMETER);
+		parameters.add(ReportingConstants.LOCATION_PARAMETER);
+		return parameters;
+	}
 }
