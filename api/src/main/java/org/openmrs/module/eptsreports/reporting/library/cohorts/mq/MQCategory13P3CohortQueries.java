@@ -90,6 +90,24 @@ public class MQCategory13P3CohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientsWhoTransferedOutRF07Category7")
+  public CohortDefinition findPatientsWhoTransferedOutRF07Category7() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsWhoAreInAlternativeLineFirstLineCategory13_3_BI1_Denominator");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = MQCategory13P3QueriesInterface.QUERY.findPatientsWhoTransferedOutRF07Category7;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findAllPatientWhoAreDeadByEndOfRevisonPeriod")
   public CohortDefinition findAllPatientWhoAreDeadByEndOfRevisonPeriod() {
 
@@ -385,7 +403,7 @@ public class MQCategory13P3CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(this.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "START-ART",
@@ -463,7 +481,7 @@ public class MQCategory13P3CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(this.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "START-ART",
@@ -538,7 +556,7 @@ public class MQCategory13P3CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(this.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "B2",
@@ -614,7 +632,7 @@ public class MQCategory13P3CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(this.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "START-ART",
@@ -716,7 +734,7 @@ public class MQCategory13P3CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(this.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "START-ART",
