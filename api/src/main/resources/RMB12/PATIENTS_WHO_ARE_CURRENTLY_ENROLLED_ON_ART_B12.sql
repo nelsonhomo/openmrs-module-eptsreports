@@ -70,7 +70,7 @@
 										      and e.encounter_type=18
 										      group by p.patient_id
 										 ) fila on fila.patient_id = saidas_por_suspensao.patient_id
-											where saidas_por_suspensao.data_estado>=fila.encounter_datetime
+											where saidas_por_suspensao.data_estado>fila.encounter_datetime
 										 
 										 union
 										
