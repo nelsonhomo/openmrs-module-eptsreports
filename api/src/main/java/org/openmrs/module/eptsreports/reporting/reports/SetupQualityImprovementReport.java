@@ -71,7 +71,7 @@ public class SetupQualityImprovementReport extends EptsPeriodIndicatorDataExport
     reportDefinition.setBaseCohortDefinition(
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "baseCohortQuery", BaseQueries.getBaseCohortQuery()),
+                "baseCohortQuery", BaseQueries.getBaseCohortQueryWithoutPrep()),
             "endDate=${endRevisionDate},location=${location}"));
 
     return reportDefinition;
