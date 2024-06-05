@@ -13,31 +13,31 @@ public class ResumoMensalDAHQueries {
   public static String getNumberOfPatientsActiveInDAHWhoAreInTARVByEndOfPreviousMonthIndicator0() {
 
     String query =
-"     select patient_id from ( " +
-"	 	select activeInDAH.patient_id,saidaDAH.obs_datetime  from( " +
-" 	 	select p.patient_id,max(e.encounter_datetime) maxDataInicioDAH " +
-" 	from " +
-"  	patient p inner join encounter e on p.patient_id=e.patient_id " +
-" 	where p.voided=0 and e.voided=0 and e.encounter_type=90 and e.encounter_datetime <= :startDate " +
-"	and e.location_id=:location " +
-"	group by p.patient_id " +
-" 	) activeInDAH " +
-"	left join " +
-"             ( " +
-"		select p.patient_id, o.obs_datetime from patient p " +
-"           join encounter e on p.patient_id=e.patient_id " +
-"           join obs o on o.encounter_id=e.encounter_id " +
-"       where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 " +
-"           and o.concept_id=1708 and o.obs_datetime <= :startDate and o.value_coded in (1366,1707,1706) and e.location_id=:location " +
-"           union " +
-"            select p.patient_id, o.value_datetime from patient p " +
-"           join encounter e on p.patient_id=e.patient_id " +
-"           join obs o on o.encounter_id=e.encounter_id " +
-"       where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 " +
-"           and o.concept_id=165386  and o.value_datetime <= :startDate and e.location_id=:location " +
-"	)saidaDAH on saidaDAH.patient_id = activeInDAH.patient_id " +
-"	where ((saidaDAH.obs_datetime >= activeInDAH.maxDataInicioDAH and  saidaDAH.obs_datetime <= :startDate) or saidaDAH.patient_id is null) " +
-"	) final where final.obs_datetime is null ";
+        "     select patient_id from ( "
+            + "	 	select activeInDAH.patient_id,saidaDAH.obs_datetime  from( "
+            + " 	 	select p.patient_id,max(e.encounter_datetime) maxDataInicioDAH "
+            + " 	from "
+            + "  	patient p inner join encounter e on p.patient_id=e.patient_id "
+            + " 	where p.voided=0 and e.voided=0 and e.encounter_type=90 and e.encounter_datetime <= :startDate "
+            + "	and e.location_id=:location "
+            + "	group by p.patient_id "
+            + " 	) activeInDAH "
+            + "	left join "
+            + "             ( "
+            + "		select p.patient_id, o.obs_datetime from patient p "
+            + "           join encounter e on p.patient_id=e.patient_id "
+            + "           join obs o on o.encounter_id=e.encounter_id "
+            + "       where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 "
+            + "           and o.concept_id=1708 and o.obs_datetime <= :startDate and o.value_coded in (1366,1707,1706) and e.location_id=:location "
+            + "           union "
+            + "            select p.patient_id, o.value_datetime from patient p "
+            + "           join encounter e on p.patient_id=e.patient_id "
+            + "           join obs o on o.encounter_id=e.encounter_id "
+            + "       where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 90 "
+            + "           and o.concept_id=165386  and o.value_datetime <= :startDate and e.location_id=:location "
+            + "	)saidaDAH on saidaDAH.patient_id = activeInDAH.patient_id "
+            + "	where ((saidaDAH.obs_datetime >= activeInDAH.maxDataInicioDAH and  saidaDAH.obs_datetime <= :startDate) or saidaDAH.patient_id is null) "
+            + "	) final where final.obs_datetime is null ";
 
     return query;
   }
