@@ -6,7 +6,6 @@ import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQ
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries.ARTSituation;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries.MCCTreatment;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries.PeriodoAbandono;
-import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TypesOfExams;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -1669,7 +1668,7 @@ public class ResumoMensalDAHCohortQueries {
         "PICKUP",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "PICKUP", ResumoMensalQueries.getPatientsWhoHaveDrugPickup()),
+                "PICKUP", ResumoMensalDAHQueries.getPatientsWhoHaveDrugPickup()),
             mappingsPickUpPeriod1));
 
     // Suspenso e reinicio segundo periodo
@@ -1689,7 +1688,7 @@ public class ResumoMensalDAHCohortQueries {
         "PICKUP-PERIOD2",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "PICKUP", ResumoMensalQueries.getPatientsWhoHaveDrugPickup()),
+                "PICKUP", ResumoMensalDAHQueries.getPatientsWhoHaveDrugPickup()),
             mappingsPickUpPeriod2));
 
     // Suspenso e reinicio terceiro periodo
@@ -1708,7 +1707,7 @@ public class ResumoMensalDAHCohortQueries {
         "PICKUP-PERIOD3",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "PICKUP", ResumoMensalQueries.getPatientsWhoHaveDrugPickup()),
+                "PICKUP", ResumoMensalDAHQueries.getPatientsWhoHaveDrugPickup()),
             mappingsPickUpPeriod3));
 
     definition.setCompositionString(
