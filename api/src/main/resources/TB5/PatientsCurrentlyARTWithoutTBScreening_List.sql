@@ -12,13 +12,13 @@ select coorte12meses_final.*,
 			when 165181 then 'BRIGADAS MOVEIS NOTURNAS(HOTSPOTS)'
 			when 165182 then 'CLINICAS MOVEIS DIURNAS'  
 			when 165183 then 'CLINICAS MOVEIS NOTURNAS(HOTSPOTS)'
-			else null 
+			else 'NA' 
 		end as TIPO_DESPENSA_FILA,
 		case obs_seguimento_dispensa.value_coded 
 			when 1098  then 'DM'
 			when 23720 then 'DT'
 			when 23888 then 'DS'
-			else null 
+			else 'NA' 
 		end as TIPO_DISPENSA_SEGUIMENTO
 		
 		from(
