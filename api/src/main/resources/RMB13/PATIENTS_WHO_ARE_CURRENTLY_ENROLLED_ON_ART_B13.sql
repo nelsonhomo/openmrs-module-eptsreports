@@ -13,21 +13,28 @@
                                      fila_recepcao.data_proximo_lev,
                                      consulta.data_encountro
                                  from ( 
-                                         Select patient_id, min(data_inicio) data_inicio 
+                                      Select patient_id, min(data_inicio) data_inicio 
                                          from ( 
-                                             select e.patient_id, min(e.encounter_datetime) as data_inicio 
-                                             from patient p 
-                                                 inner join encounter e on p.patient_id=e.patient_id 
-                                             where p.voided=0 and e.encounter_type=18 and e.voided=0 and e.encounter_datetime<=:endDate and e.location_id=:location 
-                                                 group by p.patient_id 
-                                             union 
-                                             Select p.patient_id,min(value_datetime) data_inicio 
-                                             from patient p 
-                                                 inner join encounter e on p.patient_id=e.patient_id 
-                                                 inner join obs o on e.encounter_id=o.encounter_id 
-                                             where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and  o.concept_id=23866 
-                                                 and o.value_datetime is not null and  o.value_datetime<=:endDate and e.location_id=:location 
-                                                 group by p.patient_id 
+                                            select f.patient_id, min(f.data_inicio) data_inicio from
+                                             (
+                                             select e.patient_id, min(e.encounter_datetime) as data_inicio
+                                             from patient p
+                                                 inner join encounter e on p.patient_id=e.patient_id
+                                             where p.voided=0 and e.encounter_type=18 and e.voided=0 and e.encounter_datetime<=:endDate
+                                             and e.location_id=:location and YEAR(STR_TO_DATE(e.encounter_datetime, '%Y-%m-%d')) >= 1000
+                                                 group by p.patient_id
+                                             union
+                                             Select p.patient_id,min(value_datetime) data_inicio
+                                             from patient p
+                                                 inner join encounter e on p.patient_id=e.patient_id
+                                                 inner join obs o on e.encounter_id=o.encounter_id
+                                             where p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and  o.concept_id=23866
+                                                 and o.value_datetime is not null and  o.value_datetime<=:endDate and e.location_id=:location
+                                                 and YEAR(STR_TO_DATE(o.value_datetime, '%Y-%m-%d')) >= 1000
+                                                 group by p.patient_id
+                                                )f
+                                                where f.patient_id is not null and f.data_inicio is not null
+											group by f.patient_id
                                              ) 
                                              inicio_real group by patient_id 
                                          )inicio 
@@ -70,7 +77,7 @@
 										      and e.encounter_type=18
 										      group by p.patient_id
 										 ) fila on fila.patient_id = saidas_por_suspensao.patient_id
-											where saidas_por_suspensao.data_estado>fila.encounter_datetime
+											where saidas_por_suspensao.data_estado>=fila.encounter_datetime
 										 
 										 union
 										
@@ -314,5 +321,5 @@
                          ) inicio_fila_seg_prox 
                              group by patient_id 
                         ) coorte12meses_final 
-                     WHERE  ((data_estado is null or ((data_estado is not null) and  data_fila>=data_estado))  and date_add(data_usar, interval 59 day) >=:endDate) 
+                     WHERE  ((data_estado is null or ((data_estado is not null) and  data_fila>data_estado))  and date_add(data_usar, interval 59 day) >=:endDate) 
               
