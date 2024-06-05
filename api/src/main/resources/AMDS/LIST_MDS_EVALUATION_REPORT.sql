@@ -202,18 +202,24 @@
                 SELECT p.patient_id, obsData.value_datetime as data_transferencia from patient p  
                 INNER JOIN encounter e ON p.patient_id=e.patient_id  
                 INNER JOIN obs obsTrans ON e.encounter_id=obsTrans.encounter_id AND obsTrans.voided=0 AND obsTrans.concept_id=1369 AND obsTrans.value_coded=1065 
-                INNER JOIN obs obsTarv ON e.encounter_id=obsTarv.encounter_id AND obsTarv.voided=0 AND obsTarv.concept_id=6300 AND obsTarv.value_coded=6276 
                 INNER JOIN obs obsData ON e.encounter_id=obsData.encounter_id AND obsData.voided=0 AND obsData.concept_id=23891 
-                WHERE p.voided=0 AND e.voided=0 AND e.encounter_type=53 
-                AND e.location_id=:location GROUP BY p.patient_id 
+                WHERE p.voided=0 AND e.voided=0 AND e.encounter_type=53 and obsData.value_datetime<=date_sub(date(concat(:year,'-06','-20')), interval 12 MONTH)
+                AND e.location_id=:location 
+                GROUP BY p.patient_id 
                 union
-                select final.patient_id,final.minStateDate  as data_transferencia from  ( 
+                select final.patient_id,final.minStateDate  as data_transferencia from  
+                ( 
                 select states.patient_id,states.patient_program_id,min(states.minStateDate) as minStateDate,states.program_id,states.state from  
                 ( 
                 SELECT p.patient_id, pg.patient_program_id, ps.start_date as minStateDate, pg.program_id, ps.state  FROM patient p   
                 inner join patient_program pg on p.patient_id=pg.patient_id  
                 inner join patient_state ps on pg.patient_program_id=ps.patient_program_id  
-                WHERE pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and location_id=:location  
+                WHERE pg.voided=0 
+                and ps.start_date<=date_sub(date(concat(:year,'-06','-20')), interval 12 MONTH)
+                and ps.voided=0 	
+                and p.voided=0 
+                and pg.program_id=2 
+                and location_id=:location  
                 )states 
                 group by states.patient_id 
                 order by states.minStateDate asc  
@@ -223,7 +229,7 @@
 
         ) tr GROUP BY tr.patient_id 
         )trasferedIn on coorte12Meses.patient_id=trasferedIn.patient_id
-         where trasferedIn.data_transferencia is null 
+         where trasferedIn.patient_id is null 
          
          union
 
@@ -259,23 +265,29 @@
             )coorte24Meses
             left join
         (
-          SELECT tr.patient_id, tr.data_transferencia from  
+           SELECT tr.patient_id, tr.data_transferencia from  
               (
                 SELECT p.patient_id, obsData.value_datetime as data_transferencia from patient p  
                 INNER JOIN encounter e ON p.patient_id=e.patient_id  
                 INNER JOIN obs obsTrans ON e.encounter_id=obsTrans.encounter_id AND obsTrans.voided=0 AND obsTrans.concept_id=1369 AND obsTrans.value_coded=1065 
-                INNER JOIN obs obsTarv ON e.encounter_id=obsTarv.encounter_id AND obsTarv.voided=0 AND obsTarv.concept_id=6300 AND obsTarv.value_coded=6276 
                 INNER JOIN obs obsData ON e.encounter_id=obsData.encounter_id AND obsData.voided=0 AND obsData.concept_id=23891 
-                WHERE p.voided=0 AND e.voided=0 AND e.encounter_type=53 
-                AND e.location_id=:location GROUP BY p.patient_id 
+                WHERE p.voided=0 AND e.voided=0 AND e.encounter_type=53 and obsData.value_datetime<=date_sub(date(concat(:year,'-06','-20')), interval 24 MONTH)
+                AND e.location_id=:location 
+                GROUP BY p.patient_id 
                 union
-                select final.patient_id,final.minStateDate  as data_transferencia from  ( 
+                select final.patient_id,final.minStateDate  as data_transferencia from  
+                ( 
                 select states.patient_id,states.patient_program_id,min(states.minStateDate) as minStateDate,states.program_id,states.state from  
                 ( 
                 SELECT p.patient_id, pg.patient_program_id, ps.start_date as minStateDate, pg.program_id, ps.state  FROM patient p   
                 inner join patient_program pg on p.patient_id=pg.patient_id  
                 inner join patient_state ps on pg.patient_program_id=ps.patient_program_id  
-                WHERE pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and location_id=:location  
+                WHERE pg.voided=0 
+                and ps.start_date<=date_sub(date(concat(:year,'-06','-20')), interval 24 MONTH)
+                and ps.voided=0 
+                and p.voided=0 
+                and pg.program_id=2 
+                and location_id=:location  
                 )states 
                 group by states.patient_id 
                 order by states.minStateDate asc  
@@ -283,9 +295,9 @@
                 inner join patient_state ps on ps.patient_program_id=final.patient_program_id  
                 where ps.start_date=final.minStateDate and ps.state=29 and ps.voided=0 
 
-              ) tr GROUP BY tr.patient_id 
+        ) tr GROUP BY tr.patient_id 
         )trasferedIn on coorte24Meses.patient_id=trasferedIn.patient_id
-          where trasferedIn.data_transferencia is null
+          where trasferedIn.patient_id is null
 
           union
          
@@ -321,23 +333,29 @@
             )coorte36Meses
             left join
         (
-          SELECT tr.patient_id, tr.data_transferencia from  
+           SELECT tr.patient_id, tr.data_transferencia from  
               (
                 SELECT p.patient_id, obsData.value_datetime as data_transferencia from patient p  
                 INNER JOIN encounter e ON p.patient_id=e.patient_id  
                 INNER JOIN obs obsTrans ON e.encounter_id=obsTrans.encounter_id AND obsTrans.voided=0 AND obsTrans.concept_id=1369 AND obsTrans.value_coded=1065 
-                INNER JOIN obs obsTarv ON e.encounter_id=obsTarv.encounter_id AND obsTarv.voided=0 AND obsTarv.concept_id=6300 AND obsTarv.value_coded=6276 
                 INNER JOIN obs obsData ON e.encounter_id=obsData.encounter_id AND obsData.voided=0 AND obsData.concept_id=23891 
-                WHERE p.voided=0 AND e.voided=0 AND e.encounter_type=53 
-                AND e.location_id=:location GROUP BY p.patient_id 
+                WHERE p.voided=0 AND e.voided=0 AND e.encounter_type=53 and obsData.value_datetime<=date_sub(date(concat(:year,'-06','-20')), interval 36 MONTH)
+                AND e.location_id=:location 
+                GROUP BY p.patient_id 
                 union
-                select final.patient_id,final.minStateDate  as data_transferencia from  ( 
+                select final.patient_id,final.minStateDate  as data_transferencia from  
+                ( 
                 select states.patient_id,states.patient_program_id,min(states.minStateDate) as minStateDate,states.program_id,states.state from  
                 ( 
                 SELECT p.patient_id, pg.patient_program_id, ps.start_date as minStateDate, pg.program_id, ps.state  FROM patient p   
                 inner join patient_program pg on p.patient_id=pg.patient_id  
                 inner join patient_state ps on pg.patient_program_id=ps.patient_program_id  
-                WHERE pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and location_id=:location  
+                WHERE pg.voided=0 
+                and ps.start_date<=date_sub(date(concat(:year,'-06','-20')), interval 36 MONTH)
+                and ps.voided=0 
+                and p.voided=0 
+                and pg.program_id=2 
+                and location_id=:location  
                 )states 
                 group by states.patient_id 
                 order by states.minStateDate asc  
@@ -345,9 +363,9 @@
                 inner join patient_state ps on ps.patient_program_id=final.patient_program_id  
                 where ps.start_date=final.minStateDate and ps.state=29 and ps.voided=0 
 
-              ) tr GROUP BY tr.patient_id 
+        ) tr GROUP BY tr.patient_id 
         )trasferedIn on coorte36Meses.patient_id=trasferedIn.patient_id
-              where trasferedIn.data_transferencia is null
+              where trasferedIn.patient_id is null
       )coorteFinal
        inner join person p on p.person_id=coorteFinal.patient_id
        left join
