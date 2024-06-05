@@ -198,7 +198,7 @@ public interface MQCategory19QueriesInterface {
             + "and e.encounter_datetime>=:startInclusionDate  "
             + "and e.encounter_datetime<=:endRevisionDate "
             + ")geneXertResult on geneXertRequest.patient_id=geneXertResult.patient_id "
-            + "where  geneXertResult.data_genexpert_result=geneXertRequest.data_genexpert_request ";
+            + "where  geneXertResult.data_genexpert_result>=geneXertRequest.data_genexpert_request ";
 
     public static final String findAllPatientsWithGeneXpertResultAfterGeneXpertRequest =
         "select geneXertRequest.patient_id from "
