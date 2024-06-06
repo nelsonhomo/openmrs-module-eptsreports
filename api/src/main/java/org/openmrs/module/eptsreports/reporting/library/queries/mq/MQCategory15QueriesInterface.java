@@ -1699,7 +1699,7 @@ public interface MQCategory15QueriesInterface {
                 + "Select p.patient_id,max(e.encounter_datetime) enc from patient p "
                 + "inner join encounter e on p.patient_id=e.patient_id "
                 + "where p.voided=0 and e.voided=0 and e.encounter_type=6 and "
-                + "e.encounter_datetime BETWEEN '2023-09-21' AND  :endRevisionDate  and e.location_id=:location "
+                + "e.encounter_datetime BETWEEN :startInclusionDate AND  :endRevisionDate  and e.location_id=:location "
                 + "group by p.patient_id "
                 + ")lastEnc "
                 + "inner join "
