@@ -643,7 +643,7 @@ public interface GenericMQQueryIntarface {
               + "and p.voided=0  "
               + "and e.encounter_type=6  "
               + "and o.concept_id=1766  "
-              + "and o.value_coded in(1763,1764,1762,1760,23760,1765)      "
+              + "and o.value_coded in(1763,1764,1762,1760,23760,1765,161)      "
               + "and e.location_id=:location   "
               + "and e.encounter_datetime>=:startInclusionDate  "
               + "and e.encounter_datetime<=:endRevisionDate "
