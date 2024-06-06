@@ -182,7 +182,7 @@ public class MQCategory13P3DataSet extends MQAbstractDataSet {
                 "CAT13_5_TBHIV_DENOMINATOR",
                 mappings),
             mappings),
-        "ageOnEndInclusionDate=15PlusSecondLine");
+        "ageOnEndInclusionDate=AdultsOr15PlusSecondLine");
 
     dataSetDefinition.addColumn(
         "CAT13_5_TBHIV_NUMERATOR",
@@ -193,7 +193,7 @@ public class MQCategory13P3DataSet extends MQAbstractDataSet {
                 "CAT13_5_TBHIV_NUMERATOR",
                 mappings),
             mappings),
-        "ageOnEndInclusionDate=15PlusSecondLine");
+        "ageOnEndInclusionDate=AdultsOr15PlusSecondLine");
 
     dataSetDefinition.addColumn(
         "CAT13_14_TBHIV_DENOMINATOR",
