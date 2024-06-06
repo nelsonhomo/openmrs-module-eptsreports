@@ -759,6 +759,30 @@ public interface MQQueriesInterface {
                 + "AND TIMESTAMPDIFF(year,birthdate,alternativa.data_linha) >= %d AND birthdate IS NOT NULL";
 
     public static final String
+        findAllPatientsWhoHaveTherapheuticLineSecondLineDuringInclusionPeriodOrAdultPatientsInART =
+            " "
+                + "SELECT patient_id FROM patient "
+                + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 AND person.voided=0 "
+                + "AND TIMESTAMPDIFF(year,birthdate,:endRevisionDate) >= %d AND birthdate IS NOT NULL "
+                + "union "
+                + " select alternativa.patient_id "
+                + " from "
+                + " ( "
+                + " Select p.patient_id, max(obsLinha.obs_datetime) data_linha "
+                + " from patient p "
+                + " inner join encounter e on p.patient_id = e.patient_id "
+                + " inner join obs obsLinha on obsLinha.encounter_id = e.encounter_id "
+                + " left join obs obsJustificacao on obsJustificacao.encounter_id = e.encounter_id and obsJustificacao.voided = 0 and "
+                + " obsJustificacao.concept_id = 1792 "
+                + " where p.voided = 0 and e.voided = 0 and e.encounter_type = 53 and obsLinha.concept_id = 21187 and obsLinha.voided = 0 and "
+                + " obsLinha.obs_datetime BETWEEN :startInclusionDate and :endInclusionDate and e.location_id = 277 and "
+                + " (obsJustificacao.value_coded is null or (obsJustificacao.value_coded is not null and obsJustificacao.value_coded <> 1982)) "
+                + " group by p.patient_id "
+                + " ) alternativa "
+                + "INNER JOIN person ON alternativa.patient_id = person.person_id WHERE person.voided=0 "
+                + "AND TIMESTAMPDIFF(year,birthdate,alternativa.data_linha) >= %d AND birthdate IS NOT NULL ";
+
+    public static final String
         findAllPatientsWhoHaveTherapheuticLineSecondLineDuringInclusionPeriodCategory13P3B2NEWDenominatorByAgeRenge =
             " select alternativa.patient_id "
                 + " from "

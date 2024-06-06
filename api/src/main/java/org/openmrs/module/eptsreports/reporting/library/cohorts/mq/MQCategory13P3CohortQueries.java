@@ -548,6 +548,15 @@ public class MQCategory13P3CohortQueries {
     String compositionString = "";
 
     definition.addSearch(
+        "START-ART",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoAreNewlyEnrolledOnARTRF05(), mappings));
+
+    definition.addSearch(
+        "PREGNANT",
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
+
+    definition.addSearch(
         "TRANSFERED-IN",
         EptsReportUtils.map(
             mQCohortQueries
@@ -586,7 +595,8 @@ public class MQCategory13P3CohortQueries {
       compositionString =
           "B2 NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD OR DROPPED-OUT OR TB-ACTIVA)";
     } else {
-      compositionString = "B2 NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD OR DROPPED-OUT)";
+      compositionString =
+          "((START-ART NOT PREGNANT) OR B2) NOT (TRANSFERED-IN OR TRANSFERED-OUT OR DEAD OR DROPPED-OUT)";
     }
 
     definition.setCompositionString(compositionString);

@@ -538,14 +538,23 @@ public interface MQCategory13Section1QueriesInterface {
                 + " group by linhaAlternativa.patient_id ";
 
     public static final String findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod =
-        "select maxdiagnostico.patient_id from ( "
-            + "select p.patient_id,max(e.encounter_datetime) max_datadiagnostico from patient p "
+        "select patient_id from ( "
+            + "select maxTb.patient_id, max(max_datatb) max_datatb from ( "
+            + "select p.patient_id,max(e.encounter_datetime) max_datatb from patient p "
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs o on o.encounter_id=e.encounter_id "
             + "where e.encounter_type=6 and e.voided=0 and o.voided=0 and p.voided=0 and o.concept_id=23761 and o.value_coded=1065 "
             + "and e.encounter_datetime between :startInclusionDate and :endRevisionDate and e.location_id=:location "
             + "group by p.patient_id "
-            + ") maxdiagnostico ";
+            + "union "
+            + "select p.patient_id, max(e.encounter_datetime) max_datatb from patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on o.encounter_id=e.encounter_id "
+            + "where e.encounter_type=6 and o.concept_id=1268 and o.value_coded in (1256,1257) "
+            + "and e.location_id=:location and e.voided=0 and p.voided=0 and e.encounter_datetime between :startInclusionDate and :endRevisionDate "
+            + "group by p.patient_id "
+            + ") maxTb group by maxTb.patient_id "
+            + ") finalTB ";
 
     public static final String
         findPatientsWithRequestCVInTheLastClinicalConsultationDuringRevisionPeriod =
