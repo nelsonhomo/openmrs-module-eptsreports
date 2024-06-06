@@ -1644,9 +1644,9 @@ public class ResumoMensalDAHCohortQueries {
 
     final String mappingsAbandonoPeriod2 = "endDate=${startDate-1m-1d},location=${location}";
     final String mappingsPickUpPeriod2 =
-        "startDate=${startDate-1m},endDate=${startDate},location=${location}";
+        "startDate=${startDate-1m},endDate=${startDate-1d},location=${location}";
 
-    final String mappingsAbandonoPeriod3 = "endDate=${startDate},location=${location}";
+    final String mappingsAbandonoPeriod3 = "endDate=${startDate-1d},location=${location}";
     final String mappingsPickUpPeriod3 =
         "startDate=${startDate},endDate=${endDate},location=${location}";
 
@@ -1730,7 +1730,7 @@ public class ResumoMensalDAHCohortQueries {
     } else if (periodo == PeriodoAbandono.SEGUNDO) {
       mappings = "endDate=${startDate-1m-1d},location=${location}";
     } else if (periodo == PeriodoAbandono.TERCEIRO) {
-      mappings = "endDate=${startDate},location=${location}";
+      mappings = "endDate=${startDate-1d},location=${location}";
     }
 
     definition.addSearch(
