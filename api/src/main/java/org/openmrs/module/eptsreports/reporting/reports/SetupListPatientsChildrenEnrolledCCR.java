@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
-import org.openmrs.module.eptsreports.reporting.library.datasets.ListOfPatientsEligileToViralLoadDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.ListOfPatientsChildreenEnrolledInCCRDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -27,19 +27,19 @@ public class SetupListPatientsChildrenEnrolledCCR extends EptsDataExportManager 
   @Autowired private GenericCohortQueries genericCohortQueries;
 
   @Autowired
-  private ListOfPatientsEligileToViralLoadDataSet listOfPatientsEligileToViralLoadDataSet;
+  private ListOfPatientsChildreenEnrolledInCCRDataSet listOfPatientsChildreenEnrolledInCCRDataSet;
 
   @Autowired private DatimCodeDataSet datimCodeDataset;
   @Autowired private SismaCodeDataSet sismaCodeDataset;
 
   @Override
   public String getExcelDesignUuid() {
-    return "175ffb5c-22af-11ef-8220-933d2e7c7103";
+    return "46c85a8c-24ae-11ef-8fef-f35830b9a08e";
   }
 
   @Override
   public String getUuid() {
-    return "1ee5706e-22af-11ef-9f2f-87e50793d600";
+    return "5252482c-24ae-11ef-8ffb-f760ce154d73";
   }
 
   @Override
@@ -65,14 +65,14 @@ public class SetupListPatientsChildrenEnrolledCCR extends EptsDataExportManager 
     rd.setDescription(getDescription());
     rd.setParameters(getParameters());
     rd.addDataSetDefinition(
-        "VIRALELIG",
+        "CCR",
         Mapped.mapStraightThrough(
-            listOfPatientsEligileToViralLoadDataSet.constructDataset(getParameters())));
+            listOfPatientsChildreenEnrolledInCCRDataSet.constructDataset(getParameters())));
 
     rd.addDataSetDefinition(
-        "VIRALTOTAL",
+        "CCRTOTAL",
         Mapped.mapStraightThrough(
-            this.listOfPatientsEligileToViralLoadDataSet.getTotalEligibleViralLoadDataset()));
+            this.listOfPatientsChildreenEnrolledInCCRDataSet.getTotaLOfChildrenEnrolledInCCR()));
 
     rd.addDataSetDefinition(
         "D",
@@ -102,7 +102,7 @@ public class SetupListPatientsChildrenEnrolledCCR extends EptsDataExportManager 
               null);
 
       Properties props = new Properties();
-      props.put("repeatingSections", "sheet:1,row:10,dataset:VIRALELIG");
+      props.put("repeatingSections", "sheet:1,row:11,dataset:CCR");
       props.put("sortWeight", "5000");
       reportDesign.setProperties(props);
     } catch (IOException e) {
