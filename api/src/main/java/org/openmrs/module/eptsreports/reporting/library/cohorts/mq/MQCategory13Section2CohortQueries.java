@@ -77,6 +77,8 @@ public class MQCategory13Section2CohortQueries {
 
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+    final String mappingsTbActivaEndRevisionDate =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
     String compositionString = "";
 
     definition.addSearch(
@@ -122,7 +124,7 @@ public class MQCategory13Section2CohortQueries {
         EptsReportUtils.map(
             mQCategory13Section1CohortQueries
                 .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
-            mappings));
+            mappingsTbActivaEndRevisionDate));
 
     if (excludeTbActiveDiagnostic) {
       compositionString =
@@ -150,6 +152,8 @@ public class MQCategory13Section2CohortQueries {
 
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+    final String mappingsTbActivaEndRevisionDate =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "B1",
@@ -200,7 +204,7 @@ public class MQCategory13Section2CohortQueries {
         EptsReportUtils.map(
             mQCategory13Section1CohortQueries
                 .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
-            mappings));
+            mappingsTbActivaEndRevisionDate));
 
     definition.setCompositionString(
         "(B1 AND (B2NEWII NOT (B2ENEW OR DROPPEDOUT)))  NOT (B5E OR C OR D OR TB-ACTIVA)");
@@ -281,6 +285,8 @@ public class MQCategory13Section2CohortQueries {
 
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+    final String mappingsTbActivaEndRevisionDate =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "RF14",
@@ -295,7 +301,7 @@ public class MQCategory13Section2CohortQueries {
         EptsReportUtils.map(
             mQCategory13Section1CohortQueries
                 .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
-            mappings));
+            mappingsTbActivaEndRevisionDate));
 
     definition.setCompositionString("(RF14 OR RF15) AND TB-ACTIVA");
 
@@ -347,6 +353,8 @@ public class MQCategory13Section2CohortQueries {
 
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+    final String mappingsTbActivaEndRevisionDate =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "RF14",
@@ -361,7 +369,7 @@ public class MQCategory13Section2CohortQueries {
         EptsReportUtils.map(
             mQCategory13Section1CohortQueries
                 .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
-            mappings));
+            mappingsTbActivaEndRevisionDate));
 
     definition.addSearch(
         "BREASTFEEDING",

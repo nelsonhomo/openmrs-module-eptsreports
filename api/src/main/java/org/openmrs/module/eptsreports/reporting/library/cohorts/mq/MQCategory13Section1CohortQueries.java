@@ -328,6 +328,9 @@ public class MQCategory13Section1CohortQueries {
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
+    final String mappingsTbActivaEndRevisionDate =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
     definition.addSearch(
         "B1",
         EptsReportUtils.map(
@@ -375,7 +378,8 @@ public class MQCategory13Section1CohortQueries {
     definition.addSearch(
         "TB-ACTIVA",
         EptsReportUtils.map(
-            this.findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(), mappings));
+            this.findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
+            mappingsTbActivaEndRevisionDate));
 
     if (excludeTbActiveDiagnostic) {
       compositionString =
@@ -404,6 +408,8 @@ public class MQCategory13Section1CohortQueries {
 
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+    final String mappingsTbActivaEndRevisionDate =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "B1",
@@ -455,7 +461,8 @@ public class MQCategory13Section1CohortQueries {
     definition.addSearch(
         "TB-ACTIVA",
         EptsReportUtils.map(
-            this.findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(), mappings));
+            this.findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
+            mappingsTbActivaEndRevisionDate));
 
     definition.setCompositionString(
         "(B1 AND ((B2NEW NOT DROPPEDOUT) OR (REINITIATED-ART NOT DROPPEDOUT) OR (B3 NOT (B3E OR DROPPEDOUT)))) NOT (B5E OR C OR D OR TB-ACTIVA)");
