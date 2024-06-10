@@ -585,26 +585,29 @@ select coorte12meses_final.*,
 					(
 		   
 				   select  distinct e.patient_id,e.encounter_datetime encounter_datetime,
-																case o.value_coded
-								 when  23730  then 'DISPENSA TRIMESTRAL (DT)'
-								 when  23888  then 'DISPENSA SEMESTRAL'
-								 when 165314  then 'DISPENSA ANUAL DE ARV'
-								 when 165315  then 'DISPENSA DESCENTRALIZADA DE ARV'
-								 when 165178  then 'DISPENSA COMUNITÁRIA VIA PROVEDOR'
-								 when 165179  then 'DISPENSA COMUNITARIA VIA APE'
-								 when 165264  then 'BRIGADAS MVEIS (DCBM)'
-								 when 165265  then 'CLINICAS MOVEIS (DCCM)'
-								 when  23725  then 'ABORDAGEM FAMILIAR (AF)'
-								 when  23729  then 'FLUXO RÁPIDO (FR)'
-								 when  23724  then 'GAAC'
-								 when  23726  then 'CLUBES DE ADESÃO (CA)'
-								 when 165316  then 'EXTENSAO DE HORARIO'
-								 when 165317  then 'PARAGEM UNICA NO SECTOR DA TB'
-								 when 165318  then 'PARAGEM UNICA NOS SERVICOS DE TARV' 
-								 when 165319  then 'PARAGEM UNICA NO SAAJ'
-								 when 165320  then  'PARAGEM UNICA NA SMI'
-								 when 165321  then  'DOENCA AVANCADA POR HIV'
-						else null end  as MDC
+							case o.value_coded
+								when  23730  then 'DISPENSA TRIMESTRAL (DT)'
+								when  23888  then 'DISPENSA SEMESTRAL'
+								when 165314  then 'DISPENSA ANUAL DE ARV'
+								when 165315  then 'DISPENSA DESCENTRALIZADA DE ARV'
+								when 165178  then 'DISPENSA COMUNITÁRIA VIA PROVEDOR'
+								when 165179  then 'DISPENSA COMUNITARIA VIA APE'
+								when 165264  then 'BRIGADAS MVEIS (DCBM)'
+								when 165265  then 'CLINICAS MOVEIS (DCCM)'
+								when  23725  then 'ABORDAGEM FAMILIAR (AF)'
+								when  23729  then 'FLUXO RÁPIDO (FR)'
+								when  23724  then 'GAAC'
+								when  23726  then 'CLUBES DE ADESÃO (CA)'
+								when 165316  then 'EXTENSAO DE HORARIO'
+								when 165317  then 'PARAGEM UNICA NO SECTOR DA TB'
+								when 165318  then 'PARAGEM UNICA NOS SERVICOS DE TARV' 
+								when 165319  then 'PARAGEM UNICA NO SAAJ'
+								when 165320  then  'PARAGEM UNICA NA SMI'
+								when 165321  then  'DOENCA AVANCADA POR HIV'
+								when 23727  then  'PARAGEM ÚNICA (PU)'
+								when 165340 then  'DB - DISPENSA BIMESTRAL'
+								when 23730 then  'DT - DISPENSA TRIMESTRAL DE ARV'
+							else null end  as MDC
 				 from  encounter e  
 						join obs grupo on grupo.encounter_id=e.encounter_id 
 						join obs o on o.encounter_id=e.encounter_id 
