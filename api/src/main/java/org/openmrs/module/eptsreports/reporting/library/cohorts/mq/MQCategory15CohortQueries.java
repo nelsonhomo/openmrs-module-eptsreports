@@ -1441,26 +1441,6 @@ public class MQCategory15CohortQueries {
     return definition;
   }
 
-  private CohortDefinition findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44() {
-
-    final SqlCohortDefinition definition = new SqlCohortDefinition();
-
-    definition.setName(
-        String.format("MQ - findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44 "));
-    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
-    definition.addParameter(new Parameter("location", "Location", Location.class));
-
-    String query =
-        MQCategory15QueriesInterface.QUERY
-            .findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44;
-
-    definition.setQuery(query);
-
-    return definition;
-  }
-
   private CohortDefinition findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCRF36() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
@@ -1574,7 +1554,7 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "J",
         EptsReportUtils.map(
-            this.findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44(), mappings));
+            mICategory15CohortQueries.findPatientsWhoAreActiveOnArtAndInAtleastOneDSD(), mappings));
 
     definition.addSearch(
         "TB",
@@ -1673,8 +1653,6 @@ public class MQCategory15CohortQueries {
     final String mappings =
         "startInclusionDate=${endRevisionDate-12m+1d},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
-    final String mappingsMQ = "endRevisionDate=${endRevisionDate},location=${location}";
-
     definition.addSearch(
         "A",
         EptsReportUtils.map(
@@ -1684,7 +1662,7 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "J",
         EptsReportUtils.map(
-            this.findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44(), mappingsMQ));
+            mICategory15CohortQueries.findPatientsWhoAreActiveOnArtAndInAtleastOneDSD(), mappings));
 
     definition.addSearch(
         "H",
@@ -1756,8 +1734,6 @@ public class MQCategory15CohortQueries {
     final String mappings =
         "startInclusionDate=${endRevisionDate-12m+1d},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
-    final String mappingsMQ = "endRevisionDate=${endRevisionDate},location=${location}";
-
     definition.addSearch(
         "A",
         EptsReportUtils.map(
@@ -1767,7 +1743,7 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "J",
         EptsReportUtils.map(
-            this.findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44(), mappingsMQ));
+            mICategory15CohortQueries.findPatientsWhoAreActiveOnArtAndInAtleastOneDSD(), mappings));
 
     definition.addSearch(
         "B2",
