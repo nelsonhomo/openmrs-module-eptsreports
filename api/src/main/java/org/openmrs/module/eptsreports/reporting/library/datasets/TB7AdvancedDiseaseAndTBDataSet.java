@@ -227,6 +227,14 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
                     .getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMResults(),
                 mappings));
 
+    final CohortIndicator tb7ImmunoCD4WithTBLamPositiveResults =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7",
+            EptsReportUtils.map(
+                this.tb7AdvancedDiseaseAndTBCohortQueries
+                    .getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResults(),
+                mappings));
+
     final CohortIndicator tb7ImmunoCD4WithTBLamNegativeResults =
         this.eptsGeneralIndicator.getIndicator(
             "TB7",
@@ -235,159 +243,21 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
                     .getNumberOfClientsWithNegativeTBLAMResults(),
                 mappings));
 
-    // final CohortIndicator tb7IndicatorpatienWithoutCD4CountButWithTBLAMResults =
-    // this.eptsGeneralIndicator
-    // .getIndicator("TB7",
-    // EptsReportUtils.map(patienWithoutCD4CountButWithTBLAMResults,
-    // mappings));
-    //
-    // final CohortIndicator
-    // tb7IndicatorNumberOfClientsWithTBLAMResultsByReportGenerationDate =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(numberOfClientsWithTBLAMResultsByReportGenerationDate,
-    // mappings));
-    //
-    // final CohortIndicator
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    // numberOfClientsWithPositiveTBLAMResultsByReportGenerationDate, mappings));
-    //
-    // final CohortIndicator
-    // tb7IndicatorNumberOfClientsWithNegativeTBLAMResultsByReportGenerationDate =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    // numberOfClientsWithNegativeTBLAMResultsByReportGenerationDate, mappings));
-    //
-    // final CohortIndicator
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade4ByReportGenerationDate
-    // =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    // numberOfClientsWithPositiveTBLAMResultsGrade4ByReportGenerationDate,
-    // mappings));
-    //
-    // final CohortIndicator
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade3ByReportGenerationDate
-    // =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    // numberOfClientsWithPositiveTBLAMResultsGrade3ByReportGenerationDate,
-    // mappings));
-    //
-    // final CohortIndicator
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade2ByReportGenerationDate
-    // =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    // numberOfClientsWithPositiveTBLAMResultsGrade2ByReportGenerationDate,
-    // mappings));
-    //
-    // final CohortIndicator
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade1ByReportGenerationDate
-    // =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    // numberOfClientsWithPositiveTBLAMResultsGrade1ByReportGenerationDate,
-    // mappings));
-    //
-    // final CohortIndicator
-    // tb7IndicatorclientsWithoutPositiveTBLAMButNotTestedWithGeneXpert =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(clientsWithoutPositiveTBLAMButNotTestedWithGeneXpert,
-    // mappings));
-    //
-    // final CohortIndicator
-    // tb7IndicatorclientsWithPositiveTBLAMButNotTestedWithGeneXpert =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(clientsWithPositiveTBLAMButNotTestedWithGeneXpert,
-    // mappings));
-    //
-    // final CohortIndicator tb7IndicatorClientsWithPositiveTBLAMWithGeneXpertAndTb
-    // =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7", EptsReportUtils.map(clientsWithPositiveTBLAMWithGeneXpertAndTb,
-    // mappings));
-    //
-    // final CohortIndicator
-    // tb7IndicatorClientsWithPositiveTBLAMAndGeneXpertPositiveforTb =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(clientsWithPositiveTBLAMAndGeneXpertPositiveforTb,
-    // mappings));
-    //
-    // final CohortIndicator
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGradeBlankByReportGenerationDate
-    // =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    // numberOfClientsWithPositiveTBLAMResultsGradeBlankByReportGenerationDate,
-    // mappings));
-    //
-    // final CohortIndicator
-    //
-    // tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade4ByReportGenerationDate
-    // =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    //
-    // clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade4ByReportGenerationDate,
-    // mappings));
-    //
-    // final CohortIndicator
-    //
-    // tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade3ByReportGenerationDate
-    // =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    //
-    // clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade3ByReportGenerationDate,
-    // mappings));
-    //
-    // final CohortIndicator
-    //
-    // tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade2ByReportGenerationDate
-    // =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    //
-    // clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade2ByReportGenerationDate,
-    // mappings));
-    //
-    // final CohortIndicator
-    //
-    // tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade1ByReportGenerationDate
-    // =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    //
-    // clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade1ByReportGenerationDate,
-    // mappings));
-    //
-    // final CohortIndicator
-    //
-    // tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGradeBlankByReportGenerationDate
-    // =
-    // this.eptsGeneralIndicator.getIndicator(
-    // "TB7",
-    // EptsReportUtils.map(
-    //
-    // clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGradeBlankByReportGenerationDate,
-    // mappings));
+    final CohortIndicator tb7WithoutGeneExpert =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7",
+            EptsReportUtils.map(
+                this.tb7AdvancedDiseaseAndTBCohortQueries
+                    .getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResultsWithoutGenexpert(),
+                mappings));
+
+    final CohortIndicator tb7WithGeneExpert =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7",
+            EptsReportUtils.map(
+                this.tb7AdvancedDiseaseAndTBCohortQueries
+                    .getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResultsWithGenexpert(),
+                mappings));
 
     // TI1
     dataSetDefinition.addColumn(
@@ -586,276 +456,28 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
         "tblam-grade-level=no-level");
 
     dataSetDefinition.addColumn(
+        "CASCADE2-TI2-POSITIVE",
+        "Number of clients with CD4 count showing severe immunosuppression and with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month))",
+        EptsReportUtils.map(tb7ImmunoCD4WithTBLamPositiveResults, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
         "CASCADE2-TI2-NEGATIVE",
         "Number of clients with a CD4 count during inclusion period (end date - 2 months + 1 day) and (end date - 1 month) showing severe immunosuppression - Negative Results",
         EptsReportUtils.map(tb7ImmunoCD4WithTBLamNegativeResults, mappings),
         "");
 
-    // dataSetDefinition.addColumn(
-    // "TITBLAM3",
-    // "TITBLAM3-Number of clients with CD4 count during inclusion period showing
-    // severe
-    // immunodepressio(With TBLam)",
-    // EptsReportUtils.map(tb7Indicator3TbLam, mappings),
-    // "");
-    // dataSetDefinition.addColumn(
-    // "TINTBLAM3",
-    // "TINTBLAM3-Number of clients with CD4 count during inclusion period showing
-    // severe
-    // immunodepressio(Without TBLam)",
-    // EptsReportUtils.map(tb7Indicator3WithoutTbLam, mappings),
-    // "");
+    dataSetDefinition.addColumn(
+        "CASCADE2-TI2-WITHOUT-GEN",
+        "Number of clients with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) but NOT tested with GeneXpert by report generation date",
+        EptsReportUtils.map(tb7WithoutGeneExpert, mappings),
+        "");
 
-    // addRow(
-    // dataSetDefinition,
-    // "RL2",
-    // "Number of clients with CD4 count during inclusion period showing severe
-    // immunodepression "
-    // + "(CD4 count < 200/mm3 for patients > =5 , <500/mm3 for children 1-4,
-    // <750/mm3
-    // for children under 12 months) ",
-    // EptsReportUtils.map(
-    // eptsGeneralIndicator.getIndicator(
-    // "Number of clients with CD4 count during inclusion period showing severe
-    // immunodepression "
-    // + "(CD4 count < 200/mm3 for patients > =5 , <500/mm3 for children 1-4,
-    // <750/mm3 for children under 12 months) ",
-    // EptsReportUtils.map(
-    // tb7AdvancedDiseaseAndTBCohortQueries
-    //
-    // .getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicator3WithTBLam(),
-    // mappings)),
-    // mappings),
-    // getColumns());
-    //
-    // addRow(
-    // dataSetDefinition,
-    // "NRL2",
-    // "Number of clients with CD4 count during inclusion period showing severe
-    // immunodepression "
-    // + "(CD4 count < 200/mm3 for patients > =5 , <500/mm3 for children 1-4,
-    // <750/mm3
-    // for children under 12 months) ",
-    // EptsReportUtils.map(
-    // eptsGeneralIndicator.getIndicator(
-    // "Number of clients with CD4 count during inclusion period showing severe
-    // immunodepression "
-    // + "(CD4 count < 200/mm3 for patients > =5 , <500/mm3 for children 1-4,
-    // <750/mm3 for children under 12 months) ",
-    // EptsReportUtils.map(
-    // tb7AdvancedDiseaseAndTBCohortQueries
-    //
-    // .getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicator3WithoutTBLam(),
-    // mappings)),
-    // mappings),
-    // getColumns());
-    //
-    //
-    // addRow(
-    // dataSetDefinition,
-    // "CDNRL2",
-    // "Number of clients with CD4 count during inclusion period without severe
-    // immunodepression (CD4 count > = 200/mm3 for patients >5, > = 500 for children
-    // 1-5, >
-    // =750/mm3 for children <12 months)",
-    // EptsReportUtils.map(
-    // eptsGeneralIndicator.getIndicator(
-    // "Number of clients with CD4 count during inclusion period without severe
-    // immunodepression (CD4 count > = 200/mm3 for patients >5, > = 500 for children
-    // 1-5, >
-    // =750/mm3 for children <12 months)",
-    // EptsReportUtils.map(
-    // tb7AdvancedDiseaseAndTBCohortQueries
-    //
-    // .getNumberOfClientsWithoutCd4ResultDuringInclusionPeriodIndicator3WithTBLam(),
-    // mappings)),
-    // mappings),
-    // getColumns());
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAM1T",
-    // "TBLAM1T - Number of clients without CD4 count but with TB LAM results during
-    // the
-    // inclusion period (including clients who were not eligible for CD4(Total)",
-    // EptsReportUtils.map(tb7IndicatorpatienWithoutCD4CountButWithTBLAMResults,
-    // mappings),
-    // "");
-    //
-    // addRow(
-    // dataSetDefinition,
-    // "TBLAM1",
-    // "Number of clients without CD4 count but with TB LAM results during the
-    // inclusion
-    // period (including clients who were not eligible for CD4) ",
-    // EptsReportUtils.map(
-    // eptsGeneralIndicator.getIndicator(
-    // "Number of clients without CD4 count but with TB LAM results during the
-    // inclusion period (including clients who were not eligible for CD4) ",
-    // EptsReportUtils.map(
-    // tb7AdvancedDiseaseAndTBCohortQueries
-    //
-    // .getNumberOfClientsWithoutCD4CountButWithTBLAMResultsDuringTheInclusionPeriodIncludingClientsWhoWereNotEligibleForCD4(),
-    // mappings)),
-    // mappings),
-    // getColumns());
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAM2T",
-    // "TBLAM2T - Number of clients with TBLAM Results By Report Generation Date",
-    // EptsReportUtils.map(
-    // tb7IndicatorNumberOfClientsWithTBLAMResultsByReportGenerationDate, mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP2T",
-    // "TBLAMP2T - Number of clients with Positive TBLAM Results By Report
-    // Generation Date",
-    // EptsReportUtils.map(
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate,
-    // mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMN2T",
-    // "TBLAMN2T - Number of clients with Negative TBLAM Results By Report
-    // Generation Date",
-    // EptsReportUtils.map(
-    // tb7IndicatorNumberOfClientsWithNegativeTBLAMResultsByReportGenerationDate,
-    // mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP2L4T",
-    // "TBLAMP2L4T - Number of clients with Positive TBLAM Results Grade 4 By Report
-    // Generation Date",
-    // EptsReportUtils.map(
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade4ByReportGenerationDate,
-    // mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP2L3T",
-    // "TBLAMP2L3T - Number of clients with Positive TBLAM Results Grade 3 By Report
-    // Generation Date",
-    // EptsReportUtils.map(
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade3ByReportGenerationDate,
-    // mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP2L2T",
-    // "TBLAMP2L2T - Number of clients with Positive TBLAM Results Grade 2 By Report
-    // Generation Date",
-    // EptsReportUtils.map(
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade2ByReportGenerationDate,
-    // mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP2L1T",
-    // "TBLAMP2L1T - Number of clients with Positive TBLAM Results Grade 1 By Report
-    // Generation Date",
-    // EptsReportUtils.map(
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGrade1ByReportGenerationDate,
-    // mappings),
-    // "");
-    // dataSetDefinition.addColumn(
-    // "TBLAMP2LBT",
-    // "TBLAMP2LBT - Number of clients with Positive TBLAM Results Grade Blank By
-    // Report
-    // Generation Date",
-    // EptsReportUtils.map(
-    //
-    // tb7IndicatorNumberOfClientsWithPositiveTBLAMResultsGradeBlankByReportGenerationDate,
-    // mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP3T",
-    // "TBLAMP3T - Number of clients with positive TB LAM but NOT tested with
-    // GeneXpert ",
-    // EptsReportUtils.map(
-    // tb7IndicatorclientsWithoutPositiveTBLAMButNotTestedWithGeneXpert, mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP4T",
-    // "TBLAMP4T - Number of clients with positive TB LAM and also tested with
-    // GeneXpert",
-    // EptsReportUtils.map(
-    // tb7IndicatorclientsWithPositiveTBLAMButNotTestedWithGeneXpert, mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP5T",
-    // "TBLAMP5T - Number of clients with positive TB LAM and GeneXpert positive for
-    // TB",
-    // EptsReportUtils.map(
-    // tb7IndicatorClientsWithPositiveTBLAMAndGeneXpertPositiveforTb, mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP6T",
-    // "TBLAMP6T - Number of clients with positive TB LAM and on TB treatment by
-    // report
-    // generation date",
-    // EptsReportUtils.map(tb7IndicatorClientsWithPositiveTBLAMWithGeneXpertAndTb,
-    // mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP7T",
-    // "TBLAMP7T - Number of clients with Positive TBLAM but not tested with
-    // genexpert for TB
-    // grade 4 by report generation date",
-    // EptsReportUtils.map(
-    //
-    // tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade4ByReportGenerationDate,
-    // mappings),
-    // "");
-    // dataSetDefinition.addColumn(
-    // "TBLAMP8T",
-    // "TBLAMP8T - Number of clients with Positive TBLAM but not tested with
-    // genexpert for TB
-    // grade 3 by report generation date",
-    // EptsReportUtils.map(
-    //
-    // tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade3ByReportGenerationDate,
-    // mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP9T",
-    // "TBLAMP9T - Number of clients with Positive TBLAM but not tested with
-    // genexpert for TB
-    // grade 2 by report generation date",
-    // EptsReportUtils.map(
-    //
-    // tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade2ByReportGenerationDate,
-    // mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP10T",
-    // "TBLAMP10T - Number of clients with Positive TBLAM but not tested with
-    // genexpert for
-    // TB grade 1 by report generation date",
-    // EptsReportUtils.map(
-    //
-    // tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade1ByReportGenerationDate,
-    // mappings),
-    // "");
-    //
-    // dataSetDefinition.addColumn(
-    // "TBLAMP11T",
-    // "TBLAMP11T - Number of clients with Positive TBLAM but not tested with
-    // genexpert for
-    // TB grade blank by report generation date",
-    // EptsReportUtils.map(
-    //
-    // tb7IndicatorClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGradeBlankByReportGenerationDate,
-    // mappings),
-    // "");
+    dataSetDefinition.addColumn(
+        "CASCADE2-TI2-WITH-GEN",
+        "Number of clients with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) and also tested with GeneXpert by report generation date",
+        EptsReportUtils.map(tb7WithGeneExpert, mappings),
+        "");
 
     return dataSetDefinition;
   }

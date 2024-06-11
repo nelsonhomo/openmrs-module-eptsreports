@@ -29,16 +29,19 @@ public interface TB7AdvancedDiseaseQueries {
     public static final String FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION =
         "TB7/PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION.sql";
 
+    public static final String FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION_WITH_TBLAM_GRADE_LEVEL =
+        "TB7/PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION_WITH_GRADE_LEVEL.sql";
+
     public enum PositivityLevel {
-      NO_LEVEL(null),
+      NO_GRADE(null),
 
-      LEVEL_ONE(165186),
+      GRADE_ONE(165186),
 
-      LEVEL_TWO(165187),
+      GRADE_TWO(165187),
 
-      LEVEL_THREE(165188),
+      GRADE_THREE(165188),
 
-      LEVEL_FOUR(165348);
+      GRADE_FOUR(165348);
 
       private final Integer value;
 
@@ -351,127 +354,14 @@ public interface TB7AdvancedDiseaseQueries {
             + ") positive_tb_lam on negative_tb_lam.patient_id = positive_tb_lam.patient_id                                                              "
             + "where positive_tb_lam.patient_id is null                                                                                                  ";
 
-    public static String findPatientsWithPositiveTBLAMResultsByPositiveLevel =
-        "																					"
-            + "select distinct p.patient_id                                                                                                                                                                                                "
-            + "from patient p                                                                                                                                                                                                              "
-            + "  inner join encounter e on e.patient_id=p.patient_id                                                                                                                                                                       "
-            + "      inner join obs o on o.encounter_id = e.encounter_id                                                                                                                                                                   "
-            + "      left join obs nivelPositividade on (e.encounter_id = nivelPositividade.encounter_id and nivelPositividade.voided = 0 and nivelPositividade.concept_id = 165185)                                                       "
-            + "where p.voided=0 and  e.voided=0 and o.voided=0                                                                                                                                                                             "
-            + "  and e.encounter_type = 51 and o.concept_id=23951 and o.value_coded = 703                                                                                                                                                  "
-            + "      and nivelPositividade.value_coded = %s                                                                                                                                                            	                   "
-            + "      and e.location_id= :location and e.encounter_datetime between  :startDate and  :endDate                                                                                                                               "
-            + "                                                                                                                                                                                                                            "
-            + "union                                                                                                                                                                                                                       "
-            + "                                                                                                                                                                                                                            "
-            + "select distinct p.patient_id                                                                                                                                                                                                "
-            + "from patient p                                                                                                                                                                                                              "
-            + "  inner join encounter e on e.patient_id = p.patient_id                                                                                                                                                                     "
-            + "      inner join obs o on o.encounter_id = e.encounter_id                                                                                                                                                                   "
-            + "      left join obs tbLamGrupo on (e.encounter_id = tbLamGrupo.encounter_id and tbLamGrupo.voided = 0 and tbLamGrupo.concept_id = 165349)                                                                                   "
-            + "    left join obs nivelPositividade on (e.encounter_id = nivelPositividade.encounter_id and nivelPositividade.voided = 0 and nivelPositividade.concept_id = 165185  and nivelPositividade.obs_group_id = tbLamGrupo.obs_id) "
-            + "where p.voided=0 and  e.voided=0 and o.voided=0                                                                                                                                                                             "
-            + "  and e.encounter_type in(6, 13) and o.concept_id=23951 and o.value_coded = 703                                                                                                                                             "
-            + "    and nivelPositividade.value_coded = %s                                                                                                                                                                                  "
-            + "      and e.location_id= :location and e.encounter_datetime between  :startDate and  :endDate                                                                                                                               "
-            + "                                                                                                                                                                                                                            "
-            + "union                                                                                                                                                                                                                       "
-            + "                                                                                                                                                                                                                            "
-            + "select distinct p.patient_id                                                                                                                                                                                                "
-            + "from patient p                                                                                                                                                                                                              "
-            + "  inner join encounter e on e.patient_id = p.patient_id                                                                                                                                                                     "
-            + "      inner join obs o on o.encounter_id = e.encounter_id                                                                                                                                                                   "
-            + "      inner join obs tbLamGrupo on tbLamGrupo.encounter_id = e.encounter_id                                                                                                                                                 "
-            + "    left join obs nivelPositividade on (e.encounter_id = nivelPositividade.encounter_id and nivelPositividade.voided = 0 and nivelPositividade.concept_id = 165185  and nivelPositividade.obs_group_id = tbLamGrupo.obs_id) "
-            + "where p.voided=0 and  e.voided=0 and o.voided=0  and tbLamGrupo.voided = 0                                                                                                                                                  "
-            + "  and e.encounter_type = 90 and o.concept_id=23951 and o.value_coded = 703                                                                                                                                                  "
-            + "      and tbLamGrupo.concept_id = 165391 and o.obs_group_id = tbLamGrupo.obs_id                                                                                                                                             "
-            + "    and nivelPositividade.value_coded = %s                                                                                                                                                                                  "
-            + "      and e.location_id= :location and e.encounter_datetime between  :startDate and  :endDate                                                                                                                               ";
-
-    public static final String
-        findPatientsWithPositiveTBLAMResultsByPositiveLevelResultsWithExclusions =
-            "																																	"
-                + "select grade_level.patient_id                                                                                                                                                                                                 "
-                + "from (                                                                                                                                                                                                                        "
-                + "                                                                                                                                                                                                                              "
-                + "  select p.patient_id                                                                                                                                                                                                         "
-                + "  from patient p                                                                                                                                                                                                              "
-                + "  inner join encounter e on e.patient_id=p.patient_id                                                                                                                                                                         "
-                + "      inner join obs o on o.encounter_id = e.encounter_id                                                                                                                                                                     "
-                + "      left join obs nivelPositividade on (e.encounter_id = nivelPositividade.encounter_id and nivelPositividade.voided = 0 and nivelPositividade.concept_id = 165185)                                                         "
-                + "  where p.voided=0 and  e.voided=0 and o.voided=0                                                                                                                                                                             "
-                + "  and e.encounter_type = 51 and o.concept_id=23951 and o.value_coded = 703                                                                                                                                                    "
-                + "      and nivelPositividade.value_coded = %s                                                                                                                                                                                  "
-                + "      and e.location_id=  :location and e.encounter_datetime between   :startDate and   :endDate                                                                                                                              "
-                + "                                                                                                                                                                                                                              "
-                + "  union                                                                                                                                                                                                                       "
-                + "                                                                                                                                                                                                                              "
-                + "  select p.patient_id                                                                                                                                                                                                         "
-                + "  from patient p                                                                                                                                                                                                              "
-                + "  inner join encounter e on e.patient_id = p.patient_id                                                                                                                                                                       "
-                + "      inner join obs o on o.encounter_id = e.encounter_id                                                                                                                                                                     "
-                + "      left join obs tbLamGrupo on (e.encounter_id = tbLamGrupo.encounter_id and tbLamGrupo.voided = 0 and tbLamGrupo.concept_id = 165349)                                                                                     "
-                + "    left join obs nivelPositividade on (e.encounter_id = nivelPositividade.encounter_id and nivelPositividade.voided = 0 and nivelPositividade.concept_id = 165185  and nivelPositividade.obs_group_id = tbLamGrupo.obs_id)   "
-                + "  where p.voided=0 and  e.voided=0 and o.voided=0                                                                                                                                                                             "
-                + "  and e.encounter_type in(6, 13) and o.concept_id=23951 and o.value_coded = 703                                                                                                                                               "
-                + "    and nivelPositividade.value_coded = %s                                                                                                                                                                                    "
-                + "    and e.location_id=  :location and e.encounter_datetime between   :startDate and   :endDate                                                                                                                                "
-                + "                                                                                                                                                                                                                              "
-                + "  union                                                                                                                                                                                                                       "
-                + "                                                                                                                                                                                                                              "
-                + "  select p.patient_id                                                                                                                                                                                                         "
-                + "  from patient p                                                                                                                                                                                                              "
-                + "  inner join encounter e on e.patient_id = p.patient_id                                                                                                                                                                       "
-                + "      inner join obs o on o.encounter_id = e.encounter_id                                                                                                                                                                     "
-                + "      inner join obs tbLamGrupo on tbLamGrupo.encounter_id = e.encounter_id                                                                                                                                                   "
-                + "    left join obs nivelPositividade on (e.encounter_id = nivelPositividade.encounter_id and nivelPositividade.voided = 0 and nivelPositividade.concept_id = 165185  and nivelPositividade.obs_group_id = tbLamGrupo.obs_id)   "
-                + "  where p.voided=0 and  e.voided=0 and o.voided=0  and tbLamGrupo.voided = 0                                                                                                                                                  "
-                + "  and e.encounter_type = 90 and o.concept_id=23951 and o.value_coded = 703                                                                                                                                                    "
-                + "      and tbLamGrupo.concept_id = 165391 and o.obs_group_id = tbLamGrupo.obs_id                                                                                                                                               "
-                + "    and nivelPositividade.value_coded = %s                                                                                                                                                                                    "
-                + "      and e.location_id=  :location and e.encounter_datetime between   :startDate and   :endDate                                                                                                                              "
-                + ") grade_level                                                                                                                                                                                                                 "
-                + "left join(                                                                                                                                                                                                                    "
-                + "                                                                                                                                                                                                                              "
-                + "  select p.patient_id                                                                                                                                                                                                         "
-                + "  from patient p                                                                                                                                                                                                              "
-                + "  inner join encounter e on e.patient_id=p.patient_id                                                                                                                                                                         "
-                + "      inner join obs o on o.encounter_id = e.encounter_id                                                                                                                                                                     "
-                + "      left join obs nivelPositividade on (e.encounter_id = nivelPositividade.encounter_id and nivelPositividade.voided = 0 and nivelPositividade.concept_id = 165185)                                                         "
-                + "  where p.voided=0 and  e.voided=0 and o.voided=0                                                                                                                                                                             "
-                + "  and e.encounter_type = 51 and o.concept_id=23951 and o.value_coded = 703                                                                                                                                                    "
-                + "      and nivelPositividade.value_coded in (%s)                                                                                                                                                                               "
-                + "      and e.location_id=  :location and e.encounter_datetime between   :startDate and   :endDate                                                                                                                              "
-                + "                                                                                                                                                                                                                              "
-                + "  union                                                                                                                                                                                                                       "
-                + "                                                                                                                                                                                                                              "
-                + "  select p.patient_id                                                                                                                                                                                                         "
-                + "  from patient p                                                                                                                                                                                                              "
-                + "  inner join encounter e on e.patient_id = p.patient_id                                                                                                                                                                       "
-                + "      inner join obs o on o.encounter_id = e.encounter_id                                                                                                                                                                     "
-                + "      left join obs tbLamGrupo on (e.encounter_id = tbLamGrupo.encounter_id and tbLamGrupo.voided = 0 and tbLamGrupo.concept_id = 165349)                                                                                     "
-                + "    left join obs nivelPositividade on (e.encounter_id = nivelPositividade.encounter_id and nivelPositividade.voided = 0 and nivelPositividade.concept_id = 165185  and nivelPositividade.obs_group_id = tbLamGrupo.obs_id)   "
-                + "  where p.voided=0 and  e.voided=0 and o.voided=0                                                                                                                                                                             "
-                + "  and e.encounter_type in(6, 13) and o.concept_id=23951 and o.value_coded = 703                                                                                                                                               "
-                + "    and nivelPositividade.value_coded in (%s)                                                                                                                                                                                 "
-                + "    and e.location_id=  :location and e.encounter_datetime between   :startDate and   :endDate                                                                                                                                "
-                + "                                                                                                                                                                                                                              "
-                + "  union                                                                                                                                                                                                                       "
-                + "                                                                                                                                                                                                                              "
-                + "  select p.patient_id                                                                                                                                                                                                         "
-                + "  from patient p                                                                                                                                                                                                              "
-                + "  inner join encounter e on e.patient_id = p.patient_id                                                                                                                                                                       "
-                + "      inner join obs o on o.encounter_id = e.encounter_id                                                                                                                                                                     "
-                + "      inner join obs tbLamGrupo on tbLamGrupo.encounter_id = e.encounter_id                                                                                                                                                   "
-                + "    left join obs nivelPositividade on (e.encounter_id = nivelPositividade.encounter_id and nivelPositividade.voided = 0 and nivelPositividade.concept_id = 165185  and nivelPositividade.obs_group_id = tbLamGrupo.obs_id)   "
-                + "  where p.voided=0 and  e.voided=0 and o.voided=0  and tbLamGrupo.voided = 0                                                                                                                                                  "
-                + "  and e.encounter_type = 90 and o.concept_id=23951 and o.value_coded = 703                                                                                                                                                    "
-                + "      and tbLamGrupo.concept_id = 165391 and o.obs_group_id = tbLamGrupo.obs_id                                                                                                                                               "
-                + "    and nivelPositividade.value_coded in (%s)                                                                                                                                                                                 "
-                + "      and e.location_id=  :location and e.encounter_datetime between   :startDate and   :endDate                                                                                                                              "
-                + ") exclusion on grade_level.patient_id = exclusion.patient_id                                                                                                                                                                  "
-                + " where exclusion.patient_id is null                                                                                                                                                                                           ";
+    public static final String eValuatePatientsCheckingGenExpertTest =
+        "																							"
+            + "select distinct p.patient_id, e.encounter_id                                                     "
+            + "from patient p                                                                                   "
+            + "   inner join encounter e on e.patient_id=p.patient_id                                           "
+            + "   left join obs o on (e.encounter_id =  o.encounter_id and o.voided=0 and o.concept_id=23723)   "
+            + "where p.voided=0 and  e.voided=0 and e.encounter_type in (6,13,90)                               "
+            + "        and  e.location_id= :location and e.encounter_datetime between  :endDate and CURDATE()   "
+            + "        and o.concept_id  %s                                                                ";
   }
 }
