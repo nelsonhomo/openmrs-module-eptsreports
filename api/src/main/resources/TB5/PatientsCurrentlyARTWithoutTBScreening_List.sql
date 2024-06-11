@@ -617,7 +617,8 @@ select coorte12meses_final.*,
 						and e.encounter_type in(6,9) 
 						and e.location_id= :location 
 						and obsEstado.concept_id=165322 
-						and o.obs_group_id = grupo.obs_id  
+						and o.obs_group_id = grupo.obs_id
+						and obsEstado.obs_group_id = grupo.obs_id 
 						and obsEstado.value_coded in(1256,1257) 
 						and obsEstado.voided=0 
 						and o.voided=0 
