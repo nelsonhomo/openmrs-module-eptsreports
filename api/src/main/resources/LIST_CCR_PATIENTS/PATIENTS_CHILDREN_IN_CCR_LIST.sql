@@ -12,15 +12,15 @@
              @motivoIndice := 1 + LENGTH(motivoDaConsulta.resposta) - LENGTH(REPLACE(motivoDaConsulta.resposta, ',', '')) AS motivoIndice, 
       IF(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 1)='N' OR ISNULL(motivoDaConsulta.resposta), 'N', SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 1)) AS motivoEstadio1, 
       IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 2), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 2), ',', -1), '')) AS motivoEstadio2,
-      IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 3), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 3), ',', -1), '')) AS motivoEstadio3,
-      IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 4), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 4), ',', -1), '')) AS motivoEstadio4,
-      IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 5), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 5), ',', -1), '')) AS motivoEstadio5,
-      IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 6), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 6), ',', -1), '')) AS motivoEstadio6,
-      IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 7), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 7), ',', -1), '')) AS motivoEstadio7,
-      IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 8), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 8), ',', -1), '')) AS motivoEstadio8,
-      IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 9), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 9), ',', -1), '')) AS motivoEstadio9,
-      IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 10), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 10), ',', -1), '')) AS motivoEstadio10,
-      IF(IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 11), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 1, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 11), ',', -1), '')) AS motivoEstadio11,
+      IF(IF(@motivoIndice > 2, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 3), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 2, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 3), ',', -1), '')) AS motivoEstadio3,
+      IF(IF(@motivoIndice > 3, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 4), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 3, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 4), ',', -1), '')) AS motivoEstadio4,
+      IF(IF(@motivoIndice > 4, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 5), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 4, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 5), ',', -1), '')) AS motivoEstadio5,
+      IF(IF(@motivoIndice > 5, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 6), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 5, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 6), ',', -1), '')) AS motivoEstadio6,
+      IF(IF(@motivoIndice > 6, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 7), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 6, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 7), ',', -1), '')) AS motivoEstadio7,
+      IF(IF(@motivoIndice > 7, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 8), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 7, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 8), ',', -1), '')) AS motivoEstadio8,
+      IF(IF(@motivoIndice > 8, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 9), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice > 8, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 9), ',', -1), '')) AS motivoEstadio9,
+      IF(IF(@motivoIndice > 9, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 10), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice >9, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 10), ',', -1), '')) AS motivoEstadio10,
+      IF(IF(@motivoIndice > 10, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 11), ',', -1), '') = 'N' OR ISNULL(motivoDaConsulta.resposta), 'N', IF(@motivoIndice >10, SUBSTRING_INDEX(SUBSTRING_INDEX(motivoDaConsulta.resposta, ',', 11), ',', -1), '')) AS motivoEstadio11,
       ptvCode.comments as CodigoPTV,
       nomeDaMae.value_text as nomeDaMaeFichaCCR,
       nomeMaeRelationSHip.nomeDaMaeSesp,
@@ -36,6 +36,7 @@
      when pcrDateAndResult.value_coded = 1138 then 'Indeterminado' 
      end as resultadoUltimoPCR,
                case 
+     when ISNULL(tipoAmostraPCR.value_coded) then 'N/A'
      when tipoAmostraPCR.value_coded= 1002 then 'Plasma' 
      when tipoAmostraPCR.value_coded = 23831 then 'Amostra de sangue seco' 
      when tipoAmostraPCR.value_coded = 165501 then 'Amostra de mancha de plasma seco'
@@ -48,6 +49,7 @@
      end as resultadoPenultimoPCR,
      penultimoPCR.penultimoDatePCR,
              case 
+     when ISNULL(penultimoTipoDeAmostra.value_coded) then 'N/A'
      when penultimoTipoDeAmostra.value_coded= 1002 then 'Plasma' 
      when penultimoTipoDeAmostra.value_coded = 23831 then 'Amostra de sangue seco' 
      when penultimoTipoDeAmostra.value_coded = 165501 then 'Amostra de mancha de plasma seco'
@@ -133,7 +135,9 @@
             ) pid on pid.patient_id=ccr.patient_id
             left join person_attribute pat on pat.person_id=ccr.patient_id and pat.person_attribute_type_id=9 and pat.value is not null and pat.value<>'' and pat.voided=0
             left join (
-                select patient_id, group_concat(case when value_coded is null then 'N' else 'S' end) resposta from (  
+                select patient_id,group_concat(case when value_coded is null then 'N' else 'S' end order by patient_id, motivo asc) resposta
+                 from (  
+                select patient_id, value_coded, motivo from (
                 select  distinct motivoDaConsulta.patient_id, motivo.value_coded, 1 as motivo from (
                  select  p.patient_id, value_coded                                             
                from  patient p                                                         
@@ -154,7 +158,7 @@
                    
                    union
                    
-                    select  distinct motivoDaConsulta.patient_id, motivo.value_coded, 2 as motivo from (
+                select  distinct motivoDaConsulta.patient_id, motivo.value_coded, 2 as motivo from (
                  select  p.patient_id, value_coded                                             
                from  patient p                                                         
                    inner join encounter e on p.patient_id=e.patient_id                                     
@@ -352,7 +356,8 @@
                    e.encounter_type = 92 and o.concept_id = 1874 and o.value_coded = 5622 and   
                    e.encounter_datetime<=:endDate and e.location_id= :location
                    ) motivo on motivo.patient_id = motivoDaConsulta.patient_id
-                   ) motivos
+                   ) motivos order by motivos.patient_id, motivos.motivo asc 
+                   ) motivos group by motivos.patient_id
             ) motivoDaConsulta on motivoDaConsulta.patient_id = ccr.patient_id
         left join (
                  select  p.patient_id, o.comments                                             
@@ -424,7 +429,8 @@
             group by ccr.patient_id
            ) firstSeguimento on firstSeguimento.patient_id = ccr.patient_id
            left join (
-                select ccr.patient_id, max(fichaSeguimento.encounter_datetime) data_seguimento, fichaSeguimento.value_datetime from
+           select seguimento.patient_id,seguimento.data_seguimento, o.value_datetime from (
+                select ccr.patient_id, max(fichaSeguimento.encounter_datetime) data_seguimento from
                 (select patient_id, min(data_inicio) data_inicio from (
          select  pg.patient_id,min(date_enrolled) data_inicio                                
          from  patient p inner join patient_program pg on p.patient_id=pg.patient_id                   
@@ -448,6 +454,11 @@
             ) fichaSeguimento on fichaSeguimento.patient_id = ccr.patient_id
             where fichaSeguimento.encounter_datetime between ccr.data_inicio and :endDate
             group by ccr.patient_id
+            ) seguimento 
+            inner join encounter e on e.patient_id = seguimento.patient_id
+            inner join obs o on o.encounter_id = e.encounter_id
+            where e.encounter_type = 93 and o.voided = 0 and e.voided = 0 and e.encounter_datetime = seguimento.data_seguimento
+            and o.concept_id = 1410
            )maxCCRSeguimento on maxCCRSeguimento.patient_id = ccr.patient_id
             left join (
                 select pcr.patient_id, pcr.encounter_datetime, o.value_coded from 
@@ -480,7 +491,8 @@
                   and e.encounter_datetime = pcr.encounter_datetime
             )tipoAmostraPCR on tipoAmostraPCR.patient_id = ccr.patient_id
             left join (
-                select ultimoPCR.patient_id, max(penultimoPCR.encounter_datetime) penultimoDatePCR, penultimoPCR.value_coded from (
+            		SELECT penultimo.patient_id,penultimoDatePCR,o.value_coded  from (
+                select ultimoPCR.patient_id, max(penultimoPCR.encounter_datetime) penultimoDatePCR from (
                     select  p.patient_id, max(e.encounter_datetime) encounter_datetime                                           
                from  patient p                                                         
                    inner join encounter e on p.patient_id=e.patient_id
@@ -498,6 +510,12 @@
                   and e.encounter_type in (93,13) and e.location_id= :location and e.encounter_datetime <= :endDate
                 ) penultimoPCR on penultimoPCR.patient_id = ultimoPCR.patient_id
                 where penultimoPCR.encounter_datetime < ultimoPCR.encounter_datetime
+                group by penultimoPCR.patient_id
+                ) penultimo 
+                inner join encounter e on e.patient_id = penultimo.patient_id
+                inner join obs o on o.encounter_id = e.encounter_id
+                where e.voided = 0 and o.voided = 0 and o.concept_id = 1030 and e.encounter_type in (93,13) and e.location_id= :location
+                and e.encounter_datetime = penultimo.penultimoDatePCR
             )penultimoPCR on penultimoPCR.patient_id = ccr.patient_id
             left join(
                 select ultimoTipoDeAmostra.patient_id, max(penultimoTipoDeAmostra.encounter_datetime) encounter_datetime, penultimoTipoDeAmostra.value_coded from (
@@ -621,3 +639,4 @@
                                         ) 
                                   art_start group by patient_id 
             )artStart on artStart.patient_id = ccr.patient_id
+            group by ccr.patient_id
