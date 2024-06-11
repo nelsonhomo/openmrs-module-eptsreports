@@ -130,4 +130,5 @@ from (
 	lactante_real on lactante_real.patient_id=pe.person_id 
 		where (lactante_real.data_parto is not null or gravida_real.data_gravida is not null ) and pe.gender='F'
 			group by pe.person_id
-)final
+)final 
+where final.decisao = 1

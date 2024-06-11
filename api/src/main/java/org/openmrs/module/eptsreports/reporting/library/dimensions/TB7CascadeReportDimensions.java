@@ -80,4 +80,118 @@ public class TB7CascadeReportDimensions {
 
     return dim;
   }
+
+  public CohortDefinitionDimension getCascadeOneIndicatorThreeDimension() {
+    final CohortDefinitionDimension dim = new CohortDefinitionDimension();
+    dim.setName("cascadeOneIndicatorThreeDimension");
+
+    dim.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    dim.addParameter(new Parameter("endDate", "End Date", Date.class));
+    dim.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
+    dim.addCohortDefinition(
+        "artInitiation",
+        EptsReportUtils.map(
+            this.tb7CohortQueries
+                .findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33DaysWithSevereImmunoSuppressions(),
+            mappings));
+
+    dim.addCohortDefinition(
+        "pregnant",
+        Mapped.mapStraightThrough(
+            this.tb7CohortQueries
+                .getPatientsWhoArePregnantsWithCountCD4WithSevereImmunoSuppression()));
+
+    dim.addCohortDefinition(
+        "consecutiveHighVL",
+        EptsReportUtils.map(
+            this.tb7CohortQueries
+                .findPatientsWithConsecutiveViralLoadResultsWithCD4CountWithSevereImmunoSuppressions(),
+            mappings));
+
+    dim.addCohortDefinition(
+        "artRestart",
+        EptsReportUtils.map(
+            this.tb7CohortQueries
+                .findPatientsWhoReinitiatedARTTreatmentAndHaveCD4CountAndSevereImmunoSuppression(),
+            mappings));
+
+    return dim;
+  }
+
+  public CohortDefinitionDimension getCascadeOneIndicatorFourDimension() {
+    final CohortDefinitionDimension dim = new CohortDefinitionDimension();
+    dim.setName("cascadeOneIndicatorFourDimension");
+
+    dim.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    dim.addParameter(new Parameter("endDate", "End Date", Date.class));
+    dim.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
+    dim.addCohortDefinition(
+        "artInitiation",
+        EptsReportUtils.map(
+            this.tb7CohortQueries
+                .findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33DaysWithSevereImmunoSuppressionsWithTBLAMResults(),
+            mappings));
+
+    dim.addCohortDefinition(
+        "pregnant",
+        Mapped.mapStraightThrough(
+            this.tb7CohortQueries
+                .getPatientsWhoArePregnantsWithCountCD4WithSevereImmunoSuppressionWithTBLAMResults()));
+
+    dim.addCohortDefinition(
+        "consecutiveHighVL",
+        EptsReportUtils.map(
+            this.tb7CohortQueries
+                .findPatientsWithConsecutiveViralLoadResultsWithCD4CountWithSevereImmunoSuppressionsWithTBLAMResults(),
+            mappings));
+
+    dim.addCohortDefinition(
+        "artRestart",
+        EptsReportUtils.map(
+            this.tb7CohortQueries
+                .findPatientsWhoReinitiatedARTTreatmentAndHaveCD4CountAndSevereImmunoSuppressionWithTBLAMResults(),
+            mappings));
+
+    return dim;
+  }
+
+  public CohortDefinitionDimension getTBLAMGradeLevelDimension() {
+    final CohortDefinitionDimension dim = new CohortDefinitionDimension();
+    dim.setName("tblam-grade-level");
+
+    dim.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    dim.addParameter(new Parameter("endDate", "End Date", Date.class));
+    dim.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
+    dim.addCohortDefinition(
+        "four",
+        Mapped.mapStraightThrough(
+            this.tb7CohortQueries.getNumberOfClientsWithGradeFourLevelPositiveTBLAMResults()));
+    dim.addCohortDefinition(
+        "three",
+        Mapped.mapStraightThrough(
+            this.tb7CohortQueries.getNumberOfClientsWithGradeThreeLevelPositiveTBLAMResults()));
+    dim.addCohortDefinition(
+        "two",
+        Mapped.mapStraightThrough(
+            this.tb7CohortQueries.getNumberOfClientsWithGradeTwoLevelPositiveTBLAMResults()));
+    dim.addCohortDefinition(
+        "one",
+        Mapped.mapStraightThrough(
+            this.tb7CohortQueries.getNumberOfClientsWithGradeOneLevelPositiveTBLAMResults()));
+    dim.addCohortDefinition(
+        "no-level",
+        Mapped.mapStraightThrough(
+            this.tb7CohortQueries.getNumberOfClientsWithGradeNoLevelPositiveTBLAMResults()));
+
+    return dim;
+  }
 }
