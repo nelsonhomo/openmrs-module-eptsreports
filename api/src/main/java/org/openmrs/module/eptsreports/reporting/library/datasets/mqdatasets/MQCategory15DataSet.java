@@ -350,6 +350,6 @@ public class MQCategory15DataSet extends MQAbstractDataSet {
                 "CAT15NUMERADOR_15_15",
                 mappings),
             mappings),
-        "");
+        "ageOnEndInclusionDate=2+");
   }
 }
