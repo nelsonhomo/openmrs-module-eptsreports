@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ListOfPatientsElegibleToCD4RequestQueries {
 
-  private static final String ELEGIBLECD4 = "ELEGIBLECD4/CD4Disagragations.sql";
+  private static final String ELEGIBLECD4 = "ELEGIBLECD4/CD4DISAGRAGATIONS.sql";
 
   public static final String findPatientsWhoAreHaveCd4Request(final Criteria criteria) {
 
