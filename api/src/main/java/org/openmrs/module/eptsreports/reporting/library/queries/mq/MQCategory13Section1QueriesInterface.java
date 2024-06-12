@@ -201,7 +201,7 @@ public interface MQCategory13Section1QueriesInterface {
                 + " inner join encounter e_ on e_.patient_id = linhaAlternativa.patient_id and e_.voided = 0 and e_.encounter_type = 6 and e_.location_id = :location "
                 + " inner join obs obsDiferenteLinha on e_.encounter_id = obsDiferenteLinha.encounter_id "
                 + "and obsDiferenteLinha.voided=0 and obsDiferenteLinha.concept_id=21151 and obsDiferenteLinha.value_coded<>21150 "
-                + "and obsDiferenteLinha.obs_datetime>linhaAlternativa.dataLinha "
+                + "and obsDiferenteLinha.obs_datetime>=linhaAlternativa.dataLinha "
                 + "and obsDiferenteLinha.obs_datetime<=linhaAlternativa.ultimaConsulta "
                 + "and obsDiferenteLinha.location_id=:location "
                 + "where (TIMESTAMPDIFF(MONTH,linhaAlternativa.dataLinha,linhaAlternativa.ultimaConsulta)) >= 6 and obsDiferenteLinha.obs_datetime is not null group by linhaAlternativa.patient_id";
@@ -550,7 +550,7 @@ public interface MQCategory13Section1QueriesInterface {
             + "select p.patient_id, max(e.encounter_datetime) max_datatb from patient p "
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs o on o.encounter_id=e.encounter_id "
-            + "where e.encounter_type=6 and o.concept_id=1268 and o.value_coded in (1256,1257) "
+            + "where e.encounter_type=6 and o.concept_id=1268 and o.value_coded in (1256,1257) and o.voided = 0 "
             + "and e.location_id=:location and e.voided=0 and p.voided=0 and e.encounter_datetime between :startInclusionDate and :endInclusionDate "
             + "group by p.patient_id "
             + ") maxTb group by maxTb.patient_id "

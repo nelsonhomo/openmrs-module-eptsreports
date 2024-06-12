@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class MQCategory13P2CohortQueries {
 
   @Autowired private MQCohortQueries mQCohortQueries;
+  @Autowired private MQCategory13P3CohortQueries mqCategory13P3CohortQueries;
 
   @DocumentedDefinition(value = "findPatientsWhoArePregnantWithCVInTARVCategory13P2Denumerator")
   public CohortDefinition findPatientsWhoArePregnantWithCVInTARVCategory13P2Denominator() {
@@ -41,7 +42,9 @@ public class MQCategory13P2CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mqCategory13P3CohortQueries.findPatientsWhoTransferedOutRF07Category7(),
+            mappings));
 
     definition.addSearch(
         "DROPPED-OUT",
@@ -278,7 +281,9 @@ public class MQCategory13P2CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mqCategory13P3CohortQueries.findPatientsWhoTransferedOutRF07Category7(),
+            mappings));
 
     definition.setCompositionString(
         "((START-ART AND PREGNANT AND B3 AND (K OR M)) NOT (BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)) OR (B2 AND B4 AND (L OR N)) ");

@@ -850,7 +850,7 @@ public class MQCategory13P3CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(this.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "START-ART",
