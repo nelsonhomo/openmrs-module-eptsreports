@@ -168,36 +168,6 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     return definition;
   }
 
-  public CohortDefinition getNumberOfClientsWithCD4ShowingImmunoSuppressions() {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("TB7 - Indicator 1 -cascade 2");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
-
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
-
-    definition.addSearch(
-        "CD4RESULT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with a CD4 count showing severe immunosuppression during the inclusion period",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION)),
-            mappings));
-
-    definition.addSearch(
-        "TRANSFERREDOUT",
-        Mapped.mapStraightThrough(this.findPatientsWhoAreTransferredOutByReportGenerationDate()));
-    definition.addSearch(
-        "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
-
-    definition.setCompositionString("CD4RESULT not (TRANSFERREDOUT or DEAD)");
-
-    return definition;
-  }
-
   public CohortDefinition getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMResults() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -206,16 +176,15 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
     definition.addSearch(
-        "CD4RESULT",
-        Mapped.mapStraightThrough(this.getNumberOfClientsWithCD4ShowingImmunoSuppressions()));
+        "CD4RESULT", EptsReportUtils.map(this.findPatientsWhoHaveCD4Results(), mappings));
 
     definition.addSearch(
         "TBLAM",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with TBM Results",
-                TB7AdvancedDiseaseQueries.QUERY.findPatientsWithTBLAMResults),
+            this.findPatientsWhoHaveTBLAMResults(),
             "endDate=${endDate-2m+1d},location=${location}"));
 
     definition.addSearch(
@@ -255,6 +224,36 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
   }
 
   public CohortDefinition
+      getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResultsAndInitiatedTBTreatment() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7 - Indicator 3 -cascade 2");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
+    definition.addSearch(
+        "POSITIVE-TB",
+        EptsReportUtils.map(
+            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResults(),
+            mappings));
+
+    definition.addSearch(
+        "INITIATED-TB-TREATMENT",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "Clientes Who Initated TB Treatment",
+                TB7AdvancedDiseaseQueries.QUERY.findPatientsWhoInitiatedTBTreatment),
+            "endDate=${endDate-2m+1d},location=${location}"));
+
+    definition.setCompositionString("POSITIVE-TB and INITIATED-TB-TREATMENT");
+
+    return definition;
+  }
+
+  public CohortDefinition
       getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResultsWithoutGenexpert() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -278,6 +277,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
                 "No GeneXpert by report generation date",
                 String.format(
                     TB7AdvancedDiseaseQueries.QUERY.eValuatePatientsCheckingGenExpertTest,
+                    "is null",
                     "is null")),
             "endDate=${endDate-2m+1d},location=${location}"));
 
@@ -310,10 +310,42 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
                 "GeneXpert by report generation date",
                 String.format(
                     TB7AdvancedDiseaseQueries.QUERY.eValuatePatientsCheckingGenExpertTest,
+                    "is not null",
                     "is not null")),
             "endDate=${endDate-2m+1d},location=${location}"));
 
     definition.setCompositionString("GENEXPERT and POSITIVE-RESULTS");
+
+    return definition;
+  }
+
+  public CohortDefinition
+      getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResultsWithGenexpertPositiveResults() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7 - Indicator 4 -cascade 2");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
+    definition.addSearch(
+        "GENEXPERT",
+        EptsReportUtils.map(
+            this
+                .getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResultsWithGenexpert(),
+            mappings));
+
+    definition.addSearch(
+        "GEN-POSITIVE",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "GeneXpert Positive Results by report generation date",
+                TB7AdvancedDiseaseQueries.QUERY.findPatientsWithPositiveGenExpert),
+            "endDate=${endDate-2m+1d},location=${location}"));
+
+    definition.setCompositionString("GENEXPERT and GEN-POSITIVE");
 
     return definition;
   }
@@ -393,26 +425,11 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "TXNEW",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with a CD4 count within 33 days - Newly on ART",
-                TB7AdvancedDiseaseQueries.QUERY
-                    .findPatientsWhoInitiatedARTAndHaveCD4CountWithin33Days),
-            mappings));
+            this.findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33Days(), mappings));
     definition.addSearch(
-        "CD4RESULT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with a CD4 count showing severe immunosuppression during the inclusion period",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION)),
-            mappings));
+        "CD4RESULT", EptsReportUtils.map(this.findPatientsWhoHaveCD4Results(), mappings));
 
-    definition.addSearch(
-        "TRANSFERREDOUT",
-        Mapped.mapStraightThrough(this.findPatientsWhoAreTransferredOutByReportGenerationDate()));
-    definition.addSearch(
-        "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
-    definition.setCompositionString("(TXNEW not (TRANSFERREDOUT or DEAD)) and CD4RESULT");
+    definition.setCompositionString("TXNEW and CD4RESULT");
 
     return definition;
   }
@@ -435,34 +452,17 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "TXNEW",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with a CD4 count within 33 days - Newly on ART",
-                TB7AdvancedDiseaseQueries.QUERY
-                    .findPatientsWhoInitiatedARTAndHaveCD4CountWithin33Days),
+            this
+                .findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33DaysWithSevereImmunoSuppressions(),
             mappings));
-    definition.addSearch(
-        "CD4RESULT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with a CD4 count showing severe immunosuppression during the inclusion period",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION)),
-            mappings));
+
     definition.addSearch(
         "TBLAM",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with TBM Results",
-                TB7AdvancedDiseaseQueries.QUERY.findPatientsWithTBLAMResults),
+            this.findPatientsWhoHaveTBLAMResults(),
             "endDate=${endDate-2m+1d},location=${location}"));
 
-    definition.addSearch(
-        "TRANSFERREDOUT",
-        Mapped.mapStraightThrough(this.findPatientsWhoAreTransferredOutByReportGenerationDate()));
-    definition.addSearch(
-        "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
-    definition.setCompositionString(
-        "((TXNEW not (TRANSFERREDOUT or DEAD)) and CD4RESULT) and TBLAM");
+    definition.setCompositionString("TXNEW and TBLAM");
 
     return definition;
   }
@@ -542,25 +542,11 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "HIGHVL",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "Clients with two consecutive high viral load results with CD4 Count and immunoSuppression",
-                TB7AdvancedDiseaseQueries.QUERY.findPatientsWIthHighVLWithCD4Count),
-            mappings));
+            this.findPatientsWithConsecutiveViralLoadResultsWithCD4Count(), mappings));
     definition.addSearch(
-        "CD4RESULT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with a CD4 count showing severe immunosuppression during the inclusion period",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION)),
-            mappings));
+        "CD4RESULT", EptsReportUtils.map(this.findPatientsWhoHaveCD4Results(), mappings));
 
-    definition.addSearch(
-        "TRANSFERREDOUT",
-        Mapped.mapStraightThrough(this.findPatientsWhoAreTransferredOutByReportGenerationDate()));
-    definition.addSearch(
-        "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
-    definition.setCompositionString("(HIGHVL not (TRANSFERREDOUT or DEAD)) and CD4RESULT");
+    definition.setCompositionString("(HIGHVL and CD4RESULT");
 
     return definition;
   }
@@ -583,33 +569,16 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "HIGHVL",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "Clients with two consecutive high viral load results With CD4 count and ImmunoSuppression and TBLAM Results",
-                TB7AdvancedDiseaseQueries.QUERY.findPatientsWIthHighVLWithCD4Count),
+            this
+                .findPatientsWithConsecutiveViralLoadResultsWithCD4CountWithSevereImmunoSuppressions(),
             mappings));
-    definition.addSearch(
-        "CD4RESULT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with a CD4 count showing severe immunosuppression during the inclusion period",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION)),
-            mappings));
-
     definition.addSearch(
         "TBLAM",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with TBM Results",
-                TB7AdvancedDiseaseQueries.QUERY.findPatientsWithTBLAMResults),
+            this.findPatientsWhoHaveTBLAMResults(),
             "endDate=${endDate-2m+1d},location=${location}"));
-    definition.addSearch(
-        "TRANSFERREDOUT",
-        Mapped.mapStraightThrough(this.findPatientsWhoAreTransferredOutByReportGenerationDate()));
-    definition.addSearch(
-        "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
-    definition.setCompositionString(
-        "((HIGHVL not (TRANSFERREDOUT or DEAD)) and CD4RESULT) and TBLAM");
+
+    definition.setCompositionString("HIGHVL and TBLAM");
 
     return definition;
   }
@@ -687,24 +656,12 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "ART-RESTART",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "Clients who have Restarted ART and have CD4 Count",
-                TB7AdvancedDiseaseQueries.QUERY.findPatientsWhoReinitiatedARTWhoHaveCD4Count),
-            mappings));
+            this.findPatientsWhoReinitiatedARTTreatmentAndHaveCD4Count(), mappings));
+
     definition.addSearch(
-        "CD4RESULT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with a CD4 count showing severe immunosuppression during the inclusion period",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION)),
-            mappings));
-    definition.addSearch(
-        "TRANSFERREDOUT",
-        Mapped.mapStraightThrough(this.findPatientsWhoAreTransferredOutByReportGenerationDate()));
-    definition.addSearch(
-        "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
-    definition.setCompositionString("(ART-RESTART not (TRANSFERREDOUT or DEAD)) and CD4RESULT");
+        "CD4RESULT", EptsReportUtils.map(this.findPatientsWhoHaveCD4Results(), mappings));
+
+    definition.setCompositionString("ART-RESTART and CD4RESULT");
 
     return definition;
   }
@@ -726,32 +683,15 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "ART-RESTART",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "Clients who have Restarted ART and have CD4 Count",
-                TB7AdvancedDiseaseQueries.QUERY.findPatientsWhoReinitiatedARTWhoHaveCD4Count),
+            this.findPatientsWhoReinitiatedARTTreatmentAndHaveCD4CountAndSevereImmunoSuppression(),
             mappings));
-    definition.addSearch(
-        "CD4RESULT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "Clients with a CD4 count showing severe immunosuppression during the inclusion period",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION)),
-            mappings));
+
     definition.addSearch(
         "TBLAM",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "Clients with TBM Results",
-                TB7AdvancedDiseaseQueries.QUERY.findPatientsWithTBLAMResults),
+            this.findPatientsWhoHaveTBLAMResults(),
             "endDate=${endDate-2m+1d},location=${location}"));
-    definition.addSearch(
-        "TRANSFERREDOUT",
-        Mapped.mapStraightThrough(this.findPatientsWhoAreTransferredOutByReportGenerationDate()));
-    definition.addSearch(
-        "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
-    definition.setCompositionString(
-        "((ART-RESTART not (TRANSFERREDOUT or DEAD)) and CD4RESULT) and TBLAM");
+    definition.setCompositionString("((ART-RESTART and TBLAM");
 
     return definition;
   }
@@ -785,7 +725,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
 
-    definition.setCompositionString("PREGNANT not (CD4 or TRANSFERREDOUT or DEAD)");
+    definition.setCompositionString("(PREGNANT not (TRANSFERREDOUT or DEAD)) not CD4");
 
     return definition;
   }
@@ -819,7 +759,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
 
-    definition.setCompositionString("PREGNANT not (CD4 or TRANSFERREDOUT or DEAD)");
+    definition.setCompositionString("(PREGNANT not (TRANSFERREDOUT or DEAD)) not CD4");
 
     return definition;
   }
@@ -834,36 +774,12 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
 
     definition.addSearch(
-        "PREGNANT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "Women Who are Pregnant",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PREGNANTS_WITH_COUNT_CD4)),
-            "startDate=${endDate-10m+1d},endDate=${endDate-1m},location=${location}"));
+        "PREGNANT", EptsReportUtils.map(this.getPatientsWhoArePregnantsWithCountCD4(), mappings));
 
     definition.addSearch(
-        "CD4RESULT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with a CD4 count showing severe immunosuppression during the inclusion period",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION)),
-            mappings));
+        "CD4RESULT", EptsReportUtils.map(this.findPatientsWhoHaveCD4Results(), mappings));
 
-    definition.addSearch(
-        "CD4",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "Clients With CD4", TB7AdvancedDiseaseQueries.QUERY.findPatientsWithCD4),
-            "startDate=${endDate-10m+1d},endDate=${endDate-2m+1d},location=${location}"));
-    definition.addSearch(
-        "TRANSFERREDOUT",
-        Mapped.mapStraightThrough(this.findPatientsWhoAreTransferredOutByReportGenerationDate()));
-    definition.addSearch(
-        "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
-
-    definition.setCompositionString("(PREGNANT not (CD4 or TRANSFERREDOUT or DEAD)) and CD4RESULT");
+    definition.setCompositionString("((PREGNANT and CD4RESULT");
 
     return definition;
   }
@@ -881,43 +797,15 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "PREGNANT",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "Women Who are Pregnant",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PREGNANTS_WITH_COUNT_CD4)),
-            "startDate=${endDate-10m+1d},endDate=${endDate-1m},location=${location}"));
-
-    definition.addSearch(
-        "CD4RESULT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with a CD4 count showing severe immunosuppression during the inclusion period",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION)),
-            mappings));
+            this.getPatientsWhoArePregnantsWithCountCD4WithSevereImmunoSuppression(), mappings));
 
     definition.addSearch(
         "TBLAM",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "clients with TBM Results",
-                TB7AdvancedDiseaseQueries.QUERY.findPatientsWithTBLAMResults),
+            this.findPatientsWhoHaveTBLAMResults(),
             "endDate=${endDate-2m+1d},location=${location}"));
 
-    definition.addSearch(
-        "CD4",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "Clients With CD4", TB7AdvancedDiseaseQueries.QUERY.findPatientsWithCD4),
-            "startDate=${endDate-10m+1d},endDate=${endDate-2m+1d},location=${location}"));
-    definition.addSearch(
-        "TRANSFERREDOUT",
-        Mapped.mapStraightThrough(this.findPatientsWhoAreTransferredOutByReportGenerationDate()));
-    definition.addSearch(
-        "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
-
-    definition.setCompositionString(
-        "((PREGNANT not (CD4 or TRANSFERREDOUT or DEAD)) and CD4RESULT) and TBLAM");
+    definition.setCompositionString("PREGNANT and TBLAM");
 
     return definition;
   }
@@ -936,7 +824,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
         "NEGATIVE-TBLAM-RESULTS",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "clients with Negative TBLAM Results during the inclusion period",
+                "Clients with Negative TBLAM Results during the inclusion period",
                 TB7AdvancedDiseaseQueries.QUERY.findPatientsWithNegativeTBLAMResults),
             mappings));
 
@@ -945,16 +833,18 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
         EptsReportUtils.map(this.findPatientsWithPositiveTBLAMResults(), mappings));
 
     definition.addSearch(
-        "CD4RESULT",
-        Mapped.mapStraightThrough(this.getNumberOfClientsWithCD4ShowingImmunoSuppressions()));
+        "INDICATOR-DENOMINATOR",
+        EptsReportUtils.map(
+            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMResults(), mappings));
 
     definition.addSearch(
         "TRANSFERREDOUT",
         Mapped.mapStraightThrough(this.findPatientsWhoAreTransferredOutByReportGenerationDate()));
     definition.addSearch(
         "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
+
     definition.setCompositionString(
-        "(NEGATIVE-TBLAM-RESULTS not (TRANSFERREDOUT or DEAD or POSITIVE-RESULTS)) and CD4RESULT");
+        "((NEGATIVE-TBLAM-RESULTS not POSITIVE-RESULTS) not (TRANSFERREDOUT or DEAD)) and INDICATOR-DENOMINATOR");
 
     return definition;
   }
@@ -1236,6 +1126,36 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("location", "location", Location.class));
     definition.setQuery(
         EptsQuerysUtils.loadQuery(TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WHO_ARE_DEAD));
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWhoAreDead")
+  private CohortDefinition findPatientsWhoHaveCD4Results() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+    definition.setName(
+        "clients with a CD4 count showing severe immunosuppression during the inclusion period");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.setQuery(
+        EptsQuerysUtils.loadQuery(
+            TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION));
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWhoHaveTBLAMResults")
+  private CohortDefinition findPatientsWhoHaveTBLAMResults() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+    definition.setName("clients with TBLAM Results");
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.setQuery(TB7AdvancedDiseaseQueries.QUERY.findPatientsWithTBLAMResults);
 
     return definition;
   }

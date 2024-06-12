@@ -74,111 +74,6 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
     dataSetDefinition.setName("TB7");
     dataSetDefinition.addParameters(this.getParameters());
 
-    // final CohortDefinition patienWithoutCD4CountButWithTBLAMResults =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    //
-    // .getNumberOfClientsWithoutCD4CountButWithTBLAMResultsDuringTheInclusionPeriodIncludingClientsWhoWereNotEligibleForCD4();
-    //
-    // final CohortDefinition numberOfClientsWithTBLAMResultsByReportGenerationDate
-    // =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getNumberOfClientsWithTBLAMResultsByReportGenerationDate();
-    //
-    // final CohortDefinition
-    // numberOfClientsWithPositiveTBLAMResultsByReportGenerationDate =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate();
-    //
-    // final CohortDefinition
-    // numberOfClientsWithNegativeTBLAMResultsByReportGenerationDate =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getNumberOfClientsWithNegativeTBLAMResultsByReportGenerationDate();
-    //
-    // final CohortDefinition
-    // numberOfClientsWithPositiveTBLAMResultsGrade4ByReportGenerationDate
-    // =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
-    // LevelOfPositivity.Grade_4);
-    // final CohortDefinition
-    // numberOfClientsWithPositiveTBLAMResultsGrade3ByReportGenerationDate
-    // =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
-    // LevelOfPositivity.Grade_3);
-    // final CohortDefinition
-    // numberOfClientsWithPositiveTBLAMResultsGrade2ByReportGenerationDate
-    // =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
-    // LevelOfPositivity.Grade_2);
-    //
-    // final CohortDefinition
-    // numberOfClientsWithPositiveTBLAMResultsGrade1ByReportGenerationDate
-    // =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
-    // LevelOfPositivity.Grade_1);
-    //
-    // final CohortDefinition
-    // numberOfClientsWithPositiveTBLAMResultsGradeBlankByReportGenerationDate =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getNumberOfClientsWithPositiveTBLAMResultsByReportGenerationDate(
-    // LevelOfPositivity.Blank);
-    //
-    // final CohortDefinition clientsWithoutPositiveTBLAMButNotTestedWithGeneXpert =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getClientsWithoutPositiveTBLAMButNotTestedWithGeneXpert();
-    //
-    // final CohortDefinition clientsWithPositiveTBLAMButNotTestedWithGeneXpert =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getClientsWithPositiveTBLAMAndAlsoTestedWithGeneXpert();
-    //
-    // final CohortDefinition clientsWithPositiveTBLAMWithGeneXpertAndTb =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTB();
-    //
-    // final CohortDefinition clientsWithPositiveTBLAMAndGeneXpertPositiveforTb =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getClientsWithPositiveTBLAMAndGeneXpertPositiveforTB();
-    // final CohortDefinition
-    //
-    // clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade4ByReportGenerationDate
-    // =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeDesagregation(
-    // LevelOfPositivity.Grade_4);
-    // final CohortDefinition
-    //
-    // clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade3ByReportGenerationDate
-    // =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeDesagregation(
-    // LevelOfPositivity.Grade_3);
-    // final CohortDefinition
-    //
-    // clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade2ByReportGenerationDate
-    // =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeDesagregation(
-    // LevelOfPositivity.Grade_2);
-    //
-    // final CohortDefinition
-    //
-    // clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGrade1ByReportGenerationDate
-    // =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeDesagregation(
-    // LevelOfPositivity.Grade_1);
-    //
-    // final CohortDefinition
-    //
-    // clientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeGradeBlankByReportGenerationDate
-    // =
-    // this.tb7AdvancedDiseaseAndTBCohortQueries
-    // .getClientsWithPositiveTBLAMButNotTestedWithGeneXpertForTBGradeDesagregation(
-    // LevelOfPositivity.Blank);
-
     final CohortIndicator tb7Indicator1 =
         this.eptsGeneralIndicator.getIndicator(
             "TB7",
@@ -209,14 +104,6 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
             EptsReportUtils.map(
                 this.tb7AdvancedDiseaseAndTBCohortQueries
                     .getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicator4(),
-                mappings));
-
-    final CohortIndicator tb7ImmunoCD4 =
-        this.eptsGeneralIndicator.getIndicator(
-            "TB7",
-            EptsReportUtils.map(
-                this.tb7AdvancedDiseaseAndTBCohortQueries
-                    .getNumberOfClientsWithCD4ShowingImmunoSuppressions(),
                 mappings));
 
     final CohortIndicator tb7ImmunoCD4WithTBLam =
@@ -257,6 +144,22 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
             EptsReportUtils.map(
                 this.tb7AdvancedDiseaseAndTBCohortQueries
                     .getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResultsWithGenexpert(),
+                mappings));
+
+    final CohortIndicator tb7WithGeneExpertPositiveResults =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7",
+            EptsReportUtils.map(
+                this.tb7AdvancedDiseaseAndTBCohortQueries
+                    .getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResultsWithGenexpertPositiveResults(),
+                mappings));
+
+    final CohortIndicator tb7AndTBTreatment =
+        this.eptsGeneralIndicator.getIndicator(
+            "TB7",
+            EptsReportUtils.map(
+                this.tb7AdvancedDiseaseAndTBCohortQueries
+                    .getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResultsAndInitiatedTBTreatment(),
                 mappings));
 
     // TI1
@@ -416,7 +319,7 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
     dataSetDefinition.addColumn(
         "CASCADE2-TI1",
         "Number of clients with a CD4 count during inclusion period (end date - 2 months + 1 day) and (end date - 1 month) showing severe immunosuppression",
-        EptsReportUtils.map(tb7ImmunoCD4, mappings),
+        EptsReportUtils.map(tb7Indicator3, mappings),
         "");
 
     dataSetDefinition.addColumn(
@@ -467,17 +370,63 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
         EptsReportUtils.map(tb7ImmunoCD4WithTBLamNegativeResults, mappings),
         "");
 
+    // tb7WithoutGeneExpert
     dataSetDefinition.addColumn(
         "CASCADE2-TI2-WITHOUT-GEN",
         "Number of clients with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) but NOT tested with GeneXpert by report generation date",
         EptsReportUtils.map(tb7WithoutGeneExpert, mappings),
         "");
 
+    // tb7WithGeneExpert
     dataSetDefinition.addColumn(
         "CASCADE2-TI2-WITH-GEN",
         "Number of clients with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) and also tested with GeneXpert by report generation date",
         EptsReportUtils.map(tb7WithGeneExpert, mappings),
         "");
+
+    // tb7WithGeneExpertPositiveResults
+    dataSetDefinition.addColumn(
+        "CASCADE2-TI2-WITH-GEN-POS",
+        "Number of clients with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) and GeneXpert positive for TB by report generation date",
+        EptsReportUtils.map(tb7WithGeneExpertPositiveResults, mappings),
+        "");
+
+    // .tb7AndTBTreatment
+    dataSetDefinition.addColumn(
+        "CASCADE2-TI4",
+        "Number of clients with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) and on TB treatment by report generation date",
+        EptsReportUtils.map(tb7AndTBTreatment, mappings),
+        "");
+
+    dataSetDefinition.addColumn(
+        "CASCADE2-TI4-GRADE4",
+        "Number of clients with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) and on TB treatment by report generation date - grade 4+",
+        EptsReportUtils.map(tb7AndTBTreatment, mappings),
+        "tblam-grade-level=four");
+
+    dataSetDefinition.addColumn(
+        "CASCADE2-TI4-GRADE3",
+        "Number of clients with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) and on TB treatment by report generation date - grade 3+",
+        EptsReportUtils.map(tb7AndTBTreatment, mappings),
+        "tblam-grade-level=three");
+
+    dataSetDefinition.addColumn(
+        "CASCADE2-TI4-GRADE2",
+        "Number of clients with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) and on TB treatment by report generation date - grade 2+",
+        EptsReportUtils.map(tb7AndTBTreatment, mappings),
+        "tblam-grade-level=two");
+
+    dataSetDefinition.addColumn(
+        "CASCADE2-TI4-GRADE1",
+        "Number of clients with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) and on TB treatment by report generation date - grade 1+",
+        EptsReportUtils.map(tb7AndTBTreatment, mappings),
+        "tblam-grade-level=one");
+
+    dataSetDefinition.addColumn(
+        "CASCADE2-TI4-GRADENONE",
+        "Number of clients with positive TB LAM during inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) and on TB treatment by report generation date - grade not reported",
+        EptsReportUtils.map(tb7AndTBTreatment, mappings),
+        "tblam-grade-level=no-level");
 
     return dataSetDefinition;
   }
