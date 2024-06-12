@@ -25,10 +25,14 @@
       nomeDaMae.value_text as nomeDaMaeFichaCCR,
       nomeMaeRelationSHip.nomeDaMaeSesp,
       nomeMaeRelationSHip.identifier as nid_da_mae,
-      IF(ISNULL(aceitaVisita.value_coded) OR aceitaVisita.value_coded = 1066, 'N', 'S') AS aceitaVisitaDomiciliar,
-      firstSeguimento.data_seguimento as primeiraConsultaCCR,
-      maxCCRSeguimento.data_seguimento as ultimaConsultaCCR,
-      maxCCRSeguimento.value_datetime as dataProximaConsultaCCR,
+                  case 
+     when ISNULL(aceitaVisita.value_coded) then '' 
+     when aceitaVisita.value_coded = 1066 then 'N'
+     when aceitaVisita.value_coded = 1065 then 'S' 
+     end AS aceitaVisitaDomiciliar,
+      firstSeguimento.primeira_consulta_ccr as primeiraConsultaCCR,
+      maxCCRSeguimento.ultima_consulta_ccr as ultimaConsultaCCR,
+      maxCCRSeguimento.proxima_consulta_ccr as dataProximaConsultaCCR,
       pcrDateAndResult.encounter_datetime pcrResultDate,
             case 
      when pcrDateAndResult.value_coded= 703 then 'Positivo' 
@@ -36,7 +40,8 @@
      when pcrDateAndResult.value_coded = 1138 then 'Indeterminado' 
      end as resultadoUltimoPCR,
                case 
-     when ISNULL(tipoAmostraPCR.value_coded) then 'N/A'
+     when ISNULL(tipoAmostraPCR.value_coded) and ISNULL(pcrDateAndResult.value_coded) then ''
+     when ISNULL(tipoAmostraPCR.value_coded) and pcrDateAndResult.value_coded is not null then 'N/A'
      when tipoAmostraPCR.value_coded= 1002 then 'Plasma' 
      when tipoAmostraPCR.value_coded = 23831 then 'Amostra de sangue seco' 
      when tipoAmostraPCR.value_coded = 165501 then 'Amostra de mancha de plasma seco'
@@ -49,7 +54,8 @@
      end as resultadoPenultimoPCR,
      penultimoPCR.penultimoDatePCR,
              case 
-     when ISNULL(penultimoTipoDeAmostra.value_coded) then 'N/A'
+     when ISNULL(penultimoTipoDeAmostra.value_coded) and ISNULL(penultimoPCR.value_coded) then ''
+     when ISNULL(penultimoTipoDeAmostra.value_coded) and penultimoPCR.value_coded is not null then 'N/A'
      when penultimoTipoDeAmostra.value_coded= 1002 then 'Plasma' 
      when penultimoTipoDeAmostra.value_coded = 23831 then 'Amostra de sangue seco' 
      when penultimoTipoDeAmostra.value_coded = 165501 then 'Amostra de mancha de plasma seco'
@@ -69,9 +75,9 @@
     when programa.state = 23 then 'CURADO'
     when programa.state = 31 then 'TRANSFERIDO DE'
     when programa.state = 32 OR programa.state = 1706 then 'TRANSFERIDO PARA'
-    when programa.state = 165484 then 'TRANSFERIDO PARA CONSULTAS INTEGRADAS'
-    when programa.state = 165485 then 'TRANSFERIDO PARA CONSULTA DE CRIANÇA SADIA'
-    when programa.state = 165483 then 'TRANSFERIDO PARA SECTOR DE TB'
+    when programa.state = 84 then 'TRANSFERIDO PARA CONSULTAS INTEGRADAS'
+    when programa.state = 85 then 'TRANSFERIDO PARA CONSULTA DE CRIANÇA SADIA'
+    when programa.state = 83 then 'TRANSFERIDO PARA SECTOR DE TB'
     end AS state,
      case
     when fichaResumo.state = 1707 then 'ABANDONO' 
@@ -382,7 +388,7 @@
             SELECT person_a, person_b, concat(ifnull(pn.given_name,''),' ',ifnull(pn.middle_name,''),' ',ifnull(pn.family_name,'')) as nomeDaMaeSesp FROM relationship r
             inner join person p on p.person_id = r.person_b
             inner join person_name pn on pn.person_id = p.person_id
-            where relationship = 14 
+            where relationship = 6 
             ) nomeDaMaeSesp             
             left join  ( 
                 select pid1.*  from patient_identifier pid1  
@@ -404,7 +410,7 @@
                    e.encounter_datetime <=  :endDate and e.location_id= :location
             ) aceitaVisita on aceitaVisita.patient_id = ccr.patient_id
             left join (
-                select ccr.patient_id, min(fichaSeguimento.encounter_datetime) data_seguimento from
+                select ccr.patient_id, min(fichaSeguimento.encounter_datetime) primeira_consulta_ccr from
                 (select patient_id, min(data_inicio) data_inicio from (
          select  pg.patient_id,min(date_enrolled) data_inicio                                
          from  patient p inner join patient_program pg on p.patient_id=pg.patient_id                   
@@ -429,36 +435,68 @@
             group by ccr.patient_id
            ) firstSeguimento on firstSeguimento.patient_id = ccr.patient_id
            left join (
-           select seguimento.patient_id,seguimento.data_seguimento, o.value_datetime from (
-                select ccr.patient_id, max(fichaSeguimento.encounter_datetime) data_seguimento from
-                (select patient_id, min(data_inicio) data_inicio from (
-         select  pg.patient_id,min(date_enrolled) data_inicio                                
-         from  patient p inner join patient_program pg on p.patient_id=pg.patient_id                   
-         where   pg.voided=0 and p.voided=0 and program_id=6 and date_enrolled between :startDate and :endDate and location_id= :location       
-         group by pg.patient_id  
-        union
-        Select  p.patient_id,min(e.encounter_datetime) data_inicio                                
-          from  patient p                                                 
-              inner join encounter e on p.patient_id=e.patient_id                                                   
-          where   p.voided=0 and e.voided=0 and e.encounter_type = 92 and                                      
-              e.encounter_datetime between :startDate and :endDate and e.location_id= :location                              
-          group by p.patient_id 
-          ) ccr group by ccr.patient_id
+           select distinct seguimento.patient_id,seguimento.data_seguimento ultima_consulta_ccr, proximaConsulta.value_datetime proxima_consulta_ccr
+           from (
+                select ccr.patient_id,data_inicio, max(fichaSeguimento.encounter_datetime) data_seguimento from
+                (
+           	select patient_id, min(data_inicio) data_inicio from
+           	(
+           	select  pg.patient_id,min(date_enrolled) data_inicio                                
+	         from  patient p inner join patient_program pg on p.patient_id=pg.patient_id                   
+	         where   pg.voided=0 and p.voided=0 and program_id=6 and date_enrolled between :startDate and :endDate and location_id= :location       
+	         group by pg.patient_id  
+       	 union
+	      	  Select  p.patient_id,min(e.encounter_datetime) data_inicio                                
+	          from  patient p                                                 
+	              inner join encounter e on p.patient_id=e.patient_id                                                   
+	          where   p.voided=0 and e.voided=0 and e.encounter_type = 92 and                                      
+	              e.encounter_datetime between :startDate and :endDate and e.location_id= :location                              
+	          group by p.patient_id 
+       	   ) ccr group by ccr.patient_id
           ) ccr left join (
-                select  p.patient_id, e.encounter_datetime, o.value_datetime                                           
+                select  p.patient_id, e.encounter_datetime                                           
                from  patient p                                                         
                    inner join encounter e on p.patient_id=e.patient_id
-                   inner join obs o on o.encounter_id = e.encounter_id
-               where   e.voided=0 and p.voided=0 and o.voided = 0 and o.concept_id = 1410                                      
+               where   e.voided=0 and p.voided=0                                    
                   and e.encounter_type = 93 and e.location_id= :location
             ) fichaSeguimento on fichaSeguimento.patient_id = ccr.patient_id
             where fichaSeguimento.encounter_datetime between ccr.data_inicio and :endDate
             group by ccr.patient_id
-            ) seguimento 
+            ) seguimento left join(
+                select distinct seguimento.patient_id,seguimento.data_seguimento, o.value_datetime
+           from (
+                select ccr.patient_id,data_inicio, max(fichaSeguimento.encounter_datetime) data_seguimento from
+                (
+           	select patient_id, min(data_inicio) data_inicio from
+           	(
+           	select  pg.patient_id,min(date_enrolled) data_inicio                                
+	         from  patient p inner join patient_program pg on p.patient_id=pg.patient_id                   
+	         where   pg.voided=0 and p.voided=0 and program_id=6 and date_enrolled between :startDate and :endDate and location_id= :location       
+	         group by pg.patient_id  
+       	 union
+	      	  Select  p.patient_id,min(e.encounter_datetime) data_inicio                                
+	          from  patient p                                                 
+	              inner join encounter e on p.patient_id=e.patient_id                                                   
+	          where   p.voided=0 and e.voided=0 and e.encounter_type = 92 and                                      
+	              e.encounter_datetime between :startDate and :endDate and e.location_id= :location                              
+	          group by p.patient_id 
+       		   ) ccr group by ccr.patient_id
+      	    ) ccr
+      	    left join (
+                select  p.patient_id, e.encounter_datetime                                       
+               from  patient p                                                         
+                   inner join encounter e on p.patient_id=e.patient_id
+               where   e.voided=0 and p.voided=0                                    
+                  and e.encounter_type = 93 and e.location_id= :location
+           	 ) fichaSeguimento on fichaSeguimento.patient_id = ccr.patient_id
+           	 where fichaSeguimento.encounter_datetime between ccr.data_inicio and :endDate
+          	 group by ccr.patient_id
+           	 ) seguimento
             inner join encounter e on e.patient_id = seguimento.patient_id
             inner join obs o on o.encounter_id = e.encounter_id
-            where e.encounter_type = 93 and o.voided = 0 and e.voided = 0 and e.encounter_datetime = seguimento.data_seguimento
-            and o.concept_id = 1410
+            where o.concept_id = 1410 and o.voided = 0 and e.voided = 0 and e.location_id = :location
+            and e.encounter_datetime = seguimento.data_seguimento
+            ) proximaConsulta on proximaConsulta.patient_id = seguimento.patient_id
            )maxCCRSeguimento on maxCCRSeguimento.patient_id = ccr.patient_id
             left join (
                 select pcr.patient_id, pcr.encounter_datetime, o.value_coded from 
@@ -491,7 +529,7 @@
                   and e.encounter_datetime = pcr.encounter_datetime
             )tipoAmostraPCR on tipoAmostraPCR.patient_id = ccr.patient_id
             left join (
-            		SELECT penultimo.patient_id,penultimoDatePCR,o.value_coded  from (
+                    SELECT penultimo.patient_id,penultimoDatePCR,o.value_coded  from (
                 select ultimoPCR.patient_id, max(penultimoPCR.encounter_datetime) penultimoDatePCR from (
                     select  p.patient_id, max(e.encounter_datetime) encounter_datetime                                           
                from  patient p                                                         
@@ -553,12 +591,16 @@
                   and e.encounter_datetime = pcr.encounter_datetime
             ) trHIVUltimoResultado on trHIVUltimoResultado.patient_id = ccr.patient_id
             left join (
-                    select pg.patient_id,max(ps.start_date) data_estado, ps.state
-                                        from patient p 
-                                        inner join patient_program pg on p.patient_id=pg.patient_id 
-                                        inner join patient_state ps on pg.patient_program_id=ps.patient_program_id 
-                                        where pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=6 and ps.start_date<=:endDate and pg.location_id=:location 
-                                        group by  pg.patient_id
+		    select distinct maxEstado.patient_id, data_estado, ps.state from(
+		     select pg.patient_id,max(ps.start_date) data_estado
+		     from patient p 
+		     inner join patient_program pg on p.patient_id=pg.patient_id 
+		     inner join patient_state ps on pg.patient_program_id=ps.patient_program_id 
+		     where pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=6 and ps.start_date<=:endDate and pg.location_id=:location
+		     group by  pg.patient_id
+		     )maxEstado inner join patient_program pp on pp.patient_id = maxEstado.patient_id
+		     inner join patient_state ps on ps.patient_program_id = pp.patient_program_id
+		     where ps.start_date = maxEstado.data_estado
             )programa on programa.patient_id = ccr.patient_id
             left join(
                     select fichaResumo.patient_id, o.value_coded state from (
