@@ -98,7 +98,7 @@ public class SetupListOfPatientsElegibleToCD4Request extends EptsDataExportManag
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "Lista_de_Utentes_Elegiveis_Pedido_CD4.xls",
+              "Template_Lista_de_Utentes_Elegiveis_Pedido_CD4.xls",
               "Lista de Utentes Elegíveis ao Pedido de CD4",
               getExcelDesignUuid(),
               null);

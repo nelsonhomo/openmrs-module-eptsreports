@@ -39,13 +39,13 @@ public class ListOfPatientElegibleForCD4RequestDataSet extends BaseDataSet {
     dataSetDefinition.setName("CD4");
     dataSetDefinition.addParameters(this.getParameters());
 
-    final String mappings = "endDate=${endDate},location=${location}";
-    final CohortDefinition C1 = ListOfPatientsElegibleToCD4RequestCohortQueries.getTotaC1();
-    final CohortDefinition C2 = ListOfPatientsElegibleToCD4RequestCohortQueries.getTotaC2();
-    final CohortDefinition C3 = ListOfPatientsElegibleToCD4RequestCohortQueries.getTotaC3();
-    final CohortDefinition C4 = ListOfPatientsElegibleToCD4RequestCohortQueries.getTotaC4();
-    final CohortDefinition C5 = ListOfPatientsElegibleToCD4RequestCohortQueries.getTotaC5();
-    final CohortDefinition C6 = ListOfPatientsElegibleToCD4RequestCohortQueries.getTotaC6();
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final CohortDefinition C1 = ListOfPatientsElegibleToCD4RequestCohortQueries.C1();
+    final CohortDefinition C2 = ListOfPatientsElegibleToCD4RequestCohortQueries.C2();
+    final CohortDefinition C3 = ListOfPatientsElegibleToCD4RequestCohortQueries.C3();
+    final CohortDefinition C4 = ListOfPatientsElegibleToCD4RequestCohortQueries.C4();
+    final CohortDefinition C5 = ListOfPatientsElegibleToCD4RequestCohortQueries.C5();
+    final CohortDefinition C6 = ListOfPatientsElegibleToCD4RequestCohortQueries.C6();
     dataSetDefinition.addColumn(
         "C1",
         "C1",
