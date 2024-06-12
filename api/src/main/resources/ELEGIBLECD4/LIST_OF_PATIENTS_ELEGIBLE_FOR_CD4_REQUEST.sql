@@ -23,7 +23,7 @@
 	             if(cd4.data_ultimo_cd4 is not null,DATE_FORMAT(DATE(cd4.data_ultimo_cd4), '%d-%m-%Y'),'N/A')  as data_ultimo_cd4,
 	             if(cd4Final.data_resultado_cd4 is not null,DATE_FORMAT(DATE(cd4Final.data_resultado_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_cd4,
                  if(cd4Final.valor_cd4 is not null,cd4Final.valor_cd4,'N/A') valor_cd4,
-                 DATE_FORMAT(DATE(cd4Final.data_resultado_peneultimo_cd4), '%d-%m-%Y')  as data_resultado_peneultimo_cd4,
+                 if(cd4Final.data_resultado_peneultimo_cd4 is not null,DATE_FORMAT(DATE(cd4Final.data_resultado_peneultimo_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_peneultimo_cd4,
 	             if(cd4Final.resultado_peneultimo_cd4 is not null,cd4Final.resultado_peneultimo_cd4,'N/A')  resultado_peneultimo_cd4, 
 	             DATE_FORMAT(DATE(estadiamentoClinico.encounter_datetime), '%d-%m-%Y')  as encounter_datetime,
 	             case 
