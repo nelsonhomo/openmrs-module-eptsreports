@@ -178,7 +178,7 @@
 			                  and e.voided = 0  
 			                  and o.voided = 0
 			                  and  o.concept_id=856
-			                  and  o.obs_datetime BETWEEN date_sub(:endDate, interval 6 month) and :endDate
+			                  and  o.obs_datetime<=date_sub(:endDate, interval 6 month)
 			                  and e.encounter_type=6 
 			                  and e.location_id=:location 
 			                  )cv 
@@ -195,7 +195,7 @@
 			                  and e.voided = 0  
 			                  and o.voided = 0
 			                  and  o.concept_id=856
-			                  and  o.obs_datetime BETWEEN date_sub(:endDate, interval 6 month) and :endDate
+			                  and  o.obs_datetime<=date_sub(:endDate, interval 6 month)
 			                  and e.encounter_type=6 
 			                  and e.location_id=:location 
 			                 ) cvAnterior on ultimoCV.patient_id=cvAnterior.patient_id
@@ -216,7 +216,7 @@
 			                    and e.voided = 0  
 			                    and o.voided = 0
 			                    and  o.concept_id=856
-			                    and  o.obs_datetime BETWEEN date_sub(:endDate, interval 6 month) and :endDate
+			                    and  o.obs_datetime<=date_sub(:endDate, interval 6 month)
 			                    and e.encounter_type=6 
 			                    and e.location_id=:location 
 			                    )cv 
@@ -357,7 +357,7 @@
 			                   and p.voided=0 
 			                   and  e.encounter_type=6 
 			                   and o.concept_id=1695 
-			                   and o.obs_datetime BETWEEN date_sub(:endDate, interval 12 month) and :endDate 
+			                   and o.obs_datetime<=date_sub(:endDate, interval 12 month)  
 			                   and e.location_id=:location 
 			                   and o.value_numeric<350
 			                   group by p.patient_id 
@@ -374,7 +374,7 @@
 			                   and p.voided=0 
 			                   and  e.encounter_type=6 
 			                   and o.concept_id=1695 
-			                   and o.obs_datetime BETWEEN date_sub(:endDate, interval 12 month) and :endDate 
+			                   and o.obs_datetime<=date_sub(:endDate, interval 12 month) 
 			                   and e.location_id=:location 
 			                   and o.value_numeric<30
 			                   group by p.patient_id 
@@ -395,7 +395,7 @@
 			                     and p.voided=0 
 			                     and  e.encounter_type=6 
 			                     and o.concept_id=1695 
-			                     and o.obs_datetime BETWEEN date_sub(:endDate, interval 12 month) and :endDate 
+			                     and o.obs_datetime<=date_sub(:endDate, interval 12 month)
 			                     and e.location_id=:location 
 			                     and o.value_numeric<350
 			                     group by p.patient_id 
@@ -412,7 +412,7 @@
 			                     and p.voided=0 
 			                     and  e.encounter_type=6 
 			                     and o.concept_id=1695 
-			                     and o.obs_datetime BETWEEN date_sub(:endDate, interval 12 month) and :endDate 
+			                     and o.obs_datetime<=date_sub(:endDate, interval 12 month) 
 			                     and e.location_id=:location 
 			                     and o.value_numeric<30
 			                     group by p.patient_id 
@@ -444,17 +444,19 @@
 			                     from patient p 
 			                     inner join encounter e on p.patient_id=e.patient_id  
 			                     inner join obs  o on e.encounter_id=o.encounter_id 
+			                     inner join person pe on pe.person_id=p.patient_id
 			                     where e.voided=0 and o.voided=0  
 			                     and p.voided=0 
 			                     and  e.encounter_type=6 
 			                     and o.concept_id=1982 
 			                     and o.value_coded=1065
+			                     and  pe.gender='F' 
 			                     and o.obs_datetime BETWEEN date_sub(:endDate, interval 9 month) and :endDate 
 			                     and e.location_id=:location 
 			                     group by p.patient_id 
 			                     )C6
 			                     left join
-			                     (
+			                     (			
 			                    select gravida.patient_id,gravida.data_gravida
 			                    from 
 			                    ( 
@@ -462,11 +464,13 @@
 			                     from patient p 
 			                     inner join encounter e on p.patient_id=e.patient_id  
 			                     inner join obs  o on e.encounter_id=o.encounter_id 
+			                     inner join person pe on pe.person_id=p.patient_id
 			                     where e.voided=0 and o.voided=0  
 			                     and p.voided=0 
 			                     and  e.encounter_type=6 
 			                     and o.concept_id=1982 
 			                     and o.value_coded=1065
+			                     and  pe.gender='F' 
 			                     and o.obs_datetime BETWEEN date_sub(:endDate, interval 9 month) and :endDate 
 			                     and e.location_id=:location 
 			                     group by p.patient_id 
