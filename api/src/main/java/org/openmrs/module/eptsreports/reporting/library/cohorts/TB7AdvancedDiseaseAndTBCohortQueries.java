@@ -207,16 +207,13 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
-
     definition.addSearch(
         "IMMUNO-SUPRR-AND-TBLAM",
-        EptsReportUtils.map(
-            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMResults(), mappings));
+        Mapped.mapStraightThrough(
+            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMResults()));
 
     definition.addSearch(
-        "POSITIVE-RESULTS",
-        EptsReportUtils.map(this.findPatientsWithPositiveTBLAMResults(), mappings));
+        "POSITIVE-RESULTS", Mapped.mapStraightThrough(this.findPatientsWithPositiveTBLAMResults()));
 
     definition.setCompositionString("IMMUNO-SUPRR-AND-TBLAM and POSITIVE-RESULTS");
 
@@ -232,13 +229,10 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
-
     definition.addSearch(
         "POSITIVE-TB",
-        EptsReportUtils.map(
-            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResults(),
-            mappings));
+        Mapped.mapStraightThrough(
+            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResults()));
 
     definition.addSearch(
         "INITIATED-TB-TREATMENT",
@@ -262,13 +256,10 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
-
     definition.addSearch(
         "POSITIVE-RESULTS",
-        EptsReportUtils.map(
-            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResults(),
-            mappings));
+        Mapped.mapStraightThrough(
+            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResults()));
 
     definition.addSearch(
         "NO-GENEXPERT",
@@ -295,13 +286,10 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
-
     definition.addSearch(
         "POSITIVE-RESULTS",
-        EptsReportUtils.map(
-            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResults(),
-            mappings));
+        Mapped.mapStraightThrough(
+            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResults()));
 
     definition.addSearch(
         "GENEXPERT",
@@ -328,14 +316,11 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
-
     definition.addSearch(
         "GENEXPERT",
-        EptsReportUtils.map(
+        Mapped.mapStraightThrough(
             this
-                .getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResultsWithGenexpert(),
-            mappings));
+                .getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResultsWithGenexpert()));
 
     definition.addSearch(
         "GEN-POSITIVE",
@@ -829,13 +814,12 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
             mappings));
 
     definition.addSearch(
-        "POSITIVE-RESULTS",
-        EptsReportUtils.map(this.findPatientsWithPositiveTBLAMResults(), mappings));
+        "POSITIVE-RESULTS", Mapped.mapStraightThrough(this.findPatientsWithPositiveTBLAMResults()));
 
     definition.addSearch(
         "INDICATOR-DENOMINATOR",
-        EptsReportUtils.map(
-            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMResults(), mappings));
+        Mapped.mapStraightThrough(
+            this.getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMResults()));
 
     definition.addSearch(
         "TRANSFERREDOUT",
