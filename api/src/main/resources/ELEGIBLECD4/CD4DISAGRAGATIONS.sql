@@ -469,7 +469,7 @@
 												inner join patient_program pg on p.patient_id = pg.patient_id                                                               
 												inner join patient_state ps on pg.patient_program_id = ps.patient_program_id                                                
 											where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2                                        
-														and ps.start_date<=:endDate and pg.location_id =:location group by pg.patient_id                                           
+														and ps.start_date<= CURDATE() and pg.location_id =:location group by pg.patient_id                                           
 										) max_estado                                                                                                                        
 											inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
 											inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
@@ -484,14 +484,14 @@
 											inner join obs  o on e.encounter_id=o.encounter_id                                                                          
 										where e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0                                                               
 											and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded = 1366                         
-											and o.obs_datetime<=:endDate and e.location_id=:location                                                                        
+											and o.obs_datetime<= CURDATE() and e.location_id=:location                                                                        
 											group by p.patient_id                                                                                                               
 										
 										union                                                                                                                               
 										
 										select person_id as patient_id,death_date as data_estado                                                                            
 										from person                                                                                                                         
-										where dead=1 and voided = 0 and death_date is not null and death_date<=:endDate 
+										where dead=1 and voided = 0 and death_date is not null and death_date<= CURDATE() 
 										                                                                                                           
 									) dead_state group by dead_state.patient_id  
 							) dead_state 
@@ -505,7 +505,7 @@
 										inner join person pe on pe.person_id = p.patient_id                                                                                         
 										inner join encounter e on e.patient_id=p.patient_id                                                                                         
 									where p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type=18                                                                      
-										and e.location_id=:location and e.encounter_datetime<=:endDate                                                                                  
+										and e.location_id=:location and e.encounter_datetime<= CURDATE()                                                                                  
 										group by p.patient_id  
 									
 									union
@@ -515,7 +515,7 @@
 										inner join person pe on pe.person_id = p.patient_id                                                                                         
 										inner join encounter e on e.patient_id=p.patient_id                                                                                         
 									where p.voided=0 and pe.voided = 0 and e.voided=0 and e.encounter_type in (6,9)                                                                
-										and e.location_id=:location and e.encounter_datetime<=:endDate                                                                                  
+										and e.location_id=:location and e.encounter_datetime<= CURDATE()                                                                                  
 										group by p.patient_id   
 								) fila_seguimento group by fila_seguimento.patient_id  
 						 ) fila_seguimento on dead_state.patient_id = fila_seguimento.patient_id
@@ -539,7 +539,7 @@
 				                                     	inner join patient_program pg on p.patient_id = pg.patient_id                                                               
 				                                     	inner join patient_state ps on pg.patient_program_id = ps.patient_program_id                                           
 				                                 where pg.voided=0 and ps.voided=0 and p.voided=0 and pe.voided = 0 and pg.program_id = 2                                    
-				                                 		and ps.start_date< :endDate and pg.location_id =:location group by pg.patient_id                                          
+				                                 		and ps.start_date<  CURDATE() and pg.location_id =:location group by pg.patient_id                                          
 			                             	) max_estado                                                                                                                        
 			                              	inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
 			                                 	inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
@@ -554,7 +554,7 @@
 			                                	inner join obs  o on e.encounter_id=o.encounter_id                                                                          
 			                        		where e.voided=0 and o.voided=0 and p.voided=0 and pe.voided = 0                                                    
 			                              	and e.encounter_type in (53,6) and o.concept_id in (6272,6273) and o.value_coded = 1706                         
-			                                	and o.obs_datetime<=:endDate and e.location_id=:location                                                                        
+			                                	and o.obs_datetime<= CURDATE() and e.location_id=:location                                                                        
 			                        			group by p.patient_id                                                                                                               
 			
 			                          ) saidas_por_transferencia group by saidas_por_transferencia.patient_id
@@ -564,7 +564,7 @@
 								      select p.patient_id,max(e.encounter_datetime) encounter_datetime
 								      from patient p
 								      	inner join encounter e on e.patient_id = p.patient_id
-								      where p.voided = 0 and e.voided = 0 and e.encounter_datetime < :endDate and e.location_id =:location and e.encounter_type=18
+								      where p.voided = 0 and e.voided = 0 and e.encounter_datetime <  CURDATE() and e.location_id =:location and e.encounter_type=18
 								      	group by p.patient_id
 			                      	)lev on saidas_por_transferencia.patient_id=lev.patient_id
 			                 	where lev.encounter_datetime<=saidas_por_transferencia.data_estado or lev.encounter_datetime is null
@@ -584,7 +584,7 @@
 						                   select p.patient_id,max(encounter_datetime) data_fila  
 						                   from patient p 
 						                          inner join encounter e on e.patient_id=p.patient_id 
-						                   where p.voided=0 and e.voided=0 and e.encounter_type=18 and e.location_id=:location and date(e.encounter_datetime)<=:endDate 
+						                   where p.voided=0 and e.voided=0 and e.encounter_type=18 and e.location_id=:location and date(e.encounter_datetime)<= CURDATE() 
 						                         group by p.patient_id 
 						                  )fila 
 						                   inner join encounter e on  date(e.encounter_datetime)=date(fila.data_fila) and e.encounter_type=18 and e.voided=0 and e.patient_id=fila.patient_id 
@@ -609,9 +609,9 @@
 				                         inner join encounter e on p.patient_id=e.patient_id                                                                                         
 				                         inner join obs o on e.encounter_id=o.encounter_id                                                                                           
 				                   	where p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52                                                       
-				                         and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime<=:endDate                                                                                        
+				                         and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime<= CURDATE()                                                                                        
 				                   	group by p.patient_id
 				               ) ultimo_levantamento group by patient_id
 			           	) ultimo_levantamento on saidas_por_transferencia.patient_id = ultimo_levantamento.patient_id 
-			          		where (ultimo_levantamento.data_ultimo_levantamento <= :endDate	and saidas_por_transferencia.data_estado<=:endDate)
+			          		where (ultimo_levantamento.data_ultimo_levantamento <=  CURDATE()	and saidas_por_transferencia.data_estado<= CURDATE())
                        )saidas on saidas.patient_id=final.patient_id
