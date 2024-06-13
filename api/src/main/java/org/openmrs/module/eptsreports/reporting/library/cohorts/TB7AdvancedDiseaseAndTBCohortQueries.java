@@ -849,42 +849,6 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     return definition;
   }
 
-  private CohortDefinition findPatientsWithPositiveTBLAMResults() {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("TB7 - Positive TB LAM Results");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
-
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
-
-    definition.addSearch(
-        "LEVEL4",
-        EptsReportUtils.map(
-            this.getNumberOfClientsWithGradeFourLevelPositiveTBLAMResults(), mappings));
-    definition.addSearch(
-        "LEVEL3",
-        EptsReportUtils.map(
-            this.getNumberOfClientsWithGradeThreeLevelPositiveTBLAMResults(), mappings));
-    definition.addSearch(
-        "LEVEL2",
-        EptsReportUtils.map(
-            this.getNumberOfClientsWithGradeTwoLevelPositiveTBLAMResults(), mappings));
-    definition.addSearch(
-        "LEVEL1",
-        EptsReportUtils.map(
-            this.getNumberOfClientsWithGradeOneLevelPositiveTBLAMResults(), mappings));
-    definition.addSearch(
-        "NO-LEVEL",
-        EptsReportUtils.map(
-            this.getNumberOfClientsWithGradeNoLevelPositiveTBLAMResults(), mappings));
-
-    definition.setCompositionString("LEVEL4 or LEVEL3 or LEVEL2 or LEVEL1 or NO-LEVEL");
-
-    return definition;
-  }
-
   public CohortDefinition getNumberOfClientsWithGradeFourLevelPositiveTBLAMResults() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -1103,6 +1067,42 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
             mappings));
 
     definition.setCompositionString("POSITIVE-TBLAM-RESULTS");
+
+    return definition;
+  }
+
+  private CohortDefinition findPatientsWithPositiveTBLAMResults() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7 - Positive TB LAM Results");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
+    definition.addSearch(
+        "LEVEL4",
+        EptsReportUtils.map(
+            this.getNumberOfClientsWithGradeFourLevelPositiveTBLAMResults(), mappings));
+    definition.addSearch(
+        "LEVEL3",
+        EptsReportUtils.map(
+            this.getNumberOfClientsWithGradeThreeLevelPositiveTBLAMResults(), mappings));
+    definition.addSearch(
+        "LEVEL2",
+        EptsReportUtils.map(
+            this.getNumberOfClientsWithGradeTwoLevelPositiveTBLAMResults(), mappings));
+    definition.addSearch(
+        "LEVEL1",
+        EptsReportUtils.map(
+            this.getNumberOfClientsWithGradeOneLevelPositiveTBLAMResults(), mappings));
+    definition.addSearch(
+        "NO-LEVEL",
+        EptsReportUtils.map(
+            this.getNumberOfClientsWithGradeNoLevelPositiveTBLAMResults(), mappings));
+
+    definition.setCompositionString("LEVEL4 or LEVEL3 or LEVEL2 or LEVEL1 or NO-LEVEL");
 
     return definition;
   }
