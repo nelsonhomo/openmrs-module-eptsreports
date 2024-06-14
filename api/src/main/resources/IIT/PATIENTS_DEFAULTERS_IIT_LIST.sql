@@ -992,7 +992,7 @@
                         )championManAPSS on championManAPSS.patient_id=coorte12meses_final.patient_id
                         left join
                         (
-                        select     
+                                        select     
                             f.patient_id,f.encounter_datetime as encounter_datetime,
                             @num_mdc := 1 + LENGTH(f.MDC) - LENGTH(REPLACE(f.MDC, ',', '')) AS MDC,  
                             SUBSTRING_INDEX(f.MDC, ',', 1) AS MDC1,  
@@ -1003,48 +1003,54 @@
                          from (   
                            select f.patient_id,max(f.encounter_datetime) as encounter_datetime,group_concat(f.MDC) as MDC from 
                             (
-                   
-                           select  distinct e.patient_id,e.encounter_datetime encounter_datetime,
-                                                                        case o.value_coded
-                                         when  23730  then 'DISPENSA TRIMESTRAL (DT)'
-                                         when  23888  then 'DISPENSA SEMESTRAL'
-                                         when 165314  then 'DISPENSA ANUAL DE ARV'
-                                         when 165315  then 'DISPENSA DESCENTRALIZADA DE ARV'
-                                         when 165178  then 'DISPENSA COMUNITÁRIA VIA PROVEDOR'
-                                         when 165179  then 'DISPENSA COMUNITARIA VIA APE'
-                                         when 165264  then 'BRIGADAS MVEIS (DCBM)'
-                                         when 165265  then 'CLINICAS MOVEIS (DCCM)'
-                                         when  23725  then 'ABORDAGEM FAMILIAR (AF)'
-                                         when  23729  then 'FLUXO RÁPIDO (FR)'
-                                         when  23724  then 'GAAC'
-                                         when  23726  then 'CLUBES DE ADESÃO (CA)'
-                                         when 165316  then 'EXTENSAO DE HORARIO'
-                                         when 165317  then 'PARAGEM UNICA NO SECTOR DA TB'
-                                         when 165318  then 'PARAGEM UNICA NOS SERVICOS DE TARV' 
-                                         when 165319  then 'PARAGEM UNICA NO SAAJ'
-                                         when 165320  then  'PARAGEM UNICA NA SMI'
-                                         when 165321  then  'DOENCA AVANCADA POR HIV'
-                                else null end  as MDC
-                         from  encounter e  
-                                join obs grupo on grupo.encounter_id=e.encounter_id 
-                                join obs o on o.encounter_id=e.encounter_id 
-                                join obs obsEstado on obsEstado.encounter_id=e.encounter_id
-                        where   grupo.concept_id=165323 
-                                and o.concept_id=165174 
-                                and e.encounter_type in(6,9) 
-                                and e.location_id= 271
-                                and obsEstado.concept_id=165322 
-                                and o.obs_group_id = grupo.obs_id  
-                                and obsEstado.value_coded in(1256,1257) 
-                                and obsEstado.voided=0 
-                                and o.voided=0 
-                                and grupo.voided=0
-                                and e.encounter_datetime <= CURDATE()
-                                order by e.encounter_datetime
+				             select distinct e.patient_id,e.encounter_datetime encounter_datetime,
+				              case o.value_coded
+				              when  165340 then 'DB'
+				              when  23730 then 'DT' 
+				              when  165314 then 'DA' 
+				              when  23888 then 'DS' 
+				              when  23724 then 'GA'
+				              when  23726 then 'CA'
+				              when  165317 then 'TB' 
+				              when  165320 then 'SMI' 
+				              when  165321 then 'DAH' 
+				              when  165178 then 'DCP' 
+				              when  165179 then 'DCA' 
+				              when  165318 then 'CT' 
+				              when  165315 then 'DD' 
+				              when  165264 then 'BM' 
+				              when  165265 then 'CM'
+				              when  23725  then 'AF'
+				              when  23729  then 'FR'
+				              when  165176 then 'EH' 
+				              when  165319 then 'SAAJ'
+				              when  23727  then 'PU'
+				              when  165177 then 'FARMAC/Farmácia Privada'
+				              when  23732  then 'OUTRO'
+				              end AS MDC
+				              from patient p 
+				              join encounter e on p.patient_id=e.patient_id 
+				              join obs grupo on grupo.encounter_id=e.encounter_id 
+				              join obs o on o.encounter_id=e.encounter_id 
+				              join obs obsEstado on obsEstado.encounter_id=e.encounter_id 
+				              where  e.encounter_type in(6) 
+				              and e.location_id=:location 
+				              and o.concept_id=165174  
+				              and o.voided=0 
+				              and p.patient_id=409
+				              and grupo.concept_id=165323  
+				              and grupo.voided=0 
+				              and obsEstado.concept_id=165322  
+				              and obsEstado.value_coded in(1256,1257) 
+				              and obsEstado.voided=0  
+				              and grupo.voided=0 
+				              and grupo.obs_id=o.obs_group_id 
+				              and grupo.obs_id=obsEstado.obs_group_id 
+				              order by p.patient_id, date(e.encounter_datetime) desc
                                 )f
                                 group by f.patient_id,f.encounter_datetime  order by f.encounter_datetime desc
                                 )f
-                          group by f.patient_id order by @num_mdc            
+                          group by f.patient_id order by @num_mdc       
                           ) MDC on MDC.patient_id=coorte12meses_final.patient_id
 
                           left join
@@ -1096,5 +1102,5 @@
                           left join person_attribute patOVCEntryDate on patOVCEntryDate.person_id=coorte12meses_final.patient_id and patOVCEntryDate.person_attribute_type_id=50 and patOVCEntryDate.value is not null and patOVCEntryDate.value <> '' and patOVCEntryDate.voided=0 
 			           left join person_attribute patOVCExitDate on patOVCExitDate.person_id=coorte12meses_final.patient_id and patOVCExitDate.person_attribute_type_id=51 and patOVCExitDate.value is not null and patOVCExitDate.value <> '' and patOVCExitDate.voided=0 
 			           left join person_attribute patOVCStatus on patOVCStatus.person_id=coorte12meses_final.patient_id and patOVCStatus.person_attribute_type_id=52 and patOVCStatus.value is not null and patOVCStatus.value <> '' and patOVCStatus.voided=0 
-                         where (data_estado is null or (data_estado is not null and  data_fila > data_estado)) and    datediff(:endDate,data_usar)>=3 and datediff(:endDate,data_usar) between :minDelayDays AND :maxDelayDays
+                         where (data_estado is null or (data_estado is not null and  data_fila > data_estado)) and    datediff(:endDate,data_usar)>=3 and datediff(:endDate,data_usar) between 0 AND 59
                          group by coorte12meses_final.patient_id                                                                          
