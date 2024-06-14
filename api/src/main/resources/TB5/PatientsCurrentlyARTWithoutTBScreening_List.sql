@@ -592,7 +592,7 @@ select coorte12meses_final.*,
 								when 165315  then 'DISPENSA DESCENTRALIZADA DE ARV'
 								when 165178  then 'DISPENSA COMUNITÁRIA VIA PROVEDOR'
 								when 165179  then 'DISPENSA COMUNITARIA VIA APE'
-								when 165264  then 'BRIGADAS MVEIS (DCBM)'
+								when 165264  then 'BRIGADAS MOVEIS (DCBM)'
 								when 165265  then 'CLINICAS MOVEIS (DCCM)'
 								when  23725  then 'ABORDAGEM FAMILIAR (AF)'
 								when  23729  then 'FLUXO RÁPIDO (FR)'
