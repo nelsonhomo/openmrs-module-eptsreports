@@ -1,7 +1,5 @@
 package org.openmrs.module.eptsreports.reporting.library.cohorts;
 
-import static org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils.map;
-
 import java.util.Arrays;
 import java.util.Date;
 import org.apache.commons.lang.StringUtils;
@@ -34,18 +32,16 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
-
     definition.addSearch(
-        "TXNEW", EptsReportUtils.map(findPatientsWhoAreNewlyEnrolledOnArt(), mappings));
+        "TXNEW", Mapped.mapStraightThrough(findPatientsWhoAreNewlyEnrolledOnArt()));
 
     definition.addSearch("PREGNANT", Mapped.mapStraightThrough(this.getPatientsWhoArePregnant()));
 
     definition.addSearch(
-        "HIGH-VL", EptsReportUtils.map(findPatientsWithConsecutiveViralLoadResults(), mappings));
+        "HIGH-VL", Mapped.mapStraightThrough(findPatientsWithConsecutiveViralLoadResults()));
 
     definition.addSearch(
-        "ART-RESTART", EptsReportUtils.map(findPatientsWhoReinitiatedARTTreatment(), mappings));
+        "ART-RESTART", Mapped.mapStraightThrough(findPatientsWhoReinitiatedARTTreatment()));
 
     definition.setCompositionString("TXNEW or PREGNANT or HIGH-VL or ART-RESTART");
 
@@ -60,22 +56,21 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
-
     definition.addSearch(
         "CD4-TXNEW",
-        map(this.findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33Days(), mappings));
+        Mapped.mapStraightThrough(
+            this.findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33Days()));
 
     definition.addSearch(
         "PREGNANT", Mapped.mapStraightThrough(this.getPatientsWhoArePregnantsWithCountCD4()));
 
     definition.addSearch(
         "HIGH-VL",
-        EptsReportUtils.map(findPatientsWithConsecutiveViralLoadResultsWithCD4Count(), mappings));
+        Mapped.mapStraightThrough(findPatientsWithConsecutiveViralLoadResultsWithCD4Count()));
 
     definition.addSearch(
         "ART-RESTART",
-        EptsReportUtils.map(findPatientsWhoReinitiatedARTTreatmentAndHaveCD4Count(), mappings));
+        Mapped.mapStraightThrough(findPatientsWhoReinitiatedARTTreatmentAndHaveCD4Count()));
 
     definition.addSearch(
         "TRANSFERREDOUT",
@@ -97,14 +92,11 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
-
     definition.addSearch(
         "CD4-TXNEW",
-        map(
+        Mapped.mapStraightThrough(
             this
-                .findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33DaysWithSevereImmunoSuppressions(),
-            mappings));
+                .findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33DaysWithSevereImmunoSuppressions()));
 
     definition.addSearch(
         "PREGNANT",
@@ -113,15 +105,13 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
 
     definition.addSearch(
         "HIGH-VL",
-        EptsReportUtils.map(
-            findPatientsWithConsecutiveViralLoadResultsWithCD4CountWithSevereImmunoSuppressions(),
-            mappings));
+        Mapped.mapStraightThrough(
+            findPatientsWithConsecutiveViralLoadResultsWithCD4CountWithSevereImmunoSuppressions()));
 
     definition.addSearch(
         "ART-RESTART",
-        EptsReportUtils.map(
-            findPatientsWhoReinitiatedARTTreatmentAndHaveCD4CountAndSevereImmunoSuppression(),
-            mappings));
+        Mapped.mapStraightThrough(
+            findPatientsWhoReinitiatedARTTreatmentAndHaveCD4CountAndSevereImmunoSuppression()));
 
     definition.setCompositionString("CD4-TXNEW or PREGNANT or HIGH-VL or ART-RESTART");
 
@@ -136,14 +126,11 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
-
     definition.addSearch(
         "CD4-TXNEW",
-        map(
+        Mapped.mapStraightThrough(
             this
-                .findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33DaysWithSevereImmunoSuppressionsWithTBLAMResults(),
-            mappings));
+                .findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33DaysWithSevereImmunoSuppressionsWithTBLAMResults()));
 
     definition.addSearch(
         "PREGNANT",
@@ -153,17 +140,18 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
 
     definition.addSearch(
         "HIGH-VL",
-        EptsReportUtils.map(
-            findPatientsWithConsecutiveViralLoadResultsWithCD4CountWithSevereImmunoSuppressionsWithTBLAMResults(),
-            mappings));
+        Mapped.mapStraightThrough(
+            findPatientsWithConsecutiveViralLoadResultsWithCD4CountWithSevereImmunoSuppressionsWithTBLAMResults()));
 
     definition.addSearch(
         "ART-RESTART",
-        EptsReportUtils.map(
-            findPatientsWhoReinitiatedARTTreatmentAndHaveCD4CountAndSevereImmunoSuppressionWithTBLAMResults(),
-            mappings));
+        Mapped.mapStraightThrough(
+            findPatientsWhoReinitiatedARTTreatmentAndHaveCD4CountAndSevereImmunoSuppressionWithTBLAMResults()));
 
-    definition.setCompositionString("CD4-TXNEW or PREGNANT or HIGH-VL or ART-RESTART");
+    definition.addSearch(
+        "TBLAM", Mapped.mapStraightThrough(this.findPatientsWhoHaveTBLAMResults()));
+
+    definition.setCompositionString("( CD4-TXNEW or PREGNANT or HIGH-VL or ART-RESTART  )");
 
     return definition;
   }
@@ -176,16 +164,11 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+    definition.addSearch(
+        "CD4RESULT", Mapped.mapStraightThrough(this.findPatientsWhoHaveCD4Results()));
 
     definition.addSearch(
-        "CD4RESULT", EptsReportUtils.map(this.findPatientsWhoHaveCD4Results(), mappings));
-
-    definition.addSearch(
-        "TBLAM",
-        EptsReportUtils.map(
-            this.findPatientsWhoHaveTBLAMResults(),
-            "endDate=${endDate-2m+1d},location=${location}"));
+        "TBLAM", Mapped.mapStraightThrough(this.findPatientsWhoHaveTBLAMResults()));
 
     definition.addSearch(
         "TRANSFERREDOUT",
@@ -344,7 +327,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
 
     definition.addSearch(
         "TXNEW",
@@ -372,7 +355,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
 
     definition.addSearch(
         "TXNEW",
@@ -405,14 +388,13 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-
     definition.addSearch(
         "TXNEW",
-        EptsReportUtils.map(
-            this.findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33Days(), mappings));
+        Mapped.mapStraightThrough(
+            this.findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33Days()));
+
     definition.addSearch(
-        "CD4RESULT", EptsReportUtils.map(this.findPatientsWhoHaveCD4Results(), mappings));
+        "CD4RESULT", Mapped.mapStraightThrough(this.findPatientsWhoHaveCD4Results()));
 
     definition.setCompositionString("TXNEW and CD4RESULT");
 
@@ -432,20 +414,14 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-
     definition.addSearch(
         "TXNEW",
-        EptsReportUtils.map(
+        Mapped.mapStraightThrough(
             this
-                .findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33DaysWithSevereImmunoSuppressions(),
-            mappings));
+                .findPatientsWhoAreNewlyEnrolledOnArtWithEligibleCD4Within33DaysWithSevereImmunoSuppressions()));
 
     definition.addSearch(
-        "TBLAM",
-        EptsReportUtils.map(
-            this.findPatientsWhoHaveTBLAMResults(),
-            "endDate=${endDate-2m+1d},location=${location}"));
+        "TBLAM", Mapped.mapStraightThrough(this.findPatientsWhoHaveTBLAMResults()));
 
     definition.setCompositionString("TXNEW and TBLAM");
 
@@ -462,7 +438,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
 
     definition.addSearch(
         "HIGHVL",
@@ -491,7 +467,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
 
     definition.addSearch(
         "HIGHVL",
@@ -522,14 +498,12 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-
     definition.addSearch(
         "HIGHVL",
-        EptsReportUtils.map(
-            this.findPatientsWithConsecutiveViralLoadResultsWithCD4Count(), mappings));
+        Mapped.mapStraightThrough(this.findPatientsWithConsecutiveViralLoadResultsWithCD4Count()));
+
     definition.addSearch(
-        "CD4RESULT", EptsReportUtils.map(this.findPatientsWhoHaveCD4Results(), mappings));
+        "CD4RESULT", Mapped.mapStraightThrough(this.findPatientsWhoHaveCD4Results()));
 
     definition.setCompositionString("(HIGHVL and CD4RESULT");
 
@@ -549,19 +523,13 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-
     definition.addSearch(
         "HIGHVL",
-        EptsReportUtils.map(
+        Mapped.mapStraightThrough(
             this
-                .findPatientsWithConsecutiveViralLoadResultsWithCD4CountWithSevereImmunoSuppressions(),
-            mappings));
+                .findPatientsWithConsecutiveViralLoadResultsWithCD4CountWithSevereImmunoSuppressions()));
     definition.addSearch(
-        "TBLAM",
-        EptsReportUtils.map(
-            this.findPatientsWhoHaveTBLAMResults(),
-            "endDate=${endDate-2m+1d},location=${location}"));
+        "TBLAM", Mapped.mapStraightThrough(this.findPatientsWhoHaveTBLAMResults()));
 
     definition.setCompositionString("HIGHVL and TBLAM");
 
@@ -577,7 +545,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
 
     definition.addSearch(
         "ART-RESTART",
@@ -605,7 +573,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
 
     definition.addSearch(
         "ART-RESTART",
@@ -636,15 +604,12 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-
     definition.addSearch(
         "ART-RESTART",
-        EptsReportUtils.map(
-            this.findPatientsWhoReinitiatedARTTreatmentAndHaveCD4Count(), mappings));
+        Mapped.mapStraightThrough(this.findPatientsWhoReinitiatedARTTreatmentAndHaveCD4Count()));
 
     definition.addSearch(
-        "CD4RESULT", EptsReportUtils.map(this.findPatientsWhoHaveCD4Results(), mappings));
+        "CD4RESULT", Mapped.mapStraightThrough(this.findPatientsWhoHaveCD4Results()));
 
     definition.setCompositionString("ART-RESTART and CD4RESULT");
 
@@ -663,19 +628,14 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-
     definition.addSearch(
         "ART-RESTART",
-        EptsReportUtils.map(
-            this.findPatientsWhoReinitiatedARTTreatmentAndHaveCD4CountAndSevereImmunoSuppression(),
-            mappings));
+        Mapped.mapStraightThrough(
+            this
+                .findPatientsWhoReinitiatedARTTreatmentAndHaveCD4CountAndSevereImmunoSuppression()));
 
     definition.addSearch(
-        "TBLAM",
-        EptsReportUtils.map(
-            this.findPatientsWhoHaveTBLAMResults(),
-            "endDate=${endDate-2m+1d},location=${location}"));
+        "TBLAM", Mapped.mapStraightThrough(this.findPatientsWhoHaveTBLAMResults()));
     definition.setCompositionString("((ART-RESTART and TBLAM");
 
     return definition;
@@ -727,7 +687,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
         "PREGNANT",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "Women Who are Pregnant ande have CD4 Count",
+                "Women Who are Pregnant and have CD4 Count",
                 EptsQuerysUtils.loadQuery(
                     TB7AdvancedDiseaseQueries.QUERY.FIND_PREGNANTS_WITH_COUNT_CD4)),
             "startDate=${endDate-10m+1d},endDate=${endDate-1m},location=${location}"));
@@ -756,13 +716,12 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
-    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
 
     definition.addSearch(
-        "PREGNANT", EptsReportUtils.map(this.getPatientsWhoArePregnantsWithCountCD4(), mappings));
+        "PREGNANT", Mapped.mapStraightThrough(this.getPatientsWhoArePregnantsWithCountCD4()));
 
     definition.addSearch(
-        "CD4RESULT", EptsReportUtils.map(this.findPatientsWhoHaveCD4Results(), mappings));
+        "CD4RESULT", Mapped.mapStraightThrough(this.findPatientsWhoHaveCD4Results()));
 
     definition.setCompositionString("((PREGNANT and CD4RESULT");
 
@@ -785,10 +744,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
             this.getPatientsWhoArePregnantsWithCountCD4WithSevereImmunoSuppression(), mappings));
 
     definition.addSearch(
-        "TBLAM",
-        EptsReportUtils.map(
-            this.findPatientsWhoHaveTBLAMResults(),
-            "endDate=${endDate-2m+1d},location=${location}"));
+        "TBLAM", Mapped.mapStraightThrough(this.findPatientsWhoHaveTBLAMResults()));
 
     definition.setCompositionString("PREGNANT and TBLAM");
 
@@ -1117,16 +1073,25 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
   @DocumentedDefinition(value = "findPatientsWhoAreDead")
   private CohortDefinition findPatientsWhoHaveCD4Results() {
 
-    final SqlCohortDefinition definition = new SqlCohortDefinition();
-    definition.setName(
-        "clients with a CD4 count showing severe immunosuppression during the inclusion period");
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("clients with CD4 Result");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    definition.setQuery(
-        EptsQuerysUtils.loadQuery(
-            TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION));
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
+    definition.addSearch(
+        "CD4Results",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "Clients with CD4 Results during the inclusion period",
+                EptsQuerysUtils.loadQuery(
+                    TB7AdvancedDiseaseQueries.QUERY.FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION)),
+            mappings));
+
+    definition.setCompositionString("CD4Results");
 
     return definition;
   }
@@ -1134,12 +1099,24 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
   @DocumentedDefinition(value = "findPatientsWhoHaveTBLAMResults")
   private CohortDefinition findPatientsWhoHaveTBLAMResults() {
 
-    final SqlCohortDefinition definition = new SqlCohortDefinition();
-    definition.setName("clients with TBLAM Results");
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("clients with TBLAM Result");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    definition.setQuery(TB7AdvancedDiseaseQueries.QUERY.findPatientsWithTBLAMResults);
+    final String mappings = "endDate=${endDate-2m+1d},location=${location}";
+
+    definition.addSearch(
+        "TBLAM-RESULTS",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "Clients with TBLAM Results By the end of  Report Generation Date",
+                TB7AdvancedDiseaseQueries.QUERY.findPatientsWithTBLAMResults),
+            mappings));
+
+    definition.setCompositionString("TBLAM-RESULTS");
 
     return definition;
   }
