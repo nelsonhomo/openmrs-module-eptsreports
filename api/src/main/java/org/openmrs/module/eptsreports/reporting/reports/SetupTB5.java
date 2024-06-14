@@ -6,10 +6,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.Location;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.ListPatientsCurrentlyARWithoutTBScreeningDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
+import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
+import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.ReportingException;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
@@ -28,6 +31,8 @@ public class SetupTB5 extends EptsDataExportManager {
   @Autowired private SismaCodeDataSet sismaCodeDataSet;
 
   @Autowired private DatimCodeDataSet datimCodeDataSet;
+
+  @Autowired private GenericCohortQueries genericCohortQueries;
 
   @Override
   public String getExcelDesignUuid() {
@@ -77,6 +82,12 @@ public class SetupTB5 extends EptsDataExportManager {
     rd.addDataSetDefinition(
         "SC",
         Mapped.mapStraightThrough(this.sismaCodeDataSet.constructDataset(this.getParameters())));
+
+    rd.setBaseCohortDefinition(
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "baseCohortQuery", BaseQueries.getBaseCohortQuery()),
+            "endDate=${endDate},location=${location}"));
 
     return rd;
   }
