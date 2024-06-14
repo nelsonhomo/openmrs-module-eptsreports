@@ -491,13 +491,13 @@ select coorte12meses_final.*,
 										and date_enrolled  between (:endDate - interval 6 month) and :endDate
 								union
 		
-								select  p.patient_id,e.encounter_datetime data_inicio                                                           
+								select  p.patient_id, o.obs_datetime data_inicio                                                           
 								from    patient p                                                                                                   
 									  inner join encounter e on p.patient_id=e.patient_id                                                         
 									  inner join obs o on o.encounter_id=e.encounter_id                                                           
 								where e.voided=0 and o.voided=0 and p.voided=0 and                                                                
 									  e.encounter_type=6 and o.concept_id=1268 and o.value_coded=1256  and e.location_id= :location  
-									  and e.encounter_datetime between (:endDate - interval 6 month) and :endDate
+									  and o.obs_datetime between (:endDate - interval 6 month) and :endDate
 								union
 								
 								select  p.patient_id,e.encounter_datetime data_inicio                                                           
@@ -852,13 +852,13 @@ select coorte12meses_final.*,
 							   group by p.patient_id
 						union
 		
-						select  p.patient_id, max(e.encounter_datetime) data_inicio                                                           
+						select  p.patient_id, max(o.obs_datetime) data_inicio                                                           
 						from    patient p                                                                                                   
 							  inner join encounter e on p.patient_id=e.patient_id                                                         
 							  inner join obs o on o.encounter_id=e.encounter_id                                                           
 						where e.voided=0 and o.voided=0 and p.voided=0 and                                                                
 							  e.encounter_type=6 and o.concept_id=1268 and o.value_coded=1256  and e.location_id= :location  
-							  and e.encounter_datetime <= :endDate
+							  and o.obs_datetime <= :endDate
 							  group by p.patient_id
 						union
 						
@@ -952,13 +952,13 @@ select coorte12meses_final.*,
 							   group by p.patient_id
 						union
 		
-						select  p.patient_id, max(e.encounter_datetime) data_inicio                                                           
+						select  p.patient_id, max(o.obs_datetime) data_inicio                                                           
 						from    patient p                                                                                                   
 							  inner join encounter e on p.patient_id=e.patient_id                                                         
 							  inner join obs o on o.encounter_id=e.encounter_id                                                           
 						where e.voided=0 and o.voided=0 and p.voided=0 and                                                                
 							  e.encounter_type=6 and o.concept_id=1268 and o.value_coded=1256  and e.location_id= :location  
-							  and e.encounter_datetime <= :endDate
+							  and o.obs_datetime <= :endDate
 							  group by p.patient_id
 						union
 		
