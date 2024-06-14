@@ -1037,7 +1037,6 @@
 				              and e.location_id=:location 
 				              and o.concept_id=165174  
 				              and o.voided=0 
-				              and p.patient_id=409
 				              and grupo.concept_id=165323  
 				              and grupo.voided=0 
 				              and obsEstado.concept_id=165322  
