@@ -1154,7 +1154,7 @@ public interface MQCategory15QueriesInterface {
             + "            ) cv on f.patient_id=cv.patient_id "
             + "            inner join encounter e on e.patient_id=final.patient_id "
             + "            inner join obs o on o.encounter_id=e.encounter_id "
-            + "            WHERE  e.encounter_type=6 and o.concept_id=23722 and e.voided=0 and o.voided=0 "
+            + "            WHERE e.encounter_type=6 and o.concept_id=23722 and e.voided=0 and o.voided=0 and o.value_coded=856 "
             + "            and e.encounter_datetime>final.encounter_datetime_pedido_1 "
             + "            and e.encounter_datetime<=:endRevisionDate "
             + "            and final.encounter_datetime_pedido_1>=f.data_mdc "
