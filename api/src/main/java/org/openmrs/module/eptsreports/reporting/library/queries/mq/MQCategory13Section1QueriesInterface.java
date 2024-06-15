@@ -552,6 +552,7 @@ public interface MQCategory13Section1QueriesInterface {
             + "inner join obs o on o.encounter_id=e.encounter_id "
             + "where e.encounter_type=6 and o.concept_id=1268 and o.value_coded in (1256,1257) and o.voided = 0 "
             + "and e.location_id=:location and e.voided=0 and p.voided=0 and o.obs_datetime between :startInclusionDate and :endInclusionDate "
+            + "and e.encounter_datetime between :startInclusionDate and :endInclusionDate "
             + "group by p.patient_id "
             + ") maxTb group by maxTb.patient_id "
             + ") finalTB ";

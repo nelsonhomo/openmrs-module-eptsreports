@@ -273,20 +273,13 @@ public class MQCategory13P2CohortQueries {
             this.mQCohortQueries.findPatientsWhoAreBreastfeedingInclusionDateRF09(), mappings));
 
     definition.addSearch(
-        "TRANSFERED-IN",
-        EptsReportUtils.map(
-            this.mQCohortQueries
-                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
-            mappings));
-
-    definition.addSearch(
         "TRANSFERED-OUT",
         EptsReportUtils.map(
             this.mqCategory13P3CohortQueries.findPatientsWhoTransferedOutRF07Category7(),
             mappings));
 
     definition.setCompositionString(
-        "((START-ART AND PREGNANT AND B3 AND (K OR M)) NOT (BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)) OR (B2 AND B4 AND (L OR N)) ");
+        "((START-ART AND PREGNANT AND B3 AND (K OR M)) NOT (BREASTFEEDING OR TRANSFERED-OUT)) OR (B2 AND B4 AND (L OR N)) ");
 
     return definition;
   }
