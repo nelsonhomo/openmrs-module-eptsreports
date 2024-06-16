@@ -78,7 +78,7 @@
 			              and  o.concept_id in(1695,730) 
 			              and e.encounter_type=6 
 			              and e.location_id=:location 
-			              and o.obs_datetime <=CURDATE()
+			              and o.obs_datetime BETWEEN :startDate and CURDATE()
 			            )cd4 on cd4.patient_id=tx_new.patient_id
 			            )C1 
 			           where (C1.art_start_date BETWEEN :startDate AND :endDate) and (C1.minStateDate is null and C1.value_datetime is null and C1.data_cd4 is null)
@@ -122,25 +122,25 @@
 			           )C2 on C2.patient_id=p.person_id
 			           left join
 			           (
-			            select C3.patient_id, 3 criteria from 
+			          select C3.patient_id, 3 criteria from 
 			          (
 			          select ultimoCV.patient_id,ultimoCV.data_resultado,ultimoCV.resultado,max(cvAnterior.data_resultado) data_resultado_anterior,o.value_numeric resultado_anterior 
 			          from (
-			           select cv.patient_id,max(cv.data_resultado) data_resultado ,cv.resultado
+			           select cv.patient_id,cv.data_resultado data_resultado, o.value_numeric resultado
 			            from (
-			                  select p.patient_id,o.obs_datetime data_resultado, o.value_numeric as resultado
+			                  select p.patient_id,max(e.encounter_datetime) data_resultado
 			                  from patient p   
 			                  inner join encounter e on p.patient_id = e.patient_id   
-			                  inner join obs o on o.encounter_id = e.encounter_id   
 			                  where p.voided = 0 
 			                  and e.voided = 0  
-			                  and o.voided = 0
-			                  and  o.concept_id=856
-			                  and  o.obs_datetime<=date_sub(:endDate, interval 6 month)
+			                  and e.encounter_datetime <=date_sub(:endDate, interval 6 month)
 			                  and e.encounter_type=6 
 			                  and e.location_id=:location 
+			                  group by p.patient_id
 			                  )cv 
-			                  WHERE cv.resultado>1000
+			                  inner join encounter e on e.patient_id=cv.patient_id
+			                  inner join obs o on o.encounter_id=e.encounter_id
+			                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id=856 and o.obs_datetime=cv.data_resultado and o.value_numeric>1000
 			                  group by cv.patient_id
 			                 )ultimoCV
 			                 left join 
@@ -164,20 +164,25 @@
 			                 )C3
 			                 left join
 			                (
-			                 select cv.patient_id,max(cv.data_resultado) data_resultado,cv.resultado,cd4.data_cd4,cd4.encounter_id
-			              from (
-			                    select p.patient_id,o.obs_datetime data_resultado, o.value_numeric as resultado
-			                    from patient p   
-			                    inner join encounter e on p.patient_id = e.patient_id   
-			                    inner join obs o on o.encounter_id = e.encounter_id   
-			                    where p.voided = 0 
-			                    and e.voided = 0  
-			                    and o.voided = 0
-			                    and  o.concept_id=856
-			                    and  o.obs_datetime<=date_sub(:endDate, interval 6 month)
-			                    and e.encounter_type=6 
-			                    and e.location_id=:location 
-			                    )cv 
+			 		        select cv.*,cd4.data_cd4,cd4.encounter_id  
+				               from (
+				                 select cv.patient_id,cv.data_resultado data_resultado, o.value_numeric resultado
+					            from (
+					                  select p.patient_id,max(e.encounter_datetime) data_resultado
+					                  from patient p   
+					                  inner join encounter e on p.patient_id = e.patient_id   
+					                  where p.voided = 0 
+					                  and e.voided = 0  
+					                  and e.encounter_datetime <=date_sub(:endDate, interval 6 month)
+					                  and e.encounter_type=6 
+					                  and e.location_id=:location 
+					                  group by p.patient_id
+					                  )cv 
+					                  inner join encounter e on e.patient_id=cv.patient_id
+					                  inner join obs o on o.encounter_id=e.encounter_id
+					                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id=856 and o.obs_datetime=cv.data_resultado and o.value_numeric>1000
+					                  group by cv.patient_id
+					                  )cv
 			                    left join 
 			                    (
 			                    select p.patient_id,o.obs_datetime data_cd4,e.encounter_id
@@ -307,7 +312,7 @@
 			                  select CD4Absuluto.patient_id,CD4Absuluto.data_cd4,CD4Absuluto.cd4
 			                  from 
 			                  ( 
-			                   select p.patient_id, min(e.encounter_datetime) data_cd4,o.value_numeric cd4
+			                   select p.patient_id, max(e.encounter_datetime) data_cd4,o.value_numeric cd4
 			                   from patient p 
 			                   inner join encounter e on p.patient_id=e.patient_id  
 			                   inner join obs  o on e.encounter_id=o.encounter_id 
@@ -324,7 +329,7 @@
 			                  select CD4Percentual.patient_id,CD4Percentual.data_cd4,CD4Percentual.cd4
 			                  from 
 			                  ( 
-			                   select p.patient_id, min(e.encounter_datetime) data_cd4,o.value_numeric cd4
+			                   select p.patient_id, max(e.encounter_datetime) data_cd4,o.value_numeric cd4
 			                   from patient p 
 			                   inner join encounter e on p.patient_id=e.patient_id  
 			                   inner join obs  o on e.encounter_id=o.encounter_id 
@@ -345,7 +350,7 @@
 			                    select CD4Absuluto.patient_id,CD4Absuluto.data_cd4,CD4Absuluto.cd4
 			                    from 
 			                    ( 
-			                     select p.patient_id, min(e.encounter_datetime) data_cd4,o.value_numeric cd4
+			                     select p.patient_id, max(e.encounter_datetime) data_cd4,o.value_numeric cd4
 			                     from patient p 
 			                     inner join encounter e on p.patient_id=e.patient_id  
 			                     inner join obs  o on e.encounter_id=o.encounter_id 
@@ -362,7 +367,7 @@
 			                    select CD4Percentual.patient_id,CD4Percentual.data_cd4,CD4Percentual.cd4
 			                    from 
 			                    ( 
-			                     select p.patient_id, min(e.encounter_datetime) data_cd4,o.value_numeric cd4
+			                     select p.patient_id, max(e.encounter_datetime) data_cd4,o.value_numeric cd4
 			                     from patient p 
 			                     inner join encounter e on p.patient_id=e.patient_id  
 			                     inner join obs  o on e.encounter_id=o.encounter_id 
@@ -391,7 +396,7 @@
 			                      )cd4 on cd4.patient_id=final.patient_id
 			                      where cd4.data_cd4 BETWEEN date_add(final.data_cd4, interval 1 day) and CURDATE()
 			                   )exclusion on exclusion.patient_id=C5.patient_id
-			                   where exclusion.patient_id is null
+			                   where exclusion.patient_id is null 
 			           )C5 on C5.patient_id=p.person_id
 			           left join
 			           (
