@@ -120,7 +120,7 @@
 			              and  o.concept_id in(1695,730) 
 			              and e.encounter_type=6 
 			              and e.location_id=:location 
-			              and o.obs_datetime <=CURDATE()
+			              and o.obs_datetime  BETWEEN :startDate and CURDATE()
 			            )cd4 on cd4.patient_id=tx_new.patient_id
 			            )C1 
 			           where (C1.art_start_date BETWEEN :startDate AND :endDate) and (C1.minStateDate is null and C1.value_datetime is null and C1.data_cd4 is null)
