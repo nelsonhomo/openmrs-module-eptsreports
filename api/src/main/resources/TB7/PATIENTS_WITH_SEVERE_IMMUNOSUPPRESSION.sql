@@ -1,7 +1,7 @@
 	select max_cd4.patient_id 
 	from(
 	
-		select distinct max_cd4.patient_id 
+		select max_cd4.patient_id, max_cd4.patient_id.max_data_cd4 
 		from( 
 			
 			select p.patient_id,max(o.obs_datetime) max_data_cd4  
@@ -9,7 +9,7 @@
 				inner join encounter e on p.patient_id=e.patient_id 
 				inner join obs o on e.encounter_id=o.encounter_id 
 			where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,53,90) 
-				and o.obs_datetime between :startDate and :endDate and e.location_id=:location 
+				and o.obs_datetime <= date_add(:endDate, interval  33 day) and e.location_id=:location 
 				group by p.patient_id 
 		)max_cd4 
 			inner join person per on per.person_id=max_cd4.patient_id 
@@ -18,7 +18,7 @@
 	
 		union
 	
-		select distinct max_cd4.patient_id 
+		select distinct max_cd4.patient_id, max_cd4.patient_id.max_data_cd4 
 		from( 
 			
 			select p.patient_id,max(o.obs_datetime) max_data_cd4  
@@ -26,7 +26,7 @@
 				inner join encounter e on p.patient_id=e.patient_id 
 				inner join obs o on e.encounter_id=o.encounter_id 
 			where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 165515 and  e.encounter_type in (6,51,13,53,90) 
-				and o.obs_datetime between :startDate and :endDate and e.location_id=:location 
+				and o.obs_datetime <= date_add(:endDate, interval  33 day) and e.location_id=:location 
 				group by p.patient_id 
 		)max_cd4 
 			inner join person per on per.person_id=max_cd4.patient_id 
@@ -35,7 +35,7 @@
 
 		union
 
-		select distinct max_cd4.patient_id 
+		select distinct max_cd4.patient_id, max_cd4.patient_id.max_data_cd4 
 		from( 
 			
 			select p.patient_id,max(o.obs_datetime) max_data_cd4  
@@ -43,7 +43,7 @@
 				inner join encounter e on p.patient_id=e.patient_id 
 				inner join obs o on e.encounter_id=o.encounter_id 
 			where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 165519 and  e.encounter_type in (6,51,13,53,90) 
-				and o.obs_datetime between :startDate and :endDate and e.location_id=:location 
+				and o.obs_datetime <= date_add(:endDate, interval  33 day) and e.location_id=:location 
 				group by p.patient_id 
 		)max_cd4 
 			inner join person per on per.person_id=max_cd4.patient_id 
@@ -53,7 +53,7 @@
 
 	union
 
-	select distinct max_cd4.patient_id 
+	select distinct max_cd4.patient_id, max_cd4.patient_id.max_data_cd4 
 	from( 
 		
 		select p.patient_id,max(o.obs_datetime) max_data_cd4  
@@ -61,7 +61,7 @@
 			inner join encounter e on p.patient_id=e.patient_id 
 			inner join obs o on e.encounter_id=o.encounter_id 
 		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,53,90) 
-			and o.obs_datetime between :startDate and :endDate and e.location_id=:location 
+			and o.obs_datetime <= date_add(:endDate, interval  33 day) and e.location_id=:location 
 			group by p.patient_id 
 	)max_cd4 
 		inner join person per on per.person_id=max_cd4.patient_id 
@@ -70,7 +70,7 @@
 
 	union
 
-	select distinct max_cd4.patient_id 
+	select distinct max_cd4.patient_id, max_cd4.patient_id.max_data_cd4 
 	from( 
 		
 		select p.patient_id,max(o.obs_datetime) max_data_cd4  
@@ -78,7 +78,7 @@
 			inner join encounter e on p.patient_id=e.patient_id 
 			inner join obs o on e.encounter_id=o.encounter_id 
 		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,53,90) 
-			and o.obs_datetime between :startDate and :endDate and e.location_id=:location 
+			and o.obs_datetime <= date_add(:endDate, interval  33 day) and e.location_id=:location 
 			group by p.patient_id 
 	)max_cd4 
 		inner join person per on per.person_id=max_cd4.patient_id 

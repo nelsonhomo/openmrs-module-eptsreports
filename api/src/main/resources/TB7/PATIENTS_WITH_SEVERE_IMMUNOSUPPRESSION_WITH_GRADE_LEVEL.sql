@@ -11,7 +11,7 @@ from(
 		where p.voided=0 and  e.voided=0 and o.voided=0                                                                                                                                                                             
 		and e.encounter_type = 51 and o.concept_id=23951 and o.value_coded = 703                                                                                                                                                    
 		   and nivelPositividade.value_coded = %s                                                                                                                                                                                  
-		   and e.location_id=  :location and e.encounter_datetime between   :startDate and   :endDate                                                                                                                              
+		   and e.location_id=  :location and e.encounter_datetime between   :startDate and date_add(:endDate, interval 33 day)                                                                                                                              
 		                                                                                                                                                                                                                           
 		union                                                                                                                                                                                                                       
 		                                                                                                                                                                                                                           
@@ -24,7 +24,7 @@ from(
 		where p.voided=0 and  e.voided=0 and o.voided=0                                                                                                                                                                             
 		and e.encounter_type in(6, 13) and o.concept_id=23951 and o.value_coded = 703                                                                                                                                               
 		 and nivelPositividade.value_coded = %s                                                                                                                                                                                    
-		 and e.location_id=  :location and e.encounter_datetime between   :startDate and   :endDate                                                                                                                                
+		 and e.location_id=  :location and e.encounter_datetime between   :startDate and  date_add(:endDate, interval 33 day)                                                                                                                                
 		                                                                                                                                                                                                                           
 		union                                                                                                                                                                                                                       
 		                                                                                                                                                                                                                           
@@ -38,7 +38,7 @@ from(
 		and e.encounter_type = 90 and o.concept_id=23951 and o.value_coded = 703                                                                                                                                                    
 		   and tbLamGrupo.concept_id = 165391 and o.obs_group_id = tbLamGrupo.obs_id                                                                                                                                               
 		 and nivelPositividade.value_coded = %s                                                                                                                                                                                    
-	   and e.location_id=  :location and e.encounter_datetime between   :startDate and   :endDate                                                                                                                              
+	   and e.location_id=  :location and e.encounter_datetime between   :startDate and  date_add(:endDate, interval 33 day)                                                                                                                              
 	) grade_level                                                                                                                                                                                                                 
 	left join(                                                                                                                                                                                                                    
 	                                                                                                                                                                                                                           
@@ -50,7 +50,7 @@ from(
 		where p.voided=0 and  e.voided=0 and o.voided=0                                                                                                                                                                             
 		and e.encounter_type = 51 and o.concept_id=23951 and o.value_coded = 703                                                                                                                                                    
 		   and nivelPositividade.value_coded in (%s)                                                                                                                                                                               
-		   and e.location_id=  :location and e.encounter_datetime between   :startDate and   :endDate                                                                                                                              
+		   and e.location_id=  :location and e.encounter_datetime between   :startDate and  date_add(:endDate, interval 33 day)                                                                                                                              
 		                                                                                                                                                                                                                           
 		union                                                                                                                                                                                                                       
 		                                                                                                                                                                                                                           
@@ -63,7 +63,7 @@ from(
 		where p.voided=0 and  e.voided=0 and o.voided=0                                                                                                                                                                             
 		and e.encounter_type in(6, 13) and o.concept_id=23951 and o.value_coded = 703                                                                                                                                               
 		 and nivelPositividade.value_coded in (%s)                                                                                                                                                                                 
-		 and e.location_id=  :location and e.encounter_datetime between :startDate and   :endDate                                                                                                                                
+		 and e.location_id=  :location and e.encounter_datetime between :startDate and  date_add(:endDate, interval 33 day)                                                                                                                                
 		                                                                                                                                                                                                                           
 		union                                                                                                                                                                                                                       
 		                                                                                                                                                                                                                           
@@ -77,7 +77,7 @@ from(
 		and e.encounter_type = 90 and o.concept_id=23951 and o.value_coded = 703                                                                                                                                                    
 		   and tbLamGrupo.concept_id = 165391 and o.obs_group_id = tbLamGrupo.obs_id                                                                                                                                               
 		 and nivelPositividade.value_coded in (%s)                                                                                                                                                                                 
-		   and e.location_id=  :location and e.encounter_datetime between   :startDate and   :endDate                                                                                                                              
+		   and e.location_id=  :location and e.encounter_datetime between   :startDate and   date_add(:endDate, interval 33 day)                                                                                                                              
 	) exclusion on grade_level.patient_id = exclusion.patient_id                                                                                                                                                                  
 	where exclusion.patient_id is null
 ) grade_level 
@@ -94,7 +94,7 @@ left join (
 				inner join encounter e on p.patient_id=e.patient_id 
 				inner join obs o on e.encounter_id=o.encounter_id 
 			where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,53,90) 
-				and o.obs_datetime between :startDate and :endDate and e.location_id=:location 
+				and o.obs_datetime between :startDate and date_add(:endDate, interval 33 day) and e.location_id=:location 
 				group by p.patient_id 
 		)max_cd4 
 			inner join person per on per.person_id=max_cd4.patient_id 
@@ -111,7 +111,7 @@ left join (
 				inner join encounter e on p.patient_id=e.patient_id 
 				inner join obs o on e.encounter_id=o.encounter_id 
 			where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 165515 and  e.encounter_type in (6,51,13,53,90) 
-				and o.obs_datetime between :startDate and :endDate and e.location_id=:location 
+				and o.obs_datetime between :startDate and date_add(:endDate, interval 33 day) and e.location_id=:location 
 				group by p.patient_id 
 		)max_cd4 
 			inner join person per on per.person_id=max_cd4.patient_id 
@@ -128,7 +128,7 @@ left join (
 				inner join encounter e on p.patient_id=e.patient_id 
 				inner join obs o on e.encounter_id=o.encounter_id 
 			where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 165519 and  e.encounter_type in (6,51,13,53,90) 
-				and o.obs_datetime between :startDate and :endDate and e.location_id=:location 
+				and o.obs_datetime between :startDate and date_add(:endDate, interval 33 day) and e.location_id=:location 
 				group by p.patient_id 
 		)max_cd4 
 			inner join person per on per.person_id=max_cd4.patient_id 
@@ -146,7 +146,7 @@ left join (
 			inner join encounter e on p.patient_id=e.patient_id 
 			inner join obs o on e.encounter_id=o.encounter_id 
 		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,53,90) 
-			and o.obs_datetime between :startDate and :endDate and e.location_id=:location 
+			and o.obs_datetime between :startDate and date_add(:endDate, interval 33 day) and e.location_id=:location 
 			group by p.patient_id 
 	)max_cd4 
 		inner join person per on per.person_id=max_cd4.patient_id 
@@ -163,7 +163,7 @@ left join (
 			inner join encounter e on p.patient_id=e.patient_id 
 			inner join obs o on e.encounter_id=o.encounter_id 
 		where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,53,90) 
-			and o.obs_datetime between :startDate and :endDate and e.location_id=:location 
+			and o.obs_datetime between :startDate and date_add(:endDate, interval 33 day) and e.location_id=:location 
 			group by p.patient_id 
 	)max_cd4 
 		inner join person per on per.person_id=max_cd4.patient_id 

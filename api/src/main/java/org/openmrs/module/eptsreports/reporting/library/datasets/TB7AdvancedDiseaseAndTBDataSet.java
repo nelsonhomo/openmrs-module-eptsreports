@@ -106,14 +106,6 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
                     .getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicator4(),
                 mappings));
 
-    final CohortIndicator tb7ImmunoCD4WithTBLam =
-        this.eptsGeneralIndicator.getIndicator(
-            "TB7",
-            EptsReportUtils.map(
-                this.tb7AdvancedDiseaseAndTBCohortQueries
-                    .getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMResults(),
-                mappings));
-
     final CohortIndicator tb7ImmunoCD4WithTBLamPositiveResults =
         this.eptsGeneralIndicator.getIndicator(
             "TB7",
@@ -325,37 +317,37 @@ public class TB7AdvancedDiseaseAndTBDataSet extends BaseDataSet {
     dataSetDefinition.addColumn(
         "CASCADE2-TI2",
         "Number of clients with CD4 count showing severe immunosuppression and who have a TB LAM result during the inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month))",
-        EptsReportUtils.map(tb7ImmunoCD4WithTBLam, mappings),
+        EptsReportUtils.map(tb7Indicator4, mappings),
         "");
 
     dataSetDefinition.addColumn(
         "CASCADE2-TI2-GRADE4",
         "Number of clients with CD4 count showing severe immunosuppression and who have a TB LAM result during the inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) - grade 4+",
-        EptsReportUtils.map(tb7ImmunoCD4WithTBLam, mappings),
+        EptsReportUtils.map(tb7Indicator4, mappings),
         "tblam-grade-level=four");
 
     dataSetDefinition.addColumn(
         "CASCADE2-TI2-GRADE3",
         "Number of clients with CD4 count showing severe immunosuppression and who have a TB LAM result during the inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) - grade 3+",
-        EptsReportUtils.map(tb7ImmunoCD4WithTBLam, mappings),
+        EptsReportUtils.map(tb7Indicator4, mappings),
         "tblam-grade-level=three");
 
     dataSetDefinition.addColumn(
         "CASCADE2-TI2-GRADE2",
         "Number of clients with CD4 count showing severe immunosuppression and who have a TB LAM result during the inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) - grade 2+",
-        EptsReportUtils.map(tb7ImmunoCD4WithTBLam, mappings),
+        EptsReportUtils.map(tb7Indicator4, mappings),
         "tblam-grade-level=two");
 
     dataSetDefinition.addColumn(
         "CASCADE2-TI2-GRADE1",
         "Number of clients with CD4 count showing severe immunosuppression and who have a TB LAM result during the inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) - grade 1+",
-        EptsReportUtils.map(tb7ImmunoCD4WithTBLam, mappings),
+        EptsReportUtils.map(tb7Indicator4, mappings),
         "tblam-grade-level=one");
 
     dataSetDefinition.addColumn(
         "CASCADE2-TI2-GRADENONE",
         "Number of clients with CD4 count showing severe immunosuppression and who have a TB LAM result during the inclusion period (between (end date - 2 months + 1 day) and (end date - 1 month)) - grade not reported",
-        EptsReportUtils.map(tb7ImmunoCD4WithTBLam, mappings),
+        EptsReportUtils.map(tb7Indicator4, mappings),
         "tblam-grade-level=no-level");
 
     dataSetDefinition.addColumn(
