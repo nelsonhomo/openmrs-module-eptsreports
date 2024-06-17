@@ -6,10 +6,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import org.openmrs.Location;
+import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
-import org.openmrs.module.eptsreports.reporting.library.datasets.ListPatientsCurrentlyARTNoTBScreeningDataSet;
+import org.openmrs.module.eptsreports.reporting.library.datasets.ListPatientsCurrentlyARWithoutTBScreeningDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
+import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
+import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.ReportingException;
 import org.openmrs.module.reporting.evaluation.parameter.Mapped;
 import org.openmrs.module.reporting.evaluation.parameter.Parameter;
@@ -19,14 +22,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SetupListPatientsCurrentlyARTNoTBScreening extends EptsDataExportManager {
+public class SetupTB5 extends EptsDataExportManager {
 
   @Autowired
-  private ListPatientsCurrentlyARTNoTBScreeningDataSet listPatientsCurrentlyARTNoTBScreeningDataSet;
+  private ListPatientsCurrentlyARWithoutTBScreeningDataSet
+      patientsCurrentlyARWithoutTBScreeningDataSet;
 
   @Autowired private SismaCodeDataSet sismaCodeDataSet;
 
   @Autowired private DatimCodeDataSet datimCodeDataSet;
+
+  @Autowired private GenericCohortQueries genericCohortQueries;
 
   @Override
   public String getExcelDesignUuid() {
@@ -60,11 +66,14 @@ public class SetupListPatientsCurrentlyARTNoTBScreening extends EptsDataExportMa
     rd.addDataSetDefinition(
         "TB5",
         Mapped.mapStraightThrough(
-            listPatientsCurrentlyARTNoTBScreeningDataSet.constructDataset(this.getParameters())));
+            this.patientsCurrentlyARWithoutTBScreeningDataSet.getPatientsOnArtWithoutTBScreenedList(
+                this.getParameters())));
+
     rd.addDataSetDefinition(
         "RG",
         Mapped.mapStraightThrough(
-            this.listPatientsCurrentlyARTNoTBScreeningDataSet.getTotalPatientsWhoOnTB5()));
+            this.patientsCurrentlyARWithoutTBScreeningDataSet.getTotalPatientsWhoOnTB5(
+                this.getParameters())));
 
     rd.addDataSetDefinition(
         "D",
@@ -73,6 +82,12 @@ public class SetupListPatientsCurrentlyARTNoTBScreening extends EptsDataExportMa
     rd.addDataSetDefinition(
         "SC",
         Mapped.mapStraightThrough(this.sismaCodeDataSet.constructDataset(this.getParameters())));
+
+    rd.setBaseCohortDefinition(
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "baseCohortQuery", BaseQueries.getBaseCohortQuery()),
+            "endDate=${endDate},location=${location}"));
 
     return rd;
   }
@@ -89,7 +104,7 @@ public class SetupListPatientsCurrentlyARTNoTBScreening extends EptsDataExportMa
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "Template_List_Patients_Currently_ART_No_TB_Screening.xls",
+              "TB5_List_Patients_Currently_On_ART_Without_TB_Screening_in_last_6_months.xls",
               "TB5: Lista Pacientes Activos em TARV sem Rastreio de TB",
               getExcelDesignUuid(),
               null);
