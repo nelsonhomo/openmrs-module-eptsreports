@@ -99,7 +99,7 @@ public class SetupMisauResumoMensalPrepReport extends EptsPeriodIndicatorDataExp
     reportDefinition.setBaseCohortDefinition(
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "baseCohortQuery", BaseQueries.getBaseCohortQuery()),
+                "baseCohortQuery", BaseQueries.getBaseCohortQueryPrep()),
             "endDate=${endDate},location=${location}"));
 
     return reportDefinition;
