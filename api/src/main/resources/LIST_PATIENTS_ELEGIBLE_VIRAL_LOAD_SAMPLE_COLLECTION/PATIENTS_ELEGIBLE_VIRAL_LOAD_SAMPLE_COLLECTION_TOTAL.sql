@@ -644,6 +644,6 @@
             		inner join person pe on pe.person_id=lactante_real.patient_id and pe.voided=0 and pe.gender='F' 
             		group by lactante_real.patient_id 
             	) gravida on txCurr.patient_id=gravida.patient_id 
-            	where gravida.patient_id is null and timestampdiff(month,inicio_real.data_inicio,:endDate)>= 6 and consultaLevantamento.data_proxima_consulta between :startDate and :endDate
+            	where gravida.patient_id is null and timestampdiff(month,inicio_real.data_inicio,consultaLevantamento.data_proxima_consulta)>= 6 and consultaLevantamento.data_proxima_consulta between :startDate and :endDate
             ) elegivelAColheitaCV 
             group by elegivelAColheitaCV.patient_id
