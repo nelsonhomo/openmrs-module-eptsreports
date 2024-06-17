@@ -1101,5 +1101,5 @@
                           left join person_attribute patOVCEntryDate on patOVCEntryDate.person_id=coorte12meses_final.patient_id and patOVCEntryDate.person_attribute_type_id=50 and patOVCEntryDate.value is not null and patOVCEntryDate.value <> '' and patOVCEntryDate.voided=0 
 			           left join person_attribute patOVCExitDate on patOVCExitDate.person_id=coorte12meses_final.patient_id and patOVCExitDate.person_attribute_type_id=51 and patOVCExitDate.value is not null and patOVCExitDate.value <> '' and patOVCExitDate.voided=0 
 			           left join person_attribute patOVCStatus on patOVCStatus.person_id=coorte12meses_final.patient_id and patOVCStatus.person_attribute_type_id=52 and patOVCStatus.value is not null and patOVCStatus.value <> '' and patOVCStatus.voided=0 
-                         where (data_estado is null or (data_estado is not null and  data_fila > data_estado)) and    datediff(:endDate,data_usar)>=3 and datediff(:endDate,data_usar) between 0 AND 59
+                         where (data_estado is null or (data_estado is not null and  data_fila > data_estado)) and    datediff(:endDate,data_usar)>=3 and datediff(:endDate,data_usar) between :minDelayDays AND :maxDelayDays
                          group by coorte12meses_final.patient_id                                                                          
