@@ -775,7 +775,7 @@ public interface MQQueriesInterface {
                 + " left join obs obsJustificacao on obsJustificacao.encounter_id = e.encounter_id and obsJustificacao.voided = 0 and "
                 + " obsJustificacao.concept_id = 1792 "
                 + " where p.voided = 0 and e.voided = 0 and e.encounter_type = 53 and obsLinha.concept_id = 21187 and obsLinha.voided = 0 and "
-                + " obsLinha.obs_datetime BETWEEN :startInclusionDate and :endInclusionDate and e.location_id = 277 and "
+                + " obsLinha.obs_datetime BETWEEN :startInclusionDate and :endInclusionDate and e.location_id = :location and "
                 + " (obsJustificacao.value_coded is null or (obsJustificacao.value_coded is not null and obsJustificacao.value_coded <> 1982)) "
                 + " group by p.patient_id "
                 + " ) alternativa "
