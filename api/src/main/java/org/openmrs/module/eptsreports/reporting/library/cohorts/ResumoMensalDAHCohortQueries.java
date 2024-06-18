@@ -6,7 +6,6 @@ import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQ
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries.ARTSituation;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries.MCCTreatment;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries.PeriodoAbandono;
-import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TypesOfExams;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -32,7 +31,7 @@ public class ResumoMensalDAHCohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("NumberOfPatientsActiveInDAHWhoAreInTARVByEndOfPreviousMonthIndicator0");
-    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${startDate-1d},endDate=${endDate},location=${location}";
 
     definition.setName("getNumberOfPatientsActiveInDAHWhoAreInTARVByEndOfPreviousMonthIndicator0");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -1645,9 +1644,9 @@ public class ResumoMensalDAHCohortQueries {
 
     final String mappingsAbandonoPeriod2 = "endDate=${startDate-1m-1d},location=${location}";
     final String mappingsPickUpPeriod2 =
-        "startDate=${startDate-1m},endDate=${startDate},location=${location}";
+        "startDate=${startDate-1m},endDate=${startDate-1d},location=${location}";
 
-    final String mappingsAbandonoPeriod3 = "endDate=${startDate},location=${location}";
+    final String mappingsAbandonoPeriod3 = "endDate=${startDate-1d},location=${location}";
     final String mappingsPickUpPeriod3 =
         "startDate=${startDate},endDate=${endDate},location=${location}";
 
@@ -1669,7 +1668,7 @@ public class ResumoMensalDAHCohortQueries {
         "PICKUP",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "PICKUP", ResumoMensalQueries.getPatientsWhoHaveDrugPickup()),
+                "PICKUP", ResumoMensalDAHQueries.getPatientsWhoHaveDrugPickup()),
             mappingsPickUpPeriod1));
 
     // Suspenso e reinicio segundo periodo
@@ -1689,7 +1688,7 @@ public class ResumoMensalDAHCohortQueries {
         "PICKUP-PERIOD2",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "PICKUP", ResumoMensalQueries.getPatientsWhoHaveDrugPickup()),
+                "PICKUP", ResumoMensalDAHQueries.getPatientsWhoHaveDrugPickup()),
             mappingsPickUpPeriod2));
 
     // Suspenso e reinicio terceiro periodo
@@ -1708,7 +1707,7 @@ public class ResumoMensalDAHCohortQueries {
         "PICKUP-PERIOD3",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "PICKUP", ResumoMensalQueries.getPatientsWhoHaveDrugPickup()),
+                "PICKUP", ResumoMensalDAHQueries.getPatientsWhoHaveDrugPickup()),
             mappingsPickUpPeriod3));
 
     definition.setCompositionString(
@@ -1731,7 +1730,7 @@ public class ResumoMensalDAHCohortQueries {
     } else if (periodo == PeriodoAbandono.SEGUNDO) {
       mappings = "endDate=${startDate-1m-1d},location=${location}";
     } else if (periodo == PeriodoAbandono.TERCEIRO) {
-      mappings = "endDate=${startDate},location=${location}";
+      mappings = "endDate=${startDate-1d},location=${location}";
     }
 
     definition.addSearch(

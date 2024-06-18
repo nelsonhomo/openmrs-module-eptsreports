@@ -14,7 +14,6 @@ public class MQCategory11CohortQueries {
 
   @Autowired private MQCohortQueries mQCohortQueries;
   @Autowired private MQGenericCohortQueries mQGenericCohortQueries;
-  private final boolean EXCLUDING_BREASTFEEDING = false;
 
   @DocumentedDefinition(
       value =
@@ -61,7 +60,8 @@ public class MQCategory11CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString(
         "(B1 AND B2) NOT (PREGNANT OR BREASTFEEDING OR TRANSFERED-OUT)");
@@ -107,7 +107,8 @@ public class MQCategory11CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString("(B1 AND B2) NOT (PREGNANT  OR TRANSFERED-OUT)");
 
@@ -118,7 +119,8 @@ public class MQCategory11CohortQueries {
       value =
           "findAdultsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATOR")
   public CohortDefinition
-      findPatientsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATOR() {
+      findPatientsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATOR(
+          boolean use14MonthsBeforePeriod) {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
@@ -137,7 +139,7 @@ public class MQCategory11CohortQueries {
         EptsReportUtils.map(
             this.mQGenericCohortQueries
                 .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(
-                    EXCLUDING_BREASTFEEDING),
+                    use14MonthsBeforePeriod),
             mappings));
 
     definition.addSearch(

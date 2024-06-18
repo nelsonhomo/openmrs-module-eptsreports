@@ -622,7 +622,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "E", EptsReportUtils.map(mQCohortQueries.getPatientsWhoDiedEndRevisioDate(), mappings));
@@ -666,7 +667,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "CV", EptsReportUtils.map(this.findPatientsWhoHaveCVOverThan10000Category15(), mappings));
@@ -719,7 +721,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "CV", EptsReportUtils.map(this.findPatientsWhoHaveCVOverThan10000Category15(), mappings));
@@ -767,7 +770,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "CV", EptsReportUtils.map(this.findPatientsWhoHaveCVOverThan10000Category15(), mappings));
@@ -805,7 +809,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "E", EptsReportUtils.map(mQCohortQueries.getPatientsWhoDiedEndRevisioDate(), mappings));
@@ -849,7 +854,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "CV", EptsReportUtils.map(this.findPatientsWhoHaveCVOverThan10000Category15(), mappings));
@@ -903,7 +909,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "CV", EptsReportUtils.map(this.findPatientsWhoHaveCVOverThan10000Category15(), mappings));
@@ -952,7 +959,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "CV", EptsReportUtils.map(this.findPatientsWhoHaveCVOverThan10000Category15(), mappings));
@@ -990,7 +998,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "E", EptsReportUtils.map(mQCohortQueries.getPatientsWhoDiedEndRevisioDate(), mappings));
@@ -1034,7 +1043,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "CV", EptsReportUtils.map(this.findPatientsWhoHaveCVOverThan10000Category15(), mappings));
@@ -1088,7 +1098,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "CV", EptsReportUtils.map(this.findPatientsWhoHaveCVOverThan10000Category15(), mappings));
@@ -1137,7 +1148,8 @@ public class MQCategory15CohortQueries {
         "D", EptsReportUtils.map(findPatientsWhoAreBreastfeedingSpecificForCategory15(), mappings));
 
     definition.addSearch(
-        "F", EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        "F",
+        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.addSearch(
         "CV", EptsReportUtils.map(this.findPatientsWhoHaveCVOverThan10000Category15(), mappings));
@@ -1429,26 +1441,6 @@ public class MQCategory15CohortQueries {
     return definition;
   }
 
-  private CohortDefinition findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44() {
-
-    final SqlCohortDefinition definition = new SqlCohortDefinition();
-
-    definition.setName(
-        String.format("MQ - findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44 "));
-    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
-    definition.addParameter(new Parameter("location", "Location", Location.class));
-
-    String query =
-        MQCategory15QueriesInterface.QUERY
-            .findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44;
-
-    definition.setQuery(query);
-
-    return definition;
-  }
-
   private CohortDefinition findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCRF36() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
@@ -1562,12 +1554,18 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "J",
         EptsReportUtils.map(
-            this.findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44(), mappings));
+            mICategory15CohortQueries.findPatientsWhoAreActiveOnArtAndInAtleastOneDSD(), mappings));
 
     definition.addSearch(
         "TB",
         EptsReportUtils.map(
             this.findPatientsWhoAreInTbTreatmentFor7MonthsPriorEndRevisionPeriod(), mappings));
+
+    definition.addSearch(
+        "FINISHED-TB-TREATMENT",
+        EptsReportUtils.map(
+            this.findPatientsWhoFinishedTBTreatmentLessThan30DayBeforeTheLastClinicalConsultation(),
+            mappings));
 
     definition.addSearch(
         "ADVERSASE-REACTIONS",
@@ -1592,7 +1590,7 @@ public class MQCategory15CohortQueries {
             this.findPatientsWhoReinitiatedTreatmentInTheLastThreeMonths(), mappings));
 
     definition.setCompositionString(
-        "(A AND B1) NOT (C OR D OR F OR G OR J OR TB OR ADVERSASE-REACTIONS OR SARCOMA-KAPOSI OR IIT)");
+        "(A AND B1) NOT (C OR D OR F OR G OR J OR TB OR ADVERSASE-REACTIONS OR SARCOMA-KAPOSI OR IIT OR FINISHED-TB-TREATMENT)");
 
     return definition;
   }
@@ -1655,8 +1653,6 @@ public class MQCategory15CohortQueries {
     final String mappings =
         "startInclusionDate=${endRevisionDate-12m+1d},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
-    final String mappingsMQ = "endRevisionDate=${endRevisionDate},location=${location}";
-
     definition.addSearch(
         "A",
         EptsReportUtils.map(
@@ -1666,7 +1662,7 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "J",
         EptsReportUtils.map(
-            this.findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44(), mappingsMQ));
+            mICategory15CohortQueries.findPatientsWhoAreActiveOnArtAndInAtleastOneDSD(), mappings));
 
     definition.addSearch(
         "H",
@@ -1738,8 +1734,6 @@ public class MQCategory15CohortQueries {
     final String mappings =
         "startInclusionDate=${endRevisionDate-12m+1d},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
-    final String mappingsMQ = "endRevisionDate=${endRevisionDate},location=${location}";
-
     definition.addSearch(
         "A",
         EptsReportUtils.map(
@@ -1749,7 +1743,7 @@ public class MQCategory15CohortQueries {
     definition.addSearch(
         "J",
         EptsReportUtils.map(
-            this.findPatientsWhoHaveLastConsultationOnFichaClinicaAndWhoOnMDCARF44(), mappingsMQ));
+            mICategory15CohortQueries.findPatientsWhoAreActiveOnArtAndInAtleastOneDSD(), mappings));
 
     definition.addSearch(
         "B2",
@@ -1865,6 +1859,29 @@ public class MQCategory15CohortQueries {
     String query =
         MQCategory15QueriesInterface.QUERY
             .findPatientsWhoAreInTbTreatmentFor7MonthsPriorEndRevisionPeriod;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "findPatientsWhoFinishedTBTreatmentLessThan30DayBeforeTheLastClinicalConsultation")
+  public CohortDefinition
+      findPatientsWhoFinishedTBTreatmentLessThan30DayBeforeTheLastClinicalConsultation() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "MQ Category 15 - Get Patients who finished tb treatment less than 30 days before the last clinical consultaion");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory15QueriesInterface.QUERY
+            .findPatientsWhoFinishedTBTreatmentLessThan30DayBeforeTheLastClinicalConsultation;
 
     definition.setQuery(query);
 

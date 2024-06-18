@@ -23,6 +23,7 @@ public class MQCommonsDementions {
 
   public void getMQCommonDementions(
       final CohortIndicatorDataSetDefinition dataSetDefinition, String mappings) {
+
     dataSetDefinition.addDimension("gender", map(eptsCommonDimension.gender(), ""));
 
     dataSetDefinition.addDimension(
@@ -71,5 +72,17 @@ public class MQCommonsDementions {
             this.mQAgeDimensions
                 .getDimensionForPatientsWhoReinitiatedTreatmentInClinicalConsultation(),
             mappings));
+
+    dataSetDefinition.addDimension(
+        "ageOnPresuntiveTB",
+        EptsReportUtils.map(this.mQAgeDimensions.getDimensionAgeOnThePresuntiveTB(), mappings));
+
+    dataSetDefinition.addDimension(
+        "ageOnGeneXpertRequest",
+        EptsReportUtils.map(this.mQAgeDimensions.getDimensionAgeOnGeneXpertRequest(), mappings));
+
+    dataSetDefinition.addDimension(
+        "ageOnTBDiagnostic",
+        EptsReportUtils.map(this.mQAgeDimensions.getDimensionAgeOnTBDiagnostic(), mappings));
   }
 }

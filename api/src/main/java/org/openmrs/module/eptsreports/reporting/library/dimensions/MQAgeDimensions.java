@@ -185,6 +185,25 @@ public class MQAgeDimensions {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findPatientsWhoAreNewlyEnrolledOnART12MonthsAgoOrBreastfeeding")
+  public CohortDefinition findPatientsWhoAreNewlyEnrolledOnART12MonthsAgoOrBreastfeeding(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsWhoAreNewlyEnrolledOnART12MonthsAgoOrBreastfeeding");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY
+            .findPatientsWhoAreNewlyEnrolledOnART12MonthsAgoOrBreastfeeding(age);
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientsWhoAreNewlyEnrolledOnARTByAdulOrChildren")
   public CohortDefinition findPatientsWhoAreNewlyEnrolledOnARTChildren(int age) {
 
@@ -283,6 +302,11 @@ public class MQAgeDimensions {
         "15PlusOrBreastfeeding",
         EptsReportUtils.map(
             this.findPatientsWhoAreNewlyEnrolledOnARTByAdultOrBreastfeeding(15), mappings));
+
+    dimension.addCohortDefinition(
+        "15PlusOnART12mAgoOrBreastfeeding",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreNewlyEnrolledOnART12MonthsAgoOrBreastfeeding(15), mappings));
 
     dimension.addCohortDefinition(
         "15-",
@@ -1185,6 +1209,252 @@ public class MQAgeDimensions {
             this.findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(
                 0, 14),
             mappings));
+
+    return dimension;
+  }
+
+  @DocumentedDefinition(value = "calculateAgeOnPrensutiveTBLessThanParamByAgeRenge")
+  public CohortDefinition calculateAgeOnPrensutiveTBLessThanParamByAgeRenge(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnPrensutiveTBLessThanParamByAgeRenge");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY.calculateAgeOnPrensutiveTBLessThanParamByAgeRenge(age);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "calculateAgeOnPrensutiveBiggerThanParam")
+  public CohortDefinition calculateAgeOnPrensutiveBiggerThanParam(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnPrensutiveBiggerThanParam");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = GenericMQQueryIntarface.QUERY.calculateAgeOnPrensutiveBiggerThanParam(age);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "calculateAgeOnPrensutiveTBByAgeRenge")
+  public CohortDefinition calculateAgeOnPrensutiveTBByAgeRenge(int startAge, int endAge) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnPrensutiveTBByAgeRenge");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY.calculateAgeOnPrensutiveTBByAgeRenge(startAge, endAge);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  public CohortDefinitionDimension getDimensionAgeOnThePresuntiveTB() {
+    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
+
+    dimension.setName("getDimensionAgeOnThePresuntiveTB");
+    dimension.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    dimension.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    dimension.addParameter(new Parameter("location", "Location", Location.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    dimension.addCohortDefinition(
+        "15-",
+        EptsReportUtils.map(this.calculateAgeOnPrensutiveTBLessThanParamByAgeRenge(15), mappings));
+
+    dimension.addCohortDefinition(
+        "15+", EptsReportUtils.map(this.calculateAgeOnPrensutiveBiggerThanParam(15), mappings));
+
+    dimension.addCohortDefinition(
+        "0-14", EptsReportUtils.map(this.calculateAgeOnPrensutiveTBByAgeRenge(0, 14), mappings));
+
+    return dimension;
+  }
+
+  @DocumentedDefinition(value = "calculateAgeOnGeneXpertRequestLessThanParamByAgeRenge")
+  public CohortDefinition calculateAgeOnGeneXpertRequestLessThanParamByAgeRenge(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnGeneXpertRequestLessThanParamByAgeRenge");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY.calculateAgeOnGeneXpertRequestLessThanParamByAgeRenge(age);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "calculateAgeOnGeneXpertRequestBiggerThanParam")
+  public CohortDefinition calculateAgeOnGeneXpertRequestBiggerThanParam(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnGeneXpertRequestBiggerThanParam");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = GenericMQQueryIntarface.QUERY.calculateAgeOnGeneXpertRequestBiggerThanParam(age);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "calculateAgeOnGeneXpertRequestByAgeRange")
+  public CohortDefinition calculateAgeOnGeneXpertRequestByAgeRange(int startAge, int endAge) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnPrensutiveTBByAgeRenge");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY.calculateAgeOnGeneXpertRequestByAgeRange(startAge, endAge);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  public CohortDefinitionDimension getDimensionAgeOnGeneXpertRequest() {
+    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
+
+    dimension.setName("getDimensionAgeOnGeneXpertRequest");
+    dimension.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    dimension.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    dimension.addParameter(new Parameter("location", "Location", Location.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    dimension.addCohortDefinition(
+        "15-",
+        EptsReportUtils.map(
+            this.calculateAgeOnGeneXpertRequestLessThanParamByAgeRenge(15), mappings));
+
+    dimension.addCohortDefinition(
+        "15+",
+        EptsReportUtils.map(this.calculateAgeOnGeneXpertRequestBiggerThanParam(15), mappings));
+
+    dimension.addCohortDefinition(
+        "0-14",
+        EptsReportUtils.map(this.calculateAgeOnGeneXpertRequestByAgeRange(0, 14), mappings));
+
+    return dimension;
+  }
+
+  @DocumentedDefinition(value = "calculateAgeOnTBDiagnosticLessThanParamByAgeRenge")
+  public CohortDefinition calculateAgeOnTBDiagnosticLessThanParamByAgeRenge(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnTBDiagnosticLessThanParamByAgeRenge");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY.calculateAgeOnTBDiagnosticLessThanParamByAgeRenge(age);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "calculateAgeOnTBDiagnosticBiggerThanParam")
+  public CohortDefinition calculateAgeOnTBDiagnosticBiggerThanParam(int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnTBDiagnosticBiggerThanParam");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query = GenericMQQueryIntarface.QUERY.calculateAgeOnTBDiagnosticBiggerThanParam(age);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "calculateAgeOnTBDiagnosticByAgeRange")
+  public CohortDefinition calculateAgeOnTBDiagnosticByAgeRange(int startAge, int endAge) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculateAgeOnTBDiagnosticByAgeRange");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        GenericMQQueryIntarface.QUERY.calculateAgeOnTBDiagnosticByAgeRange(startAge, endAge);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  public CohortDefinitionDimension getDimensionAgeOnTBDiagnostic() {
+    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
+
+    dimension.setName("getDimensionAgeOnGeneXpertRequest");
+    dimension.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    dimension.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    dimension.addParameter(new Parameter("location", "Location", Location.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    dimension.addCohortDefinition(
+        "15-",
+        EptsReportUtils.map(this.calculateAgeOnTBDiagnosticLessThanParamByAgeRenge(15), mappings));
+
+    dimension.addCohortDefinition(
+        "15+", EptsReportUtils.map(this.calculateAgeOnTBDiagnosticBiggerThanParam(15), mappings));
+
+    dimension.addCohortDefinition(
+        "0-14", EptsReportUtils.map(this.calculateAgeOnTBDiagnosticByAgeRange(0, 14), mappings));
 
     return dimension;
   }

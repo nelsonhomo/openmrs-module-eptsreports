@@ -192,7 +192,8 @@ public class MQCategory11P2CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString(
         "(START-ART AND PREGNANT) NOT (BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)");
@@ -239,7 +240,8 @@ public class MQCategory11P2CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString("(B1 AND PREGNANT) NOT (BREASTFEEDING OR TRANSFERED-OUT)");
 
