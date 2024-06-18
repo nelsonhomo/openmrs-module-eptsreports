@@ -36,7 +36,7 @@ public class SetupQualityImprovementReport extends EptsPeriodIndicatorDataExport
 
   @Override
   public String getName() {
-    return "Melhoria de Qualidade - 2023";
+    return "Melhoria de Qualidade - 2024";
   }
 
   @Override
@@ -71,7 +71,7 @@ public class SetupQualityImprovementReport extends EptsPeriodIndicatorDataExport
     reportDefinition.setBaseCohortDefinition(
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "baseCohortQuery", BaseQueries.getBaseCohortQuery()),
+                "baseCohortQuery", BaseQueries.getBaseCohortQueryWithoutPrep()),
             "endDate=${endRevisionDate},location=${location}"));
 
     return reportDefinition;
@@ -85,7 +85,7 @@ public class SetupQualityImprovementReport extends EptsPeriodIndicatorDataExport
           createXlsReportDesign(
               reportDefinition,
               "MQ.xls",
-              "Melhoria de Qualidade - 2023",
+              "Melhoria de Qualidade - 2024",
               getExcelDesignUuid(),
               null);
       Properties props = new Properties();

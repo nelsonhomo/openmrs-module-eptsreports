@@ -153,6 +153,28 @@ public class MQCohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "calculateDefaulteAgeSecondLineByAgeRenge")
+  public CohortDefinition calculateDefaulteAgeSecondLineByAgeRenge(int firstAge, int secondeAge) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQQueriesInterface.QUERY
+            .findAllPatientsWhoHaveTherapheuticLineSecondLineDuringInclusionPeriodCategory13P3B2NEWDenominatorByAgeRenge;
+
+    String finalQuery = String.format(query, firstAge, secondeAge);
+
+    definition.setQuery(finalQuery);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findPatientsWhoAreBreastfeedingInARTInitiation")
   public CohortDefinition findPatientsWhoAreBreastfeedingInARTInitiation() {
 
