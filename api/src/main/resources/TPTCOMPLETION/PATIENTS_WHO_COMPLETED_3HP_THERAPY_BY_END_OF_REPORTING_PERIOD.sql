@@ -104,7 +104,7 @@ select inicio_3HP.patient_id
 			where p.voided = 0 and e.voided = 0  and profilaxia3HP.voided = 0 and estadoProfilaxia.voided = 0  
 				and  profilaxia3HP.concept_id = 23985  and profilaxia3HP.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1267 
 				and e.encounter_type in (6,53) and e.location_id=:location and estadoProfilaxia.obs_datetime <= :endDate
-            ) endTPI group by endTPI.patient_id 
+            ) endTPI  
         
         ) termino_3hp on inicio_3HP.patient_id=termino_3hp.patient_id 
     where termino_3hp.data_final_3hp between inicio_3HP.data_inicio_3HP + interval 86 day  and  inicio_3HP.data_inicio_3HP + interval 365 day

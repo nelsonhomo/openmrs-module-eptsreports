@@ -6,7 +6,6 @@ import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQ
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries.ARTSituation;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries.MCCTreatment;
 import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalDAHQueries.PeriodoAbandono;
-import org.openmrs.module.eptsreports.reporting.library.queries.ResumoMensalQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.TypesOfExams;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -32,7 +31,7 @@ public class ResumoMensalDAHCohortQueries {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("NumberOfPatientsActiveInDAHWhoAreInTARVByEndOfPreviousMonthIndicator0");
-    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappings = "startDate=${startDate-1d},endDate=${endDate},location=${location}";
 
     definition.setName("getNumberOfPatientsActiveInDAHWhoAreInTARVByEndOfPreviousMonthIndicator0");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
@@ -53,6 +52,321 @@ public class ResumoMensalDAHCohortQueries {
     return definition;
   }
 
+  /** RF31 - Utentes Novos Inscritos (Pré-TARV) ou Novos Inícios (TARV) */
+  public CohortDefinition findPatientsNewEnrolledOnPreTarvOrNewEnrolledOnTarvRF31() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("NumberOfPatientsActiveInDAHWhoAreInTARVByEndOfPreviousMonthIndicator0");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappingsMinus2Months =
+        "startDate=${startDate-2m},endDate=${endDate},location=${location}";
+
+    definition.setName("getNumberOfPatientsActiveInDAHWhoAreInTARVByEndOfPreviousMonthIndicator0");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "INICIOTARV",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriod1",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.NEW_ENROLLED)),
+            mappings));
+
+    definition.addSearch(
+        "PRE-TARV",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriod1",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.PRE_TARV)),
+            mappings));
+
+    definition.addSearch(
+        "DAH-WITHOUT-SITTARV",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "findPatientsWithFichaDAHWithoutSituacaoDOTARVMarked",
+                ResumoMensalDAHQueries.findPatientsWithFichaDAHWithoutSituacaoDOTARVMarked()),
+            mappings));
+
+    definition.addSearch(
+        "B1",
+        EptsReportUtils.map(
+            resumoMensalCohortQueries
+                .getPatientsWhoInitiatedTarvAtThisFacilityDuringCurrentMonthB1(),
+            mappingsMinus2Months));
+
+    definition.addSearch(
+        "A2",
+        EptsReportUtils.map(
+            resumoMensalCohortQueries
+                .getPatientsWhoInitiatedPreTarvAtAfacilityDuringCurrentMonthA2(),
+            mappingsMinus2Months));
+
+    definition.setCompositionString(
+        "INICIOTARV OR PRE-TARV OR (DAH-WITHOUT-SITTARV AND (B1 OR A2))");
+
+    return definition;
+  }
+
+  /** RF32 - Utentes Reinícios TARV */
+  public CohortDefinition findPatientsWhoReinitiatedTarvRF32() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWhoReinitiatedTarvRF32");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWhoReinitiatedTarvRF32");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "REINICIOTARV",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsRegisteredAsReinitiatedARTDuringReportPeriod2",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.RESTART)),
+            mappings));
+
+    definition.addSearch(
+        "DAH-WITHOUT-SITTARV",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "findPatientsWithFichaDAHWithoutSituacaoDOTARVMarked",
+                ResumoMensalDAHQueries.findPatientsWithFichaDAHWithoutSituacaoDOTARVMarked()),
+            mappings));
+
+    definition.addSearch("B3", EptsReportUtils.map(this.getSumB3(), mappings));
+
+    definition.setCompositionString("REINICIOTARV OR (DAH-WITHOUT-SITTARV AND B3)");
+
+    return definition;
+  }
+
+  /** RF33 - Utentes Activos TARV */
+  public CohortDefinition findPatientsWhoAreActiveOnTarvRF33() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWhoReinitiatedTarvRF32");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWhoReinitiatedTarvRF32");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "EMTARV",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
+                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.ACTIVE)),
+            mappings));
+
+    definition.addSearch(
+        "B12",
+        EptsReportUtils.map(
+            resumoMensalCohortQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHLastMonthB12(),
+            mappings));
+
+    definition.addSearch(
+        "DAH-WITHOUT-SITTARV",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "findPatientsWithFichaDAHWithoutSituacaoDOTARVMarked",
+                ResumoMensalDAHQueries.findPatientsWithFichaDAHWithoutSituacaoDOTARVMarked()),
+            mappings));
+
+    definition.setCompositionString("EMTARV OR (DAH-WITHOUT-SITTARV AND B12)");
+
+    return definition;
+  }
+
+  /** RF26 - Relatório Desagregação - Novos inícios TARV – Indicadores 10 a 19 */
+  public CohortDefinition findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "RF31",
+        EptsReportUtils.map(
+            this.findPatientsNewEnrolledOnPreTarvOrNewEnrolledOnTarvRF31(), mappings));
+
+    definition.addSearch(
+        "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
+
+    definition.setCompositionString("RF31 NOT PREGNANT");
+
+    return definition;
+  }
+
+  /** RF26.1 - Relatório Desagregação - Novos inícios TARV – Indicadores 8 e 9 */
+  public CohortDefinition findPatientsWhoAreNovosIniciosTarvIndicator8And9RF26_1() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWhoReinitiatedTarvRF32");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+    final String mappingsMinus2Months =
+        "startDate=${startDate-2m},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWhoReinitiatedTarvRF32");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "B1",
+        EptsReportUtils.map(
+            resumoMensalCohortQueries
+                .getPatientsWhoInitiatedTarvAtThisFacilityDuringCurrentMonthB1(),
+            mappingsMinus2Months));
+
+    definition.addSearch(
+        "A2",
+        EptsReportUtils.map(
+            resumoMensalCohortQueries
+                .getPatientsWhoInitiatedPreTarvAtAfacilityDuringCurrentMonthA2(),
+            mappingsMinus2Months));
+
+    definition.addSearch(
+        "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
+
+    definition.setCompositionString("(B1 OR A2) NOT PREGNANT");
+
+    return definition;
+  }
+
+  /** RF27 - Relatório Desagregação - Reinícios TARV - Indicadores 10 a 19 */
+  public CohortDefinition findPatientsWhoAreReiniciosTarvIndicator10Until19RF27() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWhoAreReiniciosTarvIndicator10Until19RF27");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWhoAreReiniciosTarvIndicator10Until19RF27");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "RF32", EptsReportUtils.map(this.findPatientsWhoReinitiatedTarvRF32(), mappings));
+
+    definition.addSearch(
+        "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
+
+    definition.addSearch(
+        "RF26",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
+
+    definition.setCompositionString("RF32 NOT (PREGNANT OR RF26)");
+
+    return definition;
+  }
+
+  /** RF27.1 - Relatório Desagregação - Reinícios TARV - Indicadores 8 e 9 */
+  public CohortDefinition findPatientsWhoAreReiniciosTarvIndicator8And9RF27_1() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWhoArereiniciosTarvIndicator8And9RF27_1");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWhoReinitiatedTarvRF32");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch("B3", EptsReportUtils.map(this.getSumB3(), mappings));
+
+    definition.addSearch(
+        "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
+
+    definition.addSearch(
+        "RF26-1",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreNovosIniciosTarvIndicator8And9RF26_1(), mappings));
+
+    definition.setCompositionString("B3 NOT (PREGNANT OR RF26-1)");
+
+    return definition;
+  }
+
+  /** RF28 - Relatório Desagregação - Activos TARV – Indicadores 10 a 19 */
+  public CohortDefinition findPatientsWhoAreActiveInTarvIndicator10Untill19RF28() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWhoArereiniciosTarvIndicator8And9RF27_1");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWhoReinitiatedTarvRF32");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "RF33", EptsReportUtils.map(this.findPatientsWhoAreActiveOnTarvRF33(), mappings));
+
+    definition.addSearch(
+        "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
+
+    definition.addSearch(
+        "RF27",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreReiniciosTarvIndicator10Until19RF27(), mappings));
+
+    definition.addSearch(
+        "RF26",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
+
+    definition.setCompositionString("RF33 NOT (PREGNANT OR RF27 OR RF26)");
+
+    return definition;
+  }
+
+  /** RF28.1 - Relatório Desagregação - Activos TARV – Indicadores 8 a 9 */
+  public CohortDefinition findPatientsWhoAreActiveInTarvIndicator8And9RF28_1() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWhoArereiniciosTarvIndicator8And9RF27_1");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWhoReinitiatedTarvRF32");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "B12",
+        EptsReportUtils.map(
+            resumoMensalCohortQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHLastMonthB12(),
+            mappings));
+
+    definition.addSearch(
+        "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
+
+    definition.addSearch(
+        "RF27-1",
+        EptsReportUtils.map(this.findPatientsWhoAreReiniciosTarvIndicator8And9RF27_1(), mappings));
+
+    definition.addSearch(
+        "RF26-1",
+        EptsReportUtils.map(
+            this.findPatientsWhoAreNovosIniciosTarvIndicator8And9RF26_1(), mappings));
+
+    definition.setCompositionString("B12 NOT (PREGNANT OR RF27-1 OR RF26-1)");
+
+    return definition;
+  }
+
   /**
    * 1 - Número de utentes novos inícios em TARV que iniciaram seguimento para Doença Avançada por
    * HIV durante o mês
@@ -62,10 +376,8 @@ public class ResumoMensalDAHCohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("NumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriod1");
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-    final String mappingsMinus2Months =
-        "startDate=${startDate-2m},endDate=${endDate},location=${location}";
 
-    definition.setName("getNumberOfPatientsActiveInDAHWhoAreInTARVByEndOfPreviousMonthIndicator0");
+    definition.setName("getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriodI1");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
@@ -80,29 +392,11 @@ public class ResumoMensalDAHCohortQueries {
             mappings));
 
     definition.addSearch(
-        "INICIOTARV",
+        "RF31",
         EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriod1",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.NEW_ENROLLED)),
-            mappings));
+            this.findPatientsNewEnrolledOnPreTarvOrNewEnrolledOnTarvRF31(), mappings));
 
-    definition.addSearch(
-        "ALL",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriod1",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.ALL)),
-            mappings));
-
-    definition.addSearch(
-        "B1",
-        EptsReportUtils.map(
-            resumoMensalCohortQueries
-                .getPatientsWhoInitiatedTarvAtThisFacilityDuringCurrentMonthB1(),
-            mappingsMinus2Months));
-
-    definition.setCompositionString("DAHPERIOD AND (INICIOTARV OR (B1 NOT ALL))");
+    definition.setCompositionString("DAHPERIOD AND RF31");
 
     return definition;
   }
@@ -133,31 +427,15 @@ public class ResumoMensalDAHCohortQueries {
             mappings));
 
     definition.addSearch(
-        "REINICIOTARV",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsRegisteredAsReinitiatedARTDuringReportPeriod2",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.RESTART)),
-            mappings));
+        "RF32", EptsReportUtils.map(this.findPatientsWhoReinitiatedTarvRF32(), mappings));
 
     definition.addSearch(
-        "NEW-ENROLLED",
+        "I1",
         EptsReportUtils.map(
             this.getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriodI1(),
             mappings));
 
-    definition.addSearch(
-        "ALL",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriod1",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.ALL)),
-            mappings));
-
-    definition.addSearch("B3", EptsReportUtils.map(this.getSumB3(), mappings));
-
-    definition.setCompositionString(
-        "DAHPERIOD AND ((REINICIOTARV OR (B3 NOT ALL)) NOT NEW-ENROLLED)");
+    definition.setCompositionString("(DAHPERIOD AND RF32) NOT I1");
 
     return definition;
   }
@@ -187,41 +465,21 @@ public class ResumoMensalDAHCohortQueries {
             mappings));
 
     definition.addSearch(
-        "EMTARV",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsRegisteredAsActiveInARTDuringReportPeriod3",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.ACTIVE)),
-            mappings));
+        "RF33", EptsReportUtils.map(this.findPatientsWhoAreActiveOnTarvRF33(), mappings));
 
     definition.addSearch(
-        "RESTART",
+        "I1",
         EptsReportUtils.map(
             this.getNumberOfPatientsWhoReinitiatedARTWhoInitiatedDAHDuringReportPeriodI2(),
             mappings));
 
     definition.addSearch(
-        "NEW-ENROLLED",
+        "I2",
         EptsReportUtils.map(
             this.getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriodI1(),
             mappings));
 
-    definition.addSearch(
-        "B12",
-        EptsReportUtils.map(
-            resumoMensalCohortQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHLastMonthB12(),
-            mappings));
-
-    definition.addSearch(
-        "ALL",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriod1",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.ALL)),
-            mappings));
-
-    definition.setCompositionString(
-        "DAHPERIOD AND ((EMTARV OR (B12 NOT ALL)) NOT (RESTART OR NEW-ENROLLED))");
+    definition.setCompositionString("(DAHPERIOD AND RF33) NOT (I1 OR I2)");
 
     return definition;
   }
@@ -242,14 +500,31 @@ public class ResumoMensalDAHCohortQueries {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.addSearch(
-        "LEFTDAH",
+        "DAHBEFOREENDDATE",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriod1",
-                ResumoMensalDAHQueries.getNumberOfPatientsWhoLeftDAHDuringReportPeriod4()),
+                "findPatientsWithDAHBeforeEndDate",
+                ResumoMensalDAHQueries.findPatientsWithDAHBeforeEndDate()),
             mappings));
 
-    definition.setCompositionString("LEFTDAH");
+    definition.addSearch(
+        "SAIDA",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "findPatientsWithDAHBeforeEndDate",
+                ResumoMensalDAHQueries
+                    .findPatientsMarkedAsObitoOrAbandonoOrTransferredOutDuringPeriod()),
+            mappings));
+
+    definition.addSearch(
+        "DATA-DE-SAIDA",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "findPatientsWithDatadeSaidaDuringPeriod",
+                ResumoMensalDAHQueries.findPatientsWithDatadeSaidaDuringPeriod()),
+            mappings));
+
+    definition.setCompositionString("DAHBEFOREENDDATE AND (SAIDA OR DATA-DE-SAIDA)");
 
     return definition;
   }
@@ -316,14 +591,6 @@ public class ResumoMensalDAHCohortQueries {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.addSearch(
-        "DEADDAH",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsDiedWithDAHSixMonthsAfterDAH6",
-                ResumoMensalDAHQueries.getNumberOfPatientsDiedWithDAHSixMonthsAfterDAH6()),
-            mappings6Months));
-
-    definition.addSearch(
         "DAHIN6MONTHSCOORTE",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
@@ -332,10 +599,18 @@ public class ResumoMensalDAHCohortQueries {
             mappings6Months));
 
     definition.addSearch(
+        "DEADDAH",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientsDiedWithDAHSixMonthsAfterDAH6",
+                ResumoMensalDAHQueries.getNumberOfPatientsDiedWithDAHSixMonthsAfterDAH6()),
+            mappings6Months));
+
+    definition.addSearch(
         "B8",
         EptsReportUtils.map(resumoMensalCohortQueries.getPatientsWhoDiedTratmentB8(), mappings));
 
-    definition.setCompositionString("DEADDAH OR (DAHIN6MONTHSCOORTE AND B8)");
+    definition.setCompositionString("DAHIN6MONTHSCOORTE AND (DEADDAH OR B8)");
 
     return definition;
   }
@@ -391,31 +666,28 @@ public class ResumoMensalDAHCohortQueries {
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26-1",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator8And9RF26_1(), mappings));
 
-      composition = "CD4 AND NEW-ART";
+      composition = "CD4 AND RF26-1";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27-1",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator8And9RF27_1(), mappings));
 
-      composition = "CD4 AND RESTART";
+      composition = "CD4 AND RF27-1";
 
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
-          EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+          "RF28-1",
+          EptsReportUtils.map(this.findPatientsWhoAreActiveInTarvIndicator8And9RF28_1(), mappings));
 
-      composition = "CD4 AND ACTIVE";
+      composition = "CD4 AND RF28-1";
 
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
@@ -452,33 +724,35 @@ public class ResumoMensalDAHCohortQueries {
                 ResumoMensalDAHQueries.getNumberOfPatientWithCD4ResultDuringThePeriod9()),
             mappings));
 
+    definition.addSearch(
+        "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
+
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26-1",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator8And9RF26_1(), mappings));
 
-      composition = "CD4-RESULT AND NEW-ART";
+      composition = "CD4-RESULT AND RF26-1";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27-1",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator8And9RF27_1(), mappings));
 
-      composition = "CD4-RESULT AND RESTART";
+      composition = "CD4-RESULT AND RF27-1";
+
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
-          EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+          "RF28-1",
+          EptsReportUtils.map(this.findPatientsWhoAreActiveInTarvIndicator8And9RF28_1(), mappings));
 
-      composition = "CD4-RESULT AND ACTIVE";
+      composition = "CD4-RESULT AND RF28-1";
+
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
       definition.addSearch(
@@ -488,6 +762,37 @@ public class ResumoMensalDAHCohortQueries {
     }
 
     definition.setCompositionString(composition);
+
+    return definition;
+  }
+
+  /** RF16 - Relatório – Indicador 10 Resultado de CD4 baixo */
+  public CohortDefinition findPatientsWithLowCD4ResultRF16() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("NumberOfPatientWithLowCD4ResultDuringThePeriodI10");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("getNumberOfPatientWithLowCD4ResultDuringThePeriodI10");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "SEGUIMENTO",
+        EptsReportUtils.map(
+            this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(),
+            "startDate=${startDate},endDate=${endDate},location=${location}"));
+
+    definition.addSearch(
+        "CD4-BAIXO",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "getNumberOfPatientWithLowCD4ResultDuringThePeriod10",
+                ResumoMensalDAHQueries.getNumberOfPatientWithLowCD4ResultDuringThePeriod10()),
+            mappings));
+
+    definition.setCompositionString("SEGUIMENTO AND CD4-BAIXO");
 
     return definition;
   }
@@ -507,6 +812,11 @@ public class ResumoMensalDAHCohortQueries {
     String composition = "";
 
     definition.addSearch(
+        "SEGUIMENTO-DAH",
+        EptsReportUtils.map(
+            this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
+
+    definition.addSearch(
         "CD4-BAIXO",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
@@ -517,44 +827,40 @@ public class ResumoMensalDAHCohortQueries {
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
 
-      composition = "CD4-BAIXO AND NEW-ART";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND RF26";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator10Until19RF27(), mappings));
 
-      composition = "CD4-BAIXO AND RESTART";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND RF27";
+
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
+          "RF28",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+              this.findPatientsWhoAreActiveInTarvIndicator10Untill19RF28(), mappings));
 
-      composition = "CD4-BAIXO AND ACTIVE";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND RF28";
+
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
       definition.addSearch(
           "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
 
-      composition = "CD4-BAIXO AND PREGNANT";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND PREGNANT";
+
     } else if (disagregationType == ARTSituation.SEGUIMENTO_DAH) {
 
-      definition.addSearch(
-          "SEGUIMENTO",
-          EptsReportUtils.map(
-              this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
-
-      composition = "CD4-BAIXO AND SEGUIMENTO";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO";
     }
 
     definition.setCompositionString(composition);
@@ -569,7 +875,7 @@ public class ResumoMensalDAHCohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("NumberOfPatientWithLowCD4ResultDuringThePeriodI10");
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-    final String mappingsCd4Baixo =
+    final String mappingsMinusOneMonth =
         "startDate=${startDate-1m},endDate=${endDate},location=${location}";
     String composition = "";
 
@@ -579,15 +885,20 @@ public class ResumoMensalDAHCohortQueries {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.addSearch(
-        "I10",
+        "SEGUIMENTO-DAH",
+        EptsReportUtils.map(
+            this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
+
+    definition.addSearch(
+        "CD4-BAIXO",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
                 "getNumberOfPatientWithLowCD4ResultDuringThePeriod10",
                 ResumoMensalDAHQueries.getNumberOfPatientWithLowCD4ResultDuringThePeriod10()),
-            mappingsCd4Baixo));
+            mappingsMinusOneMonth));
 
     definition.addSearch(
-        "CD4-WITH-TBLAM",
+        "TBLAM",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
                 "getNumberOfPatientsElegibleToTBLAMWithTBLamResultDuringReportingPeriod11",
@@ -598,87 +909,46 @@ public class ResumoMensalDAHCohortQueries {
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
 
-      composition = "I10 AND CD4-WITH-TBLAM AND NEW-ART";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND TBLAM AND RF26";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator10Until19RF27(), mappings));
 
-      composition = "I10 AND CD4-WITH-TBLAM AND RESTART";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND TBLAM AND RF27";
 
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
+          "RF28",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+              this.findPatientsWhoAreActiveInTarvIndicator10Untill19RF28(), mappings));
 
-      composition = "I10 AND CD4-WITH-TBLAM AND ACTIVE";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND TBLAM AND RF28";
 
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
       definition.addSearch(
           "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
 
-      composition = "I10 AND CD4-WITH-TBLAM AND PREGNANT";
+      definition.addSearch(
+          "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
+
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND TBLAM AND PREGNANT";
 
     } else if (disagregationType == ARTSituation.SEGUIMENTO_DAH) {
 
-      definition.addSearch(
-          "SEGUIMENTO",
-          EptsReportUtils.map(
-              this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
-
-      composition = "I10 AND CD4-WITH-TBLAM AND SEGUIMENTO";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND TBLAM";
     }
 
     definition.setCompositionString(composition);
-
-    return definition;
-  }
-
-  /** 11 - Número de utentes elegíveis a pedido de TB-LAM com resultado de TB-LAM durante o mês */
-  public CohortDefinition
-      getNumberOfPatientsElegibleToTBLAMWithTBLamResultDuringReportingPeriodI11() {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("NumberOfPatientWithLowCD4ResultDuringThePeriodI10");
-    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-    final String mappingsCd4Baixo =
-        "startDate=${startDate-1m},endDate=${endDate},location=${location}";
-
-    definition.setName("getNumberOfPatientWithLowCD4ResultDuringThePeriodI10");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
-
-    definition.addSearch(
-        "I10",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientWithLowCD4ResultDuringThePeriod10",
-                ResumoMensalDAHQueries.getNumberOfPatientWithLowCD4ResultDuringThePeriod10()),
-            mappingsCd4Baixo));
-
-    definition.addSearch(
-        "CD4-WITH-TBLAM",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsElegibleToTBLAMWithTBLamResultDuringReportingPeriod11",
-                ResumoMensalDAHQueries.findPatientsWhoHaveSpecificExamTestResults(
-                    TypesOfExams.TBLAM)),
-            mappings));
-
-    definition.setCompositionString("I10 AND CD4-WITH-TBLAM");
 
     return definition;
   }
@@ -702,7 +972,8 @@ public class ResumoMensalDAHCohortQueries {
     definition.addSearch(
         "I11",
         EptsReportUtils.map(
-            this.getNumberOfPatientsElegibleToTBLAMWithTBLamResultDuringReportingPeriodI11(),
+            this.getNumberOfPatientsElegibleToTBLAMWithTBLamResultDuringReportingPeriodI11(
+                ARTSituation.SEGUIMENTO_DAH),
             mappings));
 
     definition.addSearch(
@@ -717,31 +988,29 @@ public class ResumoMensalDAHCohortQueries {
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
 
-      composition = "I11 AND CD4-TBLAM-POS AND NEW-ART";
+      composition = "I11 AND CD4-TBLAM-POS AND RF26";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator10Until19RF27(), mappings));
 
-      composition = "I11 AND CD4-TBLAM-POS AND RESTART";
+      composition = "I11 AND CD4-TBLAM-POS AND RF27";
 
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
+          "RF28",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+              this.findPatientsWhoAreActiveInTarvIndicator10Untill19RF28(), mappings));
 
-      composition = "I11 AND CD4-TBLAM-POS AND ACTIVE";
+      composition = "I11 AND CD4-TBLAM-POS AND RF28";
 
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
@@ -752,12 +1021,7 @@ public class ResumoMensalDAHCohortQueries {
 
     } else if (disagregationType == ARTSituation.SEGUIMENTO_DAH) {
 
-      definition.addSearch(
-          "SEGUIMENTO",
-          EptsReportUtils.map(
-              this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
-
-      composition = "I11 AND CD4-TBLAM-POS AND SEGUIMENTO";
+      composition = "I11 AND CD4-TBLAM-POS";
     }
 
     definition.setCompositionString(composition);
@@ -772,7 +1036,7 @@ public class ResumoMensalDAHCohortQueries {
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("NumberOfPatientWithLowCD4ResultDuringThePeriodI10");
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-    final String mappingsCd4Baixo =
+    final String mappingsMinusOneMonth =
         "startDate=${startDate-1m},endDate=${endDate},location=${location}";
     String composition = "";
 
@@ -782,15 +1046,20 @@ public class ResumoMensalDAHCohortQueries {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.addSearch(
-        "I10",
+        "SEGUIMENTO-DAH",
+        EptsReportUtils.map(
+            this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
+
+    definition.addSearch(
+        "CD4-BAIXO",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
                 "getNumberOfPatientWithLowCD4ResultDuringThePeriod10",
                 ResumoMensalDAHQueries.getNumberOfPatientWithLowCD4ResultDuringThePeriod10()),
-            mappingsCd4Baixo));
+            mappingsMinusOneMonth));
 
     definition.addSearch(
-        "CD4-WITH-CRAG",
+        "CRAG-SORO",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
                 "getNumberOfPatientsWithCragSericoResultDuringReportingPeriod13",
@@ -801,86 +1070,43 @@ public class ResumoMensalDAHCohortQueries {
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
 
-      composition = "I10 AND CD4-WITH-CRAG AND NEW-ART";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND CRAG-SORO AND RF26";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator10Until19RF27(), mappings));
 
-      composition = "I10 AND CD4-WITH-CRAG AND RESTART";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND CRAG-SORO AND RF27";
 
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
+          "RF28",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+              this.findPatientsWhoAreActiveInTarvIndicator10Untill19RF28(), mappings));
 
-      composition = "I10 AND CD4-WITH-CRAG AND ACTIVE";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND CRAG-SORO AND RF28";
 
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
       definition.addSearch(
           "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
 
-      composition = "I10 AND CD4-WITH-CRAG AND PREGNANT";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND CRAG-SORO AND PREGNANT";
 
     } else if (disagregationType == ARTSituation.SEGUIMENTO_DAH) {
 
-      definition.addSearch(
-          "SEGUIMENTO",
-          EptsReportUtils.map(
-              this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
-
-      composition = "I10 AND CD4-WITH-CRAG AND SEGUIMENTO";
+      composition = "SEGUIMENTO-DAH AND CD4-BAIXO AND CRAG-SORO";
     }
 
     definition.setCompositionString(composition);
-
-    return definition;
-  }
-
-  /** 13 - Número de utentes com CD4 baixo* com resultado de CrAg sérico durante o mês */
-  public CohortDefinition getNumberOfPatientsWithCragSericoResultDuringReportingPeriodI13() {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("NumberOfPatientWithLowCD4ResultDuringThePeriodI10");
-    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-    final String mappingsCd4Baixo =
-        "startDate=${startDate-1m},endDate=${endDate},location=${location}";
-
-    definition.setName("getNumberOfPatientWithLowCD4ResultDuringThePeriodI10");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
-
-    definition.addSearch(
-        "I10",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientWithLowCD4ResultDuringThePeriod10",
-                ResumoMensalDAHQueries.getNumberOfPatientWithLowCD4ResultDuringThePeriod10()),
-            mappingsCd4Baixo));
-
-    definition.addSearch(
-        "CD4-WITH-CRAG",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsWithCragSericoResultDuringReportingPeriod13",
-                ResumoMensalDAHQueries.findPatientsWhoHaveSpecificExamTestResults(
-                    TypesOfExams.CRAG_SORO)),
-            mappings));
-
-    definition.setCompositionString("I10 AND CD4-WITH-CRAG");
 
     return definition;
   }
@@ -902,10 +1128,12 @@ public class ResumoMensalDAHCohortQueries {
     definition.addSearch(
         "I13",
         EptsReportUtils.map(
-            this.getNumberOfPatientsWithCragSericoResultDuringReportingPeriodI13(), mappings));
+            this.getNumberOfPatientsWithCragSericoResultDuringReportingPeriodI13(
+                ARTSituation.SEGUIMENTO_DAH),
+            mappings));
 
     definition.addSearch(
-        "CD4-SORO-POS",
+        "CRAG-SORO-POS",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
                 "getNumberOfPatientsWithCragSericoPOSResultDuringReportingPeriod14",
@@ -916,81 +1144,43 @@ public class ResumoMensalDAHCohortQueries {
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
 
-      composition = "I13 AND CD4-SORO-POS AND NEW-ART";
+      composition = "I13 AND CRAG-SORO-POS AND RF26";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator10Until19RF27(), mappings));
 
-      composition = "I13 AND CD4-SORO-POS AND RESTART";
+      composition = "I13 AND CRAG-SORO-POS AND RF27";
 
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
+          "RF28",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+              this.findPatientsWhoAreActiveInTarvIndicator10Untill19RF28(), mappings));
 
-      composition = "I13 AND CD4-SORO-POS AND ACTIVE";
+      composition = "I13 AND CRAG-SORO-POS AND RF28";
 
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
       definition.addSearch(
           "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
 
-      composition = "I13 AND CD4-SORO-POS AND PREGNANT";
+      composition = "I13 AND CRAG-SORO-POS AND PREGNANT";
 
     } else if (disagregationType == ARTSituation.SEGUIMENTO_DAH) {
 
-      definition.addSearch(
-          "SEGUIMENTO",
-          EptsReportUtils.map(
-              this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
-
-      composition = "I13 AND CD4-SORO-POS AND SEGUIMENTO";
+      composition = "I13 AND CRAG-SORO-POS";
     }
 
     definition.setCompositionString(composition);
-
-    return definition;
-  }
-
-  /** 14 - Número de utentes com CD4 baixo* com resultado de CrAg sérico positivo durante o mês */
-  public CohortDefinition getNumberOfPatientsWithCragSericoResultDuringReportingPeriodI14() {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("NumberOfPatientWithLowCD4ResultDuringThePeriodI10");
-    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-
-    definition.setName("getNumberOfPatientWithLowCD4ResultDuringThePeriodI10");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
-
-    definition.addSearch(
-        "I13",
-        EptsReportUtils.map(
-            this.getNumberOfPatientsWithCragSericoResultDuringReportingPeriodI13(), mappings));
-
-    definition.addSearch(
-        "CD4-SORO-POS",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsWithCragSericoPOSResultDuringReportingPeriod14",
-                ResumoMensalDAHQueries.findPatientsWhoHaveSpecificExamTestResults(
-                    TypesOfExams.CRAG_SORO_POS)),
-            mappings));
-
-    definition.setCompositionString("I13 AND CD4-SORO-POS");
 
     return definition;
   }
@@ -1015,10 +1205,12 @@ public class ResumoMensalDAHCohortQueries {
     definition.addSearch(
         "I14",
         EptsReportUtils.map(
-            this.getNumberOfPatientsWithCragSericoResultDuringReportingPeriodI14(), mappings));
+            this.getNumberOfPatientsWithCragSericoResultDuringReportingPeriodI14(
+                ARTSituation.SEGUIMENTO_DAH),
+            mappings));
 
     definition.addSearch(
-        "CD4-LCR",
+        "CRAG-LCR",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
                 "getNumberOfPatientsWithCragLCRResultDuringReportingPeriodI15",
@@ -1029,47 +1221,40 @@ public class ResumoMensalDAHCohortQueries {
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
 
-      composition = "I14 AND CD4-LCR AND NEW-ART";
+      composition = "I14 AND CRAG-LCR AND RF26";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator10Until19RF27(), mappings));
 
-      composition = "I14 AND CD4-LCR AND RESTART";
+      composition = "I14 AND CRAG-LCR AND RF27";
 
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
+          "RF28",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+              this.findPatientsWhoAreActiveInTarvIndicator10Untill19RF28(), mappings));
 
-      composition = "I14 AND CD4-LCR AND ACTIVE";
+      composition = "I14 AND CRAG-LCR AND RF28";
 
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
       definition.addSearch(
           "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
 
-      composition = "I14 AND CD4-LCR AND PREGNANT";
+      composition = "I14 AND CRAG-LCR AND PREGNANT";
 
     } else if (disagregationType == ARTSituation.SEGUIMENTO_DAH) {
 
-      definition.addSearch(
-          "SEGUIMENTO",
-          EptsReportUtils.map(
-              this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
-
-      composition = "I14 AND CD4-LCR AND SEGUIMENTO";
+      composition = "I14 AND CRAG-LCR";
     }
 
     definition.setCompositionString(composition);
@@ -1097,7 +1282,9 @@ public class ResumoMensalDAHCohortQueries {
     definition.addSearch(
         "I14",
         EptsReportUtils.map(
-            this.getNumberOfPatientsWithCragSericoResultDuringReportingPeriodI14(), mappings));
+            this.getNumberOfPatientsWithCragSericoResultDuringReportingPeriodI14(
+                ARTSituation.SEGUIMENTO_DAH),
+            mappings));
 
     definition.addSearch(
         "MCC-PREVENTIVE-TREATMENT",
@@ -1111,31 +1298,29 @@ public class ResumoMensalDAHCohortQueries {
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
 
-      composition = "I14 AND MCC-PREVENTIVE-TREATMENT AND NEW-ART";
+      composition = "I14 AND MCC-PREVENTIVE-TREATMENT AND RF26";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator10Until19RF27(), mappings));
 
-      composition = "I14 AND MCC-PREVENTIVE-TREATMENT AND RESTART";
+      composition = "I14 AND MCC-PREVENTIVE-TREATMENT AND RF27";
 
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
+          "RF28",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+              this.findPatientsWhoAreActiveInTarvIndicator10Untill19RF28(), mappings));
 
-      composition = "I14 AND MCC-PREVENTIVE-TREATMENT AND ACTIVE";
+      composition = "I14 AND MCC-PREVENTIVE-TREATMENT AND RF28";
 
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
@@ -1146,12 +1331,7 @@ public class ResumoMensalDAHCohortQueries {
 
     } else if (disagregationType == ARTSituation.SEGUIMENTO_DAH) {
 
-      definition.addSearch(
-          "SEGUIMENTO",
-          EptsReportUtils.map(
-              this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
-
-      composition = "I14 AND MCC-PREVENTIVE-TREATMENT AND SEGUIMENTO";
+      composition = "I14 AND MCC-PREVENTIVE-TREATMENT";
     }
 
     definition.setCompositionString(composition);
@@ -1182,7 +1362,9 @@ public class ResumoMensalDAHCohortQueries {
     definition.addSearch(
         "I14",
         EptsReportUtils.map(
-            this.getNumberOfPatientsWithCragSericoResultDuringReportingPeriodI14(), mappings));
+            this.getNumberOfPatientsWithCragSericoResultDuringReportingPeriodI14(
+                ARTSituation.SEGUIMENTO_DAH),
+            mappings));
 
     definition.addSearch(
         "CRAG-LCR-POS",
@@ -1204,31 +1386,29 @@ public class ResumoMensalDAHCohortQueries {
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
 
-      composition = "I14 AND CRAG-LCR-POS AND MCC-TREATMENT AND NEW-ART";
+      composition = "I14 AND CRAG-LCR-POS AND MCC-TREATMENT AND RF26";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator10Until19RF27(), mappings));
 
-      composition = "I14 AND CRAG-LCR-POS AND MCC-TREATMENT AND RESTART";
+      composition = "I14 AND CRAG-LCR-POS AND MCC-TREATMENT AND RF27";
 
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
+          "RF28",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+              this.findPatientsWhoAreActiveInTarvIndicator10Untill19RF28(), mappings));
 
-      composition = "I14 AND CRAG-LCR-POS AND MCC-TREATMENT AND ACTIVE";
+      composition = "I14 AND CRAG-LCR-POS AND MCC-TREATMENT AND RF28";
 
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
@@ -1239,12 +1419,7 @@ public class ResumoMensalDAHCohortQueries {
 
     } else if (disagregationType == ARTSituation.SEGUIMENTO_DAH) {
 
-      definition.addSearch(
-          "SEGUIMENTO",
-          EptsReportUtils.map(
-              this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
-
-      composition = "I14 AND CRAG-LCR-POS AND MCC-TREATMENT AND SEGUIMENTO";
+      composition = "I14 AND CRAG-LCR-POS AND MCC-TREATMENT";
     }
 
     definition.setCompositionString(composition);
@@ -1273,6 +1448,11 @@ public class ResumoMensalDAHCohortQueries {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.addSearch(
+        "SEGUIMENTO-DAH",
+        EptsReportUtils.map(
+            this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
+
+    definition.addSearch(
         "SK",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
@@ -1284,47 +1464,40 @@ public class ResumoMensalDAHCohortQueries {
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
 
-      composition = "SK AND NEW-ART";
+      composition = "SEGUIMENTO-DAH AND SK AND RF26";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator10Until19RF27(), mappings));
 
-      composition = "SK AND RESTART";
+      composition = "SEGUIMENTO-DAH AND SK AND RF27";
 
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
+          "RF28",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+              this.findPatientsWhoAreActiveInTarvIndicator10Untill19RF28(), mappings));
 
-      composition = "SK AND ACTIVE";
+      composition = "SEGUIMENTO-DAH AND SK AND RF28";
 
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
       definition.addSearch(
           "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
 
-      composition = "SK AND PREGNANT";
+      composition = "SEGUIMENTO-DAH AND SK AND PREGNANT";
 
     } else if (disagregationType == ARTSituation.SEGUIMENTO_DAH) {
 
-      definition.addSearch(
-          "SEGUIMENTO",
-          EptsReportUtils.map(
-              this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
-
-      composition = "SK AND SEGUIMENTO";
+      composition = "SEGUIMENTO-DAH AND SK";
     }
 
     definition.setCompositionString(composition);
@@ -1350,6 +1523,11 @@ public class ResumoMensalDAHCohortQueries {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.addSearch(
+        "SEGUIMENTO-DAH",
+        EptsReportUtils.map(
+            this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
+
+    definition.addSearch(
         "QUIMIOTHERAPHY",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
@@ -1361,141 +1539,42 @@ public class ResumoMensalDAHCohortQueries {
     if (disagregationType == ARTSituation.NEW_ENROLLED) {
 
       definition.addSearch(
-          "NEW-ART",
+          "RF26",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.NEW_ENROLLED),
-              mappings));
+              this.findPatientsWhoAreNovosIniciosTarvIndicator10Untill9RF26(), mappings));
 
-      composition = "QUIMIOTHERAPHY AND NEW-ART";
+      composition = "SEGUIMENTO-DAH AND QUIMIOTHERAPHY AND RF26";
 
     } else if (disagregationType == ARTSituation.RESTART) {
 
       definition.addSearch(
-          "RESTART",
+          "RF27",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.RESTART),
-              mappings));
+              this.findPatientsWhoAreReiniciosTarvIndicator10Until19RF27(), mappings));
 
-      composition = "QUIMIOTHERAPHY AND RESTART";
+      composition = "SEGUIMENTO-DAH AND QUIMIOTHERAPHY AND RF27";
 
     } else if (disagregationType == ARTSituation.ACTIVE) {
 
       definition.addSearch(
-          "ACTIVE",
+          "RF28",
           EptsReportUtils.map(
-              this.findPatientsNewlyEnrolledOnARTDisagregationRF26(ARTSituation.ACTIVE), mappings));
+              this.findPatientsWhoAreActiveInTarvIndicator10Untill19RF28(), mappings));
 
-      composition = "QUIMIOTHERAPHY AND ACTIVE";
+      composition = "SEGUIMENTO-DAH AND QUIMIOTHERAPHY AND RF28";
 
     } else if (disagregationType == ARTSituation.PREGNANT) {
 
       definition.addSearch(
           "PREGNANT", EptsReportUtils.map(this.getNumberOfPatientsWhoArePregnantRF29(), mappings));
 
-      composition = "QUIMIOTHERAPHY AND PREGNANT";
+      composition = "SEGUIMENTO-DAH AND QUIMIOTHERAPHY AND PREGNANT";
 
     } else if (disagregationType == ARTSituation.SEGUIMENTO_DAH) {
 
-      definition.addSearch(
-          "SEGUIMENTO",
-          EptsReportUtils.map(
-              this.getNumberOfPatientsInDAHExcludingPatientsMarkedAsSaidaRF30(), mappings));
-
-      composition = "QUIMIOTHERAPHY AND SEGUIMENTO";
+      composition = "SEGUIMENTO-DAH AND QUIMIOTHERAPHY";
     }
 
-    definition.setCompositionString(composition);
-
-    return definition;
-  }
-
-  /**
-   * RF26, RF27, RF28 O sistema irá identificar todos os utentes novos inícios de TARV, para
-   * desagregação dos indicadores 8 a 19
-   */
-  public CohortDefinition findPatientsNewlyEnrolledOnARTDisagregationRF26(
-      ARTSituation artSituation) {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("findPatientsNewlyEnrolledOnARTDisagregationRF26");
-    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-    final String mappingsBack2Months =
-        "startDate=${startDate-2m},endDate=${endDate},location=${location}";
-    String composition = "";
-
-    definition.setName("findPatientsNewlyEnrolledOnARTDisagregationRF26");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
-
-    definition.addSearch(
-        "PREGNANT",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "findPatientsMarkedAsPregnantInTheLast6MonthsBeforeEndDate",
-                ResumoMensalDAHQueries.findPatientsMarkedAsPregnantInTheLast6MonthsBeforeEndDate()),
-            mappings));
-
-    definition.addSearch(
-        "NEW-ON-ART",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsRegisteredAsNewEnrolledARTDuringReportPeriod1",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.NEW_ENROLLED)),
-            mappings));
-
-    definition.addSearch(
-        "B1",
-        EptsReportUtils.map(
-            resumoMensalCohortQueries
-                .getPatientsWhoInitiatedTarvAtThisFacilityDuringCurrentMonthB1(),
-            mappingsBack2Months));
-
-    definition.addSearch(
-        "RESTART-ART",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "getNumberOfPatientsRegisteredAsNewEnrolledARTDuringReportPeriod1",
-                ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.RESTART)),
-            mappings));
-
-    definition.addSearch("B3", EptsReportUtils.map(this.getSumB3(), mappings));
-
-    if (artSituation == ARTSituation.NEW_ENROLLED) {
-
-      composition = "(NEW-ON-ART OR B1) NOT PREGNANT";
-
-    } else if (artSituation == ARTSituation.RESTART) {
-
-      composition = "((RESTART-ART OR B3) NOT PREGNANT) NOT ((NEW-ON-ART OR B1) NOT PREGNANT)";
-
-    } else if (artSituation == ARTSituation.ACTIVE) {
-
-      definition.addSearch(
-          "ACTIVE",
-          EptsReportUtils.map(
-              this.genericCohortQueries.generalSql(
-                  "getNumberOfPatientsRegisteredAsNewEnrolledARTDuringReportPeriod1",
-                  ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.ACTIVE)),
-              mappings));
-
-      definition.addSearch(
-          "B12",
-          EptsReportUtils.map(
-              resumoMensalCohortQueries.findPatientsWhoAreCurrentlyEnrolledOnArtMOHLastMonthB12(),
-              mappings));
-
-      definition.addSearch(
-          "ALL",
-          EptsReportUtils.map(
-              this.genericCohortQueries.generalSql(
-                  "getNumberOfPatientsNewEnrolledInARTWhoInitiatedDAHDuringReportPeriod1",
-                  ResumoMensalDAHQueries.findPatientsARTSituation(ARTSituation.ALL)),
-              mappings));
-
-      composition =
-          "((ACTIVE OR (B12 NOT ALL)) NOT (((RESTART-ART OR (B3 NOT ALL)) NOT (NEW-ON-ART OR (B1 NOT ALL))) OR (NEW-ON-ART OR (B1 NOT ALL)))) NOT PREGNANT";
-    }
     definition.setCompositionString(composition);
 
     return definition;
@@ -1565,9 +1644,9 @@ public class ResumoMensalDAHCohortQueries {
 
     final String mappingsAbandonoPeriod2 = "endDate=${startDate-1m-1d},location=${location}";
     final String mappingsPickUpPeriod2 =
-        "startDate=${startDate-1m},endDate=${startDate},location=${location}";
+        "startDate=${startDate-1m},endDate=${startDate-1d},location=${location}";
 
-    final String mappingsAbandonoPeriod3 = "endDate=${startDate},location=${location}";
+    final String mappingsAbandonoPeriod3 = "endDate=${startDate-1d},location=${location}";
     final String mappingsPickUpPeriod3 =
         "startDate=${startDate},endDate=${endDate},location=${location}";
 
@@ -1589,7 +1668,7 @@ public class ResumoMensalDAHCohortQueries {
         "PICKUP",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "PICKUP", ResumoMensalQueries.getPatientsWhoHaveDrugPickup()),
+                "PICKUP", ResumoMensalDAHQueries.getPatientsWhoHaveDrugPickup()),
             mappingsPickUpPeriod1));
 
     // Suspenso e reinicio segundo periodo
@@ -1609,7 +1688,7 @@ public class ResumoMensalDAHCohortQueries {
         "PICKUP-PERIOD2",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "PICKUP", ResumoMensalQueries.getPatientsWhoHaveDrugPickup()),
+                "PICKUP", ResumoMensalDAHQueries.getPatientsWhoHaveDrugPickup()),
             mappingsPickUpPeriod2));
 
     // Suspenso e reinicio terceiro periodo
@@ -1628,7 +1707,7 @@ public class ResumoMensalDAHCohortQueries {
         "PICKUP-PERIOD3",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "PICKUP", ResumoMensalQueries.getPatientsWhoHaveDrugPickup()),
+                "PICKUP", ResumoMensalDAHQueries.getPatientsWhoHaveDrugPickup()),
             mappingsPickUpPeriod3));
 
     definition.setCompositionString(
@@ -1651,7 +1730,7 @@ public class ResumoMensalDAHCohortQueries {
     } else if (periodo == PeriodoAbandono.SEGUNDO) {
       mappings = "endDate=${startDate-1m-1d},location=${location}";
     } else if (periodo == PeriodoAbandono.TERCEIRO) {
-      mappings = "endDate=${startDate},location=${location}";
+      mappings = "endDate=${startDate-1d},location=${location}";
     }
 
     definition.addSearch(

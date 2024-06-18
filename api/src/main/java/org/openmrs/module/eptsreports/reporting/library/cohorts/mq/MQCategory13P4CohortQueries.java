@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class MQCategory13P4CohortQueries {
 
   @Autowired private MQCohortQueries mqCohortQueries;
+  @Autowired private MQCategory13P3CohortQueries mQCategory13P3CohortQueries;
 
   @DocumentedDefinition(
       value = "findPatientsWhoReceivedResultMoreThan1000CVCategory13P4Denumerator")
@@ -52,7 +53,9 @@ public class MQCategory13P4CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mqCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCategory13P3CohortQueries.findPatientsWhoTransferedOutRF07Category7(),
+            mappings));
 
     definition.setCompositionString(
         "(B1 AND B2) NOT (PREGNANT OR BREASTFEEDING OR TRANSFERED-OUT)");
@@ -95,7 +98,8 @@ public class MQCategory13P4CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mqCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            mQCategory13P3CohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString("(B1 AND PREGNANT) NOT (TRANSFERED-IN OR TRANSFERED-OUT)");
     return definition;
@@ -245,7 +249,9 @@ public class MQCategory13P4CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mqCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCategory13P3CohortQueries.findPatientsWhoTransferedOutRF07Category7(),
+            mappings));
 
     definition.addSearch(
         "DEAD",
@@ -310,7 +316,8 @@ public class MQCategory13P4CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mqCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            mQCategory13P3CohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString(
         "(B1 AND B2) NOT (PREGNANT OR BREASTFEEDING OR TRANSFERED-OUT OR TRANSFERED-IN)");

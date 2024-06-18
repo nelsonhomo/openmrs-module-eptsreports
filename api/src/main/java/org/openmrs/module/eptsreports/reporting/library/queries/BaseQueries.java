@@ -78,6 +78,10 @@ public class BaseQueries {
     return query;
   }
 
+  public static String getBaseCohortQueryPrep() {
+    return "SELECT e.patient_id FROM encounter e where e.encounter_type = 80 and e.location_id=:location and e.encounter_datetime <= :endDate ";
+  }
+
   public static String getAdultBaseCohortQuery() {
     final String query =
         "select inscrito.patient_id                                                                                       "

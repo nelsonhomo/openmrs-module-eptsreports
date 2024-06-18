@@ -70,8 +70,15 @@ public interface MQQueriesInterface {
             + "select p.patient_id, max(o.obs_datetime) data_estado from patient p "
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs  o on e.encounter_id=o.encounter_id "
-            + "where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type in (53,6) and "
-            + "o.concept_id in(6272,6273) and o.obs_datetime<=:endRevisionDate and e.location_id=:location "
+            + "where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 6 and "
+            + "o.concept_id = 6273 and o.obs_datetime>=:startInclusionDate and o.obs_datetime<=:endRevisionDate and e.location_id=:location "
+            + "group by p.patient_id "
+            + "union "
+            + "select p.patient_id, max(o.obs_datetime) data_estado from patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs  o on e.encounter_id=o.encounter_id "
+            + "where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 53 and "
+            + "o.concept_id = 6272 and o.obs_datetime>=:startInclusionDate and o.obs_datetime<=:endRevisionDate and e.location_id=:location "
             + "group by p.patient_id "
             + ") saida "
             + "inner join obs o on o.person_id = saida.patient_id "
@@ -693,7 +700,7 @@ public interface MQQueriesInterface {
 
     public static final String findPatientsBiggerThan =
         "SELECT patient_id FROM patient "
-            + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 AND person.voided=0 "
+            + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 "
             + "AND TIMESTAMPDIFF(year,birthdate,:endInclusionDate) >= %d AND birthdate IS NOT NULL";
 
     public static final String findPatientsBiggerThanBreastfeeding =
@@ -757,6 +764,30 @@ public interface MQQueriesInterface {
                 + " ) alternativa "
                 + "INNER JOIN person ON alternativa.patient_id = person.person_id WHERE person.voided=0 "
                 + "AND TIMESTAMPDIFF(year,birthdate,alternativa.data_linha) >= %d AND birthdate IS NOT NULL";
+
+    public static final String
+        findAllPatientsWhoHaveTherapheuticLineSecondLineDuringInclusionPeriodOrAdultPatientsInART =
+            " "
+                + "SELECT patient_id FROM patient "
+                + "INNER JOIN person ON patient_id = person_id WHERE patient.voided=0 AND person.voided=0 "
+                + "AND TIMESTAMPDIFF(year,birthdate,:endRevisionDate) >= %d AND birthdate IS NOT NULL "
+                + "union "
+                + " select alternativa.patient_id "
+                + " from "
+                + " ( "
+                + " Select p.patient_id, max(obsLinha.obs_datetime) data_linha "
+                + " from patient p "
+                + " inner join encounter e on p.patient_id = e.patient_id "
+                + " inner join obs obsLinha on obsLinha.encounter_id = e.encounter_id "
+                + " left join obs obsJustificacao on obsJustificacao.encounter_id = e.encounter_id and obsJustificacao.voided = 0 and "
+                + " obsJustificacao.concept_id = 1792 "
+                + " where p.voided = 0 and e.voided = 0 and e.encounter_type = 53 and obsLinha.concept_id = 21187 and obsLinha.voided = 0 and "
+                + " obsLinha.obs_datetime BETWEEN :startInclusionDate and :endInclusionDate and e.location_id = :location and "
+                + " (obsJustificacao.value_coded is null or (obsJustificacao.value_coded is not null and obsJustificacao.value_coded <> 1982)) "
+                + " group by p.patient_id "
+                + " ) alternativa "
+                + "INNER JOIN person ON alternativa.patient_id = person.person_id WHERE person.voided=0 "
+                + "AND TIMESTAMPDIFF(year,birthdate,alternativa.data_linha) >= %d AND birthdate IS NOT NULL ";
 
     public static final String
         findAllPatientsWhoHaveTherapheuticLineSecondLineDuringInclusionPeriodCategory13P3B2NEWDenominatorByAgeRenge =
@@ -870,7 +901,66 @@ public interface MQQueriesInterface {
             + " e.encounter_type = 6 AND obsTB.concept_id = 1268 AND obsTB.value_coded IN (1256,1257,1267) ";
 
     public static final String
-        findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPICategory7 =
+        findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7 =
+            "select inh.patient_id from ( "
+                + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
+                + "from patient p "
+                + "inner join encounter e on p.patient_id = e.patient_id "
+                + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
+                + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
+                + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
+                + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
+                + "and e.encounter_type in (6,53) and e.location_id = :location "
+                + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
+                + "group by p.patient_id "
+                + ") inh "
+                + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
+                + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
+                + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
+                + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 6 MONTH) "
+                + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23761 AND obsTBActiva.value_coded = 1065 ";
+
+    public static final String
+        findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7 =
+            "select inh.patient_id from ( "
+                + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
+                + "from patient p "
+                + "inner join encounter e on p.patient_id = e.patient_id "
+                + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
+                + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
+                + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
+                + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
+                + "and e.encounter_type in (6,53) and e.location_id= :location "
+                + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
+                + "group by p.patient_id "
+                + ") inh "
+                + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
+                + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
+                + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
+                + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 6 MONTH) "
+                + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23758 AND obsTBActiva.value_coded = 1065 ";
+
+    public static final String finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7 =
+        "select inh.patient_id from ( "
+            + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
+            + "from patient p "
+            + "inner join encounter e on p.patient_id = e.patient_id "
+            + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
+            + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
+            + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
+            + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
+            + "and e.encounter_type in (6,53) and e.location_id= :location "
+            + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
+            + "group by p.patient_id "
+            + ") inh "
+            + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
+            + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
+            + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
+            + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 198 DAY) "
+            + "AND e.encounter_type = 6 AND obsTBActiva.concept_id=1268 and obsTBActiva.value_coded in (1256,1257,1267) ";
+
+    public static final String
+        findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPIINHCategory7 =
             "select inh.patient_id from ( "
                 + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
                 + "from patient p "
@@ -925,7 +1015,7 @@ public interface MQQueriesInterface {
             + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
             + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
             + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-            + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 9 MONTH) "
+            + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 297 DAY) "
             + "AND e.encounter_type = 6 AND obsTBActiva.concept_id=1268 and obsTBActiva.value_coded in (1256,1257,1267) ";
 
     public static final String
@@ -983,7 +1073,7 @@ public interface MQQueriesInterface {
                 + "and date(obsEstado.obs_datetime) BETWEEN :startInclusionDate and :endRevisionDate "
                 + "group by p.patient_id "
                 + ") obsFimTPI on obsFimTPI.patient_id = B4_1_2.patient_id "
-                + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 80 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 190 DAY) "
+                + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 80 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 198 DAY) "
                 + "group by B4_1_2.patient_id ";
 
     public static final String findAllPatientWhoAreDeadByEndOfRevisonPeriod =
