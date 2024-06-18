@@ -139,6 +139,62 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     return definition;
   }
 
+  public CohortDefinition getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicatorCascade2() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7 - Indicator 4 -cascade 1");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "TX-NEW", Mapped.mapStraightThrough(this.findPatientsWhoHaveCD4ResultsTx_NEW_CASCATE2()));
+
+    definition.addSearch(
+        "HIGH-VL", Mapped.mapStraightThrough(this.findPatientsWhoHaveCD4ResultsHIGH_VL_CASCATE2()));
+
+    definition.addSearch(
+        "ART-RESTART",
+        Mapped.mapStraightThrough(this.findPatientsWhoHaveCD4ResultsARTRESTART_CASCATE2()));
+
+    definition.addSearch(
+        "PREGNANT",
+        Mapped.mapStraightThrough(this.findPatientsWhoHaveCD4ResultsPREGNANT_CASCATE2()));
+
+    definition.addSearch(
+        "TRANSFERREDOUT",
+        Mapped.mapStraightThrough(this.findPatientsWhoAreTransferredOutByReportGenerationDate()));
+    definition.addSearch(
+        "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
+
+    definition.setCompositionString(
+        "(TX-NEW or HIGH-VL or ART-RESTART or PREGNANT ) not (TRANSFERREDOUT or DEAD)");
+
+    return definition;
+  }
+
+  public CohortDefinition
+      getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicatorCascade2WithTBLAMResults() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("TB7 - Indicator 4 -cascade 1");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch(
+        "DENOMINATOR",
+        Mapped.mapStraightThrough(
+            this.getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicatorCascade2()));
+
+    definition.addSearch(
+        "TBLAM", Mapped.mapStraightThrough(this.findPatientsWhoHaveTBLAMResults()));
+
+    definition.setCompositionString("DENOMINATOR and TBLAM");
+
+    return definition;
+  }
+
   public CohortDefinition
       getNumberOfClientsWithCD4ShowingImmunoSuppressionandWithTBLAMPositiveResults() {
 
@@ -151,7 +207,8 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "IMMUNO-SUPRR-AND-TBLAM",
         Mapped.mapStraightThrough(
-            this.getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicator4()));
+            this
+                .getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicatorCascade2WithTBLAMResults()));
 
     definition.addSearch(
         "POSITIVE-RESULTS", Mapped.mapStraightThrough(this.findPatientsWithPositiveTBLAMResults()));
@@ -213,7 +270,18 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
                     "is null")),
             "endDate=${endDate-2m+1d},location=${location}"));
 
-    definition.setCompositionString("NO-GENEXPERT and POSITIVE-RESULTS");
+    definition.addSearch(
+        "GENEXPERT",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "GeneXpert by report generation date",
+                String.format(
+                    TB7AdvancedDiseaseQueries.QUERY.eValuatePatientsCheckingGenExpertTest,
+                    "is not null",
+                    "is not null")),
+            "endDate=${endDate-2m+1d},location=${location}"));
+
+    definition.setCompositionString("(NO-GENEXPERT and POSITIVE-RESULTS) not GENEXPERT");
 
     return definition;
   }
@@ -739,7 +807,8 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "INDICATOR-DENOMINATOR",
         Mapped.mapStraightThrough(
-            this.getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicator4()));
+            this
+                .getNumberOfClientsWithCd4ResultDuringInclusionPeriodIndicatorCascade2WithTBLAMResults()));
 
     definition.setCompositionString(
         "(NEGATIVE-TBLAM-RESULTS not POSITIVE-RESULTS) and INDICATOR-DENOMINATOR");
@@ -1056,6 +1125,33 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
   }
 
   @DocumentedDefinition(value = "findPatientsWhoAreDead")
+  private CohortDefinition findPatientsWhoHaveCD4ResultsTx_NEW_CASCATE2() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("clients with CD4 Result");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
+    definition.addSearch(
+        "CD4Results",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "Clients with CD4 Results during the inclusion period - TX_NEW",
+                EptsQuerysUtils.loadQuery(
+                    TB7AdvancedDiseaseQueries.QUERY
+                        .FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION_TX_NEW_CASCATE2)),
+            mappings));
+
+    definition.setCompositionString("CD4Results");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWhoAreDead")
   private CohortDefinition findPatientsWhoHaveCD4ResultsHIGH_VL() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -1075,6 +1171,33 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
                 EptsQuerysUtils.loadQuery(
                     TB7AdvancedDiseaseQueries.QUERY
                         .FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION_HIGH_VL)),
+            mappings));
+
+    definition.setCompositionString("CD4Results");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWhoAreDead")
+  private CohortDefinition findPatientsWhoHaveCD4ResultsHIGH_VL_CASCATE2() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("clients with CD4 Result");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
+    definition.addSearch(
+        "CD4Results",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "Clients with CD4 Results during the inclusion period - consecutive HighL",
+                EptsQuerysUtils.loadQuery(
+                    TB7AdvancedDiseaseQueries.QUERY
+                        .FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION_HIGH_VL_CASCATE2)),
             mappings));
 
     definition.setCompositionString("CD4Results");
@@ -1110,6 +1233,33 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
   }
 
   @DocumentedDefinition(value = "findPatientsWhoAreDead")
+  private CohortDefinition findPatientsWhoHaveCD4ResultsARTRESTART_CASCATE2() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("clients with CD4 Result");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings = "startDate=${endDate-2m+1d},endDate=${endDate-1m},location=${location}";
+
+    definition.addSearch(
+        "CD4Results",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "Clients with CD4 Results during the inclusion period - ART Restart",
+                EptsQuerysUtils.loadQuery(
+                    TB7AdvancedDiseaseQueries.QUERY
+                        .FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION_ART_RESTART_CASCATE2)),
+            mappings));
+
+    definition.setCompositionString("CD4Results");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWhoAreDead")
   private CohortDefinition findPatientsWhoHaveCD4ResultsPREGNANT() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
@@ -1130,6 +1280,34 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
                 EptsQuerysUtils.loadQuery(
                     TB7AdvancedDiseaseQueries.QUERY
                         .FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION_PREGNANT)),
+            mappings));
+
+    definition.setCompositionString("CD4Results");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWhoAreDead")
+  private CohortDefinition findPatientsWhoHaveCD4ResultsPREGNANT_CASCATE2() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("clients with CD4 Result");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    final String mappings =
+        "startDate=${endDate-10m+1d},endDate=${endDate-1m},location=${location}";
+
+    definition.addSearch(
+        "CD4Results",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "Clients with CD4 Results during the inclusion period - PREGNANT",
+                EptsQuerysUtils.loadQuery(
+                    TB7AdvancedDiseaseQueries.QUERY
+                        .FIND_PATIENTS_WITH_SEVERE_IMMUNOSUPPRESSION_PREGNANT_CASCATE2)),
             mappings));
 
     definition.setCompositionString("CD4Results");
