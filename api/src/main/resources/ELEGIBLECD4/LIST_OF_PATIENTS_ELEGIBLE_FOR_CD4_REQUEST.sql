@@ -23,7 +23,7 @@
 	             if(cd4.data_ultimo_cd4 is not null,DATE_FORMAT(DATE(cd4.data_ultimo_cd4), '%d-%m-%Y'),'N/A')  as data_ultimo_cd4,
 	             if(cd4Final.data_resultado_cd4 is not null,DATE_FORMAT(DATE(cd4Final.data_resultado_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_cd4,
                  if(cd4Final.valor_cd4 is not null,cd4Final.valor_cd4,'N/A') valor_cd4,
-                 if(	cd4Final.data_resultado_peneultimo_cd4 is not null,DATE_FORMAT(DATE(cd4Final.data_resultado_peneultimo_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_peneultimo_cd4,
+                 if(cd4Final.data_resultado_peneultimo_cd4 is not null,DATE_FORMAT(DATE(cd4Final.data_resultado_peneultimo_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_peneultimo_cd4,
 	             if(cd4Final.resultado_peneultimo_cd4 is not null,cd4Final.resultado_peneultimo_cd4,'N/A')  resultado_peneultimo_cd4, 
 	             DATE_FORMAT(DATE(estadiamentoClinico.encounter_datetime), '%d-%m-%Y')  as encounter_datetime,
 	             case 
@@ -186,12 +186,12 @@
 			                  )cv 
 			                  inner join encounter e on e.patient_id=cv.patient_id
 			                  inner join obs o on o.encounter_id=e.encounter_id
-			                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id=856 and o.obs_datetime=cv.data_resultado
+			                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id in(856,1305) and o.obs_datetime=cv.data_resultado
 			                  group by cv.patient_id
 			                  )cv
 			                  left join encounter e on e.patient_id=cv.patient_id
 			                  left join obs o on o.encounter_id=e.encounter_id
-			                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id=856 and o.obs_datetime=cv.data_resultado and o.value_numeric>1000
+			                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id in(856,1305) and o.obs_datetime=cv.data_resultado and o.value_numeric>1000
 			                  group by cv.patient_id
 			                 )ultimoCV
 			                 left join 
@@ -241,7 +241,7 @@
 				                  )cv
 				                  left join encounter e on e.patient_id=cv.patient_id
 				                  left join obs o on o.encounter_id=e.encounter_id
-				                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id=856 and o.obs_datetime=cv.data_resultado and o.value_numeric>1000
+				                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id in(856,1305) and o.obs_datetime=cv.data_resultado and o.value_numeric>1000
 				                  group by cv.patient_id
 				                  )cv
 				                  left join

@@ -144,12 +144,12 @@
 			                  )cv 
 			                  inner join encounter e on e.patient_id=cv.patient_id
 			                  inner join obs o on o.encounter_id=e.encounter_id
-			                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id=856 and o.obs_datetime=cv.data_resultado
+			                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id in(856,1305) and o.obs_datetime=cv.data_resultado
 			                  group by cv.patient_id
 			                  )cv
 			                  left join encounter e on e.patient_id=cv.patient_id
 			                  left join obs o on o.encounter_id=e.encounter_id
-			                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id=856 and o.obs_datetime=cv.data_resultado and o.value_numeric>1000
+			                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id in(856,1305) and o.obs_datetime=cv.data_resultado and o.value_numeric>1000
 			                  group by cv.patient_id
 			                 )ultimoCV
 			                 left join 
@@ -199,7 +199,7 @@
 				                  )cv
 				                  left join encounter e on e.patient_id=cv.patient_id
 				                  left join obs o on o.encounter_id=e.encounter_id
-				                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id=856 and o.obs_datetime=cv.data_resultado and o.value_numeric>1000
+				                  WHERE e.encounter_type=6 and e.voided=0 and o.voided=0 and o.concept_id in(856,1305) and o.obs_datetime=cv.data_resultado and o.value_numeric>1000
 				                  group by cv.patient_id
 				                  )cv
 				                  left join
