@@ -2,8 +2,9 @@
                        pid.identifier as NID,
              concat(ifnull(pn.given_name,''),' ',ifnull(pn.middle_name,''),' ',ifnull(pn.family_name,'')) as NAME,
              p.gender as GENDER, 
+             birthdate,
              floor(datediff(:endDate,birthdate)/365) AGE,
-             floor(TIMESTAMPDIFF(month,birthdate, :endDate)) AGE_IN_MONTHS,
+             IF(DATE_FORMAT(FROM_DAYS(DATEDIFF(:endDate,birthdate)),'%y-%m-%d') = '00-00-00', floor(TIMESTAMPDIFF(month,birthdate, :endDate)),DATE_FORMAT(FROM_DAYS(DATEDIFF(:endDate,birthdate)),'%m')) AGE_IN_MONTHS,
              pad3.address6 as 'localidade',
              pad3.address5 as 'bairro',
              pad3.address1 as 'pontoReferencia', 
@@ -138,11 +139,11 @@
             ) pn2  
             where pn1.person_id=pn2.person_id and pn1.person_name_id=pn2.id  
             ) pn on pn.person_id=ccr.patient_id 
-            left join  ( 
+            inner join  ( 
             select pid1.*  from patient_identifier pid1  
             inner join  (  
-            select patient_id,min(patient_identifier_id) id  from patient_identifier  
-            where voided=0  
+            select patient_id,min(patient_identifier_id) id, identifier  from patient_identifier  
+            where voided=0 and identifier_type = 9
             group by patient_id  
             ) pid2 
             where pid1.patient_id=pid2.patient_id and pid1.patient_identifier_id=pid2.id  
