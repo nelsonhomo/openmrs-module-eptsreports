@@ -128,58 +128,11 @@ public class MICategory11P2CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString(
         "(START-ART-A AND PREGNANT) NOT (BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)");
-
-    return definition;
-  }
-
-  @DocumentedDefinition(
-      value =
-          "findPregnantOnARTStartedExcludingBreastfeedingAndTRANSFEREDOUTWITH1000CVCategory11DenominatorP2")
-  public CohortDefinition
-      findPregnantOnARTStartedExcludingBreastfeedingAndTRANSFEREDOUTWITH1000CVCategory11DenominatorP2() {
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-
-    definition.setName(
-        "findPregnantOnARTStartedExcludingBreastfeedingAndTRANSFEREDOUTWITH1000CVCategory11DenominatorP2");
-
-    definition.addParameter(
-        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
-    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
-    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
-    definition.addParameter(new Parameter("location", "location", Date.class));
-
-    final String mappingsMIB1 =
-        "startInclusionDate=${endRevisionDate-4m+1d},endInclusionDate=${endRevisionDate-3m},endRevisionDate=${endRevisionDate},location=${location}";
-
-    final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
-
-    definition.addSearch(
-        "B1",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoHaveLastFirstLineTerapeutic(), mappingsMIB1));
-
-    definition.addSearch(
-        "PREGNANT-B4",
-        EptsReportUtils.map(
-            mQCohortQueries.findPatientWithCVOver1000CopiesAndPregnatCategory11B4(), mappingsMIB1));
-
-    definition.addSearch(
-        "BREASTFEEDING-B5",
-        EptsReportUtils.map(
-            mQCohortQueries.findPatientWithCVOver1000CopiesAndBreastfeedingCategory11B5(),
-            mappingsMIB1));
-
-    definition.addSearch(
-        "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
-
-    definition.setCompositionString(
-        "(B1 AND PREGNANT-B4) NOT (BREASTFEEDING-B5 OR TRANSFERED-OUT)");
 
     return definition;
   }
@@ -223,7 +176,8 @@ public class MICategory11P2CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
 
     definition.setCompositionString("(B1 AND PREGNANT) NOT TRANSFERED-OUT");
 
