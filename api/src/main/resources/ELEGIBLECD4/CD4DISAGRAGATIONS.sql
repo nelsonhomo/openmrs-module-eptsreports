@@ -75,7 +75,7 @@
 			              where p.voided = 0 
 			              and e.voided = 0  
 			              and o.voided = 0     
-			              and  o.concept_id in(1695,730) 
+			              and  o.concept_id in(1695,730,165515) 
 			              and e.encounter_type=6 
 			              and e.location_id=:location 
 			              and o.obs_datetime BETWEEN :startDate and CURDATE()
@@ -112,7 +112,7 @@
 			                where p.voided = 0 
 			                and e.voided = 0  
 			                and o.voided = 0     
-			                and  o.concept_id in(1695,730) 
+			                and  o.concept_id in(1695,730,165515) 
 			                and e.encounter_type=6 
 			                and e.location_id=:location 
 			                and o.obs_datetime  BETWEEN :startDate and  CURDATE()
@@ -211,7 +211,7 @@
 				                    where p.voided = 0 
 				                    and e.voided = 0  
 				                    and o.voided = 0     
-				                    and  o.concept_id in(1695,730) 
+				                    and  o.concept_id in(1695,730,165515) 
 				                    and e.encounter_type=6 
 				                    and e.location_id=:location 
 				                    )cd4 on cd4.patient_id=cv.patient_id
@@ -313,7 +313,7 @@
 			                      where p.voided = 0 
 			                      and e.voided = 0  
 			                      and o.voided = 0     
-			                      and  o.concept_id in(1695,730) 
+			                      and  o.concept_id in(1695,730,165515) 
 			                      and e.encounter_type=6 
 			                      and e.location_id=:location 
 			                      )cd4 on cd4.patient_id=estadioOMS.patient_id
@@ -360,6 +360,23 @@
 			                   and o.value_numeric<30
 			                   group by p.patient_id 
 			                   )CD4Percentual
+			                   union
+			                 	select CD4SemiQuantitativo.patient_id,CD4SemiQuantitativo.data_cd4,CD4SemiQuantitativo.cd4
+			                  from 
+			                  ( 
+			                   select p.patient_id, max(e.encounter_datetime) data_cd4,o.value_numeric cd4
+			                   from patient p 
+			                   inner join encounter e on p.patient_id=e.patient_id  
+			                   inner join obs  o on e.encounter_id=o.encounter_id 
+			                   where e.voided=0 and o.voided=0  
+			                   and p.voided=0 
+			                   and  e.encounter_type=6 
+			                   and o.concept_id=165515 
+			                   and o.obs_datetime<=date_sub(:endDate, interval 12 month)  
+			                   and e.location_id=:location 
+			                   and o.value_coded=165513
+			                   group by p.patient_id 
+			                   )CD4SemiQuantitativo
 			                   )C5
 			                   left join
 			                   (
@@ -398,6 +415,23 @@
 			                     and o.value_numeric<30
 			                     group by p.patient_id 
 			                     )CD4Percentual
+			                		union
+			                 	select CD4SemiQuantitativo.patient_id,CD4SemiQuantitativo.data_cd4,CD4SemiQuantitativo.cd4
+			                  from 
+			                  ( 
+			                   select p.patient_id, max(e.encounter_datetime) data_cd4,o.value_numeric cd4
+			                   from patient p 
+			                   inner join encounter e on p.patient_id=e.patient_id  
+			                   inner join obs  o on e.encounter_id=o.encounter_id 
+			                   where e.voided=0 and o.voided=0  
+			                   and p.voided=0 
+			                   and  e.encounter_type=6 
+			                   and o.concept_id=165515 
+			                   and o.obs_datetime<=date_sub(:endDate, interval 12 month)  
+			                   and e.location_id=:location 
+			                   and o.value_coded=165513
+			                   group by p.patient_id 
+			                   )CD4SemiQuantitativo
 			                     )final
 			                     left join
 			                     (
@@ -408,7 +442,7 @@
 			                        where p.voided = 0 
 			                        and e.voided = 0  
 			                        and o.voided = 0     
-			                        and  o.concept_id in(1695,730) 
+			                        and  o.concept_id in(1695,730,165515) 
 			                        and e.encounter_type=6 
 			                        and e.location_id=:location 
 			                      )cd4 on cd4.patient_id=final.patient_id
@@ -465,7 +499,7 @@
 			                        where p.voided = 0 
 			                        and e.voided = 0  
 			                        and o.voided = 0     
-			                        and  o.concept_id in(1695,730) 
+			                        and  o.concept_id in(1695,730,165515) 
 			                        and e.encounter_type=6 
 			                        and e.location_id=:location 
 			                      )cd4 on cd4.patient_id=gravida.patient_id 
