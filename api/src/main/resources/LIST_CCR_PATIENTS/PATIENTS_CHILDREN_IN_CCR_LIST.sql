@@ -609,7 +609,7 @@
              group by  pg.patient_id
              )maxEstado inner join patient_program pp on pp.patient_id = maxEstado.patient_id
              inner join patient_state ps on ps.patient_program_id = pp.patient_program_id
-             where ps.start_date = maxEstado.data_estado
+             where ps.start_date = maxEstado.data_estado and pp.voided = 0 and ps.voided = 0
             )programa on programa.patient_id = ccr.patient_id
             left join(
                     select fichaResumo.patient_id, o.value_coded state from (
