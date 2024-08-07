@@ -519,7 +519,7 @@
             		)maxCarga 
             		inner join encounter e on maxCarga.patient_id=e.patient_id 
             		inner join obs o on o.encounter_id=e.encounter_id 
-            		where 	o.obs_datetime=maxCarga.data_carga and 
+            		where 	date(o.obs_datetime)=maxCarga.data_carga and 
             				o.concept_id in (1305,856) and e.encounter_type in (13,6,9,53,51) and e.location_id=:location and 
             				e.voided=0 and o.voided=0 
             	) carga_viral on maxNextConsultaOrLevantamento.patient_id=carga_viral.patient_id
