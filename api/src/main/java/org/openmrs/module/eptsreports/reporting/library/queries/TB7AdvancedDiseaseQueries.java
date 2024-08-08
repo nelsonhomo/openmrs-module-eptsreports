@@ -23,6 +23,9 @@ public interface TB7AdvancedDiseaseQueries {
 
     public static final String FIND_PREGNANT_OR_BREASTEFEEDING = "TB7/PATIENTS_PREGNANT.sql";
 
+    public static final String FIND_PATIENTS_WITH_CD4_AFTER_FIRST_PREGNANT_REGISTRATION =
+        "TB7/PATIENTS_WITH_CD4_AFTER_FIRST_PREGNANT_REGISTRATION.sql";
+
     public static final String FIND_PREGNANTS_WITH_COUNT_CD4 =
         "TB7/PATIENTS_PREGNANT_WITH_COUNT_CD4.sql";
 
