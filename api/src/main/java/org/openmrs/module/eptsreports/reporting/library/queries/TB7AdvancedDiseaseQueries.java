@@ -80,7 +80,7 @@ public interface TB7AdvancedDiseaseQueries {
 
     public static String findPatientsWithHighViralLoad =
         "select penultimaCV.patient_id from ( "
-            + " select distinct ultima_cv.patient_id, max(date(o.obs_datetime)) dataPenultimaCV "
+            + " select ultima_cv.patient_id, max(date(o.obs_datetime)) dataPenultimaCV "
             + "from( "
             + "	select p.patient_id ,min(o.obs_datetime) data_cv "
             + "	from patient p "
