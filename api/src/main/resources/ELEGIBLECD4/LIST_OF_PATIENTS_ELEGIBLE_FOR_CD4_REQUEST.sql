@@ -120,10 +120,10 @@
 			              and  o.concept_id in(1695,730,165515) 
 			              and e.encounter_type=6 
 			              and e.location_id=:location 
-			              and o.obs_datetime  BETWEEN :startDate and CURDATE()
+			              and o.obs_datetime  BETWEEN '2023-11-21' and CURDATE()
 			            )cd4 on cd4.patient_id=tx_new.patient_id
 			            )C1 
-			           where (C1.art_start_date BETWEEN :startDate AND :endDate) and (C1.minStateDate is null and C1.value_datetime is null and C1.data_cd4 is null)
+			           where (C1.art_start_date BETWEEN '2023-11-21' AND :endDate) and (C1.minStateDate is null and C1.value_datetime is null and C1.data_cd4 is null)
 			           )C1 on C1.patient_id=p.person_id
 			           left join
 			           (
@@ -141,7 +141,7 @@
 			               and  e.encounter_type in (53,6) 
 			               and o.concept_id in (6272,6273) 
 			               and o.value_coded in (1705) 
-			               and o.obs_datetime BETWEEN :startDate and :endDate 
+			               and o.obs_datetime BETWEEN '2023-11-21' and :endDate 
 			               and e.location_id=:location 
 			               group by p.patient_id 
 			               )C2
@@ -157,7 +157,7 @@
 			                and  o.concept_id in(1695,730,165515) 
 			                and e.encounter_type=6 
 			                and e.location_id=:location 
-			                and o.obs_datetime  BETWEEN :startDate and  CURDATE()
+			                and o.obs_datetime  BETWEEN '2023-11-21' and  CURDATE()
 			              )cd4 on cd4.patient_id=C2.patient_id
 			               WHERE cd4.patient_id is null
 			               )C2 
@@ -279,7 +279,7 @@
 			                   and  e.encounter_type=6 
 			                   and o.concept_id=1406 
 			                   and o.value_coded in (5018,5334,5018,6783,5945,126,60,43,42) 
-			                   and o.obs_datetime BETWEEN :startDate and :endDate 
+			                   and o.obs_datetime BETWEEN '2023-11-21' and :endDate 
 			                   and e.location_id=:location 
 			                   group by p.patient_id 
 			                   )III
@@ -298,7 +298,7 @@
 			                   and  e.encounter_type=6 
 			                   and o.concept_id=1406 
 			                   and o.value_coded in (5340,6990,5344,1294,507,14656,7180,5042,1570) 
-			                   and o.obs_datetime BETWEEN :startDate and :endDate 
+			                   and o.obs_datetime BETWEEN '2023-11-21' and :endDate 
 			                   and e.location_id=:location 
 			                   group by p.patient_id 
 			                   )IV
@@ -322,7 +322,7 @@
 			                   and  e.encounter_type=6 
 			                   and o.concept_id=1406 
 			                   and o.value_coded in (5018,5334,5018,6783,5945,126,60,43,42) 
-			                   and o.obs_datetime BETWEEN :startDate and :endDate 
+			                   and o.obs_datetime BETWEEN '2023-11-21' and :endDate 
 			                   and e.location_id=:location 
 			                   group by p.patient_id 
 			                   )III
@@ -341,7 +341,7 @@
 			                   and  e.encounter_type=6 
 			                   and o.concept_id=1406 
 			                   and o.value_coded in (5340,6990,5344,1294,507,14656,7180,5042,1570) 
-			                   and o.obs_datetime BETWEEN :startDate and :endDate 
+			                   and o.obs_datetime BETWEEN '2023-11-21' and :endDate 
 			                   and e.location_id=:location 
 			                   group by p.patient_id 
 			                   )IV
@@ -672,6 +672,51 @@
 			                 	where lev.encounter_datetime<=saidas_por_transferencia.data_estado or lev.encounter_datetime is null
 			                 		group by saidas_por_transferencia.patient_id 
 			           ) saidas_por_transferencia
+			            left join (  
+			           		
+			           		select patient_id, max(data_ultimo_levantamento)  data_ultimo_levantamento    
+			                    from (
+			     
+			                   		select maxFila.patient_id, date_add(max(obs_fila.value_datetime), interval 1 day) data_ultimo_levantamento 
+			                   		from ( 
+			                   			
+			                   			select fila.patient_id,fila.data_fila data_fila,e.encounter_id 
+			                   			from( 
+						                  
+						                   select p.patient_id,max(encounter_datetime) data_fila  
+						                   from patient p 
+						                          inner join encounter e on e.patient_id=p.patient_id 
+						                   where p.voided=0 and e.voided=0 and e.encounter_type=18 and e.location_id=:location and date(e.encounter_datetime)<= CURDATE() 
+						                         group by p.patient_id 
+						                  )fila 
+						                   inner join encounter e on  date(e.encounter_datetime)=date(fila.data_fila) and e.encounter_type=18 and e.voided=0 and e.patient_id=fila.patient_id 
+						            )maxFila  
+						   		  left join encounter ultimo_fila_data_criacao on ultimo_fila_data_criacao.patient_id=maxFila.patient_id 
+								 	and ultimo_fila_data_criacao.voided=0 
+								   	and ultimo_fila_data_criacao.encounter_type = 18 
+								   	and date(ultimo_fila_data_criacao.encounter_datetime) = date(maxFila.data_fila) 
+								   	and ultimo_fila_data_criacao.location_id=:location 
+								   left join obs obs_fila on obs_fila.person_id=maxFila.patient_id 
+								   	and obs_fila.voided=0 
+								   	and (date(obs_fila.obs_datetime)=date(maxFila.data_fila)  or (date(ultimo_fila_data_criacao.date_created) = date(obs_fila.date_created) and ultimo_fila_data_criacao.encounter_id = obs_fila.encounter_id )) 
+								   	and obs_fila.concept_id=5096 
+								   	and obs_fila.location_id=:location 
+			                      		group by maxFila.patient_id 
+			
+			              			union
+			
+				                   	select p.patient_id, date_add(max(value_datetime), interval 31 day) data_ultimo_levantamento                                                                                     
+				                   	from patient p                                                                                                                                   
+				                    	inner join person pe on pe.person_id = p.patient_id                                                                                         
+				                         inner join encounter e on p.patient_id=e.patient_id                                                                                         
+				                         inner join obs o on e.encounter_id=o.encounter_id                                                                                           
+				                   	where p.voided=0 and pe.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type=52                                                       
+				                         and o.concept_id=23866 and o.value_datetime is not null and e.location_id=:location and o.value_datetime<= CURDATE()                                                                                        
+				                   	group by p.patient_id
+				               ) ultimo_levantamento group by patient_id
+			           	) ultimo_levantamento on saidas_por_transferencia.patient_id = ultimo_levantamento.patient_id 
+			          		where (ultimo_levantamento.patient_id is not null and ultimo_levantamento.data_ultimo_levantamento <= CURDATE() and saidas_por_transferencia.data_estado <= CURDATE()) or  ultimo_levantamento.patient_id is null
+			           
                        )saidas on saidas.patient_id=coorteFinal.patient_id
 
                       left join
@@ -797,7 +842,7 @@
 	                                  inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
 	                              where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=1982
 	                              and value_coded=1065 and e.encounter_type=6                                                                                                                               
-	                              and e.encounter_datetime  between :startDate and :endDate  
+	                              and e.encounter_datetime  between '2023-11-21' and :endDate  
 	                              and e.location_id=:location  
 	                              and pe.gender = 'F' 
 	                        ) gravida_real on gravida_real.patient_id=coorteFinal.patient_id
@@ -810,7 +855,7 @@
 	                                  inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
 	                              where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=6332
 	                              and value_coded=1065 and e.encounter_type=6                                                                                                                               
-	                              and e.encounter_datetime  between :startDate and :endDate  
+	                              and e.encounter_datetime  between '2023-11-21' and :endDate  
 	                              and e.location_id=:location  
 	                              and pe.gender = 'F' 
 	                          ) lactante_real on lactante_real.patient_id = coorteFinal.patient_id
