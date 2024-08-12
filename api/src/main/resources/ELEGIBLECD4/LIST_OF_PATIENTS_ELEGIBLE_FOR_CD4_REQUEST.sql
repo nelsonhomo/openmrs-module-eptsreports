@@ -120,10 +120,10 @@
 			              and  o.concept_id in(1695,730,165515) 
 			              and e.encounter_type=6 
 			              and e.location_id=:location 
-			              and o.obs_datetime  BETWEEN '2023-11-21' and CURDATE()
+			              and o.obs_datetime  BETWEEN :startDate and CURDATE()
 			            )cd4 on cd4.patient_id=tx_new.patient_id
 			            )C1 
-			           where (C1.art_start_date BETWEEN '2023-11-21' AND :endDate) and (C1.minStateDate is null and C1.value_datetime is null and C1.data_cd4 is null)
+			           where (C1.art_start_date BETWEEN :startDate AND :endDate) and (C1.minStateDate is null and C1.value_datetime is null and C1.data_cd4 is null)
 			           )C1 on C1.patient_id=p.person_id
 			           left join
 			           (
@@ -141,7 +141,7 @@
 			               and  e.encounter_type in (53,6) 
 			               and o.concept_id in (6272,6273) 
 			               and o.value_coded in (1705) 
-			               and o.obs_datetime BETWEEN '2023-11-21' and :endDate 
+			               and o.obs_datetime BETWEEN :startDate and :endDate 
 			               and e.location_id=:location 
 			               group by p.patient_id 
 			               )C2
@@ -157,7 +157,7 @@
 			                and  o.concept_id in(1695,730,165515) 
 			                and e.encounter_type=6 
 			                and e.location_id=:location 
-			                and o.obs_datetime  BETWEEN '2023-11-21' and  CURDATE()
+			                and o.obs_datetime  BETWEEN :startDate and  CURDATE()
 			              )cd4 on cd4.patient_id=C2.patient_id
 			               WHERE cd4.patient_id is null
 			               )C2 
@@ -279,7 +279,7 @@
 			                   and  e.encounter_type=6 
 			                   and o.concept_id=1406 
 			                   and o.value_coded in (5018,5334,5018,6783,5945,126,60,43,42) 
-			                   and o.obs_datetime BETWEEN '2023-11-21' and :endDate 
+			                   and o.obs_datetime BETWEEN :startDate and :endDate 
 			                   and e.location_id=:location 
 			                   group by p.patient_id 
 			                   )III
@@ -298,7 +298,7 @@
 			                   and  e.encounter_type=6 
 			                   and o.concept_id=1406 
 			                   and o.value_coded in (5340,6990,5344,1294,507,14656,7180,5042,1570) 
-			                   and o.obs_datetime BETWEEN '2023-11-21' and :endDate 
+			                   and o.obs_datetime BETWEEN :startDate and :endDate 
 			                   and e.location_id=:location 
 			                   group by p.patient_id 
 			                   )IV
@@ -322,7 +322,7 @@
 			                   and  e.encounter_type=6 
 			                   and o.concept_id=1406 
 			                   and o.value_coded in (5018,5334,5018,6783,5945,126,60,43,42) 
-			                   and o.obs_datetime BETWEEN '2023-11-21' and :endDate 
+			                   and o.obs_datetime BETWEEN :startDate and :endDate 
 			                   and e.location_id=:location 
 			                   group by p.patient_id 
 			                   )III
@@ -341,7 +341,7 @@
 			                   and  e.encounter_type=6 
 			                   and o.concept_id=1406 
 			                   and o.value_coded in (5340,6990,5344,1294,507,14656,7180,5042,1570) 
-			                   and o.obs_datetime BETWEEN '2023-11-21' and :endDate 
+			                   and o.obs_datetime BETWEEN :startDate and :endDate 
 			                   and e.location_id=:location 
 			                   group by p.patient_id 
 			                   )IV
@@ -842,7 +842,7 @@
 	                                  inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
 	                              where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=1982
 	                              and value_coded=1065 and e.encounter_type=6                                                                                                                               
-	                              and e.encounter_datetime  between '2023-11-21' and :endDate  
+	                              and e.encounter_datetime  between :startDate and :endDate  
 	                              and e.location_id=:location  
 	                              and pe.gender = 'F' 
 	                        ) gravida_real on gravida_real.patient_id=coorteFinal.patient_id
@@ -855,7 +855,7 @@
 	                                  inner join obs o on e.encounter_id=o.encounter_id                                                                                                                                                                                               
 	                              where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=6332
 	                              and value_coded=1065 and e.encounter_type=6                                                                                                                               
-	                              and e.encounter_datetime  between '2023-11-21' and :endDate  
+	                              and e.encounter_datetime  between :startDate and :endDate  
 	                              and e.location_id=:location  
 	                              and pe.gender = 'F' 
 	                          ) lactante_real on lactante_real.patient_id = coorteFinal.patient_id
