@@ -1729,14 +1729,14 @@ public class MQCohortQueries {
   }
 
   @DocumentedDefinition(
-      value = "findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7")
+      value = "findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPIINHCategory7")
   public CohortDefinition
-      findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7() {
+      findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPIINHCategory7() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7");
+        "findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPIINHCategory7");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -1744,7 +1744,7 @@ public class MQCohortQueries {
 
     String query =
         MQQueriesInterface.QUERY
-            .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7;
+            .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPIINHCategory7;
 
     definition.setQuery(query);
 
@@ -1752,14 +1752,14 @@ public class MQCohortQueries {
   }
 
   @DocumentedDefinition(
-      value = "findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7")
+      value = "findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHCategory7")
   public CohortDefinition
-      findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7() {
+      findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHCategory7() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
     definition.setName(
-        "findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7");
+        "findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHCategory7");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -1767,7 +1767,7 @@ public class MQCohortQueries {
 
     String query =
         MQQueriesInterface.QUERY
-            .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7;
+            .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHCategory7;
 
     definition.setQuery(query);
 
@@ -1775,12 +1775,12 @@ public class MQCohortQueries {
   }
 
   @DocumentedDefinition(
-      value = "finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7")
-  public CohortDefinition finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7() {
+      value = "finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHCategory7")
+  public CohortDefinition finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHCategory7() {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
-    definition.setName("finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7");
+    definition.setName("finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHCategory7");
     definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
@@ -1788,7 +1788,7 @@ public class MQCohortQueries {
 
     String query =
         MQQueriesInterface.QUERY
-            .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7;
+            .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHCategory7;
 
     definition.setQuery(query);
 

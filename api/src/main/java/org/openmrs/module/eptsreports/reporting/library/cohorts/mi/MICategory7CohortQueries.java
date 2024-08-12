@@ -56,21 +56,21 @@ public class MICategory7CohortQueries {
         "TB-ACTIVE-CAT7-B1",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7(),
+                .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPIINHCategory7(),
             mappingsMI));
 
     definition.addSearch(
         "TB-SCREENING-CAT7-B2",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7(),
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHCategory7(),
             mappingsMI));
 
     definition.addSearch(
         "TB-TREATMENT-CAT7-B3",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7(),
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHCategory7(),
             mappingsMI));
 
     definition.addSearch(
@@ -250,21 +250,21 @@ public class MICategory7CohortQueries {
         "TB-ACTIVE-CAT7-B1",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7(),
+                .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPIINHCategory7(),
             mappingsMI));
 
     definition.addSearch(
         "TB-SCREENING-CAT7-B2",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7(),
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHCategory7(),
             mappingsMI));
 
     definition.addSearch(
         "TB-TREATMENT-CAT7-B3",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7(),
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHCategory7(),
             mappingsMI));
 
     definition.addSearch(

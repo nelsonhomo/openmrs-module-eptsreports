@@ -422,7 +422,7 @@ public interface MQQueriesInterface {
             + "and obsEstado.obs_datetime BETWEEN :startInclusionDate AND :endRevisionDate "
             + "group by p.patient_id  "
             + ") obsFimTPI on obsFimTPI.patient_id = B4_1_2.patient_id   "
-            + " WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 170 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 297 DAY) "
+            + " WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 170 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 231 DAY) "
             + "group by B4_1_2.patient_id "
             + ")finalTPI ";
 
@@ -861,7 +861,7 @@ public interface MQQueriesInterface {
             + "INNER JOIN encounter e ON e.patient_id = TPI3HP.patient_id  "
             + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id  "
             + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-            + "AND  e.encounter_datetime BETWEEN TPI3HP.data_inicio_3HP AND (TPI3HP.data_inicio_3HP + INTERVAL 6 MONTH) "
+            + "AND  e.encounter_datetime BETWEEN TPI3HP.data_inicio_3HP AND (TPI3HP.data_inicio_3HP + INTERVAL 132 DAY) "
             + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23761 AND obsTBActiva.value_coded = 1065  ";
 
     public static final String findPatientWhoAreTBScreeningSixMonthfterLastConsultationRF13_1 =
@@ -879,7 +879,7 @@ public interface MQQueriesInterface {
             + " INNER JOIN encounter e ON e.patient_id = TPI3HP.patient_id "
             + " INNER JOIN obs obsTBPositivo ON obsTBPositivo.encounter_id = e.encounter_id "
             + " WHERE e.voided = 0 AND obsTBPositivo.voided = 0 "
-            + " AND e.encounter_datetime BETWEEN TPI3HP.data_inicio_3HP AND (TPI3HP.data_inicio_3HP + INTERVAL 6 MONTH) "
+            + " AND e.encounter_datetime BETWEEN TPI3HP.data_inicio_3HP AND (TPI3HP.data_inicio_3HP + INTERVAL 132 DAY) "
             + " AND e.location_id = :location AND e.encounter_type = 6 AND obsTBPositivo.concept_id = 23758 AND obsTBPositivo.value_coded = 1065 ";
 
     public static final String findPatientWhoAreTBTretmantSixMonthfterLastConsultationRF13_1 =
@@ -897,11 +897,11 @@ public interface MQQueriesInterface {
             + " INNER JOIN encounter e ON e.patient_id = TPI3HP.patient_id "
             + " INNER JOIN obs obsTB ON obsTB.encounter_id = e.encounter_id "
             + " WHERE e.voided = 0 AND e.location_id = :location  AND obsTB.voided = 0 AND "
-            + " obsTB.obs_datetime BETWEEN TPI3HP.data_inicio_3HP AND (TPI3HP.data_inicio_3HP + INTERVAL 6 MONTH) AND "
+            + " obsTB.obs_datetime BETWEEN TPI3HP.data_inicio_3HP AND (TPI3HP.data_inicio_3HP + INTERVAL 132 DAY) AND "
             + " e.encounter_type = 6 AND obsTB.concept_id = 1268 AND obsTB.value_coded IN (1256,1257,1267) ";
 
     public static final String
-        findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPI3HPCategory7 =
+        findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPIINHCategory7 =
             "select inh.patient_id from ( "
                 + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
                 + "from patient p "
@@ -917,11 +917,11 @@ public interface MQQueriesInterface {
                 + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
                 + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
                 + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-                + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 6 MONTH) "
+                + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 231 DAY) "
                 + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23761 AND obsTBActiva.value_coded = 1065 ";
 
     public static final String
-        findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiated3HPCategory7 =
+        findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHCategory7 =
             "select inh.patient_id from ( "
                 + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
                 + "from patient p "
@@ -937,10 +937,10 @@ public interface MQQueriesInterface {
                 + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
                 + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
                 + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-                + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 6 MONTH) "
+                + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 231 DAY) "
                 + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23758 AND obsTBActiva.value_coded = 1065 ";
 
-    public static final String finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiated3HPCategory7 =
+    public static final String finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHCategory7 =
         "select inh.patient_id from ( "
             + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
             + "from patient p "
@@ -956,7 +956,7 @@ public interface MQQueriesInterface {
             + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
             + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
             + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-            + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 198 DAY) "
+            + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 231 DAY) "
             + "AND e.encounter_type = 6 AND obsTBActiva.concept_id=1268 and obsTBActiva.value_coded in (1256,1257,1267) ";
 
     public static final String
@@ -1043,7 +1043,7 @@ public interface MQQueriesInterface {
                 + "and date(obsEstado.obs_datetime) BETWEEN :startInclusionDate and :endRevisionDate "
                 + "group by p.patient_id  "
                 + ") obsFimTPI on obsFimTPI.patient_id = B4_1_2.patient_id "
-                + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 170 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 297 DAY) "
+                + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 170 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 231 DAY) "
                 + "group by B4_1_2.patient_id "
                 + ")finalTPI ";
 
@@ -1073,7 +1073,7 @@ public interface MQQueriesInterface {
                 + "and date(obsEstado.obs_datetime) BETWEEN :startInclusionDate and :endRevisionDate "
                 + "group by p.patient_id "
                 + ") obsFimTPI on obsFimTPI.patient_id = B4_1_2.patient_id "
-                + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 80 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 198 DAY) "
+                + "WHERE obsFimTPI.obs_datetime between (B4_1_2.dataInicioTPI + INTERVAL 80 DAY) and (B4_1_2.dataInicioTPI + INTERVAL 132 DAY) "
                 + "group by B4_1_2.patient_id ";
 
     public static final String findAllPatientWhoAreDeadByEndOfRevisonPeriod =
