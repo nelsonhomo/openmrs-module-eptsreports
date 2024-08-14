@@ -65,5 +65,12 @@ public class MICommonsDementions {
         "ageOnTheFirstConsultationDuringInclusionPeriod",
         EptsReportUtils.map(
             this.mIAgeDimentions.getDimensionAgeOnTheFirstConsultation(), mappings));
+
+    dataSetDefinition.addDimension(
+        "ageOnReinicio",
+        EptsReportUtils.map(
+            this.mQAgeDimensions
+                .getDimensionForPatientsWhoReinitiatedTreatmentInClinicalConsultation(),
+            mappings));
   }
 }

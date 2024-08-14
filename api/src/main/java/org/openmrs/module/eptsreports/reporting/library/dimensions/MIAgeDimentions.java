@@ -851,4 +851,49 @@ public class MIAgeDimentions {
 
     return dimension;
   }
+
+  public CohortDefinitionDimension
+      getDimensionForPatientsWhoReinitiatedTreatmentInClinicalConsultation() {
+    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
+
+    dimension.setName("patientsPregnantEnrolledOnART");
+    dimension.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    dimension.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    dimension.addParameter(new Parameter("location", "Location", Location.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    dimension.addCohortDefinition(
+        "15+",
+        EptsReportUtils.map(
+            mQAgeDimensions.findAdultPatientsWhoReinitiatedTreatmentInClinicalConsultation(15),
+            mappings));
+
+    dimension.addCohortDefinition(
+        "15-",
+        EptsReportUtils.map(
+            mQAgeDimensions.findChildrenPatientsWhoReinitiatedTreatmentInClinicalConsultation(
+                0, 14),
+            mappings));
+
+    dimension.addCohortDefinition(
+        "CD4-15+",
+        EptsReportUtils.map(
+            mQAgeDimensions
+                .findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(
+                    15),
+            mappings));
+
+    dimension.addCohortDefinition(
+        "CD4-15-",
+        EptsReportUtils.map(
+            mQAgeDimensions
+                .findPatientsWhoReinitiatedTreatmentInTheSameClinicalConsultationMarkedAsRequestCD4(
+                    0, 14),
+            mappings));
+
+    return dimension;
+  }
 }
