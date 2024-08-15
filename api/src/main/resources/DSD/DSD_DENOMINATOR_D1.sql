@@ -1,4 +1,4 @@
-select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestampdiff(year,per.birthdate,:endDate) idade, timestampdiff(month,inicioMaisReal.data_inicio,:endDate) idadeEmTarv, cd4Absoluto.value_numeric cd4Abs, cd4Percentual.value_numeric cd4Per, cvmenor1000.patient_id pidcv12meses,cvmenor1000.person_id pidcvmenor100  
+select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestampdiff(year,per.birthdate,:endDate) idade, timestampdiff(month,inicioMaisReal.data_inicio,:endDate) idadeEmTarv, cd4Absoluto.value_numeric cd4Abs,cd4SemiQuantitativo.value_coded cd4SemiQt, cd4Percentual.value_numeric cd4Per, cvmenor1000.patient_id pidcv12meses,cvmenor1000.person_id pidcvmenor100  
             from (
             				select patient_id, data_inicio, data_usar
                 from( 
@@ -242,6 +242,18 @@ select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestamp
             left join obs o on o.person_id=max_cd4.patient_id and max_cd4.max_data_cd4=o.obs_datetime and o.voided=0 and  
             o.concept_id = 1695 and o.value_numeric>200 and o.location_id=:location 
             ) cd4Absoluto on inicio.patient_id=cd4Absoluto.patient_id  
+            left join ( 
+            select distinct max_cd4.patient_id,o.value_coded  from (  
+            Select p.patient_id,max(o.obs_datetime) max_data_cd4  From patient p  
+            inner join encounter e on p.patient_id=e.patient_id  
+            inner join obs o on e.encounter_id=o.encounter_id  
+            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 165515 and  e.encounter_type in (6,9,13,53) 
+            and o.obs_datetime between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location 
+            group by p.patient_id 
+            )max_cd4  
+            left join obs o on o.person_id=max_cd4.patient_id and max_cd4.max_data_cd4=o.obs_datetime and o.voided=0 and  
+            o.concept_id = 165515 and o.value_coded = 1254 and o.location_id=:location 
+            ) cd4SemiQuantitativo on inicio.patient_id=cd4SemiQuantitativo.patient_id  
             left join  
             ( 
             select distinct max_cd4.patient_id,o.value_numeric  from ( 
@@ -256,4 +268,4 @@ select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestamp
             o.concept_id=730 and o.value_numeric>15 and o.location_id=:location 
             ) cd4Percentual on inicio.patient_id=cd4Percentual.patient_id 
             ) elegivel  
-            where (idade>=2 and idadeEmTarv>=3) and ((pidcvmenor100 is not null ) or (pidcv12meses is null and (idade>=5 and idade<=9) and cd4Abs>200) or (pidcv12meses is null and (idade>=2 and idade<=4) and (cd4Abs>750 or cd4Per>15)))
+            where (idade>=2 and idadeEmTarv>=3) and ((pidcvmenor100 is not null ) or (pidcv12meses is null and (idade>=5 and idade<=9) and (cd4Abs>200 or cd4SemiQt = 1254)) or (pidcv12meses is null and (idade>=2 and idade<=4) and (cd4Abs>750 or cd4Per>15)))
