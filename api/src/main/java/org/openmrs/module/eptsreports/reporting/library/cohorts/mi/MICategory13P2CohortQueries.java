@@ -3,6 +3,7 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts.mi;
 import java.util.Date;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCohortQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.ReportType;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
@@ -49,7 +50,9 @@ public class MICategory13P2CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI),
+            mappings));
 
     definition.addSearch(
         "DROPPED-OUT",

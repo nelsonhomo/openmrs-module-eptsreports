@@ -1,5 +1,6 @@
 package org.openmrs.module.eptsreports.reporting.library.queries.mq;
 
+import org.openmrs.module.eptsreports.reporting.utils.ReportType;
 import org.openmrs.module.eptsreports.reporting.utils.TypePTV;
 
 public interface MQQueriesInterface {
@@ -64,27 +65,50 @@ public interface MQQueriesInterface {
             + ") consultaOuARV on saida.patient_id=consultaOuARV.patient_id "
             + "where consultaOuARV.encounter_datetime <= saida.data_estado and saida.data_estado <= :endRevisionDate ";
 
-    public static final String findPatientsWhoTransferedOutRF07Category7 =
-        "select saida.patient_id from "
-            + "( "
-            + "select p.patient_id, max(o.obs_datetime) data_estado from patient p "
-            + "inner join encounter e on p.patient_id=e.patient_id "
-            + "inner join obs  o on e.encounter_id=o.encounter_id "
-            + "where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 6 and "
-            + "o.concept_id = 6273 and o.obs_datetime>=:startInclusionDate and o.obs_datetime<=:endRevisionDate and e.location_id=:location "
-            + "group by p.patient_id "
-            + "union "
-            + "select p.patient_id, max(o.obs_datetime) data_estado from patient p "
-            + "inner join encounter e on p.patient_id=e.patient_id "
-            + "inner join obs  o on e.encounter_id=o.encounter_id "
-            + "where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 53 and "
-            + "o.concept_id = 6272 and o.obs_datetime>=:startInclusionDate and o.obs_datetime<=:endRevisionDate and e.location_id=:location "
-            + "group by p.patient_id "
-            + ") saida "
-            + "inner join obs o on o.person_id = saida.patient_id "
-            + "where o.concept_id in (6272,6273) and o.value_coded = 1706 "
-            + "and o.obs_datetime = saida.data_estado and o.voided = 0 "
-            + "group by saida.patient_id ";
+    public static final String findPatientsWhoTransferedOutRF07Category7(ReportType reportType) {
+      String query =
+          "select saida.patient_id from "
+              + "( "
+              + "select p.patient_id, max(o.obs_datetime) data_estado from patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs  o on e.encounter_id=o.encounter_id "
+              + "where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 6 and "
+              + "o.concept_id = 6273 and %s and e.location_id=:location "
+              + "group by p.patient_id "
+              + "union "
+              + "select p.patient_id, max(o.obs_datetime) data_estado from patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "inner join obs  o on e.encounter_id=o.encounter_id "
+              + "where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 53 and "
+              + "o.concept_id = 6272 and %s and e.location_id=:location "
+              + "group by p.patient_id "
+              + ") saida "
+              + "inner join obs o on o.person_id = saida.patient_id "
+              + "where o.concept_id in (6272,6273) and o.value_coded = 1706 "
+              + "and o.obs_datetime = saida.data_estado and o.voided = 0 "
+              + "group by saida.patient_id ";
+
+      switch (reportType) {
+        case MQ:
+          query =
+              String.format(
+                  query,
+                  " o.obs_datetime>=:startInclusionDate and o.obs_datetime<=:endRevisionDate  ",
+                  " o.obs_datetime>=:startInclusionDate and o.obs_datetime<=:endRevisionDate  ");
+
+          break;
+
+        case MI:
+          query =
+              String.format(
+                  query,
+                  " o.obs_datetime<=:endRevisionDate ",
+                  " o.obs_datetime<=:endRevisionDate ");
+          break;
+      }
+
+      return query;
+    }
 
     public static final String getPatientsWhoDiedEndRevisioDate =
         "select obito.patient_id from ( "

@@ -10,6 +10,7 @@ import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory13P
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory13P3QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory13P4QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQQueriesInterface;
+import org.openmrs.module.eptsreports.reporting.utils.ReportType;
 import org.openmrs.module.eptsreports.reporting.utils.TypePTV;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
@@ -99,7 +100,7 @@ public class MQCohortQueries {
   }
 
   @DocumentedDefinition(value = "findPatientsWhoTransferedOutRF07Category7")
-  public CohortDefinition findPatientsWhoTransferedOutRF07Category7() {
+  public CohortDefinition findPatientsWhoTransferedOutRF07Category7(ReportType reportType) {
 
     final SqlCohortDefinition definition = new SqlCohortDefinition();
 
@@ -109,7 +110,7 @@ public class MQCohortQueries {
     definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
     definition.addParameter(new Parameter("location", "Location", Location.class));
 
-    String query = MQQueriesInterface.QUERY.findPatientsWhoTransferedOutRF07Category7;
+    String query = MQQueriesInterface.QUERY.findPatientsWhoTransferedOutRF07Category7(reportType);
 
     definition.setQuery(query);
 

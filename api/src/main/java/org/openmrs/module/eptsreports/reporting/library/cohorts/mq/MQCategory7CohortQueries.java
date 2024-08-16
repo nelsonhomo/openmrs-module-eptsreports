@@ -2,6 +2,7 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts.mq;
 
 import java.util.Date;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.ReportType;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
@@ -209,7 +210,8 @@ public class MQCategory7CohortQueries {
     definition.addSearch(
         "TRANSFERED-OUT",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MQ),
+            mappings));
 
     definition.addSearch(
         "PREGNANT",
@@ -365,7 +367,8 @@ public class MQCategory7CohortQueries {
     definition.addSearch(
         "TRANSFERED-OUT",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MQ),
+            mappings));
 
     definition.addSearch(
         "TB-ACTIVE-CAT7",

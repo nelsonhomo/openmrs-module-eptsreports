@@ -5,6 +5,7 @@ import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQQueriesInterface;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.ReportType;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
@@ -129,7 +130,8 @@ public class MICategory11P2CohortQueries {
     definition.addSearch(
         "TRANSFERED-OUT",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI),
+            mappings));
 
     definition.setCompositionString(
         "(START-ART-A AND PREGNANT) NOT (BREASTFEEDING OR TRANSFERED-IN OR TRANSFERED-OUT)");
@@ -177,7 +179,8 @@ public class MICategory11P2CohortQueries {
     definition.addSearch(
         "TRANSFERED-OUT",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI),
+            mappings));
 
     definition.setCompositionString("(B1 AND PREGNANT) NOT TRANSFERED-OUT");
 

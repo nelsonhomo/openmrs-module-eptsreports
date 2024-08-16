@@ -5,6 +5,7 @@ import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCategory13P
 import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.mqdatasets.MQAbstractDataSet;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.ReportType;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
@@ -57,7 +58,8 @@ public class MICategory13P3CohortQueries extends MQAbstractDataSet {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
 
     definition.addSearch(
         "START-ART",
@@ -131,7 +133,8 @@ public class MICategory13P3CohortQueries extends MQAbstractDataSet {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
 
     definition.addSearch(
         "START-ART",
@@ -205,7 +208,8 @@ public class MICategory13P3CohortQueries extends MQAbstractDataSet {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
 
     definition.addSearch(
         "START-ART",
@@ -279,7 +283,8 @@ public class MICategory13P3CohortQueries extends MQAbstractDataSet {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
 
     definition.addSearch(
         "START-ART",
@@ -348,7 +353,8 @@ public class MICategory13P3CohortQueries extends MQAbstractDataSet {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
 
     definition.addSearch(
         "B2",
@@ -413,7 +419,8 @@ public class MICategory13P3CohortQueries extends MQAbstractDataSet {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
 
     definition.addSearch(
         "START-ART",
@@ -515,7 +522,8 @@ public class MICategory13P3CohortQueries extends MQAbstractDataSet {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
 
     definition.addSearch(
         "START-ART",
@@ -617,7 +625,8 @@ public class MICategory13P3CohortQueries extends MQAbstractDataSet {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
 
     definition.addSearch(
         "START-ART",
@@ -719,7 +728,8 @@ public class MICategory13P3CohortQueries extends MQAbstractDataSet {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
 
     definition.addSearch(
         "START-ART",

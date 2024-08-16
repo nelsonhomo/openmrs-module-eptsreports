@@ -4,6 +4,7 @@ import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.library.queries.mq.MQCategory19QueriesInterface;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.ReportType;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
@@ -191,7 +192,8 @@ public class MQCategory19CohortQueries {
     definition.addSearch(
         "TRANSFERED-OUT",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MQ),
+            mappings));
 
     definition.setCompositionString("PRESUNTIVETB NOT TRANSFERED-OUT");
 
@@ -254,7 +256,8 @@ public class MQCategory19CohortQueries {
             this.findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequest(), mappings));
     definition.addSearch(
         "TROUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MQ), mappings));
 
     definition.setCompositionString("(GENEXPERTREQUEST AND GENEXPERTRESULT) NOT TROUT");
 
@@ -313,7 +316,8 @@ public class MQCategory19CohortQueries {
 
     definition.addSearch(
         "TROUT",
-        EptsReportUtils.map(mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(), mappings));
+        EptsReportUtils.map(
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MQ), mappings));
 
     definition.setCompositionString("TBDIAGNOSTIC NOT TROUT");
 
