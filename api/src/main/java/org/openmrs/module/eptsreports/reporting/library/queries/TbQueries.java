@@ -62,8 +62,10 @@ public interface TbQueries {
             + ") tb";
 
     public static final String findPatientsWhoAreInTbTreatmentFor7MonthsPriorEndReportingPeriod =
-        "select tb.patient_id from ( "
-            + "select inicioTB.patient_id from ( "
+        "select tb.patient_id from "
+            + "( "
+            + "select inicioTB.patient_id from "
+            + "( "
             + "select p.patient_id,min(o.value_datetime) data_inicio_tb from patient p "
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs o on o.encounter_id=e.encounter_id "
@@ -71,7 +73,8 @@ public interface TbQueries {
             + "and  o.value_datetime  between (:endDate - INTERVAL 7 MONTH ) and :endDate "
             + "group by p.patient_id "
             + ") inicioTB "
-            + "left join ( "
+            + "left join "
+            + "( "
             + "select p.patient_id,max(o.value_datetime) data_fim_tb  from 	patient p "
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs o on o.encounter_id=e.encounter_id "
@@ -87,7 +90,8 @@ public interface TbQueries {
             + "where pg.program_id=5 and pg.voided=0 and p.voided=0 and pg.date_enrolled between (:endDate - INTERVAL 7 MONTH) and :endDate "
             + "and pg.location_id=:location and (pg.date_completed is null or (pg.date_completed is not null and pg.date_completed> :endDate)) "
             + "union "
-            + "select max_tb.patient_id from ( "
+            + "select max_tb.patient_id from "
+            + "( "
             + "select p.patient_id,max(o.obs_datetime) max_datatb from patient p "
             + "inner join encounter e on p.patient_id=e.patient_id "
             + "inner join obs o on o.encounter_id=e.encounter_id "
@@ -116,6 +120,12 @@ public interface TbQueries {
             + "where p.voided=0 and e.voided=0 and obsTB.obs_datetime between :endDate - INTERVAL 7 MONTH and  :endDate  and "
             + "e.location_id=:location and e.encounter_type=53 and obsTB.concept_id=1406 and obsTB.value_coded =42 and obsTB.voided=0 "
             + "group by p.patient_id "
-            + ") tb ";
+            + "union "
+            + "select p.patient_id from patient p "
+            + "inner join encounter e on e.patient_id=p.patient_id "
+            + "inner join obs obsTB on obsTB.encounter_id=e.encounter_id "
+            + "where p.voided=0 and e.voided=0 and obsTB.obs_datetime between :endDate - INTERVAL 7 MONTH and  :endDate  and "
+            + "e.location_id=:location and e.encounter_type=6 and obsTB.concept_id=23758 and obsTB.value_coded =1065 and obsTB.voided=0 "
+            + " ) tb ";
   }
 }
