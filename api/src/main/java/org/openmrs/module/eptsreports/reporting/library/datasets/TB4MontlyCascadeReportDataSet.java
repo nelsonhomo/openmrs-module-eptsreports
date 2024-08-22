@@ -281,6 +281,7 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
         "5. Screened patients with specimen sent -Total",
         EptsReportUtils.map(specimenSet, mappings),
         "");
+
     dataSetDefinition.addColumn(
         "TBD-SP-baciloscopia",
         "5. Screened patients with specimen sent -Total",
@@ -354,6 +355,7 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
         this.getColumnsForAgeDesaggregation(),
         mappings,
         "artStartState=txcurrPreviouslyOnArt|diagnostictest=tblam");
+
     // Other
 
     dataSetDefinition.addColumn(
@@ -396,14 +398,14 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "TBD-PR-baciloscopia",
-        "6. 6a.Screened patients with positive TB testing result -Total",
+        "6a.Screened patients with positive TB testing result -Total",
         EptsReportUtils.map(positiveResults, mappings),
         "diagnostictest=baciloscopia");
 
     this.addRow(
         dataSetDefinition,
         "TBD-PR-N",
-        "6.Screened patients with positive TB testing result (New on ART) ",
+        "6a.Screened patients with positive TB testing result (New on ART) ",
         EptsReportUtils.map(positiveResults, mappings),
         this.getColumnsForAgeDesaggregation(),
         mappings,
@@ -412,7 +414,7 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
     this.addRow(
         dataSetDefinition,
         "TBD-PR-P",
-        "6.Screened patients with positive TB testing result (Previously on ART)",
+        "6a.Screened patients with positive TB testing result (Previously on ART)",
         EptsReportUtils.map(positiveResults, mappings),
         this.getColumnsForAgeDesaggregation(),
         mappings,
@@ -421,14 +423,14 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
     // mWRD
     dataSetDefinition.addColumn(
         "TBD-PR-mWRD",
-        " 6. Screened patients with positive TB testing result mWRD MTB/RIF",
+        " 6a. Screened patients with positive TB testing result mWRD MTB/RIF",
         EptsReportUtils.map(positiveResults, mappings),
         "diagnostictest=genexpert");
 
     this.addRow(
         dataSetDefinition,
         "TBD-PRM-N",
-        "6. Screened patients with positive TB testing resultmWRD MTB/RIF (Previously on ART) ",
+        "6a. Screened patients with positive TB testing result mWRD MTB/RIF (Previously on ART) ",
         EptsReportUtils.map(positiveResults, mappings),
         this.getColumnsForAgeDesaggregation(),
         mappings,
@@ -437,7 +439,7 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
     this.addRow(
         dataSetDefinition,
         "TBD-PRM-P",
-        "6.Screened patients with positive TB testing resultmWRD MTB/RIF (Previously on ART)",
+        "6a.Screened patients with positive TB testing resultmWRD MTB/RIF (Previously on ART)",
         EptsReportUtils.map(positiveResults, mappings),
         this.getColumnsForAgeDesaggregation(),
         mappings,
@@ -446,7 +448,7 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
     // TB LAM
     dataSetDefinition.addColumn(
         "TBD-PRL-tblam",
-        " 6. Screened patients with positive TB testing result TB LAM",
+        " 6a. Screened patients with positive TB testing result TB LAM",
         EptsReportUtils.map(positiveResults, mappings),
         "diagnostictest=tblam");
 
@@ -462,7 +464,7 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
     this.addRow(
         dataSetDefinition,
         "TBD-PRL-P",
-        "Screened patients with positive TB testing result TB LAM (Previously on ART)",
+        "6a.Screened patients with positive TB testing result TB LAM (Previously on ART)",
         EptsReportUtils.map(positiveResults, mappings),
         this.getColumnsForAgeDesaggregation(),
         mappings,
@@ -471,14 +473,14 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
 
     dataSetDefinition.addColumn(
         "TBD-PRO-other",
-        " 6. Screened patients with positive TB testing result with Additional test other",
+        " 6a. Screened patients with positive TB testing result with Additional test other",
         EptsReportUtils.map(positiveResults, mappings),
         "diagnostictest=additonalDiagnostic");
 
     this.addRow(
         dataSetDefinition,
         "TBD-PRO-N",
-        "6. Screened patients with positive TB testing result with Additional test other (New on ART) ",
+        "6a. Screened patients with positive TB testing result with Additional test other (New on ART) ",
         EptsReportUtils.map(positiveResults, mappings),
         this.getColumnsForAgeDesaggregation(),
         mappings,
@@ -487,7 +489,7 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
     this.addRow(
         dataSetDefinition,
         "TBD-PRO-P",
-        "Screened patients with positive TB testing result with Additional test other (Previously on ART)",
+        "6a.Screened patients with positive TB testing result with Additional test other (Previously on ART)",
         EptsReportUtils.map(positiveResults, mappings),
         this.getColumnsForAgeDesaggregation(),
         mappings,
@@ -533,7 +535,7 @@ public class TB4MontlyCascadeReportDataSet extends BaseDataSet {
 
     // mWRD
     dataSetDefinition.addColumn(
-        "TBD-PR-mWRD",
+        "TBD-NRM-mWRD",
         " 6b.Screened patients with negative TB testing  result mWRD MTB/RIF",
         EptsReportUtils.map(negativeResults, mappings),
         "diagnostictest=genexpert|negativeTestResult=negativeGenexpert");
