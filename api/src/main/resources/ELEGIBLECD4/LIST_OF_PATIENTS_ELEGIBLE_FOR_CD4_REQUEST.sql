@@ -10,7 +10,7 @@
 				 max_fila.data_fila,
 				 max_fila.data_proximo_lev,
 				 DATE_FORMAT(DATE(maxConsulta.data_seguimento), '%d-%m-%Y')  as data_seguimento,
-				 DATE_FORMAT(DATE(max(obs_seguimento.value_datetime)), '%d-%m-%Y')  as data_proximo_seguimento,
+				 if(max(obs_seguimento.value_datetime) is not null,DATE_FORMAT(DATE(max(obs_seguimento.value_datetime)), '%d-%m-%Y'),'N/A') as data_proximo_seguimento,
 				 coorteFinal.criteria,
 			     case 
 	             when coorteFinal.criteria = 1 then 'C1– CD4 Inicial - Novo Início TARV' 
@@ -21,11 +21,11 @@
 	             when coorteFinal.criteria = 6 then 'C6– Mulher Grávida'
 	             end as criterioElegibilidade,
 	             if(cd4.data_ultimo_cd4 is not null,DATE_FORMAT(DATE(cd4.data_ultimo_cd4), '%d-%m-%Y'),'N/A')  as data_ultimo_cd4,
-	             if(cd4Final.data_resultado_cd4 is not null,DATE_FORMAT(DATE(cd4Final.data_resultado_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_cd4,
-                 if(cd4Final.valor_cd4 is not null,cd4Final.valor_cd4,'N/A') valor_cd4,
+	             if(ultimoCD4.data_resultado_cd4 is not null,DATE_FORMAT(DATE(cd4Final.data_resultado_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_cd4,
+                 if(ultimoCD4.valor_cd4 is not null,cd4Final.valor_cd4,'N/A') valor_cd4,
                  if(cd4Final.data_resultado_peneultimo_cd4 is not null,DATE_FORMAT(DATE(cd4Final.data_resultado_peneultimo_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_peneultimo_cd4,
 	             if(cd4Final.resultado_peneultimo_cd4 is not null,cd4Final.resultado_peneultimo_cd4,'N/A')  resultado_peneultimo_cd4, 
-	             DATE_FORMAT(DATE(estadiamentoClinico.encounter_datetime), '%d-%m-%Y')  as encounter_datetime,
+	             if(estadiamentoClinico.encounter_datetime is not null,DATE_FORMAT(DATE(estadiamentoClinico.encounter_datetime), '%d-%m-%Y'),'N/A' ) as encounter_datetime
 	             case 
 		         when estadiamentoClinico.tipoEstadio=3 then 'Estadio III' 
 		         when estadiamentoClinico.tipoEstadio=4 then 'Estadio IV' 
@@ -911,6 +911,44 @@
 		                        and e.location_id=:location 
 		                        group by p.patient_id 
 		                      )cd4 on cd4.patient_id=coorteFinal.patient_id
+		                      left join
+		                      (
+		                             select cd4.patient_id,cd4.data_resultado_cd4 data_resultado_cd4,o.value_numeric valor_cd4  
+					                 from 
+					                 (
+						              select cd4.patient_id,max(cd4.data_resultado) data_resultado_cd4
+						              from (
+					                       select p.patient_id,e.encounter_datetime data_resultado
+						                  from patient p   
+						                  inner join encounter e on p.patient_id = e.patient_id   
+						                  inner join obs o on o.encounter_id = e.encounter_id   
+						                  where p.voided = 0 
+						                  and  e.voided = 0  
+						                  and  o.voided = 0
+						                  and  o.concept_id in (1695,730,165515)
+						                  and  e.encounter_datetime <= :endDate
+						                  and  e.encounter_type in(13,6,9,51)
+						                  and p.patient_id=:location35
+						                  and  e.location_id=:location 
+						                  union
+						                  select p.patient_id,o.obs_datetime data_resultado
+						                  from patient p   
+						                  inner join encounter e on p.patient_id = e.patient_id   
+						                  inner join obs o on o.encounter_id = e.encounter_id   
+						                  where p.voided = 0 
+						                  and e.voided = 0  
+						                  and o.voided = 0
+						                  and  o.concept_id in (1695,730,165515)
+						                  and  o.obs_datetime <= :endDate
+						                  and e.encounter_type in(53,90)
+						                  and e.location_id=:location 
+						                  and p.patient_id=:location35
+						                  )cd4
+						                  group by cd4.patient_id
+						                  )cd4
+						                  left join obs o on o.person_id=cd4.patient_id 
+						                  where o.concept_id in (1695,730,165515) and cd4.data_resultado_cd4=o.obs_datetime and o.voided=0
+		                      )ultimoCD4 on ultimoCD4.patient_id=coorteFinal.patient_id
 		                      left join
 		                      (
 					                 select cd4Final.*, o.value_numeric as resultado_peneultimo_cd4 from
