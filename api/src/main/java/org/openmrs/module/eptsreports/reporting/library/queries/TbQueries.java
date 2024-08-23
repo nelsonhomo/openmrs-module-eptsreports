@@ -100,7 +100,7 @@ public interface TbQueries {
             + "group by p.patient_id "
             + ") max_tb "
             + "inner join obs on obs.person_id=max_tb.patient_id and max_tb.max_datatb=obs.obs_datetime "
-            + "where obs.concept_id=1268 and obs.value_coded in (1256,1257) and obs.voided=0 and obs.location_id=:location "
+            + "where obs.concept_id=1268 and obs.value_coded=1256 and obs.voided=0 and obs.location_id=:location "
             + "union "
             + "select maxdiagnostico.patient_id from ( "
             + "select p.patient_id,max(e.encounter_datetime) max_datadiagnostico from patient p "
@@ -125,7 +125,7 @@ public interface TbQueries {
             + "inner join encounter e on e.patient_id=p.patient_id "
             + "inner join obs obsTB on obsTB.encounter_id=e.encounter_id "
             + "where p.voided=0 and e.voided=0 and obsTB.obs_datetime between :endDate - INTERVAL 7 MONTH and  :endDate  and "
-            + "e.location_id=:location and e.encounter_type=6 and obsTB.concept_id=23758 and obsTB.value_coded =1065 and obsTB.voided=0 "
+            + "e.location_id=:location and e.encounter_type=6 and obsTB.concept_id=23761 and obsTB.value_coded =1065 and obsTB.voided=0 "
             + " ) tb ";
   }
 }
