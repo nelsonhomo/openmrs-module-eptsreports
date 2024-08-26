@@ -97,7 +97,14 @@ public class MICategory13P2CohortQueries {
                 .findPatientsWhoDroppedOutARTThreeMonthsBeforeLastConsultationPeriod(),
             mappings));
 
-    definition.setCompositionString("B2 NOT DROPPED-OUT");
+    definition.addSearch(
+        "TRANSFERED-IN",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .findPatientsWhoWhereMarkedAsTransferedInAndOnARTOnInAPeriodOnMasterCardRF06(),
+            mappings));
+
+    definition.setCompositionString("B2 NOT (DROPPED-OUT OR TRANSFERED-IN)");
 
     return definition;
   }
@@ -185,9 +192,9 @@ public class MICategory13P2CohortQueries {
         "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
-        "B2",
+        "DENOMINATOR-13-16",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientsWhoArePregnantInFirstConsultationInclusionPeriodByB2(),
+            this.findPatientsWhoArePregnantWithCVInFirstConsultationTARVCategory13P2Denumerator(),
             mappings));
 
     definition.addSearch(
@@ -197,14 +204,7 @@ public class MICategory13P2CohortQueries {
                 .findPatientsWhoAreRequestForLaboratoryInvestigationAndPregnantInclusionPeriodCAT13DenumeratorP2ByB4(),
             mappings));
 
-    definition.addSearch(
-        "DROPPED-OUT",
-        EptsReportUtils.map(
-            this.mQCohortQueries
-                .findPatientsWhoDroppedOutARTThreeMonthsBeforeLastConsultationPeriod(),
-            mappings));
-
-    definition.setCompositionString("((B2 NOT DROPPED-OUT) AND J)");
+    definition.setCompositionString("DENOMINATOR-13-16 AND J");
     return definition;
   }
 

@@ -441,6 +441,13 @@ public class MIAgeDimentions {
             mappingsMI));
 
     dimension.addCohortDefinition(
+        "0-14",
+        EptsReportUtils.map(
+            mQAgeDimensions.findPatientsWithLastClinicalConsultationDenominatorB1AgeCalculation(
+                0, 14),
+            mappingsMI));
+
+    dimension.addCohortDefinition(
         "5-9",
         EptsReportUtils.map(
             mQAgeDimensions.findPatientsWithLastClinicalConsultationDenominatorB1AgeCalculation(
@@ -823,6 +830,10 @@ public class MIAgeDimentions {
     dimension.addCohortDefinition(
         "1-4",
         EptsReportUtils.map(mQAgeDimensions.findPatientsAgeRangeEndRevisionDate(1, 4), mappings));
+
+    dimension.addCohortDefinition(
+        "0-14",
+        EptsReportUtils.map(mQAgeDimensions.findPatientsAgeRangeEndRevisionDate(0, 14), mappings));
 
     dimension.addCohortDefinition(
         "2-14",

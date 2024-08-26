@@ -75,7 +75,7 @@ public interface MQCategory13P2QueriesInterface {
                 + " WHERE 	cc.voided = 0 AND cc.encounter_type = 6  AND cc.location_id = :location "
                 + " AND o.concept_id = 23722 AND o.value_coded = 856 AND o.voided = 0 "
                 + " ) fisrtConsultation ON fisrtConsultation.patient_id = tx_new.patient_id "
-                + " WHERE fisrtConsultation.encounter_datetime BETWEEN date_add(tx_new.art_start_date, INTERVAL 80 DAY) AND date_add(tx_new.art_start_date, INTERVAL 130 DAY) "
+                + " WHERE fisrtConsultation.encounter_datetime BETWEEN date_add(tx_new.art_start_date, INTERVAL 80 DAY) AND date_add(tx_new.art_start_date, INTERVAL 132 DAY) "
                 + " GROUP BY tx_new.patient_id "
                 + ") result ";
 
@@ -263,7 +263,7 @@ public interface MQCategory13P2QueriesInterface {
                 + "and p.voided=0  "
                 + "and  e.encounter_type = 6  "
                 + "and e.location_id=:location "
-                + "and e.encounter_datetime BETWEEN :startInclusionDate AND :endRevisionDate  "
+                + "and e.encounter_datetime BETWEEN :startInclusionDate AND :endInclusionDate  "
                 + "GROUP by p.patient_id "
                 + ")ultimaConsulta "
                 + "inner join "

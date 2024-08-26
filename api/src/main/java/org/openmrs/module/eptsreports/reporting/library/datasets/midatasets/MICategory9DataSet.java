@@ -242,7 +242,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory9CohortQueries
-                    .findPregnantWomanPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9_9_6(),
+                    .findPregnantWomanPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9_9_10(),
                 "CAT9PREGNANT02TNUMERATOR",
                 mappings),
             mappings),
@@ -254,7 +254,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 miCategory9CohortQueries
-                    .findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_6(),
+                    .findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_10(),
                 "CAT9PREGNANT02TDENOMINATOR",
                 mappings),
             mappings),

@@ -829,14 +829,14 @@ public class MICategory9CohortQueries {
 
   @DocumentedDefinition(
       value =
-          "findPregnantWomanPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9_9_6")
+          "findPregnantWomanPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9_9_10")
   public CohortDefinition
-      findPregnantWomanPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9_9_6() {
+      findPregnantWomanPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9_9_10() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
     definition.setName(
-        "findPregnantWomanPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9_9_6");
+        "findPregnantWomanPatientsWhoHaveAreFirstConsultationAndHaveNumeratorAdultCategory9_9_10");
 
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
@@ -852,7 +852,7 @@ public class MICategory9CohortQueries {
     definition.addSearch(
         "DENOMINATOR",
         EptsReportUtils.map(
-            this.findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_6(),
+            this.findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_10(),
             mappingsForDenominator));
 
     definition.addSearch(
@@ -900,12 +900,12 @@ public class MICategory9CohortQueries {
   }
 
   @DocumentedDefinition(
-      value = "findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_6")
-  public CohortDefinition findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_6() {
+      value = "findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_10")
+  public CohortDefinition findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_10() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
-    definition.setName("findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_6");
+    definition.setName("findPragnantWomanWhoHaveAreFirstConsultationDenominatorCategory9_9_10");
 
     definition.addParameter(
         new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
