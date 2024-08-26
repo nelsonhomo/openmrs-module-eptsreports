@@ -25,7 +25,7 @@
                  if(ultimoCD4.valor_cd4 is not null,cd4Final.valor_cd4,'N/A') valor_cd4,
                  if(cd4Final.data_resultado_peneultimo_cd4 is not null,DATE_FORMAT(DATE(cd4Final.data_resultado_peneultimo_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_peneultimo_cd4,
 	             if(cd4Final.resultado_peneultimo_cd4 is not null,cd4Final.resultado_peneultimo_cd4,'N/A')  resultado_peneultimo_cd4, 
-	             if(estadiamentoClinico.encounter_datetime is not null,DATE_FORMAT(DATE(estadiamentoClinico.encounter_datetime), '%d-%m-%Y'),'N/A' ) as encounter_datetime
+	             if(estadiamentoClinico.encounter_datetime is not null,DATE_FORMAT(DATE(estadiamentoClinico.encounter_datetime), '%d-%m-%Y'),'N/A' ) as encounter_datetime,
 	             case 
 		         when estadiamentoClinico.tipoEstadio=3 then 'Estadio III' 
 		         when estadiamentoClinico.tipoEstadio=4 then 'Estadio IV' 
@@ -928,7 +928,7 @@
 						                  and  o.concept_id in (1695,730,165515)
 						                  and  e.encounter_datetime <= :endDate
 						                  and  e.encounter_type in(13,6,9,51)
-						                  and p.patient_id=:location35
+						                  and p.patient_id=:location
 						                  and  e.location_id=:location 
 						                  union
 						                  select p.patient_id,o.obs_datetime data_resultado
@@ -942,7 +942,7 @@
 						                  and  o.obs_datetime <= :endDate
 						                  and e.encounter_type in(53,90)
 						                  and e.location_id=:location 
-						                  and p.patient_id=:location35
+						                  and p.patient_id=:location
 						                  )cd4
 						                  group by cd4.patient_id
 						                  )cd4
@@ -1107,7 +1107,7 @@
 								left join
 								(
 						     select final.patient_id,final.data_ultimo_resultado_cv,if(final.comments is not null,concat(final.resultado_cv,' ',final.comments),final.resultado_cv ) resultado_cv,
-				                    final.data_ultimo_resultado_cv_anterior,if(final.comments_anterior is not null,concat(final.resultado_cv_anterior,' ',final.comments_anterior),final.resultado_cv ) resultado_cv_anterior
+				                    final.data_ultimo_resultado_cv_anterior,if(final.comments_anterior is not null,concat(final.resultado_cv_anterior,' ',final.comments_anterior),final.resultado_cv_anterior ) resultado_cv_anterior
                             from
                             (
 		                     select ultimoCV.patient_id,ultimoCV.data_ultimo_resultado_cv,ultimoCV.resultado_cv,ultimoCV.comments, cvAnterior.data_ultimo_resultado_cv_anterior,cvAnterior.resultado_cv_anterior,cvAnterior.comments comments_anterior
