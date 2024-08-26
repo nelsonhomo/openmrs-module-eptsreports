@@ -21,8 +21,8 @@
 	             when coorteFinal.criteria = 6 then 'C6– Mulher Grávida'
 	             end as criterioElegibilidade,
 	             if(cd4.data_ultimo_cd4 is not null,DATE_FORMAT(DATE(cd4.data_ultimo_cd4), '%d-%m-%Y'),'N/A')  as data_ultimo_cd4,
-	             if(ultimoCD4.data_resultado_cd4 is not null,DATE_FORMAT(DATE(cd4Final.data_resultado_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_cd4,
-                 if(ultimoCD4.valor_cd4 is not null,cd4Final.valor_cd4,'N/A') valor_cd4,
+	             if(ultimoCD4.data_resultado_cd4 is not null,DATE_FORMAT(DATE(ultimoCD4.data_resultado_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_cd4,
+                 if(ultimoCD4.valor_cd4 is not null,ultimoCD4.valor_cd4,'N/A') valor_cd4,
                  if(cd4Final.data_resultado_peneultimo_cd4 is not null,DATE_FORMAT(DATE(cd4Final.data_resultado_peneultimo_cd4), '%d-%m-%Y'),'N/A')  as data_resultado_peneultimo_cd4,
 	             if(cd4Final.resultado_peneultimo_cd4 is not null,cd4Final.resultado_peneultimo_cd4,'N/A')  resultado_peneultimo_cd4, 
 	             if(estadiamentoClinico.encounter_datetime is not null,DATE_FORMAT(DATE(estadiamentoClinico.encounter_datetime), '%d-%m-%Y'),'N/A' ) as encounter_datetime,
@@ -928,7 +928,6 @@
 						                  and  o.concept_id in (1695,730,165515)
 						                  and  e.encounter_datetime <= :endDate
 						                  and  e.encounter_type in(13,6,9,51)
-						                  and p.patient_id=:location
 						                  and  e.location_id=:location 
 						                  union
 						                  select p.patient_id,o.obs_datetime data_resultado
@@ -942,7 +941,6 @@
 						                  and  o.obs_datetime <= :endDate
 						                  and e.encounter_type in(53,90)
 						                  and e.location_id=:location 
-						                  and p.patient_id=:location
 						                  )cd4
 						                  group by cd4.patient_id
 						                  )cd4
