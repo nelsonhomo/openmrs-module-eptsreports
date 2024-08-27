@@ -79,9 +79,6 @@ public class SetupAQDReport extends EptsDataExportManager {
 
     rd.addDataSetDefinition(
         "DQA", mapStraightThrough(aqdViralLoadDataset.constructDataset(getParameters())));
-
-    rd.addDataSetDefinition("DQ", mapStraightThrough(viralLoadSummuryDataset.constructDatset()));
-
     rd.addDataSetDefinition(
         "D",
         Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
