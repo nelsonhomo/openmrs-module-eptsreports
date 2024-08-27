@@ -7,8 +7,8 @@ select coorte12meses_final.patient_id as patient_id,
                     TPT_ELIG_FR16.decisao as gravidaLactante, 
                     TPT_ELIG_FR19.data_seguimento as data_seguimento, 
                     TPT_ELIG_FR19.data_proximo_seguimento as data_proximo_seguimento,
-                    DATE_FORMAT(DATE(coorte12meses_final.data_fila), '%d-%m-%Y') as LAST_FILA, 
-                    DATE_FORMAT(DATE(coorte12meses_final.data_proximo_lev), '%d-%m-%Y') as NEXT_FILA
+                    DATE_FORMAT(DATE(fila.data_levantamento), '%d-%m-%Y') as LAST_FILA, 
+                    DATE_FORMAT(DATE(fila.data_proximo_levantamento), '%d-%m-%Y') as NEXT_FILA
              from 
             (
             select inicio_fila_seg_prox.*,     
@@ -162,7 +162,7 @@ select coorte12meses_final.patient_id as patient_id,
                              ) max_estado                                                                                                                        
                                  inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
                                  inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
-                             where pp.program_id = 2 and ps.state = 8 and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location                 
+                             where pp.program_id = 2 and ps.state = 8 and pp.voided = 0 and ps.voided = 0 and pp.location_id =:location                 
                              
 							 union                                                                                                                               
                              
@@ -183,7 +183,7 @@ select coorte12meses_final.patient_id as patient_id,
 											) max_estado                                                                                                                        
 												inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
 												inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
-											where pp.program_id = 2 and ps.state = 10 and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location  
+											where pp.program_id = 2 and ps.state = 10 and pp.voided = 0 and ps.voided = 0 and pp.location_id =:location  
 											 union
 											select  p.patient_id,                                                                                                               
 												max(o.obs_datetime) data_estado                                                                                             
@@ -262,7 +262,7 @@ select coorte12meses_final.patient_id as patient_id,
 			                             		) max_estado                                                                                                                        
 			                                 		inner join patient_program pp on pp.patient_id = max_estado.patient_id                                                          
 			                                 		inner join patient_state ps on ps.patient_program_id = pp.patient_program_id and ps.start_date = max_estado.data_estado         
-			                             		where pp.program_id = 2 and ps.state = 7 and pp.voided = 0 and ps.voided = 0 and pp.location_id = :location                 
+			                             		where pp.program_id = 2 and ps.state = 7 and pp.voided = 0 and ps.voided = 0 and pp.location_id =:location                 
 			                             
 			                             		union                                                                                                                               
 			                             		
@@ -284,12 +284,12 @@ select coorte12meses_final.patient_id as patient_id,
 				                                         inner join encounter e on p.patient_id=e.patient_id                                                                     
 				                                         inner join obs o on o.encounter_id=e.encounter_id                                                                       
 				                                     where e.voided=0 and p.voided=0 and e.encounter_datetime<= :endDate                                       
-				                                         and e.encounter_type = 21 and  e.location_id= :location                                                                 
+				                                         and e.encounter_type = 21 and  e.location_id=:location                                                                 
 				                                         group by p.patient_id                                                                                                   
 				                                 ) ultimaBusca                                                                                                                   
 				                                     inner join encounter e on e.patient_id = ultimaBusca.patient_id                                                             
 				                                     inner join obs o on o.encounter_id = e.encounter_id                                                                         
-				                                where e.encounter_type = 21 and o.voided=0 and o.concept_id=2016 and o.value_coded in (1706,23863) and ultimaBusca.data_estado = e.encounter_datetime and e.location_id = :location 
+				                                where e.encounter_type = 21 and o.voided=0 and o.concept_id=2016 and o.value_coded in (1706,23863) and ultimaBusca.data_estado = e.encounter_datetime and e.location_id =:location 
 		                                ) saidas_por_transferencia 
 	                                	group by patient_id 
                                	) saidas_por_transferencia
@@ -729,7 +729,7 @@ select coorte12meses_final.patient_id as patient_id,
                         
                         )consultasSemDTINH on inicio_inh.patient_id = consultasSemDTINH.patient_id
                     where consultasSemDTINH.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH)
-                    group by inicio_inh.patient_id,inicio_inh.data_inicio_INH  having count(distinct consultasSemDTINH.encounter_id)>=3 
+                    group by inicio_inh.patient_id,inicio_inh.data_inicio_INH  having count(distinct consultasSemDTINH.encounter_id)>=:location 
                   ) consultasSemDTINH
              inner join 
              (
@@ -958,7 +958,7 @@ select coorte12meses_final.patient_id as patient_id,
                         where e.voided=0 and obsDTINH.voided=0 and obsLevTPI.voided=0 and e.encounter_type in (60)          
                             and obsDTINH.concept_id=23986 and obsDTINH.value_coded=1098  and obsLevTPI.concept_id=23985 and obsLevTPI.value_coded in (656,23982)  
                             and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.location_id=:location 
-                            group by inicio_inh.patient_id having count(distinct e.encounter_id)>=3 
+                            group by inicio_inh.patient_id having count(distinct e.encounter_id)>=:location 
                     )
                  inicio_inh  
                  inner join
@@ -1168,7 +1168,7 @@ from (
              ) end3HP                 
       ) termino_3HP on inicio_3HP.patient_id = termino_3HP.patient_id
 where termino_3HP.data_final_3HP between inicio_3HP.data_inicio_3HP and (inicio_3HP.data_inicio_3HP + INTERVAL 120 DAY)
- group by termino_3HP.patient_id having count(distinct termino_3HP.encounter_id)>=3
+ group by termino_3HP.patient_id having count(distinct termino_3HP.encounter_id)>=:location
 
 union
 
@@ -1356,7 +1356,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
     and e.encounter_datetime between inicio_3HP.data_inicio_3HP and (inicio_3HP.data_inicio_3HP + INTERVAL 4 month)  
         and e.location_id=:location    
     group by inicio_3HP.patient_id  
-    having count(distinct e.encounter_id)>=3    
+    having count(distinct e.encounter_id)>=:location    
 
 )TPT_ELIG_FR9 on TPT_ELIG_FR9.patient_id=coorte12meses_final.patient_id 
             left join  
@@ -1407,7 +1407,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
 			inner join encounter e on p.patient_id=e.patient_id                                                         
 		    inner join obs o on o.encounter_id=e.encounter_id                                                           
 		where e.voided=0 and o.voided=0 and p.voided=0                                                                 
-			and e.encounter_type in (6,9) and o.concept_id=1113  and e.location_id= :location 
+			and e.encounter_type in (6,9) and o.concept_id=1113  and e.location_id=:location 
      		and  o.value_datetime  between (:endDate - INTERVAL 14 DAY) and :endDate
 		
      	union
@@ -1417,7 +1417,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
 			inner join encounter e on p.patient_id=e.patient_id                                                         
 		    inner join obs o on o.encounter_id=e.encounter_id                                                           
 		where e.voided=0 and o.voided=0 and p.voided=0                                                                 
-		      and e.encounter_type in (6,9) and o.concept_id=6257 and o.value_coded =1065 and e.location_id= :location 
+		      and e.encounter_type in (6,9) and o.concept_id=6257 and o.value_coded =1065 and e.location_id=:location 
 		      and  e.encounter_datetime  between (:endDate - INTERVAL 14 DAY) and :endDate
 		
 		 union
@@ -1427,7 +1427,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
       		inner join encounter e on p.patient_id=e.patient_id                                                         
       		inner join obs o on o.encounter_id=e.encounter_id                                                           
 		where e.voided=0 and o.voided=0 and p.voided=0                                                                 
-     		and e.encounter_type in (6,9) and o.concept_id=6277 and o.value_coded = 703  and e.location_id= :location 
+     		and e.encounter_type in (6,9) and o.concept_id=6277 and o.value_coded = 703  and e.location_id=:location 
      		and e.encounter_datetime  between (:endDate - INTERVAL 14 DAY) and :endDate
      		
      	union
@@ -1438,7 +1438,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
 			inner join obs obs6277 on obs6277.encounter_id= e.encounter_id 
 			inner join obs obs6257 on obs6257.encounter_id= e.encounter_id                                                           
 		where p.voided = 0 and e.voided = 0 and obs6277.voided = 0 and obs6257.voided = 0                                                                  
-			and e.encounter_type in (6,9) and obs6277.concept_id=6277 and obs6277.value_coded = 664 and e.location_id= :location and obs6257.concept_id= 6257 and obs6257.value_coded in(1065,1066)
+			and e.encounter_type in (6,9) and obs6277.concept_id=6277 and obs6277.value_coded = 664 and e.location_id=:location and obs6257.concept_id= 6257 and obs6257.value_coded in(1065,1066)
 			and e.encounter_datetime  between (:endDate - INTERVAL 14 DAY) and :endDate
 
 		union
@@ -1448,7 +1448,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
       		inner join encounter e on p.patient_id=e.patient_id                                                         
       		inner join obs o on o.encounter_id=e.encounter_id                                                           
 		where e.voided=0 and o.voided=0 and p.voided=0                                                                 
-      		and e.encounter_type=53 and o.concept_id=1406 and o.value_coded=42  and e.location_id= :location 
+      		and e.encounter_type=53 and o.concept_id=1406 and o.value_coded=42  and e.location_id=:location 
      		and o.obs_datetime  between (:endDate - INTERVAL 14 DAY) and :endDate
 		
      	union
@@ -1456,7 +1456,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
 		select pg.patient_id, date_enrolled data_tratamento                                                             
 		from patient p 
         	inner join patient_program pg on p.patient_id=pg.patient_id                                       
-		where pg.voided=0 and p.voided=0 and program_id=5 and location_id= :location  
+		where pg.voided=0 and p.voided=0 and program_id=5 and location_id=:location  
         	and date_enrolled between (:endDate - INTERVAL 14 DAY) and :endDate
 		
         union
@@ -1466,7 +1466,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
 			inner join encounter e on p.patient_id=e.patient_id                                                         
 			inner join obs o on o.encounter_id=e.encounter_id                                                           
 		where e.voided=0 and o.voided=0 and p.voided=0                                                                 
-			and e.encounter_type=6 and o.concept_id=1268 and o.value_coded=1256  and e.location_id= :location 
+			and e.encounter_type=6 and o.concept_id=1268 and o.value_coded=1256  and e.location_id=:location 
 		    and  e.encounter_datetime  between (:endDate - INTERVAL 14 DAY) and  :endDate
 		
 		union
@@ -1476,7 +1476,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
       		inner join encounter e on p.patient_id=e.patient_id                                                         
       		inner join obs o on o.encounter_id=e.encounter_id                                                           
 		where e.voided=0 and o.voided=0 and p.voided=0                                                                 
-      		and e.encounter_type=6 and o.concept_id=23758 and o.value_coded=1065  and e.location_id= :location 
+      		and e.encounter_type=6 and o.concept_id=23758 and o.value_coded=1065  and e.location_id=:location 
      		and e.encounter_datetime  between (:endDate - INTERVAL 14 DAY) and :endDate
 		
      	union
@@ -1486,7 +1486,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
       		inner join encounter e on p.patient_id=e.patient_id                                                         
       		inner join obs o on o.encounter_id=e.encounter_id                                                           
 		where e.voided=0 and o.voided=0 and p.voided=0                                                                 
-      		and e.encounter_type=6 and o.concept_id=23761 and o.value_coded=1065  and e.location_id= :location 
+      		and e.encounter_type=6 and o.concept_id=23761 and o.value_coded=1065  and e.location_id=:location 
      		and e.encounter_datetime  between (:endDate - INTERVAL 14 DAY) and :endDate
 
 		union
@@ -1497,7 +1497,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
       		inner join obs o on o.encounter_id=e.encounter_id
 		where e.voided=0 and o.voided=0 and p.voided=0                                                             
      		and e.encounter_type = 6 and o.concept_id=1766 and o.value_coded in(1763,1764,1762,1760,1765,23760,161)   
-      		and e.location_id= :location  and e.encounter_datetime   between (:endDate - INTERVAL 14 DAY) and :endDate
+      		and e.location_id=:location  and e.encounter_datetime   between (:endDate - INTERVAL 14 DAY) and :endDate
 		
       	union
 
@@ -1507,7 +1507,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
       		inner join obs o on o.encounter_id=e.encounter_id
 		where e.voided=0 and o.voided=0 and p.voided=0                                                             
       		and e.encounter_type=6 and o.concept_id=23722 and o.value_coded in(23723,23774,23951,307,12)   
-      		and e.location_id= :location  and e.encounter_datetime   between (:endDate - INTERVAL 14 DAY) and :endDate
+      		and e.location_id=:location  and e.encounter_datetime   between (:endDate - INTERVAL 14 DAY) and :endDate
 		
       	union
 
@@ -1517,7 +1517,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
       		inner join obs o on o.encounter_id=e.encounter_id
 		where e.voided=0 and o.voided=0 and p.voided=0                                                             
      		and e.encounter_type=6 and o.concept_id  in(23723,23774,23951,307,12) and o.value_coded is not null
-      		and e.location_id= :location  and e.encounter_datetime   between (:endDate - INTERVAL 14 DAY) and :endDate
+      		and e.location_id=:location  and e.encounter_datetime   between (:endDate - INTERVAL 14 DAY) and :endDate
       
 		union
 		
@@ -1527,7 +1527,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
       		inner join obs o on o.encounter_id=e.encounter_id
 		where e.voided=0 and o.voided=0 and p.voided=0                                                             
      		and e.encounter_type=13 and o.concept_id  in(307, 23723, 23724, 23951, 165189) and o.value_coded is not null
-      		and e.location_id= :location  and e.encounter_datetime   between (:endDate - INTERVAL 14 DAY) and :endDate
+      		and e.location_id=:location  and e.encounter_datetime   between (:endDate - INTERVAL 14 DAY) and :endDate
 		
  		union
 		
@@ -1537,7 +1537,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
       		inner join obs o on o.encounter_id=e.encounter_id
 		where e.voided=0 and o.voided=0 and p.voided=0                                                             
       		and e.encounter_type= 51 and o.concept_id = 23951 and o.value_coded is not null
-      		and e.location_id= :location  and e.encounter_datetime   between (:endDate - INTERVAL 14 DAY) and :endDate
+      		and e.location_id=:location  and e.encounter_datetime   between (:endDate - INTERVAL 14 DAY) and :endDate
             ) TPT_ELIG_FR12 on TPT_ELIG_FR12.patient_id=coorte12meses_final.patient_id 
             left join  
             (select patient_id,decisao 
@@ -1614,7 +1614,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
 				inner join obs data_colheita on data_colheita.encounter_id = e.encounter_id                                                                                                                                                                        	
 			where p.voided=0 and e.voided=0 and esta_gravida.voided=0 and data_colheita.voided = 0 and esta_gravida.concept_id=1982 																																
 				and esta_gravida.value_coded = 1065 and e.encounter_type=51                                                                                                     																					
-				and data_colheita.concept_id =23821 and data_colheita.value_datetime between (curdate() - INTERVAL 9 MONTH) and curdate() and e.location_id= :location 
+				and data_colheita.concept_id =23821 and data_colheita.value_datetime between (curdate() - INTERVAL 9 MONTH) and curdate() and e.location_id=:location 
 				
                         ) gravida_real on gravida_real.patient_id=inicio_real.patient_id   
                     left join  
@@ -1664,7 +1664,7 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
 				inner join obs data_colheita on data_colheita.encounter_id = e.encounter_id                                                                                                                                                                        	
 			where p.voided=0 and e.voided=0 and esta_gravida.voided=0 and data_colheita.voided = 0 and esta_gravida.concept_id=6332 																																
 				and esta_gravida.value_coded = 1065 and e.encounter_type=51                                                                                                     																					
-				and data_colheita.concept_id =23821 and data_colheita.value_datetime between (curdate() - INTERVAL 18 MONTH) and curdate() and e.location_id= :location 
+				and data_colheita.concept_id =23821 and data_colheita.value_datetime between (curdate() - INTERVAL 18 MONTH) and curdate() and e.location_id=:location 
 				
                     ) lactante_real on lactante_real.patient_id=inicio_real.patient_id 
                     where   lactante_real.data_parto is not null or gravida_real.data_gravida is not null 
@@ -1702,6 +1702,22 @@ where e.voided=0 and obs3hp.voided=0 and obsTipo.voided=0
                     ) proximaConsulta on proximaConsulta.patient_id=max_consulta.patient_id
            
                     ) TPT_ELIG_FR19 on TPT_ELIG_FR19.patient_id=coorte12meses_final.patient_id 
+                    left join (
+					                    select f.patient_id,f.data_levantamento,data_proximo_levantamento  from  ( 
+					select fila.patient_id,max(fila.data_levantamento) data_levantamento,obs_fila.value_datetime data_proximo_levantamento  from  ( 
+					Select p.patient_id,max(encounter_datetime) data_levantamento  from  patient p 
+					inner join encounter e on e.patient_id=p.patient_id 
+					where  p.voided=0 and e.voided=0 and e.encounter_type=18 and e.location_id=:location 
+					and e.encounter_datetime <=curdate() 
+					group by p.patient_id 
+					)fila 
+					inner join  obs obs_fila on obs_fila.person_id=fila.patient_id 
+					and obs_fila.voided=0  and obs_fila.obs_datetime=fila.data_levantamento 
+					and obs_fila.concept_id=5096 
+					and obs_fila.location_id=:location 
+					group by fila.patient_id 
+					) f
+                    )fila on fila.patient_id=coorte12meses_final.patient_id
             where (data_estado is null or (data_estado is not null and  data_fila > data_estado)) and date_add(data_usar, interval 28 day) >=:endDate  
                     and  TPT_ELIG_FR4.patient_id is null  
                     and  TPT_ELIG_FR8.patient_id is null  
