@@ -1118,7 +1118,7 @@
 								   from (
 							        select p.patient_id,o.obs_datetime  data_ultimo_resultado_cv,
 							        			  case o.value_coded 
-									              when 23814  then 'CARGA VIRAL INDETECTAVEL'
+									              when 23814  then 'INDETECTAVEL'
 									              when 165331 then 'MENOR QUE'
 									              when 1306   then 'NIVEL BAIXO DE DETECÇÃO'
 									              when 1304   then 'MA QUALIDADE DA AMOSTRA'
@@ -1154,7 +1154,7 @@
 											      union
 									              select p.patient_id,e.encounter_datetime  data_ultimo_resultado_cv,
 									              case o.value_coded 
-									              when 23814  then 'CARGA VIRAL INDETECTAVEL'
+									              when 23814  then 'INDETECTAVEL'
 									              when 165331 then 'MENOR QUE'
 									              when 1306   then 'NIVEL BAIXO DE DETECÇÃO'
 									              when 1304   then 'MA QUALIDADE DA AMOSTRA'
@@ -1205,7 +1205,7 @@
 												   from (
 											        select p.patient_id,o.obs_datetime  data_ultimo_resultado_cv_anterior,
 											        			  case o.value_coded 
-													              when 23814  then 'CARGA VIRAL INDETECTAVEL'
+													              when 23814  then 'INDETECTAVEL'
 													              when 165331 then 'MENOR QUE'
 													              when 1306   then 'NIVEL BAIXO DE DETECÇÃO'
 													              when 1304   then 'MA QUALIDADE DA AMOSTRA'
@@ -1241,7 +1241,7 @@
 															      union
 													              select p.patient_id,e.encounter_datetime  data_ultimo_resultado_cv_anterior,
 													              case o.value_coded 
-													              when 23814  then 'CARGA VIRAL INDETECTAVEL'
+													              when 23814  then 'INDETECTAVEL'
 													              when 165331 then 'MENOR QUE'
 													              when 1306   then 'NIVEL BAIXO DE DETECÇÃO'
 													              when 1304   then 'MA QUALIDADE DA AMOSTRA'
