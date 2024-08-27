@@ -72,5 +72,16 @@ public class MICommonsDementions {
             this.mQAgeDimensions
                 .getDimensionForPatientsWhoReinitiatedTreatmentInClinicalConsultation(),
             mappings));
+    dataSetDefinition.addDimension(
+        "ageOnPresuntiveTB",
+        EptsReportUtils.map(this.mIAgeDimentions.getDimensionAgeOnThePresuntiveTB(), mappings));
+
+    dataSetDefinition.addDimension(
+        "ageOnGeneXpertRequest",
+        EptsReportUtils.map(this.mIAgeDimentions.getDimensionAgeOnGeneXpertRequest(), mappings));
+
+    dataSetDefinition.addDimension(
+        "ageOnTBDiagnostic",
+        EptsReportUtils.map(this.mIAgeDimentions.getDimensionAgeOnTBDiagnostic(), mappings));
   }
 }

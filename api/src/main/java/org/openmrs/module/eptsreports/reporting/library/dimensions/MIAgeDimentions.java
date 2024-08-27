@@ -929,4 +929,90 @@ public class MIAgeDimentions {
 
     return dimension;
   }
+
+  public CohortDefinitionDimension getDimensionAgeOnThePresuntiveTB() {
+    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
+
+    dimension.setName("getDimensionAgeOnThePresuntiveTB");
+    dimension.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    dimension.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    dimension.addParameter(new Parameter("location", "Location", Location.class));
+
+    final String mappings =
+        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+
+    dimension.addCohortDefinition(
+        "15-",
+        EptsReportUtils.map(
+            mQAgeDimensions.calculateAgeOnPrensutiveTBLessThanParamByAgeRenge(15), mappings));
+
+    dimension.addCohortDefinition(
+        "15+",
+        EptsReportUtils.map(mQAgeDimensions.calculateAgeOnPrensutiveBiggerThanParam(15), mappings));
+
+    dimension.addCohortDefinition(
+        "0-14",
+        EptsReportUtils.map(mQAgeDimensions.calculateAgeOnPrensutiveTBByAgeRenge(0, 14), mappings));
+
+    return dimension;
+  }
+
+  public CohortDefinitionDimension getDimensionAgeOnGeneXpertRequest() {
+    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
+
+    dimension.setName("getDimensionAgeOnGeneXpertRequest");
+    dimension.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    dimension.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    dimension.addParameter(new Parameter("location", "Location", Location.class));
+
+    final String mappings =
+        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+    dimension.addCohortDefinition(
+        "15-",
+        EptsReportUtils.map(
+            mQAgeDimensions.calculateAgeOnGeneXpertRequestLessThanParamByAgeRenge(15), mappings));
+
+    dimension.addCohortDefinition(
+        "15+",
+        EptsReportUtils.map(
+            mQAgeDimensions.calculateAgeOnGeneXpertRequestBiggerThanParam(15), mappings));
+
+    dimension.addCohortDefinition(
+        "0-14",
+        EptsReportUtils.map(
+            mQAgeDimensions.calculateAgeOnGeneXpertRequestByAgeRange(0, 14), mappings));
+
+    return dimension;
+  }
+
+  public CohortDefinitionDimension getDimensionAgeOnTBDiagnostic() {
+    final CohortDefinitionDimension dimension = new CohortDefinitionDimension();
+
+    dimension.setName("getDimensionAgeOnGeneXpertRequest");
+    dimension.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    dimension.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    dimension.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    dimension.addParameter(new Parameter("location", "Location", Location.class));
+
+    final String mappings =
+        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+
+    dimension.addCohortDefinition(
+        "15-",
+        EptsReportUtils.map(
+            mQAgeDimensions.calculateAgeOnTBDiagnosticLessThanParamByAgeRenge(15), mappings));
+
+    dimension.addCohortDefinition(
+        "15+",
+        EptsReportUtils.map(
+            mQAgeDimensions.calculateAgeOnTBDiagnosticBiggerThanParam(15), mappings));
+
+    dimension.addCohortDefinition(
+        "0-14",
+        EptsReportUtils.map(mQAgeDimensions.calculateAgeOnTBDiagnosticByAgeRange(0, 14), mappings));
+
+    return dimension;
+  }
 }
