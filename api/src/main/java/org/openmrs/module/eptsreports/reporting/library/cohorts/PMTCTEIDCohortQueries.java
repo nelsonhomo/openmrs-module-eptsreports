@@ -67,7 +67,8 @@ public class PMTCTEIDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "getNumberOfInfantsWhoHadVirologicHIVTestWithFistTest",
-                PMTCTEIDQueries.QUERY.findFirstVRRestulTest),
+                String.format(
+                    PMTCTEIDQueries.QUERY.findRestulTestByFirstOrSencodTest, 165503, 165507)),
             mappings));
 
     composition.setCompositionString("FIRST-TEST");
@@ -90,7 +91,8 @@ public class PMTCTEIDCohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "getNumberOfInfantsWhoHadVirologicHIVTestWithSecondTest",
-                PMTCTEIDQueries.QUERY.findSecondVRRestulTest),
+                String.format(
+                    PMTCTEIDQueries.QUERY.findRestulTestByFirstOrSencodTest, 165506, 165510)),
             mappings));
 
     composition.setCompositionString("SECOND-TEST");
