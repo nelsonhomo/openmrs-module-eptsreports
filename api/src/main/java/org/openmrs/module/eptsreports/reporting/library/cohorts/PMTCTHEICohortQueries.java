@@ -109,7 +109,12 @@ public class PMTCTHEICohortQueries {
                     NEGATIVE_RESULT_CONCEPT_ID)),
             mappings));
 
-    composition.setCompositionString("NUMERATOR and NEGATIVE-RESULTS");
+    composition.addSearch(
+        "POSITIVE-RESULTS",
+        EptsReportUtils.map(
+            this.getNumberOfInfantsWhoHadVirologicHIVTestWithPositiveTestResults(), mappings));
+
+    composition.setCompositionString("(NUMERATOR and NEGATIVE-RESULTS) not POSITIVE-RESULTS");
 
     return composition;
   }

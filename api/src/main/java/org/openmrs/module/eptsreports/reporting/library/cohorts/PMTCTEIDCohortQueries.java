@@ -63,6 +63,10 @@ public class PMTCTEIDCohortQueries {
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     composition.addSearch(
+        "NUMERATOR",
+        EptsReportUtils.map(this.getNumberOfInfantsWhoHadVirologicHIVTest(), mappings));
+
+    composition.addSearch(
         "FIRST-TEST",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
@@ -71,7 +75,7 @@ public class PMTCTEIDCohortQueries {
                     PMTCTEIDQueries.QUERY.findRestulTestByFirstOrSencodTest, 165503, 165507)),
             mappings));
 
-    composition.setCompositionString("FIRST-TEST");
+    composition.setCompositionString("NUMERATOR and FIRST-TEST");
 
     return composition;
   }
@@ -87,6 +91,10 @@ public class PMTCTEIDCohortQueries {
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
     composition.addSearch(
+        "NUMERATOR",
+        EptsReportUtils.map(this.getNumberOfInfantsWhoHadVirologicHIVTest(), mappings));
+
+    composition.addSearch(
         "SECOND-TEST",
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
@@ -95,7 +103,7 @@ public class PMTCTEIDCohortQueries {
                     PMTCTEIDQueries.QUERY.findRestulTestByFirstOrSencodTest, 165506, 165510)),
             mappings));
 
-    composition.setCompositionString("SECOND-TEST");
+    composition.setCompositionString("NUMERATOR and SECOND-TEST");
 
     return composition;
   }
