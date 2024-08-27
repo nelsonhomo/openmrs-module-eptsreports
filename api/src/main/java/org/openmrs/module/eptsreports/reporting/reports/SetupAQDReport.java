@@ -60,12 +60,12 @@ public class SetupAQDReport extends EptsDataExportManager {
 
   @Override
   public String getName() {
-    return "AQD HIV MISAU";
+    return "Lista de Utentes que Receberam Resultado de CV Durante o Trimestre";
   }
 
   @Override
   public String getDescription() {
-    return "AQD HIV MISAU";
+    return "Lista de Utentes que Receberam Resultado de CV Durante o Trimestre";
   }
 
   @Override
