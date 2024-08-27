@@ -15,7 +15,6 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts;
 
 import java.util.Date;
 import org.openmrs.Location;
-import org.openmrs.module.eptsreports.reporting.library.queries.PMTCTEIDQueries;
 import org.openmrs.module.eptsreports.reporting.library.queries.PMTCTHEIQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
@@ -47,8 +46,8 @@ public class PMTCTHEICohortQueries {
         EptsReportUtils.map(
             this.genericCohorts.generalSql(
                 "findNumberOfInfantesWhoHadVirologicHIVTestBy12MonthsOfAgeDuringReportingPeriod",
-                PMTCTEIDQueries.QUERY
-                    .findNumberOfInfantesWhoHadVirologicHIVTestBy12MonthsOfAgeDuringReportingPeriod),
+                PMTCTHEIQueries.QUERY
+                    .findNumberOfInfantesWhoHadVirologicHIVTesResulttBy12MonthsOfAgeDuringReportingPeriod),
             mappings));
 
     composition.setCompositionString("NUMERATOR");
