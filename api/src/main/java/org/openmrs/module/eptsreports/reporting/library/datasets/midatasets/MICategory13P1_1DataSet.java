@@ -22,7 +22,7 @@ public class MICategory13P1_1DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13CV15PLUSNUMERATOR",
-        "13.1: Adultos (15/+anos) na 1a linha de TARV que tiveram consulta clínica no período de revisão e que eram elegíveis ao pedido de CV Numerador",
+        "13.1:  # Adultos (15/+anos) na 1a linha de TARV que tiveram consulta clínica no período de revisão e que eram elegíveis ao pedido de CV Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P1_1CohortQueries.findFinalNumeratorCategory13SectionIC(),
@@ -33,7 +33,7 @@ public class MICategory13P1_1DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13CV15PLUSDENOMINATOR",
-        "13.1: Adultos (15/+anos) na 1a linha de TARV que tiveram consulta clínica no período de revisão e que eram elegíveis ao pedido de CV Denominador ",
+        "13.1:  # Adultos (15/+anos) na 1a linha de TARV que tiveram consulta clínica no período de revisão e que eram elegíveis ao pedido de CV Denominador ",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P1_1CohortQueries.findDenominatorCategory13SectionIB(
@@ -45,7 +45,7 @@ public class MICategory13P1_1DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13CV13_1PLUS13_4NUMERATOR",
-        "13.1: # de adultos (15/+anos)  em TARV na 1ª(13.1) ou 2ª(13.4) linha com consulta clínica no período de avaliação, elegíveis ao pedido de CV Numerador ",
+        "13.1: % de adultos (15/+anos)  em TARV na 1ª(13.1) ou 2ª(13.4) linha com consulta clínica no período de avaliação, elegíveis ao pedido de CV Numerador ",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P1_1CohortQueries
@@ -57,7 +57,7 @@ public class MICategory13P1_1DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13CV13_1PLUS13_4DENOMINATOR",
-        "13.1: # de adultos (15/+anos)  em TARV na 1ª(13.1) ou 2ª(13.4) linha com consulta clínica no período de avaliação, elegíveis ao pedido de CV Denominador ",
+        "13.1: % de adultos (15/+anos)  em TARV na 1ª(13.1) ou 2ª(13.4) linha com consulta clínica no período de avaliação, elegíveis ao pedido de CV Denominador ",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P1_1CohortQueries
@@ -70,7 +70,7 @@ public class MICategory13P1_1DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_PART_3_13_2_NUMERATOR",
-        "13.2: Adultos (15/+anos) na 1a linha de TARV que receberam o resultado da CV entre o sexto e o nono mês após início do TARV Numerador",
+        "13.2: # Adultos (15/+anos) na 1a linha de TARV que receberam o resultado da CV entre o sexto e o nono mês após início do TARV Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P3CohortQueries
@@ -82,7 +82,7 @@ public class MICategory13P1_1DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_PART_3_13_2_DENOMINATOR",
-        "13.2: Adultos (15/+anos) na 1a linha de TARV que receberam o resultado da CV entre o sexto e o nono mês após início do TARV Denominador",
+        "13.2: # Adultos (15/+anos) na 1a linha de TARV que receberam o resultado da CV entre o sexto e o nono mês após início do TARV Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P3CohortQueries
@@ -95,7 +95,7 @@ public class MICategory13P1_1DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_CV_13-2_13-5_NUMERATOR",
-        "13.2: # de adultos (15/+anos) em TARV (1a ou 2ª linha) 13.2-1ª Linha + 13.5-2ª Linha Numerador",
+        "13.2: % de adultos (15/+anos) em TARV (1a ou 2ª linha) 13.2-1ª Linha + 13.5-2ª Linha Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P3CohortQueries
@@ -107,7 +107,7 @@ public class MICategory13P1_1DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_CV_13-2_13-5_DENOMINATOR",
-        "13.2: # de adultos (15/+anos) em TARV (1a ou 2ª linha) 13.2-1ª Linha + 13.5-2ª Linha Denominador",
+        "13.2: % de adultos (15/+anos) em TARV (1a ou 2ª linha) 13.2-1ª Linha + 13.5-2ª Linha Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P3CohortQueries

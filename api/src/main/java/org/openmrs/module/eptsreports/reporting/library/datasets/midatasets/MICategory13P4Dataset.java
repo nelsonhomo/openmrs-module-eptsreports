@@ -19,7 +19,7 @@ public class MICategory13P4Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P2PregnantWithCVInFirstConsultationTARVNUMINATOR",
-        "13.16: Mulheres elegíveis a CV com registo de pedido de CV feito pelo clínico na primeira CPN (MG que entraram em TARV na CPN) Numerador",
+        "13.16: % Mulheres elegíveis a CV com registo de pedido de CV feito pelo clínico na primeira CPN (MG que entraram em TARV na CPN) Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P2CohortQueries
@@ -31,7 +31,7 @@ public class MICategory13P4Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P2PregnantWithCVInFirstConsultationTARVDENOMINATOR",
-        "13.16: Mulheres Gravidas elegíveis a CV com registo de pedido de "
+        "13.16: % Mulheres Gravidas elegíveis a CV com registo de pedido de "
             + "CV feito pelo clínico na primeira CPN (MG que entraram em TARV na CPN) Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
@@ -44,7 +44,7 @@ public class MICategory13P4Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P2PregnantWithCVIn33DaysAfterInclusionDateTARVNUMINATOR",
-        "13.17: Mulheres Gravidas que receberam o resultado da Carga Viral dentro de 33 dias após pedido Numerador",
+        "13.17: % Mulheres Gravidas que receberam o resultado da Carga Viral dentro de 33 dias após pedido Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P2CohortQueries
@@ -56,7 +56,7 @@ public class MICategory13P4Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P2PregnantWithCVIn33DaysAfterInclusionDateTARVDENOMINATOR",
-        "13.17: Mulheres Gravidas que receberam o resultado da Carga Viral dentro de 33 dias após pedido Denominador",
+        "13.17: % Mulheres Gravidas que receberam o resultado da Carga Viral dentro de 33 dias após pedido Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P2CohortQueries
@@ -68,7 +68,7 @@ public class MICategory13P4Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P4PregnantNUMINATOR",
-        "13.18: Mulheres gravidas na 1ª linha de TARV com registo de pedido de CV entre o 3º e o 4º "
+        "13.18: % Mulheres gravidas na 1ª linha de TARV com registo de pedido de CV entre o 3º e o 4º "
             + "mês após terem recebido  o último resultado de CVCV ≥1000",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
@@ -81,7 +81,7 @@ public class MICategory13P4Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P4PregnantDENUMINATOR",
-        "13.18: Mulheres Gravidas na 1ª linha de TARV com registo de pedido de CV entre o 3º e o 4º "
+        "13.18: % Mulheres Gravidas na 1ª linha de TARV com registo de pedido de CV entre o 3º e o 4º "
             + "mês após terem recebido  o último resultado de CV ≥ 1000 Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(

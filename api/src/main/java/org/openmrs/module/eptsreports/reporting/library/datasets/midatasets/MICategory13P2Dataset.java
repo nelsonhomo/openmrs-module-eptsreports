@@ -22,7 +22,7 @@ public class MICategory13P2Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13CV24NUMERATOR_SECTION1_2",
-        "13.13: Crianças na 2a linha de TARV que tiveram consulta clínica no período de revisão e que eram elegíveis ao pedido de CV Numerator",
+        "13.13: # Crianças na 2a linha de TARV que tiveram consulta clínica no período de revisão e que eram elegíveis ao pedido de CV Numerator",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P1_2CohortQueries.findFinalNumeratorCategory13SectionIIC(),
@@ -33,7 +33,7 @@ public class MICategory13P2Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13CV24DENOMINATOR_SECTION1_2",
-        "13.13: Crianças na 2a linha de TARV que tiveram consulta clínica no período de revisão e que eram elegíveis ao pedido de CV Denominador",
+        "13.13: # Crianças na 2a linha de TARV que tiveram consulta clínica no período de revisão e que eram elegíveis ao pedido de CV Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P1_2CohortQueries.findDenominatorCategory13SectionIIB(
@@ -69,7 +69,7 @@ public class MICategory13P2Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_PART_3_13_14_NUMERATOR",
-        "13.14: Crianças  na 2a linha de TARV que receberam o resultado da Carga Viral entre o "
+        "13.14: # Crianças  na 2a linha de TARV que receberam o resultado da Carga Viral entre o "
             + "sexto e o nono mês após o início da 2a linha de TARV Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
@@ -82,7 +82,7 @@ public class MICategory13P2Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_PART_3_13_14_DENOMINATOR",
-        "13.14: Crianças  na 2a linha de TARV que receberam o resultado da Carga Viral entre o "
+        "13.14: # Crianças  na 2a linha de TARV que receberam o resultado da Carga Viral entre o "
             + "sexto e o nono mês após o início da 2a linha de TARV Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
@@ -119,7 +119,7 @@ public class MICategory13P2Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P2PregnantWithCVInTARVNUMINATOR",
-        "13.15: Mulheres Gravidas elegíveis a CV com registo de pedido de CV feito pelo clínico (MG que iniciaram TARV na CPN) Numerador",
+        "13.15: % Mulheres Gravidas elegíveis a CV com registo de pedido de CV feito pelo clínico (MG que iniciaram TARV na CPN) Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P2CohortQueries
@@ -131,7 +131,7 @@ public class MICategory13P2Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P2PregnantWithCVInTARVDENOMINATOR",
-        "13.15: Mulheres Gravidas elegíveis a CV com registo de pedido de CV feito pelo clínico (MG que iniciaram TARV na CPN) Denominador",
+        "13.15: % Mulheres Gravidas elegíveis a CV com registo de pedido de CV feito pelo clínico (MG que iniciaram TARV na CPN) Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P2CohortQueries

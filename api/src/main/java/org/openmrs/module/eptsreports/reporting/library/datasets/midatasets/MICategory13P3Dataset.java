@@ -19,7 +19,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_PART_3_13_9_NUMERATOR",
-        "13.9: Crianças  (0-4 anos de idade) na 1a linha de TARV que receberam o resultado da "
+        "13.9: % Crianças  (0-4 anos de idade) na 1a linha de TARV que receberam o resultado da "
             + "Carga Viral entre o sexto e o nono mês após o início do TARV Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
@@ -32,7 +32,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_PART_3_13_9_DENOMINATOR",
-        "13.9: Crianças  (0-4 anos de idade) na 1a linha de TARV que receberam o resultado da "
+        "13.9: % Crianças  (0-4 anos de idade) na 1a linha de TARV que receberam o resultado da "
             + "Carga Viral entre o sexto e o nono mês após o início do TARV Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
@@ -45,7 +45,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_PART_3_13_10_NUMERATOR",
-        "13.10: Crianças  (5-9 anos de idade) na 1a linha de TARV que receberam o resultado da "
+        "13.10: % Crianças  (5-9 anos de idade) na 1a linha de TARV que receberam o resultado da "
             + "Carga Viral entre o sexto e o nono mês após o início do TARV Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
@@ -58,7 +58,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_PART_3_13_10_DENOMINATOR",
-        "13.10: Crianças  (5-9 anos de idade) na 1a linha de TARV que receberam o resultado da "
+        "13.10: % Crianças  (5-9 anos de idade) na 1a linha de TARV que receberam o resultado da "
             + "Carga Viral entre o sexto e o nono mês após o início do TARV Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
@@ -71,7 +71,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_PART_3_13_11_NUMERATOR",
-        "13.11: Crianças  (10-14 anos de idade) na 1a linha de TARV que receberam o resultado da"
+        "13.11: # Crianças  (10-14 anos de idade) na 1a linha de TARV que receberam o resultado da"
             + " Carga Viral entre o sexto e o nono mês após o início do TARV Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
@@ -84,7 +84,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_PART_3_13_11_DENOMINATOR",
-        "13.11: Crianças  (10-14 anos de idade) na 1a linha de TARV que receberam o resultado da "
+        "13.11: # Crianças  (10-14 anos de idade) na 1a linha de TARV que receberam o resultado da "
             + "Carga Viral entre o sexto e o nono mês após o início do TARV Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
@@ -97,7 +97,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_CV_13-11_13-14_NUMERATOR",
-        "13.11: # de crianças (10-14 anos de idade) na 1ª(13.11) ou 2ª(13.14) linha de TARV que recebeu o resultado da Carga Viral entre o sexto e o nono mês após início do TARV Numerador",
+        "13.11: % de crianças (10-14 anos de idade) na 1ª(13.11) ou 2ª(13.14) linha de TARV que recebeu o resultado da Carga Viral entre o sexto e o nono mês após início do TARV Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P3CohortQueries
@@ -109,7 +109,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13_CV_13-11_13-14_DENOMINATOR",
-        "13.11: # de crianças (10-14 anos de idade) na 1ª(13.11) ou 2ª(13.14) linha de TARV que recebeu o resultado da Carga Viral entre o sexto e o nono mês após início do TARV Denominador",
+        "13.11: % de crianças (10-14 anos de idade) na 1ª(13.11) ou 2ª(13.14) linha de TARV que recebeu o resultado da Carga Viral entre o sexto e o nono mês após início do TARV Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mICategory13P3CohortQueries
@@ -121,7 +121,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P4ChildrenNUMINATOR",
-        "13.12: Crianças (>2 anos de idade) na 1ª linha de TARV com registo de pedido de CV entre o 3º e o 4º mês "
+        "13.12: % Crianças (>2 anos de idade) na 1ª linha de TARV com registo de pedido de CV entre o 3º e o 4º mês "
             + "após terem recebido  o último resultado de CV ≥1000 Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
@@ -134,7 +134,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P4ChildrenDENUMINATOR",
-        "13.12: Crianças (>2 anos de idade) na 1ª linha de TARV com registo de resultado de CV ≥1000 ",
+        "13.12: % Crianças (>2 anos de idade) na 1ª linha de TARV com registo de resultado de CV ≥1000 ",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.miCategory13P4CohortQueries
