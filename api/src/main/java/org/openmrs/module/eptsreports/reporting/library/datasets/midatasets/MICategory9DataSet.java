@@ -26,7 +26,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
                 "CAT9ADUL01TNUMERATOR",
                 mappings),
             mappings),
-        "ageOnTheFirstConsultationDuringInclusionPeriod=15+");
+        "ageOnTheFirstConsultationDuringInclusionPeriod=15+Back3Months");
 
     dataSetDefinition.addColumn(
         "CAT9ADUL01TDENOMINATOR",
@@ -38,7 +38,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
                 "CAT9ADUL01TDENOMINATOR",
                 mappings),
             mappings),
-        "ageOnTheFirstConsultationDuringInclusionPeriod=15+");
+        "ageOnTheFirstConsultationDuringInclusionPeriod=15+Back3Months");
 
     dataSetDefinition.addColumn(
         "CAT9ADUL02TNUMERATOR",
@@ -65,18 +65,6 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         "ageOnTheFirstConsultationDuringInclusionPeriod=15+Back3Months");
 
     dataSetDefinition.addColumn(
-        "CAT9ADULTOS93DENOMINADOR",
-        "9.3 % de adultos (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV - Denomindaor ",
-        EptsReportUtils.map(
-            this.setIndicatorWithAllParameters(
-                miCategory9CohortQueries
-                    .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioDenominator9_3(),
-                "CAT9ADULTOS93DENOMINADOR",
-                mappings),
-            mappings),
-        "ageOnReinicio=15+");
-
-    dataSetDefinition.addColumn(
         "CAT9ADULTOS93NUMERADOR",
         "9.3 % de adultos (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV - Numerador",
         EptsReportUtils.map(
@@ -84,6 +72,18 @@ public class MICategory9DataSet extends MQAbstractDataSet {
                 miCategory9CohortQueries
                     .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioAfterAbandonedTreatmentNumerator9_3(),
                 "CAT9ADULTOS93NUMERADOR",
+                mappings),
+            mappings),
+        "ageOnReinicio=15+");
+
+    dataSetDefinition.addColumn(
+        "CAT9ADULTOS93DENOMINADOR",
+        "9.3 % de adultos (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV - Denomindaor ",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                miCategory9CohortQueries
+                    .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioDenominator9_3(),
+                "CAT9ADULTOS93DENOMINADOR",
                 mappings),
             mappings),
         "ageOnReinicio=15+");
@@ -124,7 +124,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
                 "CAT9CHILDREN01TNUMERATOR",
                 mappings),
             mappings),
-        "ageOnTheFirstConsultationDuringInclusionPeriod=15-");
+        "ageOnTheFirstConsultationDuringInclusionPeriod=15-Back3Months");
 
     dataSetDefinition.addColumn(
         "CAT9ACHILDREN01TDENOMINATOR",
@@ -136,7 +136,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
                 "CAT9ACHILDREN01TDENOMINATOR",
                 mappings),
             mappings),
-        "ageOnTheFirstConsultationDuringInclusionPeriod=15-");
+        "ageOnTheFirstConsultationDuringInclusionPeriod=15-Back3Months");
 
     dataSetDefinition.addColumn(
         "CAT9CHILDREN02TNUMERATOR",
@@ -163,18 +163,6 @@ public class MICategory9DataSet extends MQAbstractDataSet {
         "ageOnTheFirstConsultationDuringInclusionPeriod=15-Back3Months");
 
     dataSetDefinition.addColumn(
-        "CAT9ADULTOS97DENOMINADOR",
-        "9.7 % de adultos (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV - Denomindaor ",
-        EptsReportUtils.map(
-            this.setIndicatorWithAllParameters(
-                miCategory9CohortQueries
-                    .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioDenominator9_3(),
-                "CAT9ADULTOS97DENOMINADOR",
-                mappings),
-            mappings),
-        "ageOnReinicio=15-");
-
-    dataSetDefinition.addColumn(
         "CAT9ADULTOS97NUMERADOR",
         "9.7 % de adultos (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV - Numerador",
         EptsReportUtils.map(
@@ -182,6 +170,18 @@ public class MICategory9DataSet extends MQAbstractDataSet {
                 miCategory9CohortQueries
                     .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioAfterAbandonedTreatmentNumerator9_3(),
                 "CAT9ADULTOS97NUMERADOR",
+                mappings),
+            mappings),
+        "ageOnReinicio=15-");
+
+    dataSetDefinition.addColumn(
+        "CAT9ADULTOS97DENOMINADOR",
+        "9.7 % de adultos (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV - Denomindaor ",
+        EptsReportUtils.map(
+            this.setIndicatorWithAllParameters(
+                miCategory9CohortQueries
+                    .findAdultPatientsWithRequestCD4InTheSameClinicalConsultationMarkedAsReinicioDenominator9_3(),
+                "CAT9ADULTOS97DENOMINADOR",
                 mappings),
             mappings),
         "ageOnReinicio=15-");

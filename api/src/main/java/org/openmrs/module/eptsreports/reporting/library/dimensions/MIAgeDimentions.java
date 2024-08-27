@@ -746,7 +746,7 @@ public class MIAgeDimentions {
     dimension.addCohortDefinition(
         "15-Back3Months",
         EptsReportUtils.map(
-            this.calculateAgeOnTheFirstConsultationDateBiggerThanParam(15),
+            this.calculatePatientAgeOnTheFirstClinicalConsultationDuringAvaliationPeriod(15),
             mappingsBackThreeMonths));
 
     dimension.addCohortDefinition(
@@ -800,6 +800,28 @@ public class MIAgeDimentions {
     String query =
         MICategory9QueriesInterface.QUERY
             .findPatientsWhoAreNewlyEnrolledOnARTTUntilRevisionDateLessThanParamFC(age);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "calculatePatientAgeOnTheFirstClinicalConsultationDuringAvaliationPeriod")
+  public CohortDefinition calculatePatientAgeOnTheFirstClinicalConsultationDuringAvaliationPeriod(
+      int age) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("calculatePatientAgeOnTheFirstClinicalConsultationDuringAvaliationPeriod");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MICategory9QueriesInterface.QUERY
+            .calculatePatientAgeOnTheFirstClinicalConsultationDuringAvaliationPeriod(age);
 
     definition.setQuery(query);
 
