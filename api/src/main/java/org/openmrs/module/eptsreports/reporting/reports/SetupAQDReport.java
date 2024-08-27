@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.aqd.AQDViralLoadDataset;
-import org.openmrs.module.eptsreports.reporting.library.datasets.aqd.AQDViralLoadSummuryDataset;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
@@ -42,10 +42,7 @@ import org.springframework.stereotype.Component;
 public class SetupAQDReport extends EptsDataExportManager {
 
   @Autowired private AQDViralLoadDataset aqdViralLoadDataset;
-  @Autowired private AQDViralLoadSummuryDataset viralLoadSummuryDataset;
-
   @Autowired protected GenericCohortQueries genericCohortQueries;
-
   @Autowired private DatimCodeDataSet datimCodeDataSet;
 
   @Override
