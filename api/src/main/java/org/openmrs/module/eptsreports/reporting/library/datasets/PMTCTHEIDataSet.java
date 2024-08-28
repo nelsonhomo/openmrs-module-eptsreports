@@ -76,7 +76,8 @@ public class PMTCTHEIDataSet extends BaseDataSet {
                 mappings));
 
     dataSetDefinition.addDimension(
-        "pmtctage", EptsReportUtils.map(this.pmtctAgeDimensions.getPMTCTAgeDimensions(), mappings));
+        "pmtctage-hei",
+        EptsReportUtils.map(this.pmtctAgeDimensions.getPMTCTHEIAgeDimensions(), mappings));
 
     dataSetDefinition.addColumn(
         "PMTCT-HEI",
@@ -88,37 +89,37 @@ public class PMTCTHEIDataSet extends BaseDataSet {
         "HEI-P-LESS2MONTHS",
         "Infant age at virologic sample collection and result returned - Positive (< 2 months)",
         EptsReportUtils.map(positiveTestResults, mappings),
-        "pmtctage=less2months");
+        "pmtctage-hei=less2months");
 
     dataSetDefinition.addColumn(
         "HEI-P-GREATER2MONTHS",
         "Infant age at virologic sample collection and result returned - Positive (2-12 months)",
         EptsReportUtils.map(positiveTestResults, mappings),
-        "pmtctage=betweent2and12months");
+        "pmtctage-hei=betweent2and12months");
 
     dataSetDefinition.addColumn(
         "HEI-N-LESS2MONTHS",
         "Infant age at virologic sample collection and result returned - Negative (< 2 months)",
         EptsReportUtils.map(negativeTestResults, mappings),
-        "pmtctage=less2months");
+        "pmtctage-hei=less2months");
 
     dataSetDefinition.addColumn(
         "HEI-N-GREATER2MONTHS",
         "Infant age at virologic sample collection and result returned - Negative (2-12 months)",
         EptsReportUtils.map(negativeTestResults, mappings),
-        "pmtctage=betweent2and12months");
+        "pmtctage-hei=betweent2and12months");
 
     dataSetDefinition.addColumn(
         "HEI-ART-LESS2MONTHS",
         "Result returned, Positive, confirmed initiated ART by age at virologic sample collection (< 2 months)",
         EptsReportUtils.map(positiveResultsAndART, mappings),
-        "pmtctage=less2months");
+        "pmtctage-hei=less2months");
 
     dataSetDefinition.addColumn(
         "HEI-ART-GREATER2MONTHS",
         "Result returned, Positive, confirmed initiated ART by age at virologic sample collection (2-12 months)",
         EptsReportUtils.map(positiveResultsAndART, mappings),
-        "pmtctage=betweent2and12months");
+        "pmtctage-hei=betweent2and12months");
 
     return dataSetDefinition;
   }

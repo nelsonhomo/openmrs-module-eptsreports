@@ -65,7 +65,8 @@ public class PMTCTEIDDataSet extends BaseDataSet {
                 mappings));
 
     dataSetDefinition.addDimension(
-        "pmtctage", EptsReportUtils.map(this.pmtctAgeDimensions.getPMTCTAgeDimensions(), mappings));
+        "pmtctage",
+        EptsReportUtils.map(this.pmtctAgeDimensions.getPMTCTEIDAgeDimensions(), mappings));
 
     dataSetDefinition.addColumn(
         "PMTCT-EID",
