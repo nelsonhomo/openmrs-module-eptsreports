@@ -59,7 +59,6 @@ public interface EC6DuplicateFichaResumoQueries {
             + " FROM patient_program pg "
             + " INNER JOIN patient_state ps ON pg.patient_program_id = ps.patient_program_id "
             + " AND ps.start_date IS NOT NULL "
-            + " AND ps.end_date IS NULL "
             + " AND pg.program_id = 2 "
             + " AND ps.voided = 0 "
             + " AND pg.voided = 0 "
