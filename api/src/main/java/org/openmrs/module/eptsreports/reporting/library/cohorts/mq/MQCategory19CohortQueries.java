@@ -130,6 +130,26 @@ public class MQCategory19CohortQueries {
     return definition;
   }
 
+  @DocumentedDefinition(value = "findAllPatientsWithGeneXpertResultAfterSevenDaysPresuntiveResult")
+  public CohortDefinition findAllPatientsWithGeneXpertResultAfterSevenDaysPresuntiveResult() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findAllPatientsWhoHavePresumptiveTBAndGeneXpertRequest");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory19QueriesInterface.QUERY
+            .findAllPatientsWithGeneXpertResultAfterSevenDaysPresuntiveResult;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
   @DocumentedDefinition(value = "findAllPatientsWithGeneXpertResultAfterSevenDaysGeneXpertRequest")
   public CohortDefinition findAllPatientsWithGeneXpertResultAfterSevenDaysGeneXpertRequest() {
 

@@ -31,7 +31,7 @@ public class MICategory19CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
 
     definition.addSearch(
         "PRESUNTIVETB",
@@ -62,9 +62,9 @@ public class MICategory19CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappingsDen =
-        "startInclusionDate=${endRevisionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappings =
-        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR",
@@ -127,7 +127,7 @@ public class MICategory19CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappingsDen =
-        "startInclusionDate=${endRevisionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappings =
         "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
 
@@ -162,7 +162,7 @@ public class MICategory19CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
 
     definition.addSearch(
         "GENEXPERTREQUEST",
@@ -177,7 +177,7 @@ public class MICategory19CohortQueries {
     definition.addSearch(
         "TROUT",
         EptsReportUtils.map(
-            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MQ), mappings));
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
 
     definition.setCompositionString("(GENEXPERTREQUEST AND GENEXPERTRESULT) NOT TROUT");
 
@@ -199,21 +199,20 @@ public class MICategory19CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappingsDen =
-        "startInclusionDate=${endRevisionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappings =
-        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
-
+        "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
     definition.addSearch(
         "DENOMINATOR",
         EptsReportUtils.map(
-            this.findAllPatientsWithGeneXpertResultOnTheSameDateGeneXpertRequestMIDenominator(),
+            this.findPatientsWithGeneXpertRequestExcludingTransferedOutMIDenominator(),
             mappingsDen));
 
     definition.addSearch(
         "GENEXPERTRESULT",
         EptsReportUtils.map(
             mqCategory19CohortQueries
-                .findAllPatientsWithGeneXpertResultAfterSevenDaysGeneXpertRequest(),
+                .findAllPatientsWithGeneXpertResultAfterSevenDaysPresuntiveResult(),
             mappings));
 
     definition.setCompositionString("DENOMINATOR AND GENEXPERTRESULT");
@@ -234,7 +233,7 @@ public class MICategory19CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
 
     definition.addSearch(
         "TBDIAGNOSTIC",
@@ -244,7 +243,7 @@ public class MICategory19CohortQueries {
     definition.addSearch(
         "TROUT",
         EptsReportUtils.map(
-            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MQ), mappings));
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
 
     definition.setCompositionString("TBDIAGNOSTIC NOT TROUT");
 
@@ -264,9 +263,9 @@ public class MICategory19CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappingsDen =
-        "startInclusionDate=${endRevisionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappings =
-        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR",

@@ -940,7 +940,7 @@ public class MIAgeDimentions {
     dimension.addParameter(new Parameter("location", "Location", Location.class));
 
     final String mappings =
-        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
 
     dimension.addCohortDefinition(
         "15-",
@@ -968,7 +968,7 @@ public class MIAgeDimentions {
     dimension.addParameter(new Parameter("location", "Location", Location.class));
 
     final String mappings =
-        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
     dimension.addCohortDefinition(
         "15-",
         EptsReportUtils.map(
@@ -997,7 +997,7 @@ public class MIAgeDimentions {
     dimension.addParameter(new Parameter("location", "Location", Location.class));
 
     final String mappings =
-        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
 
     dimension.addCohortDefinition(
         "15-",
