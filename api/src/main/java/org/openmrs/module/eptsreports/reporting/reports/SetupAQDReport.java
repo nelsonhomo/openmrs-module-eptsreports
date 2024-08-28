@@ -24,6 +24,7 @@ import java.util.Properties;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.GenericCohortQueries;
 import org.openmrs.module.eptsreports.reporting.library.datasets.DatimCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.LocationDataSetDefinition;
+import org.openmrs.module.eptsreports.reporting.library.datasets.SismaCodeDataSet;
 import org.openmrs.module.eptsreports.reporting.library.datasets.aqd.AQDViralLoadDataset;
 import org.openmrs.module.eptsreports.reporting.library.queries.BaseQueries;
 import org.openmrs.module.eptsreports.reporting.reports.manager.EptsDataExportManager;
@@ -43,6 +44,7 @@ public class SetupAQDReport extends EptsDataExportManager {
   @Autowired private AQDViralLoadDataset aqdViralLoadDataset;
   @Autowired protected GenericCohortQueries genericCohortQueries;
   @Autowired private DatimCodeDataSet datimCodeDataSet;
+  @Autowired private SismaCodeDataSet sismaCodeDataSet;
 
   @Override
   public String getExcelDesignUuid() {
@@ -78,6 +80,9 @@ public class SetupAQDReport extends EptsDataExportManager {
     rd.addDataSetDefinition(
         "D",
         Mapped.mapStraightThrough(this.datimCodeDataSet.constructDataset(this.getParameters())));
+    rd.addDataSetDefinition(
+        "SC",
+        Mapped.mapStraightThrough(this.sismaCodeDataSet.constructDataset(this.getParameters())));
 
     rd.setBaseCohortDefinition(
         EptsReportUtils.map(
@@ -99,8 +104,8 @@ public class SetupAQDReport extends EptsDataExportManager {
       reportDesign =
           createXlsReportDesign(
               reportDefinition,
-              "AQD_Carga_Viral_MISAU.xls",
-              "AQD HIV MISAU",
+              "Lista_de_Utentes_Resultado_CV.xls",
+              "Lista_de_Utentes_Resultado_CV",
               getExcelDesignUuid(),
               null);
       Properties props = new Properties();
