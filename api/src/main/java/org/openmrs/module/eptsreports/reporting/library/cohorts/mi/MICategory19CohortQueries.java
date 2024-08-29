@@ -233,7 +233,7 @@ public class MICategory19CohortQueries {
     definition.addParameter(new Parameter("location", "location", Date.class));
 
     final String mappings =
-        "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
+        "startInclusionDate=${endRevisionDate-2m+1d},endRevisionDate=${endRevisionDate-1m},location=${location}";
 
     definition.addSearch(
         "TBDIAGNOSTIC",
@@ -265,7 +265,7 @@ public class MICategory19CohortQueries {
     final String mappingsDen =
         "startInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappings =
-        "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
+        "startInclusionDate=${endRevisionDate-2m+1d},endRevisionDate=${endRevisionDate-1m},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR",
