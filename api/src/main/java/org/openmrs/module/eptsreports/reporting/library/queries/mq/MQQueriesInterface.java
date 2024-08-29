@@ -1,6 +1,7 @@
 package org.openmrs.module.eptsreports.reporting.library.queries.mq;
 
 import org.openmrs.module.eptsreports.reporting.utils.ReportType;
+import org.openmrs.module.eptsreports.reporting.utils.TPTType;
 import org.openmrs.module.eptsreports.reporting.utils.TypePTV;
 
 public interface MQQueriesInterface {
@@ -870,177 +871,136 @@ public interface MQQueriesInterface {
                 + "INNER JOIN person ON alternativa.patient_id = person.person_id WHERE person.voided=0 "
                 + "AND TIMESTAMPDIFF(year,birthdate,alternativa.data_linha) BETWEEN %d and %s AND birthdate IS NOT NULL";
 
-    public static final String findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1 =
-        "SELECT TPI3HP.patient_id FROM  (  "
-            + "select p.patient_id, max(obsEstado.obs_datetime) data_inicio_3HP  from patient p  "
-            + "inner join encounter e on p.patient_id = e.patient_id  "
-            + "inner join obs ultimaProfilaxiaIsoniazia on ultimaProfilaxiaIsoniazia.encounter_id = e.encounter_id  "
-            + "inner join obs obsEstado on obsEstado.encounter_id = e.encounter_id "
-            + "where   e.encounter_type in(6,53) and  ultimaProfilaxiaIsoniazia.concept_id=23985 and ultimaProfilaxiaIsoniazia.value_coded=23954  "
-            + "and obsEstado.concept_id=165308 and obsEstado.value_coded=1256  "
-            + "and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and e.location_id=:location "
-            + "and DATE(obsEstado.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate  "
-            + "group by p.patient_id "
-            + ") TPI3HP  "
-            + "INNER JOIN encounter e ON e.patient_id = TPI3HP.patient_id  "
-            + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id  "
-            + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-            + "AND  e.encounter_datetime BETWEEN TPI3HP.data_inicio_3HP AND (TPI3HP.data_inicio_3HP + INTERVAL 132 DAY) "
-            + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23761 AND obsTBActiva.value_coded = 1065  ";
+    public static final String
+        findPatientsDiagnosedWithActiveTBDuring7MonthsAfterInitiatedTPIINHOr3HPCategory7(
+            TPTType tptType) {
+      String query =
+          "select inh.patient_id from ( "
+              + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
+              + "from patient p "
+              + "inner join encounter e on p.patient_id = e.patient_id "
+              + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
+              + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
+              + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
+              + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = %s and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
+              + "and e.encounter_type in (6,53) and e.location_id = :location "
+              + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
+              + "group by p.patient_id "
+              + ") inh "
+              + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
+              + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
+              + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
+              + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + %s) "
+              + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23761 AND obsTBActiva.value_coded = 1065 ";
 
-    public static final String findPatientWhoAreTBScreeningSixMonthfterLastConsultationRF13_1 =
-        "SELECT TPI3HP.patient_id FROM  (  "
-            + "select p.patient_id, max(obsEstado.obs_datetime) data_inicio_3HP  from patient p  "
-            + "inner join encounter e on p.patient_id = e.patient_id  "
-            + "inner join obs ultimaProfilaxiaIsoniazia on ultimaProfilaxiaIsoniazia.encounter_id = e.encounter_id  "
-            + "inner join obs obsEstado on obsEstado.encounter_id = e.encounter_id "
-            + "where   e.encounter_type in (6,53) and  ultimaProfilaxiaIsoniazia.concept_id=23985 and ultimaProfilaxiaIsoniazia.value_coded=23954  "
-            + "and obsEstado.concept_id=165308 and obsEstado.value_coded=1256  "
-            + "and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and e.location_id=:location "
-            + "and DATE(obsEstado.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate  "
-            + "group by p.patient_id "
-            + ") TPI3HP  "
-            + " INNER JOIN encounter e ON e.patient_id = TPI3HP.patient_id "
-            + " INNER JOIN obs obsTBPositivo ON obsTBPositivo.encounter_id = e.encounter_id "
-            + " WHERE e.voided = 0 AND obsTBPositivo.voided = 0 "
-            + " AND e.encounter_datetime BETWEEN TPI3HP.data_inicio_3HP AND (TPI3HP.data_inicio_3HP + INTERVAL 132 DAY) "
-            + " AND e.location_id = :location AND e.encounter_type = 6 AND obsTBPositivo.concept_id = 23758 AND obsTBPositivo.value_coded = 1065 ";
+      switch (tptType) {
+        case INH_MI:
+          query = String.format(query, 656, "INTERVAL 231 DAY");
 
-    public static final String findPatientWhoAreTBTretmantSixMonthfterLastConsultationRF13_1 =
-        "SELECT TPI3HP.patient_id FROM  (  "
-            + "select p.patient_id, max(obsEstado.obs_datetime) data_inicio_3HP  from patient p  "
-            + "inner join encounter e on p.patient_id = e.patient_id  "
-            + "inner join obs ultimaProfilaxiaIsoniazia on ultimaProfilaxiaIsoniazia.encounter_id = e.encounter_id  "
-            + "inner join obs obsEstado on obsEstado.encounter_id = e.encounter_id "
-            + "where   e.encounter_type in (6,53) and  ultimaProfilaxiaIsoniazia.concept_id=23985 and ultimaProfilaxiaIsoniazia.value_coded=23954  "
-            + "and obsEstado.concept_id=165308 and obsEstado.value_coded=1256  "
-            + "and p.voided=0 and e.voided=0 and ultimaProfilaxiaIsoniazia.voided=0 and obsEstado.voided=0 and e.location_id=:location "
-            + "and DATE(obsEstado.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate  "
-            + "group by p.patient_id "
-            + ") TPI3HP  "
-            + " INNER JOIN encounter e ON e.patient_id = TPI3HP.patient_id "
-            + " INNER JOIN obs obsTB ON obsTB.encounter_id = e.encounter_id "
-            + " WHERE e.voided = 0 AND e.location_id = :location  AND obsTB.voided = 0 AND "
-            + " obsTB.obs_datetime BETWEEN TPI3HP.data_inicio_3HP AND (TPI3HP.data_inicio_3HP + INTERVAL 132 DAY) AND "
-            + " e.encounter_type = 6 AND obsTB.concept_id = 1268 AND obsTB.value_coded IN (1256,1257,1267) ";
+          break;
+
+        case _3HP_MI:
+          query = String.format(query, 23954, "INTERVAL 132 DAY");
+
+        case INH_MQ:
+          query = String.format(query, 656, "INTERVAL 9 MONTH");
+
+          break;
+
+        case _3HP_MQ:
+          query = String.format(query, 23954, "INTERVAL 6 MONTH");
+          break;
+      }
+
+      return query;
+    }
 
     public static final String
-        findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPIINHCategory7 =
-            "select inh.patient_id from ( "
-                + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
-                + "from patient p "
-                + "inner join encounter e on p.patient_id = e.patient_id "
-                + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
-                + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
-                + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
-                + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
-                + "and e.encounter_type in (6,53) and e.location_id = :location "
-                + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
-                + "group by p.patient_id "
-                + ") inh "
-                + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
-                + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
-                + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-                + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 231 DAY) "
-                + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23761 AND obsTBActiva.value_coded = 1065 ";
+        findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+            TPTType tptType) {
+      String query =
+          "select inh.patient_id from ( "
+              + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
+              + "from patient p "
+              + "inner join encounter e on p.patient_id = e.patient_id "
+              + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
+              + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
+              + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
+              + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = %s and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
+              + "and e.encounter_type in (6,53) and e.location_id= :location "
+              + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
+              + "group by p.patient_id "
+              + ") inh "
+              + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
+              + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
+              + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
+              + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + %s) "
+              + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23758 AND obsTBActiva.value_coded = 1065 ";
+
+      switch (tptType) {
+        case INH_MI:
+          query = String.format(query, 656, "INTERVAL 231 DAY");
+
+          break;
+
+        case _3HP_MI:
+          query = String.format(query, 23954, "INTERVAL 132 DAY");
+
+        case INH_MQ:
+          query = String.format(query, 656, "INTERVAL 9 MONTH");
+
+          break;
+
+        case _3HP_MQ:
+          query = String.format(query, 23954, "INTERVAL 6 MONTH");
+          break;
+      }
+
+      return query;
+    }
 
     public static final String
-        findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHCategory7 =
-            "select inh.patient_id from ( "
-                + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
-                + "from patient p "
-                + "inner join encounter e on p.patient_id = e.patient_id "
-                + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
-                + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
-                + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
-                + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
-                + "and e.encounter_type in (6,53) and e.location_id= :location "
-                + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
-                + "group by p.patient_id "
-                + ") inh "
-                + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
-                + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
-                + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-                + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 231 DAY) "
-                + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23758 AND obsTBActiva.value_coded = 1065 ";
+        finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHOr3HPCategory7(TPTType tptType) {
+      String query =
+          "select inh.patient_id from ( "
+              + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
+              + "from patient p "
+              + "inner join encounter e on p.patient_id = e.patient_id "
+              + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
+              + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
+              + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
+              + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = %s and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
+              + "and e.encounter_type in (6,53) and e.location_id= :location "
+              + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
+              + "group by p.patient_id "
+              + ") inh "
+              + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
+              + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
+              + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
+              + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + %s) "
+              + "AND e.encounter_type = 6 AND obsTBActiva.concept_id=1268 and obsTBActiva.value_coded in (1256,1257,1267) ";
 
-    public static final String finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHCategory7 =
-        "select inh.patient_id from ( "
-            + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
-            + "from patient p "
-            + "inner join encounter e on p.patient_id = e.patient_id "
-            + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
-            + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
-            + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
-            + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 23954 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
-            + "and e.encounter_type in (6,53) and e.location_id= :location "
-            + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
-            + "group by p.patient_id "
-            + ") inh "
-            + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
-            + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
-            + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-            + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 231 DAY) "
-            + "AND e.encounter_type = 6 AND obsTBActiva.concept_id=1268 and obsTBActiva.value_coded in (1256,1257,1267) ";
+      switch (tptType) {
+        case INH_MI:
+          query = String.format(query, 656, "INTERVAL 231 DAY");
 
-    public static final String
-        findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPIINHCategory7 =
-            "select inh.patient_id from ( "
-                + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
-                + "from patient p "
-                + "inner join encounter e on p.patient_id = e.patient_id "
-                + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
-                + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
-                + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
-                + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
-                + "and e.encounter_type in (6,53) and e.location_id = :location "
-                + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
-                + "group by p.patient_id "
-                + ") inh "
-                + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
-                + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
-                + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-                + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 9 MONTH) "
-                + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23761 AND obsTBActiva.value_coded = 1065 ";
+          break;
 
-    public static final String
-        findPatientsWithPositiveTBScreeningDuring9MonthsAfterInitiatedINHCategory7 =
-            "select inh.patient_id from ( "
-                + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
-                + "from patient p "
-                + "inner join encounter e on p.patient_id = e.patient_id "
-                + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
-                + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
-                + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
-                + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
-                + "and e.encounter_type in (6,53) and e.location_id= :location "
-                + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
-                + "group by p.patient_id "
-                + ") inh "
-                + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
-                + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
-                + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-                + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 9 MONTH) "
-                + "AND e.encounter_type = 6 AND obsTBActiva.concept_id = 23758 AND obsTBActiva.value_coded = 1065 ";
+        case _3HP_MI:
+          query = String.format(query, 23954, "INTERVAL 132 DAY");
 
-    public static final String finPatientsWhoHadTBTreatmentDuring9MonthsAfterInitiatedINHCategory7 =
-        "select inh.patient_id from ( "
-            + "select p.patient_id, MAX(estadoProfilaxia.obs_datetime) dataInicioTPI "
-            + "from patient p "
-            + "inner join encounter e on p.patient_id = e.patient_id "
-            + "inner join obs profilaxiaINH on profilaxiaINH.encounter_id = e.encounter_id "
-            + "inner join obs estadoProfilaxia on estadoProfilaxia.encounter_id = e.encounter_id "
-            + "where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0 "
-            + "and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 "
-            + "and e.encounter_type in (6,53) and e.location_id= :location "
-            + "and DATE(estadoProfilaxia.obs_datetime) BETWEEN :startInclusionDate AND :endInclusionDate "
-            + "group by p.patient_id "
-            + ") inh "
-            + "INNER JOIN encounter e ON e.patient_id = inh.patient_id "
-            + "INNER JOIN obs obsTBActiva ON obsTBActiva.encounter_id = e.encounter_id "
-            + "WHERE e.voided = 0 AND e.location_id = :location AND obsTBActiva.voided = 0 "
-            + "AND  e.encounter_datetime BETWEEN inh.dataInicioTPI AND (inh.dataInicioTPI + INTERVAL 297 DAY) "
-            + "AND e.encounter_type = 6 AND obsTBActiva.concept_id=1268 and obsTBActiva.value_coded in (1256,1257,1267) ";
+        case INH_MQ:
+          query = String.format(query, 656, "INTERVAL 297 DAY");
+
+          break;
+
+        case _3HP_MQ:
+          query = String.format(query, 23954, "INTERVAL 198 DAY");
+          break;
+      }
+
+      return query;
+    }
 
     public static final String
         finPatientsWhoCompletedINHBetween170And297DaysAfterInitiatedTreatment =

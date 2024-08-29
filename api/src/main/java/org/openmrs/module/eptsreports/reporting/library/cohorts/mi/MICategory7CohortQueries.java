@@ -4,6 +4,7 @@ import java.util.Date;
 import org.openmrs.module.eptsreports.reporting.library.cohorts.mq.MQCohortQueries;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
 import org.openmrs.module.eptsreports.reporting.utils.ReportType;
+import org.openmrs.module.eptsreports.reporting.utils.TPTType;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
@@ -57,39 +58,48 @@ public class MICategory7CohortQueries {
         "TB-ACTIVE-CAT7-B1",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPIINHCategory7(),
+                .findPatientsDiagnosedWithActiveTBDuring7MonthsAfterInitiatedTPIINHOr3HPCategory7(
+                    TPTType.INH_MI),
             mappingsMI));
 
     definition.addSearch(
         "TB-SCREENING-CAT7-B2",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHCategory7(),
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType.INH_MI),
             mappingsMI));
 
     definition.addSearch(
         "TB-TREATMENT-CAT7-B3",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHCategory7(),
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType.INH_MI),
             mappingsMI));
 
     definition.addSearch(
         "A",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1(),
+            this.mQCohortQueries
+                .findPatientsDiagnosedWithActiveTBDuring7MonthsAfterInitiatedTPIINHOr3HPCategory7(
+                    TPTType._3HP_MI),
             mappingsMI));
 
     definition.addSearch(
         "B",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBScreeningSixMonthfterLastConsultationRF13_1(),
+            this.mQCohortQueries
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType._3HP_MI),
             mappingsMI));
 
     definition.addSearch(
         "C",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBTretmantSixMonthfterLastConsultationRF13_1(),
+            this.mQCohortQueries
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType._3HP_MI),
             mappingsMI));
 
     definition.addSearch(
@@ -253,39 +263,48 @@ public class MICategory7CohortQueries {
         "TB-ACTIVE-CAT7-B1",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsDiagnosedWithActiveTBDuring6MonthsAfterInitiatedTPIINHCategory7(),
+                .findPatientsDiagnosedWithActiveTBDuring7MonthsAfterInitiatedTPIINHOr3HPCategory7(
+                    TPTType.INH_MI),
             mappingsMI));
 
     definition.addSearch(
         "TB-SCREENING-CAT7-B2",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHCategory7(),
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType.INH_MI),
             mappingsMI));
 
     definition.addSearch(
         "TB-TREATMENT-CAT7-B3",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHCategory7(),
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType.INH_MI),
             mappingsMI));
 
     definition.addSearch(
         "A",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1(),
+            this.mQCohortQueries
+                .findPatientsDiagnosedWithActiveTBDuring7MonthsAfterInitiatedTPIINHOr3HPCategory7(
+                    TPTType._3HP_MI),
             mappingsMI));
 
     definition.addSearch(
         "B",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBScreeningSixMonthfterLastConsultationRF13_1(),
+            this.mQCohortQueries
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType._3HP_MI),
             mappingsMI));
 
     definition.addSearch(
         "C",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBTretmantSixMonthfterLastConsultationRF13_1(),
+            this.mQCohortQueries
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType._3HP_MI),
             mappingsMI));
 
     definition.setCompositionString(
