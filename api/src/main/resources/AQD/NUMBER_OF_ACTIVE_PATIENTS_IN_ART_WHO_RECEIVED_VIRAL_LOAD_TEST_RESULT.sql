@@ -603,6 +603,7 @@ from
             )
             L 
             on L.patient_id = coorte12meses_final.patient_id 
+            group by coorte12meses_final.patient_id
 
       union
       -- Aqui  Neste Bloco vamos buscar a activos do segundo mes e aqueles que tem carga viral no segundo mes
@@ -1201,7 +1202,7 @@ from
             L 
             on L.patient_id = coorte12meses_final.patient_id 
      
-      group by coorte12meses_final.patient_id     
+             group by coorte12meses_final.patient_id     
          
          -- Aqui  Neste Bloco vamos buscar a activos do terceiro mes e aqueles que tem carga viral no terceiro mes
       union
