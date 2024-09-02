@@ -70,6 +70,7 @@ public interface MQQueriesInterface {
       String query =
           "select saida.patient_id from "
               + "( "
+              + "select patient_id, max(data_estado) data_estado from ( "
               + "select p.patient_id, max(o.obs_datetime) data_estado from patient p "
               + "inner join encounter e on p.patient_id=e.patient_id "
               + "inner join obs  o on e.encounter_id=o.encounter_id "
@@ -83,6 +84,7 @@ public interface MQQueriesInterface {
               + "where e.voided=0 and o.voided=0 and p.voided=0 and e.encounter_type = 53 and "
               + "o.concept_id = 6272 and %s and e.location_id=:location "
               + "group by p.patient_id "
+              + ") saida group by saida.patient_id "
               + ") saida "
               + "inner join obs o on o.person_id = saida.patient_id "
               + "where o.concept_id in (6272,6273) and o.value_coded = 1706 "
