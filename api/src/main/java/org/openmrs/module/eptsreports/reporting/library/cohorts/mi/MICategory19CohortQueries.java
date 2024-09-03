@@ -33,6 +33,8 @@ public class MICategory19CohortQueries {
     final String mappings =
         "startInclusionDate=${endRevisionDate-3m+1d},endRevisionDate=${endRevisionDate-2m},location=${location}";
 
+    final String mappingsForTrfOut = "endRevisionDate=${endRevisionDate},location=${location}";
+
     definition.addSearch(
         "PRESUNTIVETB",
         EptsReportUtils.map(
@@ -42,7 +44,7 @@ public class MICategory19CohortQueries {
         "TRANSFERED-OUT",
         EptsReportUtils.map(
             this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI),
-            mappings));
+            mappingsForTrfOut));
 
     definition.setCompositionString("PRESUNTIVETB NOT TRANSFERED-OUT");
 
@@ -235,6 +237,8 @@ public class MICategory19CohortQueries {
     final String mappings =
         "startInclusionDate=${endRevisionDate-2m+1d},endRevisionDate=${endRevisionDate-1m},location=${location}";
 
+    final String mappingsForTrfOut = "endRevisionDate=${endRevisionDate},location=${location}";
+
     definition.addSearch(
         "TBDIAGNOSTIC",
         EptsReportUtils.map(
@@ -243,7 +247,8 @@ public class MICategory19CohortQueries {
     definition.addSearch(
         "TROUT",
         EptsReportUtils.map(
-            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI), mappings));
+            mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MI),
+            mappingsForTrfOut));
 
     definition.setCompositionString("TBDIAGNOSTIC NOT TROUT");
 
