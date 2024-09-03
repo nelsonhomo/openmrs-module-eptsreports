@@ -576,7 +576,7 @@ public interface DSDQueriesInterface {
 
       return "select patient.patient_id from patient                         		"
           + "	inner join person on person.person_id = patient.patient_id		"
-          + "where patient.voided = 0 and person.voided = 0 					"
+          + "where patient.voided = 0 "
           + "	and (TIMESTAMPDIFF(year,birthdate,:endDate)) 			    ";
     }
 
