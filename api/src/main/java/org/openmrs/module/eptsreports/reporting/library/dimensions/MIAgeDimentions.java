@@ -896,7 +896,7 @@ public class MIAgeDimentions {
     dimension.addParameter(new Parameter("location", "Location", Location.class));
 
     final String mappings =
-        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
 
     dimension.addCohortDefinition(
         "15+",
