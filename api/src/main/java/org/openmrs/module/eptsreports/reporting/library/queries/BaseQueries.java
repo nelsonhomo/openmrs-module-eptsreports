@@ -48,7 +48,7 @@ public class BaseQueries {
             + "WHERE e.voided=0 AND p.voided=0 AND e.encounter_type IN (5,7) "
             + "AND e.encounter_datetime<=:endDate AND e.location_id = :location "
             + "UNION SELECT pg.patient_id FROM 	patient p INNER JOIN patient_program pg ON p.patient_id=pg.patient_id "
-            + "WHERE pg.voided=0 AND p.voided=0 AND program_id IN (1,2, 6) AND date_enrolled<=:endDate AND location_id=:location "
+            + "WHERE pg.voided=0 AND p.voided=0 AND program_id IN (1,2) AND date_enrolled<=:endDate AND location_id=:location "
             + "UNION SELECT p.patient_id FROM patient p INNER JOIN encounter e ON p.patient_id=e.patient_id "
             + "INNER JOIN obs o ON e.encounter_id=o.encounter_id "
             + "WHERE p.voided=0 AND e.voided=0 AND o.voided=0 AND e.encounter_type=53 AND o.concept_id=23891 "
