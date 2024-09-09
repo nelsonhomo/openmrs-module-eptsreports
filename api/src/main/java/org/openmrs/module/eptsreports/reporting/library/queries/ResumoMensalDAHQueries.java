@@ -285,15 +285,15 @@ public class ResumoMensalDAHQueries {
             + "	From patient p "
             + "	inner join encounter e on p.patient_id=e.patient_id "
             + "	inner join obs o on e.encounter_id=o.encounter_id "
-            + "	where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type = 90 and o.value_numeric is not null "
-            + "	and e.location_id=:location and o.obs_datetime >= :startDate and o.obs_datetime <= :endDate "
+            + "	where p.voided=0 and e.voided=0 and o.voided=0 and o.concept_id = 1695 and  e.encounter_type in (90,6) and o.value_numeric is not null "
+            + "	and e.location_id=:location and o.obs_datetime between :startDate and :endDate "
             + "	union "
             + "	Select p.patient_id "
             + "	From patient p "
             + "	inner join encounter e on p.patient_id=e.patient_id "
             + "	inner join obs o on e.encounter_id=o.encounter_id "
-            + "	where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type = 6 and o.value_numeric is not null "
-            + "	and e.location_id=:location and e.encounter_datetime >= :startDate and e.encounter_datetime <= :endDate ";
+            + "	where p.voided=0 and e.voided=0 and o.voided=0 and o.concept_id = 165515 and  e.encounter_type in (90,6) and o.value_coded is not null "
+            + "	and e.location_id=:location and o.obs_datetime between :startDate and  :endDate ";
 
     return query;
   }
@@ -313,7 +313,7 @@ public class ResumoMensalDAHQueries {
             + "   from patient p "
             + "inner join encounter e on e.patient_id=p.patient_id "
             + "inner join obs o on o.encounter_id=e.encounter_id "
-            + "  where (p.voided=0 and  e.voided=0 and e.encounter_type in (6,90) and o.concept_id in(1695,165515)  and o.voided=0 and o.value_numeric is not null) "
+            + "  where p.voided=0 and  e.voided=0 and e.encounter_type in (6,90) and o.concept_id in(1695,165515)  and o.voided=0 and (o.value_numeric is not null or o.value_coded is not null) "
             + "        and  e.location_id=:location and o.obs_datetime between :startDate and :endDate "
             + ")f "
             + "inner join person pe on pe.person_id=f.patient_id "
