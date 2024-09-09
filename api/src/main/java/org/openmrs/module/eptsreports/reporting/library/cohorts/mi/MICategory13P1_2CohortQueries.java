@@ -189,6 +189,9 @@ public class MICategory13P1_2CohortQueries {
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
+    final String mappingsPeriodoAvaliacao =
+        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate},location=${location}";
+
     definition.addSearch(
         "RF15-SEGUNDA-LINHA",
         EptsReportUtils.map(this.findDenominatorCategory13SectionIIB(false), mappings));
@@ -204,7 +207,7 @@ public class MICategory13P1_2CohortQueries {
         EptsReportUtils.map(
             mQCategory13Section1CohortQueries
                 .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
-            mappings));
+            mappingsPeriodoAvaliacao));
 
     definition.setCompositionString("(RF15-SEGUNDA-LINHA OR RF14-PRIMEIRA-LINHA) AND TB-ACTIVA");
 

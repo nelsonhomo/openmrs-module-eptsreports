@@ -113,7 +113,7 @@ public class MICategory13P1_1CohortQueries {
           "(B1 AND (B2NEW OR REINITIATED-ART OR (B3 NOT B3E ))) NOT (B5E OR C OR DROPPEDOUT OR TRANSFERED-IN OR TB-ACTIVA)");
     else
       definition.setCompositionString(
-          "(B1 AND (B2NEW OR REINITIATED-ART OR (B3 NOT B3E ))) NOT (B5E OR C OR DROPPEDOUT OR TRANSFERED-IN");
+          "(B1 AND (B2NEW OR REINITIATED-ART OR (B3 NOT B3E ))) NOT (B5E OR C OR DROPPEDOUT OR TRANSFERED-IN)");
 
     return definition;
   }
