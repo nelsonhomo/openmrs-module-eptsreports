@@ -164,7 +164,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT9ADULTOS97NUMERADOR",
-        "9.7 % de adultos (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV - Numerador",
+        "9.7 % de crianças  (0-14 anos) com pedido de CD4 na primeira consulta clínica de reinício do TARV - Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 miCategory9CohortQueries
@@ -176,7 +176,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT9ADULTOS97DENOMINADOR",
-        "9.7 % de adultos (15/+anos) com pedido de CD4 na consulta clínica de reinício do TARV - Denomindaor ",
+        "9.7 % de crianças  (0-14 anos) com pedido de CD4 na primeira consulta clínica de reinício do TARV - Denomindaor ",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 miCategory9CohortQueries
