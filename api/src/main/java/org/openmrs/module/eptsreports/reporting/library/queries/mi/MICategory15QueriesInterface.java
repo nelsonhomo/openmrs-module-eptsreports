@@ -651,7 +651,7 @@ public interface MICategory15QueriesInterface {
         findPatientsWhoHaveTbTreatmentMarkedEnd30DaysBeforeTheLastAppointment =
             "select f.patient_id from "
                 + "( "
-                + "select lastEnc.patient_id,lastEnc.enc, (TIMESTAMPDIFF(day,tb.data_fim_tb, lastEnc.enc)), tb.data_fim_tb "
+                + "select lastEnc.patient_id,lastEnc.enc, tb.data_fim_tb "
                 + "from "
                 + "( "
                 + "Select p.patient_id,max(e.encounter_datetime) enc from patient p "
@@ -672,7 +672,7 @@ public interface MICategory15QueriesInterface {
                 + "and e.encounter_datetime <= :endRevisionDate "
                 + "group by p.patient_id "
                 + ")tb on lastEnc.patient_id=tb.patient_id "
-                + "WHERE (TIMESTAMPDIFF(day,lastEnc.enc,tb.data_fim_tb)) <= 30 "
+                + "WHERE ABS(DATEDIFF(lastEnc.enc,tb.data_fim_tb)) <= 30 "
                 + " order by lastEnc.enc desc "
                 + " )f ";
   }

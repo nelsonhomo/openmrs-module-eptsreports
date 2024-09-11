@@ -229,6 +229,9 @@ public class MICategory13P1_2CohortQueries {
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
+    final String mappingsPeriodoAvaliacao =
+        "startInclusionDate=${endRevisionDate-2m+1d},endInclusionDate=${endRevisionDate-1m},endRevisionDate=${endRevisionDate-1m},location=${location}";
+
     definition.addSearch(
         "TBHIV-DENOMINATOR-13-4",
         EptsReportUtils.map(
@@ -237,7 +240,8 @@ public class MICategory13P1_2CohortQueries {
     definition.addSearch(
         "REQUEST-CV",
         EptsReportUtils.map(
-            mQCategory13Section1CohortQueries.findNumeratorCategory13Section1C(), mappings));
+            mQCategory13Section1CohortQueries.findNumeratorCategory13Section1C(),
+            mappingsPeriodoAvaliacao));
 
     definition.setCompositionString("TBHIV-DENOMINATOR-13-4 AND REQUEST-CV");
 

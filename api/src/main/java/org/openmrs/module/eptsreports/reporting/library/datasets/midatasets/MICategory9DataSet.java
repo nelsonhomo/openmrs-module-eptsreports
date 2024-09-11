@@ -98,7 +98,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
                 "CAT9ADULTOS94NUMERADOR",
                 mappings),
             mappings),
-        "ageOnReinicio=CD4-15+");
+        "ageOnReinicio=15+");
 
     dataSetDefinition.addColumn(
         "CAT9ADULTOS94DENOMINADOR",
@@ -110,7 +110,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
                 "CAT9ADULTOS94DENOMINADOR",
                 mappings),
             mappings),
-        "ageOnReinicio=CD4-15+");
+        "ageOnReinicio=15+");
 
     // Criancas
 
@@ -196,7 +196,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
                 "CAT9ADULTOS98NUMERADOR",
                 mappings),
             mappings),
-        "ageOnReinicio=CD4-15-");
+        "ageOnReinicio=15-");
 
     dataSetDefinition.addColumn(
         "CAT9ADULTOS98DENOMINADOR",
@@ -208,7 +208,7 @@ public class MICategory9DataSet extends MQAbstractDataSet {
                 "CAT9ADULTOS98DENOMINADOR",
                 mappings),
             mappings),
-        "ageOnReinicio=CD4-15-");
+        "ageOnReinicio=15-");
 
     // Gravidas
 
