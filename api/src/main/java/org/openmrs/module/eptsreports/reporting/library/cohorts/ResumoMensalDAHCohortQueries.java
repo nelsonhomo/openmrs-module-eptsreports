@@ -582,7 +582,7 @@ public class ResumoMensalDAHCohortQueries {
             this.genericCohortQueries.generalSql(
                 "getNumberOfPatientsDiedWithDAHSixMonthsAfterDAH6",
                 ResumoMensalDAHQueries.getNumberOfPatientsDiedWithDAHSixMonthsAfterDAH6()),
-            mappings6Months));
+            mappings));
 
     definition.addSearch(
         "B8",
