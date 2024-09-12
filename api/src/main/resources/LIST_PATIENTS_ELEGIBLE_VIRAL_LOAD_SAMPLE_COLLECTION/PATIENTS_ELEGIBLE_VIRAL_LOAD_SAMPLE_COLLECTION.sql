@@ -424,7 +424,7 @@
             					inner join obs o on e.encounter_id=o.encounter_id 
             			where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and 
             					o.concept_id=23866 and o.value_datetime is not null and 
-            					o.value_datetime<= :startDate and e.location_id=:location 
+            					o.value_datetime<= :endDate and e.location_id=:location 
             					order by p.patient_id, value_datetime desc
             					) maxFicha where (data_levantamento + INTERVAL 30 day) between  :startDate and :endDate 
             					group by maxFicha.patient_id
@@ -666,7 +666,7 @@
             					inner join patient_program pg on p.patient_id=pg.patient_id 
             					inner join patient_state ps on pg.patient_program_id=ps.patient_program_id 
             			where 	pg.voided=0 and ps.voided=0 and p.voided=0 and 
-            					pg.program_id=8 and ps.state=27 and ps.end_date is null and 
+            					pg.program_id=8 and ps.state=27 and 
             					ps.start_date between date_add(:endDate, interval -18 month) AND :endDate and location_id=:location 
             		     union 
                            select p.patient_id,data_colheita.value_datetime data_parto from patient p 
