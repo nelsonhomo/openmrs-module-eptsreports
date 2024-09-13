@@ -133,7 +133,7 @@ from (
 		where (lactante_real.data_parto is not null or gravida_real.data_gravida is not null ) and pe.gender='F'
 			group by pe.person_id
 )final 
-where final.decisao = 1
+where final.decisao = 1 and data_gravida between (:startDate - INTERVAL 8 MONTH) and :endDate
 
 )cd4_eligible
  left join (
@@ -142,7 +142,7 @@ where final.decisao = 1
 		inner join encounter e on e.patient_id=p.patient_id
 		inner join obs o on o.encounter_id=e.encounter_id
 	where e.voided=0 and e.encounter_type in (6,13,53,51,90) and o.concept_id in (1695, 165515) and o.voided=0 
-		and  e.location_id=:location and o.obs_datetime between :startDate and :endDate
+		and  e.location_id=:location and o.obs_datetime between :startDate and :endDate and o.obs_datetime < (:startDate - INTERVAL 8 MONTH)
 )cd4_absolute on cd4_eligible.patient_id = cd4_absolute.patient_id
-where  cd4_absolute.obs_datetime >= cd4_eligible.data_gravida
+where  cd4_absolute.obs_datetime >= cd4_eligible.data_gravida or cd4_absolute.obs_datetime is null
 group by cd4_eligible.patient_id

@@ -133,7 +133,7 @@ select cd4_eligible.patient_id
 			where (lactante_real.data_parto is not null or gravida_real.data_gravida is not null ) and pe.gender='F'
 			group by pe.person_id
 	)cd4_eligible
-	  where cd4_eligible.decisao =1
+	  where cd4_eligible.decisao =1 and data_gravida between (:startDate - INTERVAL 8 MONTH) and :endDate
 	  
 ) cd4_eligible                                             
  left join(

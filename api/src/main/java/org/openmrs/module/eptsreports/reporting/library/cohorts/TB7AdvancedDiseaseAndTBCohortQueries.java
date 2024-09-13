@@ -682,15 +682,6 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
         "PREGNANT",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "Women Who are Pregnant",
-                EptsQuerysUtils.loadQuery(
-                    TB7AdvancedDiseaseQueries.QUERY.FIND_PREGNANT_OR_BREASTEFEEDING)),
-            "startDate=${endDate-10m+1d},endDate=${endDate-1m},location=${location}"));
-
-    definition.addSearch(
-        "CD4",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
                 "Clients With CD4",
                 EptsQuerysUtils.loadQuery(
                     TB7AdvancedDiseaseQueries.QUERY
@@ -702,7 +693,7 @@ public class TB7AdvancedDiseaseAndTBCohortQueries {
     definition.addSearch(
         "DEAD", Mapped.mapStraightThrough(this.findPatientsWhoAreDeadByReportGenerationDate()));
 
-    definition.setCompositionString("(PREGNANT not (TRANSFERREDOUT or DEAD)) not CD4");
+    definition.setCompositionString("PREGNANT not (TRANSFERREDOUT or DEAD)");
 
     return definition;
   }

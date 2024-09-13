@@ -140,4 +140,4 @@ left join(
 	where e.voided=0 and e.encounter_type in (6,13,53,51,90) and o.concept_id in (1695, 165515) and o.voided=0 
 		and  e.location_id=:location and o.obs_datetime <= date_add(:endDate, interval  33 day)
 )cd4_absolute on cd4_eligible.patient_id = cd4_absolute.patient_id
-where  cd4_absolute.obs_datetime between cd4_eligible.data_gravida and date_add(cd4_eligible.data_gravida, interval 33 day) and cd4_eligible.decisao =1
+where  cd4_absolute.obs_datetime between cd4_eligible.data_gravida and date_add(cd4_eligible.data_gravida, interval 33 day) and cd4_eligible.decisao =1 and data_gravida between (:startDate - INTERVAL 8 MONTH) and :endDate
