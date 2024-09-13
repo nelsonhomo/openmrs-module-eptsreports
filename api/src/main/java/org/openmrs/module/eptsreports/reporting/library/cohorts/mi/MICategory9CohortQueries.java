@@ -382,7 +382,7 @@ public class MICategory9CohortQueries {
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsBackThreeMonths =
-        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate-2m},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR-9-3",
@@ -422,7 +422,7 @@ public class MICategory9CohortQueries {
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
     final String mappingsBackThreeMonths =
-        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate},location=${location}";
+        "startInclusionDate=${endRevisionDate-3m+1d},endInclusionDate=${endRevisionDate-2m},endRevisionDate=${endRevisionDate-2m},location=${location}";
 
     definition.addSearch(
         "DENOMINATOR-9-4",
