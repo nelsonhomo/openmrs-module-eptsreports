@@ -105,7 +105,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
                 "CAT13_CV_13-11_13-14_NUMERATOR",
                 mappings),
             mappings),
-        "");
+        "ageMiEndRevisionDate=10-14");
 
     dataSetDefinition.addColumn(
         "CAT13_CV_13-11_13-14_DENOMINATOR",
@@ -117,7 +117,7 @@ public class MICategory13P3Dataset extends MQAbstractDataSet {
                 "CAT13_CV_13-11_13-14_DENOMINATOR",
                 mappings),
             mappings),
-        "");
+        "ageMiEndRevisionDate=10-14");
 
     dataSetDefinition.addColumn(
         "CAT13P4ChildrenNUMINATOR",
