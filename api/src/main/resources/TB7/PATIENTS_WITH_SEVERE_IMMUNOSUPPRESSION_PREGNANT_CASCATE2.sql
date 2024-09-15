@@ -11,7 +11,11 @@ select cd4_eligible.patient_id
             from person pe
             left join (
 					select gravida_real.patient_id,max(gravida_real.data_gravida) data_gravida  
-					from ( 
+					from (
+					
+					        select main.*
+        					from(
+					
 								select p.patient_id,e.encounter_datetime data_gravida 
 								from patient p 
 									inner join encounter e on p.patient_id=e.patient_id 
@@ -67,6 +71,19 @@ select cd4_eligible.patient_id
 								where p.voided=0 and e.voided=0 and esta_gravida.voided=0 and data_colheita.voided = 0 and esta_gravida.concept_id=1982                                                                                                                                 
 									and esta_gravida.value_coded = 1065 and e.encounter_type=51                                                                                                                                                                                         
 									and data_colheita.concept_id =23821 and data_colheita.value_datetime between :startDate and :endDate and e.location_id= :location                                                      
+					
+						  ) main
+							     left join (
+							          select p.patient_id, o.obs_datetime
+							          from patient p
+							            inner join encounter e on e.patient_id=p.patient_id
+							            inner join obs o on o.encounter_id=e.encounter_id
+							          where e.voided=0 and e.encounter_type in (6,13,53,51,90) and o.concept_id in (1695, 165515) and o.voided=0 
+							            and  e.location_id=:location and o.obs_datetime between :startDate and :endDate and o.obs_datetime < (:startDate + INTERVAL 8 MONTH)
+							        )cd4_absolute on main.patient_id = cd4_absolute.patient_id
+							        where cd4_absolute.obs_datetime is null
+       
+									
 					) 
 				gravida_real 
 					group by gravida_real.patient_id
@@ -74,6 +91,10 @@ select cd4_eligible.patient_id
 		left join(
 				select lactante_real.patient_id,max(lactante_real.data_parto) data_parto  
 				from ( 
+
+				        select main.*
+    					from(
+				
 							select p.patient_id,o.value_datetime data_parto 
 							from patient p 
 								inner join encounter e on p.patient_id=e.patient_id 
@@ -125,7 +146,18 @@ select cd4_eligible.patient_id
 							where p.voided=0 and e.voided=0 and esta_gravida.voided=0 and data_colheita.voided = 0 and esta_gravida.concept_id=1982                                                                                                                                 
 								and esta_gravida.value_coded = 1065 and e.encounter_type=51                                                                                                                                                                                         
 								and data_colheita.concept_id =23821 and data_colheita.value_datetime between (:startDate - INTERVAL 9 MONTH) and :endDate and e.location_id= :location
-				) 
+				
+						) main
+			              left join (
+			        		  select p.patient_id, o.obs_datetime
+					          from patient p
+					            inner join encounter e on e.patient_id=p.patient_id
+					            inner join obs o on o.encounter_id=e.encounter_id
+					          where e.voided=0 and e.encounter_type in (6,13,53,51,90) and o.concept_id in (1695, 165515) and o.voided=0 
+					            and  e.location_id=:location and o.obs_datetime between :startDate and :endDate and o.obs_datetime < (:startDate + INTERVAL 8 MONTH)
+					        )cd4_absolute on main.patient_id = cd4_absolute.patient_id
+					      where cd4_absolute.obs_datetime is null					
+			) 
 			lactante_real 
 				group by lactante_real.patient_id
 		)
@@ -133,7 +165,7 @@ select cd4_eligible.patient_id
 			where (lactante_real.data_parto is not null or gravida_real.data_gravida is not null ) and pe.gender='F'
 			group by pe.person_id
 	)cd4_eligible
-	  where cd4_eligible.decisao =1 and data_gravida between (:startDate - INTERVAL 8 MONTH) and :endDate
+	  where cd4_eligible.decisao =1 and data_gravida <= :endDate
 	  
 ) cd4_eligible                                             
  left join(
