@@ -212,7 +212,7 @@ public interface TB7AdvancedDiseaseQueries {
             + "		inner join encounter e on e.patient_id=p.patient_id  "
             + "		inner join obs o on o.encounter_id=e.encounter_id  "
             + "where p.voided = 0 and e.voided=0 and o.voided=0 and e.encounter_type in (6,13,53,51,90) and o.concept_id in (1695, 165515) "
-            + "		and e.location_id= :location and o.obs_datetime >= :startDate and o.obs_datetime < :endDate ";
+            + "		and e.location_id= :location and o.obs_datetime >= :startDate and o.obs_datetime <= :endDate ";
 
     public static final String findPatientsWIthHighVLWithCD4Count =
         "select cd4_eligible.patient_id  												"
