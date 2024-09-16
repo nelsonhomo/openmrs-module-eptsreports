@@ -408,7 +408,7 @@ select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestamp
             Select p.patient_id,max(o.obs_datetime) max_data_cd4  From patient p  
             inner join encounter e on p.patient_id=e.patient_id  
             inner join obs o on e.encounter_id=o.encounter_id  
-            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,9,13,53) 
+            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,9,13,53,51) 
             and o.obs_datetime between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location 
             group by p.patient_id 
             )max_cd4  
@@ -420,7 +420,7 @@ select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestamp
             Select p.patient_id,max(o.obs_datetime) max_data_cd4  From patient p  
             inner join encounter e on p.patient_id=e.patient_id  
             inner join obs o on e.encounter_id=o.encounter_id  
-            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 165515 and  e.encounter_type in (6,9,13,53) 
+            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 165515 and  e.encounter_type in (6,9,13,53,51) 
             and o.obs_datetime between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location 
             group by p.patient_id 
             )max_cd4  
@@ -433,7 +433,7 @@ select patient_id from ( select inicio.patient_id, inicio.data_inicio, timestamp
             Select p.patient_id,max(o.obs_datetime) max_data_cd4  From patient p  
             inner join encounter e on p.patient_id=e.patient_id  
             inner join obs o on e.encounter_id=o.encounter_id  
-            where   p.voided=0 and e.voided=0 and o.voided=0 and concept_id=730 and  e.encounter_type in (6,9,13) 
+            where   p.voided=0 and e.voided=0 and o.voided=0 and concept_id=730 and  e.encounter_type in (6,9,13,53,51) 
             and o.obs_datetime between (:endDate - INTERVAL 12 MONTH) AND :endDate and e.location_id=:location  
             group by p.patient_id 
             ) max_cd4  
