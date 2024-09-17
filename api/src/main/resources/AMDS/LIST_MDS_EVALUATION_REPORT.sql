@@ -79,8 +79,8 @@ select f.* from
             when estadiamentoClinico24Meses.tipoEstadio24Meses=4  then 'Estadio IV' 
             end as tipo_estadio_24_meses,             
            tb24Meses.tb_24_meses tb_24_meses,
-           primeiroMdc24Meses.data_registo_primeiro_mdc_24_meses data_registo_primeiro_mdc_24_meses,
-           inicioMds24Meses.data_inicio_mds_24_meses data_inicio_mds_24_mesess,
+           DATE_FORMAT(DATE(primeiroMdc24Meses.data_registo_primeiro_mdc_24_meses),'%d/%m/%Y') data_registo_primeiro_mdc_24_meses,
+           DATE_FORMAT(DATE(inicioMds24Meses.data_inicio_mds_24_meses),'%d/%m/%Y') data_inicio_mds_24_mesess,
 
            primeiroMds24Meses.INICIO_MDS1_24_MESES INICIO_MDS1_24_MESES,
            primeiroMds24Meses.INICIO_MDS2_24_MESES INICIO_MDS2_24_MESES,
@@ -7372,8 +7372,8 @@ select f.* from
             when estadiamentoClinico24Meses.tipoEstadio24Meses=4  then 'Estadio IV' 
             end as tipo_estadio_24_meses,             
            tb24Meses.tb_24_meses tb_24_meses,
-           primeiroMdc24Meses.data_registo_primeiro_mdc_24_meses data_registo_primeiro_mdc_24_meses,
-           inicioMds24Meses.data_inicio_mds_24_meses data_inicio_mds_24_mesess,
+            DATE_FORMAT(DATE(primeiroMdc24Meses.data_registo_primeiro_mdc_24_meses),'%d/%m/%Y') data_registo_primeiro_mdc_24_meses,
+            DATE_FORMAT(DATE(inicioMds24Meses.data_inicio_mds_24_meses),'%d/%m/%Y') data_inicio_mds_24_mesess,
 
            primeiroMds24Meses.INICIO_MDS1_24_MESES INICIO_MDS1_24_MESES,
            primeiroMds24Meses.INICIO_MDS2_24_MESES INICIO_MDS2_24_MESES,
