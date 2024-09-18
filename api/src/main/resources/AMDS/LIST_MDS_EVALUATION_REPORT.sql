@@ -4697,7 +4697,8 @@ select f.* from
              ) final
             left join
             (
-              select p.person_id,tpt.patient_id,
+              select 
+                     tpt.patient_id,
                      tpt.tpt.art_start_date,
                      tpt.data_tb as data,
                      if(tpt.data_tb is not null,'Não','Sim') valor1
@@ -4762,7 +4763,7 @@ select f.* from
                 inner join obs o on o.encounter_id=e.encounter_id 
                 where e.encounter_type=6 and  e.location_id=:location and e.voided=0 and p.voided=0 and  o.concept_id=1406  and o.value_coded =42
                 )tpt on tpt.patient_id=tx_new.patient_id
-                )tpt on tpt.patient_id=p.person_id  
+                )tpt on tpt.patient_id=p.person_id  and p.voided=0
                 where ((tpt.data_tb BETWEEN tpt.art_start_date and date_add(tpt.art_start_date, interval 33 day)) or tpt.data_tb is null) 
                )tpt on tpt.patient_id=final.patient_id
 
@@ -9916,7 +9917,8 @@ select f.* from
              ) final
             left join
             (
-            select p.person_id,tpt.patient_id,
+            select 
+                   tpt.patient_id,
                    tpt.tpt.art_start_date,
                    tpt.data_tb as data,
                    if(tpt.data_tb is not null,'Não','Sim') valor1
@@ -9981,7 +9983,7 @@ select f.* from
                 inner join obs o on o.encounter_id=e.encounter_id 
                 where e.encounter_type=6 and  e.location_id=:location and e.voided=0 and p.voided=0 and  o.concept_id=1406  and o.value_coded =42
                 )tpt on tpt.patient_id=tx_new.patient_id
-                )tpt on tpt.patient_id=p.person_id  
+                )tpt on tpt.patient_id=p.person_id  and p.voided=0
                 where ((tpt.data_tb BETWEEN tpt.art_start_date and date_add(tpt.art_start_date, interval 33 day)) or tpt.data_tb is null) 
                )tpt on tpt.patient_id=final.patient_id
 
@@ -12952,7 +12954,8 @@ select f.* from
              ) final
             left join
             (
-             select p.person_id,tpt.patient_id,
+             select 
+                    tpt.patient_id,
                     tpt.tpt.art_start_date,
                     tpt.data_tb as data,
                     if(tpt.data_tb is not null,'Não','Sim') valor1
@@ -13017,7 +13020,7 @@ select f.* from
                 inner join obs o on o.encounter_id=e.encounter_id 
                 where e.encounter_type=6 and  e.location_id=:location and e.voided=0 and p.voided=0 and  o.concept_id=1406  and o.value_coded =42
                 )tpt on tpt.patient_id=tx_new.patient_id
-                )tpt on tpt.patient_id=p.person_id  
+                )tpt on tpt.patient_id=p.person_id  and p.voided=0
                 where ((tpt.data_tb BETWEEN tpt.art_start_date and date_add(tpt.art_start_date, interval 33 day)) or tpt.data_tb is null) 
             )tpt on tpt.patient_id=final.patient_id
 
