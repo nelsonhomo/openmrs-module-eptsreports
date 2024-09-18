@@ -746,7 +746,7 @@ select f.* from
           from patient p 
               inner join encounter e on p.patient_id=e.patient_id 
               inner join obs o on o.encounter_id=e.encounter_id 
-              where e.encounter_type in(6) and o.concept_id=23761  and e.location_id=1065 
+              where e.encounter_type in(6) and o.concept_id=23761  and e.location_id=:location 
               and e.voided=0 and p.voided=0 and o.voided=0 
               union
               select p.patient_id,e.encounter_datetime as data_tb_24_meses  from patient p 
