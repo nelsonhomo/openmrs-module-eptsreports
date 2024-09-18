@@ -97,7 +97,6 @@ from (
 		where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0  
 			and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 
 			and e.encounter_type in (6,9,53) and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
-			--group by p.patient_id,estadoProfilaxia.obs_datetime
    ) inicio_inh 
    inner join        																																
 	(  select p.patient_id, estadoProfilaxia.obs_datetime data_final_inh,e.encounter_id
@@ -125,7 +124,6 @@ from(
 		where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0  
 			and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 
 			and e.encounter_type in (6,9,53) and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
-			--group by p.patient_id,estadoProfilaxia.obs_datetime
 )inicio_inh 
 inner join
 (
@@ -158,7 +156,6 @@ from(
 		where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0  
 			and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 
 			and e.encounter_type in (6,9,53) and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
-			--group by p.patient_id,estadoProfilaxia.obs_datetime
  )inicio_inh 
  inner join
 (
@@ -321,7 +318,6 @@ union
 			where p.voided = 0 and e.voided = 0  and profilaxiaINH.voided = 0 and estadoProfilaxia.voided = 0  
 				and  profilaxiaINH.concept_id = 23985  and profilaxiaINH.value_coded = 656 and estadoProfilaxia.concept_id = 165308 and estadoProfilaxia.value_coded = 1256 
 				and e.encounter_type in (6,9,53) and e.location_id=:location and estadoProfilaxia.obs_datetime < :endDate
-				--group by p.patient_id,estadoProfilaxia.obs_datetime
 	
 	          ) inicioAnterior                                                                                                                          
 	          on inicio.patient_id = inicioAnterior.patient_id
@@ -411,13 +407,13 @@ union
 
 union               
 
- select inicio_inh.patient_id                                                                                                               
+ select inicio_inh.patient_id                                                                                                                
  from                                                                                                                                                
      (  
- select inicio_inh.patient_id                                                                                                               
+ select inicio_inh.patient_id,inicio_inh.encounter_id_inicio                                                                                                         
  from                                                                                                                                                
      (  
-        select p.patient_id, e.encounter_datetime data_inicio_inh                                                                                   
+        select p.patient_id, e.encounter_datetime data_inicio_inh, e.encounter_id  encounter_id_inicio                                                                                 
 	      from patient p                                                                                                                              
 	          inner join encounter e on p.patient_id = e.patient_id                                                                                     
 	          inner join obs regimeIsoniazida on regimeIsoniazida.encounter_id = e.encounter_id                                                                                       
@@ -428,9 +424,9 @@ union
 	      
 	      union                                                                                                                                       
 	      
-	      select inicio.patient_id, inicio.data_inicio_inh                                                                                        
+	      select inicio.patient_id, inicio.data_inicio_inh, inicio.encounter_id_inicio                                                                                       
 	      from                                                                                                                                    
-	          (  select p.patient_id, e.encounter_datetime data_inicio_inh                                                                       
+	          (  select p.patient_id, e.encounter_datetime data_inicio_inh,e.encounter_id  encounter_id_inicio                                                                       
 	              from patient p                                                                                                                  
 	                  inner join encounter e on p.patient_id=e.patient_id                                                                         
 	                  inner join obs regimeIsoniazida on regimeIsoniazida.encounter_id=e.encounter_id                                                                           
@@ -441,7 +437,7 @@ union
 	              
 	              union                                                                                                                           
 	              
-	              select p.patient_id, e.encounter_datetime data_inicio_inh                                                                       
+	              select p.patient_id, e.encounter_datetime data_inicio_inh, e.encounter_id  encounter_id_inicio                                                                       
 	              from patient p                                                                                                                  
 	                  inner join encounter e on p.patient_id=e.patient_id                                                                         
 	                  inner join obs regimeIsoniazida on regimeIsoniazida.encounter_id=e.encounter_id                                                                           
@@ -480,14 +476,14 @@ union
 		where e.voided=0 and obsDTINH.voided=0 and obsLevTPI.voided=0 and e.encounter_type in (60)  
 			and obsDTINH.concept_id=23986 and obsDTINH.value_coded=1098  and obsLevTPI.concept_id=23985 and obsLevTPI.value_coded in (656,23982)  
 			and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.encounter_datetime < :endDate and e.location_id=:location  
-			group by inicio_inh.patient_id,inicio_inh.data_inicio_inh having count(distinct e.encounter_id)>=3           
+			group by inicio_inh.patient_id,inicio_inh.data_inicio_inh having count(distinct e.encounter_id)>=3         
 )inicio_inh
 inner join     
 (
-	 select  inicio_inh.patient_id,data_inicio_inh                                                                                                               
+	 select  inicio_inh.patient_id,data_inicio_inh,inicio_inh.encounter_id_inicio  encounter_id_inicio                                                                                                              
  	from                                                                                                                                                
      (  
-         select p.patient_id, e.encounter_datetime data_inicio_inh                                                                                   
+         select p.patient_id, e.encounter_datetime data_inicio_inh, e.encounter_id  encounter_id_inicio                                                                                   
 	      from patient p                                                                                                                              
 	          inner join encounter e on p.patient_id = e.patient_id                                                                                     
 	          inner join obs regimeIsoniazida on regimeIsoniazida.encounter_id = e.encounter_id                                                                                       
@@ -498,9 +494,9 @@ inner join
 	      
 	      union                                                                                                                                       
 	      
-	      select inicio.patient_id, inicio.data_inicio_inh                                                                                        
+	      select inicio.patient_id, inicio.data_inicio_inh, inicio.encounter_id_inicio  encounter_id_inicio                                                                                        
 	      from                                                                                                                                    
-	          (  select p.patient_id, e.encounter_datetime data_inicio_inh                                                                       
+	          (  select p.patient_id, e.encounter_datetime data_inicio_inh, e.encounter_id  encounter_id_inicio                                                                       
 	              from patient p                                                                                                                  
 	                  inner join encounter e on p.patient_id=e.patient_id                                                                         
 	                  inner join obs regimeIsoniazida on regimeIsoniazida.encounter_id=e.encounter_id                                                                           
@@ -511,7 +507,7 @@ inner join
 	              
 	              union                                                                                                                           
 	              
-	              select p.patient_id, e.encounter_datetime data_inicio_inh                                                                       
+	              select p.patient_id, e.encounter_datetime data_inicio_inh, e.encounter_id  encounter_id_inicio                                                                       
 	              from patient p                                                                                                                  
 	                  inner join encounter e on p.patient_id=e.patient_id                                                                         
 	                  inner join obs regimeIsoniazida on regimeIsoniazida.encounter_id=e.encounter_id                                                                           
@@ -548,7 +544,8 @@ inner join
 		inner join obs obsLevTPI on e.encounter_id=obsLevTPI.encounter_id          
 	where e.voided=0 and obsDTINH.voided=0 and obsLevTPI.voided=0 and e.encounter_type in (60)  
 	  and obsDTINH.concept_id=23986 and obsDTINH.value_coded=23720  and obsLevTPI.concept_id=23985 and obsLevTPI.value_coded in (656,23982)  
-	  and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.encounter_datetime < :endDate and e.location_id=:location  
+	  and e.encounter_datetime between inicio_inh.data_inicio_inh and (inicio_inh.data_inicio_inh + INTERVAL 7 MONTH) and e.encounter_datetime <= :endDate and e.location_id=:location  
 	  group by inicio_inh.patient_id,inicio_inh.data_inicio_inh having count(distinct e.encounter_id)>=1 
-) inicio_inh_dt on inicio_inh_dt.patient_id = inicio_inh.patient_id
+) inicio_inh_dt on inicio_inh_dt.patient_id = inicio_inh.patient_id 
+where inicio_inh.encounter_id_inicio=inicio_inh_dt.encounter_id_inicio
 ) final group by patient_id

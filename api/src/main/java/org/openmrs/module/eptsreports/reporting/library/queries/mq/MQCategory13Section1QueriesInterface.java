@@ -67,7 +67,7 @@ public interface MQCategory13Section1QueriesInterface {
               + "group by p.patient_id  "
               + ")maxEnc  "
               + "INNER JOIN person pe ON maxEnc.patient_id=pe.person_id  "
-              + "WHERE (TIMESTAMPDIFF(year,birthdate,maxEnc.encounter_datetime)) >= %s AND birthdate IS NOT NULL and pe.voided = 0  "
+              + "WHERE (TIMESTAMPDIFF(year,birthdate,maxEnc.encounter_datetime)) >= %s AND birthdate IS NOT NULL "
               + ") final "
               + "union "
               + "select patient_id from (   "
@@ -201,7 +201,7 @@ public interface MQCategory13Section1QueriesInterface {
                 + " inner join encounter e_ on e_.patient_id = linhaAlternativa.patient_id and e_.voided = 0 and e_.encounter_type = 6 and e_.location_id = :location "
                 + " inner join obs obsDiferenteLinha on e_.encounter_id = obsDiferenteLinha.encounter_id "
                 + "and obsDiferenteLinha.voided=0 and obsDiferenteLinha.concept_id=21151 and obsDiferenteLinha.value_coded<>21150 "
-                + "and obsDiferenteLinha.obs_datetime>linhaAlternativa.dataLinha "
+                + "and obsDiferenteLinha.obs_datetime>=linhaAlternativa.dataLinha "
                 + "and obsDiferenteLinha.obs_datetime<=linhaAlternativa.ultimaConsulta "
                 + "and obsDiferenteLinha.location_id=:location "
                 + "where (TIMESTAMPDIFF(MONTH,linhaAlternativa.dataLinha,linhaAlternativa.ultimaConsulta)) >= 6 and obsDiferenteLinha.obs_datetime is not null group by linhaAlternativa.patient_id";
@@ -536,5 +536,44 @@ public interface MQCategory13Section1QueriesInterface {
                 + " and obsDiferenteLinha.location_id = :location "
                 + " where (TIMESTAMPDIFF(MONTH,linhaAlternativa.dataLinha,linhaAlternativa.ultimaConsulta)) >= 6 and obsDiferenteLinha.obs_datetime is null "
                 + " group by linhaAlternativa.patient_id ";
+
+    public static final String findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod =
+        "select patient_id from ( "
+            + "select maxTb.patient_id, max(max_datatb) max_datatb from ( "
+            + "select p.patient_id,max(e.encounter_datetime) max_datatb from patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on o.encounter_id=e.encounter_id "
+            + "where e.encounter_type=6 and e.voided=0 and o.voided=0 and p.voided=0 and o.concept_id=23761 and o.value_coded=1065 "
+            + "and e.encounter_datetime between :startInclusionDate and :endInclusionDate and e.location_id=:location "
+            + "group by p.patient_id "
+            + "union "
+            + "select p.patient_id, max(o.obs_datetime) max_datatb from patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "inner join obs o on o.encounter_id=e.encounter_id "
+            + "where e.encounter_type=6 and o.concept_id=1268 and o.value_coded in (1256,1257) and o.voided = 0 "
+            + "and e.location_id=:location and e.voided=0 and p.voided=0 and o.obs_datetime between :startInclusionDate and :endInclusionDate "
+            + "and e.encounter_datetime between :startInclusionDate and :endInclusionDate "
+            + "group by p.patient_id "
+            + ") maxTb group by maxTb.patient_id "
+            + ") finalTB ";
+
+    public static final String
+        findPatientsWithRequestCVInTheLastClinicalConsultationDuringRevisionPeriod =
+            "Select final.patient_id from ( "
+                + "Select cvPedido.patient_id,enc.encounter_datetime ultimaConsulta,min(cvPedido.dataPedidoCV) dataPedidoCV from ( "
+                + "Select p.patient_id,max(e.encounter_datetime) encounter_datetime from patient p "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "where p.voided=0 and e.voided=0 and e.encounter_type=6 and "
+                + "e.encounter_datetime >=:startInclusionDate and e.encounter_datetime<=:endRevisionDate   and e.location_id=:location "
+                + "group by p.patient_id "
+                + ") enc inner join ( "
+                + "Select p.patient_id,o.obs_datetime as dataPedidoCV from patient p "
+                + "inner join encounter  e on e.patient_id=p.patient_id "
+                + "inner join obs o on o.encounter_id=e.encounter_id	 "
+                + "where  e.voided=0 and o.concept_id = 23722 and o.value_coded=856 and e.encounter_type=6 and o.voided=0 and e.location_id=:location "
+                + ") cvPedido on cvPedido.patient_id=enc.patient_id "
+                + "where date(cvPedido.dataPedidoCV) = date(enc.encounter_datetime) "
+                + "group by patient_id "
+                + ") final";
   }
 }

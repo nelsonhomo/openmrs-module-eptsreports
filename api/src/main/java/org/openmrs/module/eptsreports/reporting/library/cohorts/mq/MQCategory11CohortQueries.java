@@ -2,6 +2,7 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts.mq;
 
 import java.util.Date;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.ReportType;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
@@ -14,7 +15,6 @@ public class MQCategory11CohortQueries {
 
   @Autowired private MQCohortQueries mQCohortQueries;
   @Autowired private MQGenericCohortQueries mQGenericCohortQueries;
-  private final boolean EXCLUDING_BREASTFEEDING = false;
 
   @DocumentedDefinition(
       value =
@@ -61,7 +61,9 @@ public class MQCategory11CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MQ),
+            mappings));
 
     definition.setCompositionString(
         "(B1 AND B2) NOT (PREGNANT OR BREASTFEEDING OR TRANSFERED-OUT)");
@@ -107,7 +109,9 @@ public class MQCategory11CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MQ),
+            mappings));
 
     definition.setCompositionString("(B1 AND B2) NOT (PREGNANT  OR TRANSFERED-OUT)");
 
@@ -118,7 +122,8 @@ public class MQCategory11CohortQueries {
       value =
           "findAdultsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATOR")
   public CohortDefinition
-      findPatientsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATOR() {
+      findPatientsOnARTStartedExcludingPregantAndBreastfeedingAndTransferredInTRANSFEREDOUTCategory11NUMERATOR(
+          boolean use14MonthsBeforePeriod) {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
@@ -137,7 +142,7 @@ public class MQCategory11CohortQueries {
         EptsReportUtils.map(
             this.mQGenericCohortQueries
                 .findPatientOnARTdExcludingPregantAndTransferredInTransferredOut(
-                    EXCLUDING_BREASTFEEDING),
+                    use14MonthsBeforePeriod),
             mappings));
 
     definition.addSearch(

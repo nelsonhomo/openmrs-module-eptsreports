@@ -2,6 +2,8 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts.mq;
 
 import java.util.Date;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.ReportType;
+import org.openmrs.module.eptsreports.reporting.utils.TPTType;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.CompositionCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
@@ -52,10 +54,6 @@ public class MQCategory7CohortQueries {
             mappings));
 
     definition.addSearch(
-        "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
-
-    definition.addSearch(
         "TB-ACTIVE-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries.findPatientsDiagnosedWithActiveTBDuringDuringPeriodCategory7(),
@@ -78,7 +76,7 @@ public class MQCategory7CohortQueries {
             this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
 
     definition.setCompositionString(
-        "(PREGNANT AND START-ART)  NOT (TB-ACTIVE-CAT7 OR TB-SCREENING-CAT7 OR TB-TREATMENT-CAT7 OR TRANSFERED-IN OR TRANSFERED-OUT OR BREASTFEEDING)");
+        "(PREGNANT AND START-ART)  NOT (TB-ACTIVE-CAT7 OR TB-SCREENING-CAT7 OR TB-TREATMENT-CAT7 OR TRANSFERED-IN OR BREASTFEEDING)");
 
     return definition;
   }
@@ -165,21 +163,48 @@ public class MQCategory7CohortQueries {
         "TB-ACTIVE-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPICategory7(),
+                .findPatientsDiagnosedWithActiveTBDuring7MonthsAfterInitiatedTPIINHOr3HPCategory7(
+                    TPTType.INH_MQ),
             mappings));
 
     definition.addSearch(
         "TB-SCREENING-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsWithPositiveTBScreeningDuring9MonthsAfterInitiatedINHCategory7(),
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType.INH_MQ),
             mappings));
 
     definition.addSearch(
         "TB-TREATMENT-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .finPatientsWhoHadTBTreatmentDuring9MonthsAfterInitiatedINHCategory7(),
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType.INH_MQ),
+            mappings));
+
+    definition.addSearch(
+        "TB-ACTIVE-CAT7-3HP",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .findPatientsDiagnosedWithActiveTBDuring7MonthsAfterInitiatedTPIINHOr3HPCategory7(
+                    TPTType._3HP_MQ),
+            mappings));
+
+    definition.addSearch(
+        "TB-SCREENING-CAT7-3HP",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType._3HP_MQ),
+            mappings));
+
+    definition.addSearch(
+        "TB-TREATMENT-CAT7-3HP",
+        EptsReportUtils.map(
+            this.mQCohortQueries
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType._3HP_MQ),
             mappings));
 
     definition.addSearch(
@@ -191,7 +216,9 @@ public class MQCategory7CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MQ),
+            mappings));
 
     definition.addSearch(
         "PREGNANT",
@@ -213,34 +240,18 @@ public class MQCategory7CohortQueries {
         EptsReportUtils.map(
             this.mQCohortQueries.findPatientWhoStartTPI3HPDuringPeriodCategory7(), mappings));
 
-    definition.addSearch(
-        "A",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1(),
-            mappings));
-
-    definition.addSearch(
-        "B",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBScreeningSixMonthfterLastConsultationRF13_1(),
-            mappings));
-
-    definition.addSearch(
-        "C",
-        EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBTretmantSixMonthfterLastConsultationRF13_1(),
-            mappings));
-
     definition.setCompositionString(
         "((START-ART NOT (TB-ACTIVE-CAT7-RF11 OR TB-SCREENING-CAT7-RF11 OR TB-TREATMENT-CAT7-RF11)) AND (START-TPI-INH OR START-TPI-3HP)) "
             + "NOT (TB-ACTIVE-CAT7  "
             + "OR TB-SCREENING-CAT7 "
             + "OR TB-TREATMENT-CAT7 "
+            + "OR TB-ACTIVE-CAT7-3HP  "
+            + "OR TB-SCREENING-CAT7-3HP "
+            + "OR TB-TREATMENT-CAT7-3HP "
             + "OR TRANSFERED-IN "
             + "OR TRANSFERED-OUT "
             + "OR PREGNANT "
-            + "OR BREASTFEEDING "
-            + "OR A OR B OR C )");
+            + "OR BREASTFEEDING )");
 
     return definition;
   }
@@ -343,49 +354,60 @@ public class MQCategory7CohortQueries {
 
     definition.addSearch(
         "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
+        EptsReportUtils.map(
+            this.mQCohortQueries.findPatientsWhoTransferedOutRF07Category7(ReportType.MQ),
+            mappings));
 
     definition.addSearch(
         "TB-ACTIVE-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsDiagnosedWithActiveTBDuring9MonthsAfterInitiatedTPICategory7(),
+                .findPatientsDiagnosedWithActiveTBDuring7MonthsAfterInitiatedTPIINHOr3HPCategory7(
+                    TPTType.INH_MQ),
             mappings));
 
     definition.addSearch(
         "TB-SCREENING-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .findPatientsWithPositiveTBScreeningDuring9MonthsAfterInitiatedINHCategory7(),
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType.INH_MQ),
             mappings));
 
     definition.addSearch(
         "TB-TREATMENT-CAT7",
         EptsReportUtils.map(
             this.mQCohortQueries
-                .finPatientsWhoHadTBTreatmentDuring9MonthsAfterInitiatedINHCategory7(),
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType.INH_MQ),
             mappings));
 
     definition.addSearch(
-        "A",
+        "TB-ACTIVE-CAT7-3HP",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBActiveASixMonthfterLastConsultationRF13_1(),
+            this.mQCohortQueries
+                .findPatientsDiagnosedWithActiveTBDuring7MonthsAfterInitiatedTPIINHOr3HPCategory7(
+                    TPTType._3HP_MQ),
             mappings));
 
     definition.addSearch(
-        "B",
+        "TB-SCREENING-CAT7-3HP",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBScreeningSixMonthfterLastConsultationRF13_1(),
+            this.mQCohortQueries
+                .findPatientsWithPositiveTBScreeningDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType._3HP_MQ),
             mappings));
 
     definition.addSearch(
-        "C",
+        "TB-TREATMENT-CAT7-3HP",
         EptsReportUtils.map(
-            this.mQCohortQueries.findPatientWhoAreTBTretmantSixMonthfterLastConsultationRF13_1(),
+            this.mQCohortQueries
+                .finPatientsWhoHadTBTreatmentDuring6MonthsAfterInitiatedINHOr3HPCategory7(
+                    TPTType._3HP_MQ),
             mappings));
 
     definition.setCompositionString(
-        "((PREGNANT AND START-ART) AND (START-TPI-INH)) NOT (TB-ACTIVE-CAT7 OR TB-SCREENING-CAT7 OR TB-TREATMENT-CAT7 OR TRANSFERED-IN OR TRANSFERED-OUT OR A OR B OR C OR BREASTFEEDING)");
+        "((PREGNANT AND START-ART) AND (START-TPI-INH OR START-TPI-3HP)) NOT (TB-ACTIVE-CAT7-3HP OR TB-SCREENING-CAT7-3HP OR TB-TREATMENT-CAT7-3HP OR TB-ACTIVE-CAT7 OR TB-SCREENING-CAT7 OR TB-TREATMENT-CAT7 OR TRANSFERED-IN OR TRANSFERED-OUT OR BREASTFEEDING)");
 
     return definition;
   }
@@ -477,10 +499,6 @@ public class MQCategory7CohortQueries {
             mappings));
 
     definition.addSearch(
-        "TRANSFERED-OUT",
-        EptsReportUtils.map(this.mQCohortQueries.findPatientsWhoTransferedOutRF07(), mappings));
-
-    definition.addSearch(
         "PREGNANT",
         EptsReportUtils.map(
             this.mQCohortQueries.findPatientsWhoArePregnantInclusionDateRF08(), mappings));
@@ -491,7 +509,7 @@ public class MQCategory7CohortQueries {
             this.mQCohortQueries.findPatientsWhoAreBreastfeedingForMQCat7AndMQCat12(), mappings));
 
     definition.setCompositionString(
-        "START-ART NOT (TB-ACTIVE-CAT7 OR TB-SCREENING-CAT7 OR TB-TREATMENT-CAT7 OR TRANSFERED-IN OR TRANSFERED-OUT OR PREGNANT OR BREASTFEEDING)");
+        "START-ART NOT (TB-ACTIVE-CAT7 OR TB-SCREENING-CAT7 OR TB-TREATMENT-CAT7 OR TRANSFERED-IN OR PREGNANT OR BREASTFEEDING)");
 
     return definition;
   }

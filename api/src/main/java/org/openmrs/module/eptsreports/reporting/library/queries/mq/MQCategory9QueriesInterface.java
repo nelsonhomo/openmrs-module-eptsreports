@@ -129,20 +129,19 @@ public interface MQCategory9QueriesInterface {
 
     public static final String
         findPregnantWomanWhithCD4OnFirstClinicalConsultationDuringInclusionDateNumeratorCategory9 =
-            "select firstClinica.patient_id from  (   "
-                + "select * from (   "
-                + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from person pe   "
-                + "inner join patient p on pe.person_id=p.patient_id   "
-                + "inner join encounter e on p.patient_id=e.patient_id   "
-                + "inner join obs o on e.encounter_id=o.encounter_id   "
-                + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F' and   "
-                + "o.concept_id=1982 and o.value_coded=1065   "
-                + "group by p.patient_id  "
-                + ")pregnat   "
-                + ") firstClinica   "
-                + "inner join obs obsCD4 on obsCD4.person_id=firstClinica.patient_id   "
-                + "where firstClinica.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) "
-                + "and obsCD4.concept_id in(23722) and obsCD4.value_coded=1695 and obsCD4.voided=0 and firstClinica.encounter_datetime=obsCD4.obs_datetime "
+            "select firstClinica.patient_id from  ( "
+                + "select * from ( "
+                + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from person pe "
+                + "inner join patient p on pe.person_id=p.patient_id "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "inner join obs o on e.encounter_id=o.encounter_id "
+                + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F' and "
+                + "o.concept_id=1982 and o.value_coded=1065 and e.encounter_datetime between DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) "
+                + "group by p.patient_id "
+                + ")pregnat "
+                + ") firstClinica "
+                + "inner join obs obsCD4 on obsCD4.person_id=firstClinica.patient_id "
+                + "where obsCD4.concept_id in(23722) and obsCD4.value_coded=1695 and obsCD4.voided=0 and firstClinica.encounter_datetime=obsCD4.obs_datetime "
                 + "and obsCD4.location_id=:location ";
 
     public static final String
@@ -171,31 +170,100 @@ public interface MQCategory9QueriesInterface {
                 + "inner join obs obsCD4 on obsCD4.encounter_id=e.encounter_id  "
                 + "where firstClinica.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH)  "
                 + "and obsCD4.obs_datetime >= firstClinica.encounter_datetime and obsCD4.obs_datetime <=  DATE_ADD(firstClinica.encounter_datetime, INTERVAL 33 DAY)  "
-                + "and obsCD4.concept_id in(1695,730) and obsCD4.value_numeric is not null and obsCD4.voided=0  "
+                + "and obsCD4.concept_id in(1695,730,165515) and (obsCD4.value_numeric is not null or obsCD4.value_coded is not null) and obsCD4.voided=0  "
                 + "and obsCD4.location_id=:location and e.encounter_type=6 ";
 
     public static final String
         findPregnantWomanWhithCD4ResultOn33DaysAfterFirstClinicalConsultationDuringInclusionDateNumeratorCategory9 =
             "select  firstClinica.patient_id from  ( "
-                + "select * from (     "
-                + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from person pe     "
-                + "inner join patient p on pe.person_id=p.patient_id     "
-                + "inner join encounter e on p.patient_id=e.patient_id     "
-                + "inner join obs o on e.encounter_id=o.encounter_id     "
+                + "select * from ( "
+                + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from person pe "
+                + "inner join patient p on pe.person_id=p.patient_id "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "inner join obs o on e.encounter_id=o.encounter_id "
                 + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0  and e.encounter_type=6 and e.location_id=:location and pe.gender='F'  and "
-                + "o.concept_id=1982 and o.value_coded=1065 "
-                + "group by p.patient_id    "
-                + ")pregnat  "
-                + ") firstClinica     "
-                + "inner join encounter e on firstClinica.patient_id=e.patient_id   "
-                + "inner join obs obsCD4 on obsCD4.encounter_id=e.encounter_id   "
-                + "where firstClinica.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH)   "
-                + "and obsCD4.concept_id in(1695,730)  "
-                + "and obsCD4.value_numeric is not null   "
-                + "and obsCD4.voided=0   "
-                + "and obsCD4.obs_datetime >=firstClinica.encounter_datetime  "
-                + "and obsCD4.obs_datetime<=date_add(firstClinica.encounter_datetime, interval 33 day)   "
+                + "o.concept_id=1982 and o.value_coded=1065 and "
+                + "e.encounter_datetime between  DATE_ADD(DATE_SUB(:endRevisionDate, INTERVAL 12 MONTH), INTERVAL 1 DAY) and DATE_SUB(:endRevisionDate, INTERVAL 9 MONTH) "
+                + "group by p.patient_id "
+                + ")pregnat "
+                + ") firstClinica "
+                + "inner join encounter e on firstClinica.patient_id=e.patient_id "
+                + "inner join obs obsCD4 on obsCD4.encounter_id=e.encounter_id "
+                + "where "
+                + "obsCD4.concept_id in(1695,730,165515) "
+                + "and (obsCD4.value_numeric is not null or obsCD4.value_coded is not null) "
+                + "and obsCD4.voided=0 "
+                + "and obsCD4.obs_datetime >=firstClinica.encounter_datetime "
+                + "and obsCD4.obs_datetime<=date_add(firstClinica.encounter_datetime, interval 33 day) "
                 + "and obsCD4.location_id=:location "
                 + "and e.encounter_type=6 ";
+
+    public static final String findPatientsWithReinicioAndPedidoDeCD4InTheSameFichaClinica =
+        "	select reinicio.patient_id from ( "
+            + "	select p.patient_id, max(e.encounter_datetime) data_estado from patient p "
+            + "	inner join encounter e on p.patient_id=e.patient_id "
+            + "	inner join obs  o on e.encounter_id=o.encounter_id "
+            + "	where e.voided=0 and o.voided=0 and p.voided=0 and  e.encounter_type = 6 and o.concept_id = 6273 and o.value_coded = 1705 and e.location_id=:location "
+            + "	and e.encounter_datetime between :startInclusionDate and :endRevisionDate "
+            + "	group by p.patient_id "
+            + "	) reinicio "
+            + "	inner join encounter e on e.patient_id = reinicio.patient_id "
+            + "	inner join obs o on o.encounter_id = e.encounter_id "
+            + "	where o.voided = 0 and e.voided = 0 and e.location_id = :location "
+            + "	and e.encounter_type = 6 and e.encounter_datetime = reinicio.data_estado "
+            + "	and o.concept_id = 23722 and o.value_coded = 1695 ";
+
+    public static final String findPatientsWhoReinitiatedTreatmentCat9RF29 =
+        "	select reinicio.patient_id from ( "
+            + "	select p.patient_id, max(e.encounter_datetime) data_reinicio from patient p "
+            + "	inner join encounter e on p.patient_id=e.patient_id "
+            + "	inner join obs  o on e.encounter_id=o.encounter_id "
+            + "	where e.voided=0 and o.voided=0 and p.voided=0 and  e.encounter_type = 6 and o.concept_id = 6273 and o.value_coded = 1705 and e.location_id=:location "
+            + "	and e.encounter_datetime between :startInclusionDate and :endRevisionDate "
+            + "	group by p.patient_id "
+            + "	) reinicio ";
+
+    public static final String
+        findPatientsWhoReinitiatedTreatmentForMoreThan30DaysBeforeEndRevisionDate =
+            "select reinicio.patient_id from ( "
+                + "select p.patient_id, max(e.encounter_datetime) data_reinicio from patient p "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "inner join obs  o on e.encounter_id=o.encounter_id "
+                + "where e.voided=0 and o.voided=0 and p.voided=0 and  e.encounter_type = 6 and o.concept_id = 6273 and o.value_coded = 1705 and e.location_id=:location "
+                + "and e.encounter_datetime between :startInclusionDate and :endRevisionDate "
+                + "group by p.patient_id "
+                + ") reinicio where DATEDIFF(:endRevisionDate, reinicio.data_reinicio) >= 33 ";
+
+    public static final String
+        findPatientsWhoReceivedCD4ResultBetweenReinitiatedConsultationAndEnRevisionDate =
+            "	select reinicio.patient_id from ( "
+                + "select p.patient_id, max(e.encounter_datetime) data_estado from patient p "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "inner join obs  o on e.encounter_id=o.encounter_id "
+                + "where e.voided=0 and o.voided=0 and p.voided=0 and  e.encounter_type = 6 and o.concept_id = 6273 and o.value_coded = 1705 and e.location_id=:location "
+                + "and e.encounter_datetime between :startInclusionDate and :endRevisionDate "
+                + "group by p.patient_id "
+                + ") reinicio "
+                + "inner join encounter e on reinicio.patient_id=e.patient_id "
+                + "inner join obs obsCD4 on obsCD4.encounter_id=e.encounter_id "
+                + "and obsCD4.obs_datetime >= reinicio.data_estado and obsCD4.obs_datetime <= :endRevisionDate "
+                + "and obsCD4.concept_id in(1695,730,165515) and (obsCD4.value_numeric is not null or obsCD4.value_coded is not null) and obsCD4.voided=0 "
+                + "and obsCD4.location_id=:location and e.encounter_type=6 ";
+
+    public static final String
+        findPatientsWhoReceivedCD4ResultIn33DaysAfterTheClinicalConsultationMarkedAsReinicio =
+            "	select reinicio.patient_id from ( "
+                + "select p.patient_id, max(e.encounter_datetime) data_estado from patient p "
+                + "inner join encounter e on p.patient_id=e.patient_id "
+                + "inner join obs  o on e.encounter_id=o.encounter_id "
+                + "where e.voided=0 and o.voided=0 and p.voided=0 and  e.encounter_type = 6 and o.concept_id = 6273 and o.value_coded = 1705 and e.location_id=:location "
+                + "and e.encounter_datetime between :startInclusionDate and :endRevisionDate "
+                + "group by p.patient_id "
+                + ") reinicio "
+                + "inner join encounter e on reinicio.patient_id=e.patient_id "
+                + "inner join obs obsCD4 on obsCD4.encounter_id=e.encounter_id "
+                + "and obsCD4.obs_datetime >= reinicio.data_estado and obsCD4.obs_datetime <= DATE_ADD(reinicio.data_estado, INTERVAL 33 DAY) "
+                + "and obsCD4.concept_id in(1695,730,165515) and (obsCD4.value_numeric is not null or obsCD4.value_coded is not null) and obsCD4.voided=0 "
+                + "and obsCD4.location_id=:location and e.encounter_type=6 ";
   }
 }

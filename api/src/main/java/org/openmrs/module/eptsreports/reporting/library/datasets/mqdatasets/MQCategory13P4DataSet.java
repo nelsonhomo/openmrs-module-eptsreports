@@ -16,7 +16,7 @@ public class MQCategory13P4DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P4AdultDENUMINATOR",
-        "13.3: Adultos (15/+anos) na 1ª linha de TARV com registo resultado de CV acima de 1000 ",
+        "13.3: Adultos (15/+anos) na 1ª linha de TARV com registo resultado de CV acima de 1000 - Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory13P4CohortQueries
@@ -29,7 +29,7 @@ public class MQCategory13P4DataSet extends MQAbstractDataSet {
     dataSetDefinition.addColumn(
         "CAT13P4AdultNUMINATOR",
         "13.3: Adultos (15/+anos) na 1ª linha de TARV com registo de pedido de CV entre o 3º e o 4º mês "
-            + "após terem recebido o último resultado de CV ≥1000 cps/ml",
+            + "após terem recebido o último resultado de CV ≥1000 cps/ml - Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory13P4CohortQueries
@@ -41,7 +41,7 @@ public class MQCategory13P4DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P4ChildrenDENUMINATOR",
-        "13.12: Crianças (>2 anos de idade) na 1ª linha de TARV com registo de resultado de CV ≥1000 ",
+        "13.12: Crianças (>2 anos de idade) na 1ª linha de TARV com registo de resultado de CV ≥1000 - Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory13P4CohortQueries
@@ -54,7 +54,7 @@ public class MQCategory13P4DataSet extends MQAbstractDataSet {
     dataSetDefinition.addColumn(
         "CAT13P4ChildrenNUMINATOR",
         "13.12: Crianças (>2 anos de idade) na 1ª linha de TARV com registo de pedido de CV entre o 3º e o 4º mês "
-            + "após terem recebido o último resultado de CV ≥1000",
+            + "após terem recebido o último resultado de CV ≥1000 - Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory13P4CohortQueries
@@ -66,7 +66,7 @@ public class MQCategory13P4DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P4PregnantDENUMINATOR",
-        "13.18: Mulheres Gravidas na na 1ª linha de TARV com registo de resultado de CV > 50 ",
+        "13.18: Mulheres Gravidas na na 1ª linha de TARV com registo de resultado de CV > 50 - Denominador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory13P4CohortQueries
@@ -78,7 +78,7 @@ public class MQCategory13P4DataSet extends MQAbstractDataSet {
 
     dataSetDefinition.addColumn(
         "CAT13P4PregnantNUMINATOR",
-        "13.18: Mulheres gravidas na 1ª linha de TARV com registo de pedido de CV entre o 3º e o 4º mês após terem recebido o último resultado de CV >50 ",
+        "13.18: Mulheres gravidas na 1ª linha de TARV com registo de pedido de CV entre o 3º e o 4º mês após terem recebido o último resultado de CV >50 - Numerador",
         EptsReportUtils.map(
             this.setIndicatorWithAllParameters(
                 this.mQCategory13P4CohortQueries

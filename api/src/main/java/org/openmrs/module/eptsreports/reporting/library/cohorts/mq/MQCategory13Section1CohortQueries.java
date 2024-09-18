@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 public class MQCategory13Section1CohortQueries {
 
   @Autowired private MQCohortQueries mQCohortQueries;
+  @Autowired private MQCategory13Section2CohortQueries mQCategory13Section2CohortQueries;
 
   @DocumentedDefinition(value = "findPatientsWhoArePregnantCAT13Part1")
   public CohortDefinition findPatientsWhoArePregnantCAT13Part1() {
@@ -72,6 +73,49 @@ public class MQCategory13Section1CohortQueries {
     String query =
         MQCategory13Section1QueriesInterface.QUERY
             .findPatientsWithLastClinicalConsultationDenominatorB1;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod")
+  public CohortDefinition findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory13Section1QueriesInterface.QUERY
+            .findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod;
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "findPatientsWithRequestCVInTheLastClinicalConsultationDuringRevisionPeriod")
+  public CohortDefinition
+      findPatientsWithRequestCVInTheLastClinicalConsultationDuringRevisionPeriod() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "findPatientsWithRequestCVInTheLastClinicalConsultationDuringRevisionPeriod");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory13Section1QueriesInterface.QUERY
+            .findPatientsWithRequestCVInTheLastClinicalConsultationDuringRevisionPeriod;
 
     definition.setQuery(query);
 
@@ -268,7 +312,7 @@ public class MQCategory13Section1CohortQueries {
   }
 
   @DocumentedDefinition(value = "findDenominatorCategory13SectionIB")
-  public CohortDefinition findDenominatorCategory13SectionIB() {
+  public CohortDefinition findDenominatorCategory13SectionIB(boolean excludeTbActiveDiagnostic) {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
@@ -279,8 +323,13 @@ public class MQCategory13Section1CohortQueries {
     definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
     definition.addParameter(new Parameter("location", "location", Date.class));
 
+    String compositionString = "";
+
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    final String mappingsTbActivaEndRevisionDate =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "B1",
@@ -326,8 +375,21 @@ public class MQCategory13Section1CohortQueries {
                 .findPatientsMarkedAsReinitiatedARTForAtLeastSixMonthsBeforeLastClinicalConsultation(),
             mappings));
 
-    definition.setCompositionString(
-        "(B1 AND ((B2NEW NOT DROPPEDOUT) OR (REINITIATED-ART NOT DROPPEDOUT) OR (B3 NOT (B3E OR DROPPEDOUT)))) NOT B5E NOT C ");
+    definition.addSearch(
+        "TB-ACTIVA",
+        EptsReportUtils.map(
+            this.findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
+            mappingsTbActivaEndRevisionDate));
+
+    if (excludeTbActiveDiagnostic) {
+      compositionString =
+          "(B1 AND ((B2NEW NOT DROPPEDOUT) OR (REINITIATED-ART NOT DROPPEDOUT) OR (B3 NOT (B3E OR DROPPEDOUT)))) NOT (B5E OR C OR TB-ACTIVA)";
+    } else {
+      compositionString =
+          "(B1 AND ((B2NEW NOT DROPPEDOUT) OR (REINITIATED-ART NOT DROPPEDOUT) OR (B3 NOT (B3E OR DROPPEDOUT)))) NOT (B5E OR C)";
+    }
+
+    definition.setCompositionString(compositionString);
 
     return definition;
   }
@@ -346,6 +408,8 @@ public class MQCategory13Section1CohortQueries {
 
     final String mappings =
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+    final String mappingsTbActivaEndRevisionDate =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endRevisionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
         "B1",
@@ -394,14 +458,20 @@ public class MQCategory13Section1CohortQueries {
                 .findPatientsMarkedAsReinitiatedARTForAtLeastSixMonthsBeforeLastClinicalConsultation(),
             mappings));
 
+    definition.addSearch(
+        "TB-ACTIVA",
+        EptsReportUtils.map(
+            this.findPatientsWithDiagnosticoTBAtivaDuringRevisionPeriod(),
+            mappingsTbActivaEndRevisionDate));
+
     definition.setCompositionString(
-        "(B1 AND ((B2NEW NOT DROPPEDOUT) OR (REINITIATED-ART NOT DROPPEDOUT) OR (B3 NOT (B3E OR DROPPEDOUT)))) NOT B5E NOT C NOT D ");
+        "(B1 AND ((B2NEW NOT DROPPEDOUT) OR (REINITIATED-ART NOT DROPPEDOUT) OR (B3 NOT (B3E OR DROPPEDOUT)))) NOT (B5E OR C OR D OR TB-ACTIVA)");
 
     return definition;
   }
 
   @DocumentedDefinition(value = "findFinalNumeratorCategory13SectionIC")
-  public CohortDefinition findFinalNumeratorCategory13SectionIC() {
+  public CohortDefinition findFinalNumeratorCategory13SectionIC(boolean excludeTbActiveDiagnostic) {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
 
@@ -416,7 +486,9 @@ public class MQCategory13Section1CohortQueries {
         "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     definition.addSearch(
-        "Denominator", EptsReportUtils.map(this.findDenominatorCategory13SectionIB(), mappings));
+        "Denominator",
+        EptsReportUtils.map(
+            this.findDenominatorCategory13SectionIB(excludeTbActiveDiagnostic), mappings));
 
     definition.addSearch(
         "G", EptsReportUtils.map(this.findNumeratorCategory13Section1C(), mappings));
@@ -520,6 +592,28 @@ public class MQCategory13Section1CohortQueries {
   }
 
   @DocumentedDefinition(
+      value = "findPatientsWithLastClinicalConsultationDenominatorB1AgeCalculation")
+  public CohortDefinition findPatientsWithLastClinicalConsultationDenominatorB1AgeCalculation(
+      int startAge, int endAge) {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName("patientsPregnantEnrolledOnART");
+    definition.addParameter(new Parameter("startInclusionDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+
+    String query =
+        MQCategory13Section1QueriesInterface.QUERY
+            .findPatientsWithLastClinicalConsultationDenominatorB1AgeCalculation(startAge, endAge);
+
+    definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(
       value = "findPatientsWhoAbandonedARTInTheFirstSixMonthsAfterInitiatedSecondLineRegimenART")
   public CohortDefinition
       findPatientsWhoAbandonedARTInTheFirstSixMonthsAfterInitiatedSecondLineRegimenART() {
@@ -538,6 +632,158 @@ public class MQCategory13Section1CohortQueries {
             .findPatientsWhoAbandonedARTInTheFirstSixMonthsAfterInitiatedSecondLineRegimenART;
 
     definition.setQuery(query);
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findDenominatorPedidoCVRF16_Indicator_13_1")
+  public CohortDefinition findDenominatorPedidoCVRF16_Indicator_13_1(
+      boolean excludeTbActiveDiagnostic) {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findDenominatorPedidoCVRF16_Indicator_13_1");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR-13-1-OLD",
+        EptsReportUtils.map(
+            this.findDenominatorCategory13SectionIB(excludeTbActiveDiagnostic), mappings));
+
+    definition.addSearch(
+        "DENOMINATOR-13-4-OLD",
+        EptsReportUtils.map(
+            mQCategory13Section2CohortQueries.findDenominatorCategory13SectionIIB(
+                excludeTbActiveDiagnostic),
+            mappings));
+
+    definition.setCompositionString("(DENOMINATOR-13-1-OLD OR DENOMINATOR-13-4-OLD)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findNumeratorPedidoCVRF16_Indicator_13_1")
+  public CohortDefinition findNumeratorPedidoCVRF16_Indicator_13_1(
+      boolean excludeTbActiveDiagnostic) {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findNumeratorPedidoCVRF16_Indicator_13_1");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "NUMERATOR-13-1-OLD",
+        EptsReportUtils.map(
+            this.findFinalNumeratorCategory13SectionIC(excludeTbActiveDiagnostic), mappings));
+
+    definition.addSearch(
+        "NUMERATOR-13-4-OLD",
+        EptsReportUtils.map(
+            mQCategory13Section2CohortQueries.findFinalNumeratorCategory13SectionIIC(
+                excludeTbActiveDiagnostic),
+            mappings));
+
+    definition.setCompositionString("(NUMERATOR-13-1-OLD OR NUMERATOR-13-4-OLD)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findDenominatorPedidoCVRF24_Indicator_13_8")
+  public CohortDefinition findDenominatorPedidoCVRF24_Indicator_13_8() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findDenominatorPedidoCVRF24_Indicator_13_8");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "DENOMINATOR-13-8-OLD",
+        EptsReportUtils.map(this.findDenominatorCategory13SectionIBChildrens(), mappings));
+
+    definition.addSearch(
+        "TEN-FOURTEEN",
+        EptsReportUtils.map(
+            this.findPatientsWithLastClinicalConsultationDenominatorB1AgeCalculation(10, 14),
+            mappings));
+
+    definition.addSearch(
+        "DENOMINATOR-13-13-OLD",
+        EptsReportUtils.map(
+            mQCategory13Section2CohortQueries.findDenominatorCategory13SectionIIBChildrens(),
+            mappings));
+
+    definition.addSearch(
+        "TWO-FOURTEEN",
+        EptsReportUtils.map(
+            this.findPatientsWithLastClinicalConsultationDenominatorB1AgeCalculation(2, 14),
+            mappings));
+
+    definition.setCompositionString(
+        "(DENOMINATOR-13-8-OLD AND TEN-FOURTEEN) OR (DENOMINATOR-13-13-OLD AND TWO-FOURTEEN)");
+
+    return definition;
+  }
+
+  @DocumentedDefinition(value = "findNumeratorPedidoCVRF16_Indicator_13_1")
+  public CohortDefinition findNumeratorPedidoCVRF25_Indicator_13_8() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+
+    definition.setName("findNumeratorPedidoCVRF16_Indicator_13_1");
+    definition.addParameter(
+        new Parameter("startInclusionDate", "Data Inicio Inclusão", Date.class));
+    definition.addParameter(new Parameter("endInclusionDate", "Data Fim Inclusão", Date.class));
+    definition.addParameter(new Parameter("endRevisionDate", "Data Fim Revisão", Date.class));
+    definition.addParameter(new Parameter("location", "location", Date.class));
+
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
+
+    definition.addSearch(
+        "NUMERATOR-13-8-OLD",
+        EptsReportUtils.map(this.findFinalNumeratorCategory13SectionICChildrens(), mappings));
+
+    definition.addSearch(
+        "TEN-FOURTEEN",
+        EptsReportUtils.map(
+            this.findPatientsWithLastClinicalConsultationDenominatorB1AgeCalculation(10, 14),
+            mappings));
+
+    definition.addSearch(
+        "NUMERATOR-13-13-OLD",
+        EptsReportUtils.map(
+            mQCategory13Section2CohortQueries.findFinalNumeratorCategory13SectionIICChildrens(),
+            mappings));
+
+    definition.addSearch(
+        "TWO-FOURTEEN",
+        EptsReportUtils.map(
+            this.findPatientsWithLastClinicalConsultationDenominatorB1AgeCalculation(2, 14),
+            mappings));
+
+    definition.setCompositionString(
+        "(NUMERATOR-13-8-OLD AND TEN-FOURTEEN) OR (NUMERATOR-13-13-OLD AND TWO-FOURTEEN)");
 
     return definition;
   }

@@ -132,7 +132,7 @@ public class MQCategory14CohortQueries {
     definition.addSearch(
         "DSD",
         EptsReportUtils.map(
-            findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression(),
+            findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithAnyViralLoadValue(),
             "endDate=${endRevisionDate},location=${location}"));
 
     definition.setCompositionString("DENOMINATOR-TXPVLS AND DSD");
@@ -355,6 +355,23 @@ public class MQCategory14CohortQueries {
     String query =
         MQCategory14QueriesInterface.QUERY
             .findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithViralSupression;
+    definition.setQuery(query);
+    return definition;
+  }
+
+  @DocumentedDefinition(
+      value = "findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithAnyViralLoadValue")
+  private CohortDefinition findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithAnyViralLoadValue() {
+
+    final SqlCohortDefinition definition = new SqlCohortDefinition();
+
+    definition.setName(
+        "MQ Category 14 - Get patients who are active on ART and in at least one DSD with any viral load");
+    definition.addParameter(new Parameter("endDate", "End Revision Date", Date.class));
+    definition.addParameter(new Parameter("location", "Location", Location.class));
+    String query =
+        MQCategory14QueriesInterface.QUERY
+            .findPatientsWhoAreActiveOnArtAndInAtleastOneDSDWithAnyViralLoadValue;
     definition.setQuery(query);
     return definition;
   }

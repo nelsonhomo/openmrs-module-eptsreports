@@ -204,7 +204,7 @@ public interface MICategory9QueriesInterface {
               + "select f.patient_id,f.data_lactante,f.data_gravida, if(f.data_lactante is null,1, if(f.data_gravida is null,2, if(f.data_gravida>=f.data_lactante,1,2))) decisao  "
               + "from  (  "
               + "select p.person_id as patient_id ,gravida.data_gravida,lactante.data_lactante from person  p  "
-              + "inner join (  "
+              + "left join (  "
               + "Select p.patient_id,obsGravida.obs_datetime data_gravida  from person pe   "
               + "inner join patient p on pe.person_id=p.patient_id   "
               + "inner join encounter e on p.patient_id=e.patient_id   "
@@ -223,7 +223,7 @@ public interface MICategory9QueriesInterface {
               + "where pe.voided=0 and p.voided=0 and e.voided=0 and o.voided=0 and obsLactante.voided=0 and e.encounter_type=53 and e.location_id=:location and   "
               + "o.concept_id=1190 and o.value_datetime is not null and   "
               + "obsLactante.concept_id=6332 and obsLactante.value_coded=1065 and pe.gender='F'   "
-              + ")lactante  on lactante.patient_id=gravida.patient_id  "
+              + ")lactante  on lactante.patient_id=p.person_id  "
               + ")f  "
               + "GROUP by f.patient_id   "
               + ")f WHERE decisao=2 "
@@ -290,6 +290,23 @@ public interface MICategory9QueriesInterface {
               + ")age  "
               + "inner join person pe on pe.person_id=age.patient_id  "
               + "where  TIMESTAMPDIFF(year,pe.birthdate,age.art_start_date) < %s and  birthdate IS NOT NULL ";
+
+      return String.format(sql, startAge);
+    }
+
+    public static final String
+        calculatePatientAgeOnTheFirstClinicalConsultationDuringAvaliationPeriod(int startAge) {
+
+      final String sql =
+          "select patient_id from ( "
+              + "Select p.patient_id, min(e.encounter_datetime) encounter_datetime from patient p "
+              + "inner join encounter e on p.patient_id=e.patient_id "
+              + "where p.voided=0 and e.voided=0 and e.encounter_type=6 and e.location_id=:location "
+              + "group by p.patient_id "
+              + ")firstConsultation "
+              + "inner join person pe on pe.person_id=firstConsultation.patient_id "
+              + "where  TIMESTAMPDIFF(year,pe.birthdate,firstConsultation.encounter_datetime) < %s and  birthdate IS NOT NULL "
+              + "and firstConsultation.encounter_datetime between :startInclusionDate and :endInclusionDate ";
 
       return String.format(sql, startAge);
     }

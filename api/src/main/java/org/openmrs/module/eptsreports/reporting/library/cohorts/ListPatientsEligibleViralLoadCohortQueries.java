@@ -2,7 +2,7 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts;
 
 import java.util.Date;
 import org.openmrs.Location;
-import org.openmrs.module.eptsreports.reporting.library.queries.ListOfPatientsEligileToViralLoadQueries;
+import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
 import org.openmrs.module.reporting.definition.library.DocumentedDefinition;
@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ListPatientsEligibleViralLoadCohortQueries {
+
+  private static final String FIND_PATIENTS_ELEGIBLE_VIRAL_LOAD_SAMPLE_COLLECTION_TOTAL =
+      "LIST_PATIENTS_ELEGIBLE_VIRAL_LOAD_SAMPLE_COLLECTION/PATIENTS_ELEGIBLE_VIRAL_LOAD_SAMPLE_COLLECTION_TOTAL.sql";
 
   @DocumentedDefinition(value = "findPatientsEligibleToViralLoad")
   public CohortDefinition findPatientsEligibleToViralLoad() {
@@ -22,7 +25,7 @@ public class ListPatientsEligibleViralLoadCohortQueries {
     definition.addParameter(new Parameter("location", "location", Location.class));
 
     definition.setQuery(
-        ListOfPatientsEligileToViralLoadQueries.QUERY.findPatientsEligibleToViralLoad);
+        EptsQuerysUtils.loadQuery(FIND_PATIENTS_ELEGIBLE_VIRAL_LOAD_SAMPLE_COLLECTION_TOTAL));
 
     return definition;
   }

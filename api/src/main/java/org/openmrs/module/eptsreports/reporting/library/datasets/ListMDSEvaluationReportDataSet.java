@@ -1,6 +1,8 @@
 package org.openmrs.module.eptsreports.reporting.library.datasets;
 
 import java.util.List;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.openmrs.module.eptsreports.reporting.library.dimensions.AgeDimensionCohortInterface;
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
@@ -20,6 +22,7 @@ public class ListMDSEvaluationReportDataSet extends BaseDataSet {
 
   @Autowired
   @Qualifier("commonAgeDimensionCohort")
+  @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
   private AgeDimensionCohortInterface ageDimensionCohort;
 
   public DataSetDefinition constructDataset(List<Parameter> parameterList) {
