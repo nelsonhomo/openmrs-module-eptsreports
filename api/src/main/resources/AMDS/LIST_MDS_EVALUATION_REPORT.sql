@@ -8541,7 +8541,7 @@ select f.* from
                             inner join obs o on o.encounter_id=e.encounter_id 
                         where e.encounter_type = 6 and e.voided=0 and o.voided=0 and p.voided=0 and o.concept_id in(374,23728) 
                         and  ((o.concept_id=374 and o.value_coded in (190, 780, 5279, 21928, 5275, 5276, 23714, 23715)) or (o.concept_id=23728 and o.value_text is not null))
-                        and e.location_id=:location and p.patient_id=18377
+                        and e.location_id=:location
                     ) pf24Meses 
                     )pf24Meses order by pf24Meses.patient_id, pf24Meses.encounter_datetime 
                     )pf24Meses on pf24Meses.patient_id=tx_new.patient_id
