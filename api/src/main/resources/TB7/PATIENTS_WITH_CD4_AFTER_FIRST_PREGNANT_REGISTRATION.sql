@@ -1,6 +1,5 @@
-select cd4_eligible.patient_id      
- from(
-
+select cd4_eligible.patient_id
+from (
 select cd4_eligible.patient_id, ultima_marcacao_gravida.data_gravida 
 from (
 
@@ -305,7 +304,7 @@ inner join(
 				from patient p 
 					inner join encounter e on p.patient_id=e.patient_id 
 					inner join obs o on e.encounter_id=o.encounter_id 
-				where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=1982 and value_coded=1065 and e.encounter_type in (5,6) and e.encounter_datetime  between :startDate  and (:startDate + INTERVAL 8 MONTH  - INTERVAL 1 DAY) and e.location_id=:location
+				where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=1982 and value_coded=1065 and e.encounter_type in (5,6) and e.encounter_datetime  between :startDate  and  (:startDate + INTERVAL 8 MONTH  - INTERVAL 1 DAY) and e.location_id=:location
 				
 				union 
 				select p.patient_id,e.encounter_datetime data_gravida 
@@ -654,97 +653,5 @@ from (
 				group by gravida_real.patient_id
 		) gravida_real
 	)primeira_marcacao_gravida on cd4_eligible.patient_id = primeira_marcacao_gravida.patient_id
- where primeira_marcacao_gravida.data_gravida between (:startDate + INTERVAL 8 MONTH) and :endDate	  
-) cd4_eligible                                             
- left join(
- 	
-		select max_cd4.patient_id, max_cd4.max_data_cd4 
-		from(
-		
-			select max_cd4.patient_id, max_cd4.max_data_cd4 
-			from( 
-				
-				select p.patient_id,max(o.obs_datetime) max_data_cd4  
-				from patient p 
-					inner join encounter e on p.patient_id=e.patient_id 
-					inner join obs o on e.encounter_id=o.encounter_id 
-				where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,53,90) 
-					and o.obs_datetime <= date_add(:endDate, interval  33 day) and e.location_id=:location 
-					group by p.patient_id 
-			)max_cd4 
-				inner join person per on per.person_id=max_cd4.patient_id 
-				inner join obs o on o.person_id=max_cd4.patient_id and max_cd4.max_data_cd4=o.obs_datetime and o.voided=0  
-				and per.voided=0 and timestampdiff(year,per.birthdate,:endDate)>=5 and o.concept_id = 1695 and o.value_numeric<200 and o.location_id= :location 
-		
-			union
-		
-			select distinct max_cd4.patient_id, max_cd4.max_data_cd4 
-			from( 
-				
-				select p.patient_id,max(o.obs_datetime) max_data_cd4  
-				from patient p 
-					inner join encounter e on p.patient_id=e.patient_id 
-					inner join obs o on e.encounter_id=o.encounter_id 
-				where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 165515 and  e.encounter_type in (6,51,13,53,90) 
-					and o.obs_datetime <= date_add(:endDate, interval  33 day) and e.location_id=:location 
-					group by p.patient_id 
-			)max_cd4 
-				inner join person per on per.person_id=max_cd4.patient_id 
-				inner join obs o on o.person_id=max_cd4.patient_id and max_cd4.max_data_cd4=o.obs_datetime and o.voided=0  
-				and per.voided=0 and timestampdiff(year,per.birthdate,:endDate)>=5 and o.concept_id = 165515 and o.value_coded = 165513  and o.location_id= :location
-	
-			union
-	
-			select distinct max_cd4.patient_id, max_cd4.max_data_cd4 
-			from( 
-				
-				select p.patient_id,max(o.obs_datetime) max_data_cd4  
-				from patient p 
-					inner join encounter e on p.patient_id=e.patient_id 
-					inner join obs o on e.encounter_id=o.encounter_id 
-				where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 165519 and  e.encounter_type in (6,51,13,53,90) 
-					and o.obs_datetime <= date_add(:endDate, interval  33 day) and e.location_id=:location 
-					group by p.patient_id 
-			)max_cd4 
-				inner join person per on per.person_id=max_cd4.patient_id 
-				inner join obs o on o.person_id=max_cd4.patient_id and max_cd4.max_data_cd4=o.obs_datetime and o.voided=0  
-				and per.voided=0 and timestampdiff(year,per.birthdate,:endDate)>=5 and o.concept_id = 165519 and o.value_coded = 165513  and o.location_id= :location
-		)max_cd4
-	
-		union
-	
-		select distinct max_cd4.patient_id, max_cd4.max_data_cd4 
-		from( 
-			
-			select p.patient_id,max(o.obs_datetime) max_data_cd4  
-			from patient p 
-				inner join encounter e on p.patient_id=e.patient_id 
-				inner join obs o on e.encounter_id=o.encounter_id 
-			where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,53,90) 
-				and o.obs_datetime <= date_add(:endDate, interval  33 day) and e.location_id=:location 
-				group by p.patient_id 
-		)max_cd4 
-			inner join person per on per.person_id=max_cd4.patient_id 
-			inner join obs o on o.person_id=max_cd4.patient_id and max_cd4.max_data_cd4=o.obs_datetime and o.voided=0  
-			and per.voided=0 and timestampdiff(month,per.birthdate,:startDate)>=12 and timestampdiff(year,per.birthdate,:endDate)< 5  and o.concept_id = 1695 and o.value_numeric < 500 and o.location_id= :location 
-	
-		union
-	
-		select distinct max_cd4.patient_id, max_cd4.max_data_cd4 
-		from( 
-			
-			select p.patient_id,max(o.obs_datetime) max_data_cd4  
-			from patient p 
-				inner join encounter e on p.patient_id=e.patient_id 
-				inner join obs o on e.encounter_id=o.encounter_id 
-			where p.voided=0 and e.voided=0 and o.voided=0 and concept_id = 1695 and  e.encounter_type in (6,51,13,53,90) 
-				and o.obs_datetime <= date_add(:endDate, interval  33 day) and e.location_id=:location 
-				group by p.patient_id 
-		)max_cd4 
-			inner join person per on per.person_id=max_cd4.patient_id 
-			inner join obs o on o.person_id=max_cd4.patient_id and max_cd4.max_data_cd4=o.obs_datetime and o.voided=0  
-			and per.voided=0 and timestampdiff(month,per.birthdate,:endDate)< 12   and o.concept_id = 1695 and o.value_numeric < 750 and o.location_id= :location 
- 
- )cd4_absolute on cd4_eligible.patient_id = cd4_absolute.patient_id                   
-  where  cd4_absolute.max_data_cd4 between :startDate  and :endDate
-  
+ where primeira_marcacao_gravida.data_gravida between (:startDate + INTERVAL 8 MONTH) and :endDate
+)cd4_eligible
