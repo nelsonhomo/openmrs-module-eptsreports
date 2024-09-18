@@ -26,6 +26,9 @@ public class TxTbPrevCohortQueries {
       FIND_PATIENTS_WHO_COMPLETED_TB_PREV_PREVENTIVE_TREATMENT_DURING_REPORTING_PERIOD =
           "TBPREV/PATIENTS_WHO_COMPLETED_TB_PREV_PREVENTIVE_TREATMENT_DURING_REPORTING_PERIOD.sql";
 
+  private static final String TRANSFERRED_OUT =
+      "TRANSFERRED_OUT/FIND_PATIENTS_WHO_ARE_TRANSFERRED_OUT.sql";
+
   @DocumentedDefinition(value = "getTbPrevTotalDenominator")
   public CohortDefinition getTbPrevTotalDenominator() {
     final CompositionCohortDefinition dsd = new CompositionCohortDefinition();
@@ -44,7 +47,13 @@ public class TxTbPrevCohortQueries {
                 EptsQuerysUtils.loadQuery(
                     FIND_PATIENTS_WHO_STARTED_TB_PREV_PREVENTIVE_TREATMENT_DURING_PREVIOUS_REPORTING_PERIOD)),
             mappings));
-    dsd.addSearch("TRF-OUT", EptsReportUtils.map(this.findPatientsTransferredOut(), mappings));
+
+    dsd.addSearch(
+        "TRF-OUT",
+        EptsReportUtils.map(
+            this.findPatientsTransferredOut(),
+            "startDate=${startDate-6m},endDate=${endDate},location=${location}"));
+
     dsd.addSearch(
         "ENDED-TPT",
         EptsReportUtils.map(
@@ -53,6 +62,7 @@ public class TxTbPrevCohortQueries {
                 EptsQuerysUtils.loadQuery(
                     FIND_PATIENTS_WHO_COMPLETED_TB_PREV_PREVENTIVE_TREATMENT_DURING_REPORTING_PERIOD)),
             mappings));
+
     dsd.addSearch(
         "NEWLY-ART",
         EptsReportUtils.map(this.findPatientsWhoStartedArtAndTpiNewDessagragation(), mappings));
@@ -62,7 +72,7 @@ public class TxTbPrevCohortQueries {
             this.findPatientsWhoStartedArtAndTpiPreviouslyDessagragation(), mappings));
 
     dsd.setCompositionString(
-        "(STARTED-TPT AND (NEWLY-ART OR PREVIOUS-ART)) NOT (TRF-OUT NOT ENDED-TPT) ");
+        "(STARTED-TPT AND (NEWLY-ART OR PREVIOUS-ART)) NOT (TRF-OUT NOT ENDED-TPT )");
 
     return dsd;
   }
@@ -148,7 +158,7 @@ public class TxTbPrevCohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    definition.setQuery(TxTbPrevQueriesInterface.QUERY.findPatientsTransferredOut);
+    definition.setQuery(EptsQuerysUtils.loadQuery(TRANSFERRED_OUT));
 
     return definition;
   }
