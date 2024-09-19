@@ -47,6 +47,8 @@ public class MIAgeDimentions {
 
     final String mappingsMILessFourteenMonths =
         "startInclusionDate=${endRevisionDate-14m+1d},endInclusionDate=${endRevisionDate-13m},endRevisionDate=${endRevisionDate},location=${location}";
+    final String mappings =
+        "startInclusionDate=${startInclusionDate},endInclusionDate=${endInclusionDate},endRevisionDate=${endRevisionDate},location=${location}";
 
     /*   Dimension Age for new enrrolment on ART less than 2 months
      */
@@ -348,14 +350,12 @@ public class MIAgeDimentions {
     dimension.addCohortDefinition(
         "8-9RD",
         EptsReportUtils.map(
-            this.calculateAgeOnTheFirstConsultationDateLessThanParamByAgeRenge(8, 9),
-            mappingsMILessFourteenMonths));
+            this.calculateAgeOnTheFirstConsultationDateLessThanParamByAgeRenge(8, 9), mappings));
 
     dimension.addCohortDefinition(
         "10-14RD",
         EptsReportUtils.map(
-            this.calculateAgeOnTheFirstConsultationDateLessThanParamByAgeRenge(10, 14),
-            mappingsMILessFourteenMonths));
+            this.calculateAgeOnTheFirstConsultationDateLessThanParamByAgeRenge(10, 14), mappings));
 
     return dimension;
   }
