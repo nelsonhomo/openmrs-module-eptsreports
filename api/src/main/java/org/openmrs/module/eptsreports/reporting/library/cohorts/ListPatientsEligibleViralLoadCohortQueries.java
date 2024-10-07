@@ -3,6 +3,7 @@ package org.openmrs.module.eptsreports.reporting.library.cohorts;
 import java.util.Date;
 import org.openmrs.Location;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
+import org.openmrs.module.eptsreports.reporting.utils.TxCurrColumnsQuantity;
 import org.openmrs.module.eptsreports.reporting.utils.TxCurrQuery;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.cohort.definition.SqlCohortDefinition;
@@ -28,7 +29,7 @@ public class ListPatientsEligibleViralLoadCohortQueries {
     String query =
         String.format(
             EptsQuerysUtils.loadQuery(FIND_PATIENTS_ELEGIBLE_VIRAL_LOAD_SAMPLE_COLLECTION_TOTAL),
-            TxCurrQuery.findPatientsInTxCurr());
+            TxCurrQuery.findPatientsInTxCurr(TxCurrColumnsQuantity.PATIENT_ID));
 
     definition.setQuery(query);
 

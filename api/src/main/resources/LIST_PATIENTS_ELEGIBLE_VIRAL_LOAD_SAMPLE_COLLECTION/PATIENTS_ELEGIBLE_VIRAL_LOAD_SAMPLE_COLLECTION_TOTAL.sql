@@ -31,15 +31,15 @@
             					e.encounter_type=18 and e.location_id=:location and o.value_datetime between :startDate and :endDate 
             			union 
 
-            			select patient_id, data_levantamento, max(data_levantamento + INTERVAL 30 day) data_proximo_levantamento from (
-            			Select 	p.patient_id,value_datetime data_levantamento
+            			select patient_id, data_levantamento, (data_levantamento + INTERVAL 30 day) as data_proximo_levantamento from (
+            			Select 	p.patient_id,max(value_datetime) data_levantamento
             			from 	patient p 
             					inner join encounter e on p.patient_id=e.patient_id 
             					inner join obs o on e.encounter_id=o.encounter_id 
             			where 	p.voided=0 and e.voided=0 and o.voided=0 and e.encounter_type=52 and 
             					o.concept_id=23866 and o.value_datetime is not null and 
-            					o.value_datetime<= :endDate and e.location_id=:location 
-            					order by p.patient_id, value_datetime desc
+            					o.value_datetime<= CURDATE() and e.location_id=:location
+            					group by p.patient_id
             					) maxFicha where (data_levantamento + INTERVAL 30 day) between  :startDate and :endDate 
             					group by maxFicha.patient_id
             			

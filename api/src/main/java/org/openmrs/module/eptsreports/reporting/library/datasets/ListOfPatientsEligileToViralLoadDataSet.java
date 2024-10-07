@@ -5,6 +5,7 @@ import org.openmrs.module.eptsreports.reporting.library.cohorts.ListPatientsElig
 import org.openmrs.module.eptsreports.reporting.library.indicators.EptsGeneralIndicator;
 import org.openmrs.module.eptsreports.reporting.utils.EptsQuerysUtils;
 import org.openmrs.module.eptsreports.reporting.utils.EptsReportUtils;
+import org.openmrs.module.eptsreports.reporting.utils.TxCurrColumnsQuantity;
 import org.openmrs.module.eptsreports.reporting.utils.TxCurrQuery;
 import org.openmrs.module.reporting.cohort.definition.CohortDefinition;
 import org.openmrs.module.reporting.dataset.definition.CohortIndicatorDataSetDefinition;
@@ -34,7 +35,7 @@ public class ListOfPatientsEligileToViralLoadDataSet extends BaseDataSet {
     String query =
         String.format(
             EptsQuerysUtils.loadQuery(FIND_PATIENTS_ELEGIBLE_VIRAL_LOAD_SAMPLE_COLLECTION_LIST),
-            TxCurrQuery.findPatientsInTxCurr());
+            TxCurrQuery.findPatientsInTxCurr(TxCurrColumnsQuantity.PATIENT_ID));
 
     dsd.setSqlQuery(query);
 
