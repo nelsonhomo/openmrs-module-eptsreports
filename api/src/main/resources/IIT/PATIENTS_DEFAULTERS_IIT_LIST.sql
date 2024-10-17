@@ -17,7 +17,7 @@
                                     concat(ifnull(pn.given_name,''),' ',ifnull(pn.middle_name,''),' ',ifnull(pn.family_name,'')) as 'nomeCompleto',                              
                                     pid.identifier as nid,                              
                                     p.gender,                              
-                                    round(datediff(:endDate,p.birthdate)/365) idadeActual,                              
+                                    floor(datediff(:endDate,p.birthdate)/365) idadeActual,                              
                                     pat.value as telefone,                              
                                     estadoMulher.estadoMulher estadoMulher,                              
                                     tb.temTB,                              
@@ -40,18 +40,16 @@
 			                        MDC.MDC3 as MDC3,
 			                        MDC.MDC4 AS MDC4,
 			                        MDC.MDC5 as MDC5,
-			                        IF(ISNULL(keyPop.obs_datetime), 'N/A', DATE_FORMAT(keyPop.obs_datetime, '%d-%m-%Y')) AS fcWithKeyPopDate,
-					                IF(ISNULL(keyPop.value_coded) OR keyPop.value_coded<>1377, 'N', 'S') AS keyPopHSH,
-							        IF(ISNULL(keyPop.value_coded) OR keyPop.value_coded<>20454, 'N', 'S') AS keyPopPID,
-								    IF(ISNULL(keyPop.value_coded) OR keyPop.value_coded<>20426, 'N', 'S') AS keyPopREC,
-								    IF(ISNULL(keyPop.value_coded) OR keyPop.value_coded<>1901, 'N', 'S') AS keyPopTS,
-								    patOVCEntryDate.value AS oVCEntryDate,
-								    patOVCExitDate.value AS OVCExitDate,
-								    patOVCStatus.value AS OVCStatus,
+			                        IF(ISNULL(keyPop.fcWithKeyPopDate),'N/A',keyPop.fcWithKeyPopDate) as fcWithKeyPopDate,
+					                keyPop.keyPopHSH,
+							        keyPop.keyPopPID,
+								    keyPop.keyPopREC,
+								    keyPop.keyPopTS,
+								    if(patOVCEntryDate.value is null,'N/A',patOVCEntryDate.value) AS oVCEntryDate,
+								    if(patOVCExitDate.value is null,'N.A', patOVCExitDate.value) AS OVCExitDate,
+								    if(patOVCStatus.value is null,'N/A',patOVCStatus.value) AS OVCStatus,
 								    DATE_FORMAT(abandonoNotificado.data_estado_abandono, '%d-%m-%Y') data_estado_abandono
-					
-					                                    
-                         from                              
+					             from                              
                          (
                         
 		             select *                                                                                                   
@@ -837,27 +835,29 @@
 
                          left join
                          (
-                         select menthorMotherFC.patient_id,menthorMotherFC.data_seguimento, 
+                           select menthorMotherFC.patient_id,menthorMotherFC.data_seguimento, menthorMotherFC.encounter_id,obs_seguimento.concept_id,
                             case obs_seguimento.value_coded                                                 
                                 when 1256 then 'INICIO'                                                  
                                 when 1257 then 'CONTINUA'                                                   
                                 when 1267 then 'FIM'  
                             else null end as menthorMother  
                             from  
-                            (   Select  p.patient_id,max(encounter_datetime) data_seguimento 
+                            (   Select  p.patient_id,max(encounter_datetime) data_seguimento, e.encounter_id 
                                 from    patient p  
                                         inner join encounter e on e.patient_id=p.patient_id 
-                                where   p.voided=0 and e.voided=0 and e.encounter_type in (6) and  
-                                        e.location_id=:location and e.encounter_datetime<=:endDate
-                                group by p.patient_id 
+                                where   p.voided=0 and e.voided=0 and e.encounter_type=6 and  
+                                        e.location_id=:location and e.encounter_datetime<=:endDate and e.voided=0
+                               group by p.patient_id 
                             ) menthorMotherFC 
-                            left join 
-                                obs obs_seguimento on obs_seguimento.person_id=menthorMotherFC.patient_id 
+                               left join 
+                                encounter e on e.patient_id=menthorMotherFC.patient_id
+                                join obs obs_seguimento on obs_seguimento.encounter_id=e.encounter_id 
                                 and obs_seguimento.voided=0 
                                 and obs_seguimento.obs_datetime=menthorMotherFC.data_seguimento 
                                 and obs_seguimento.concept_id=24031 
-                                and obs_seguimento.location_id=:location  
-
+                                and obs_seguimento.location_id=:location 
+                                and e.encounter_type=6
+                                and e.voided=0
                          ) menthorMotherFC on  menthorMotherFC.patient_id= coorte12meses_final.patient_id    
 
                         left join
@@ -915,26 +915,29 @@
 
                         left join
                          (
-                         select menthorMotherAPSS.patient_id,menthorMotherAPSS.data_seguimento, 
+                         select menthorMotherAPSS.patient_id,menthorMotherAPSS.data_seguimento, menthorMotherAPSS.encounter_id,obs_seguimento.concept_id,
                             case obs_seguimento.value_coded                                                 
                                 when 1256 then 'INICIO'                                                  
                                 when 1257 then 'CONTINUA'                                                   
                                 when 1267 then 'FIM'  
                             else null end as menthorMotherApss  
                             from  
-                            (   Select  p.patient_id,max(encounter_datetime) data_seguimento 
+                            (   Select  p.patient_id,max(encounter_datetime) data_seguimento, e.encounter_id 
                                 from    patient p  
                                         inner join encounter e on e.patient_id=p.patient_id 
                                 where   p.voided=0 and e.voided=0 and e.encounter_type in (35) and  
-                                        e.location_id=:location and e.encounter_datetime<=:endDate
-                                group by p.patient_id 
+                                        e.location_id=:location and e.encounter_datetime<=:endDate and e.voided=0
+                               group by p.patient_id 
                             ) menthorMotherAPSS 
-                            left join 
-                                obs obs_seguimento on obs_seguimento.person_id=menthorMotherAPSS.patient_id 
+                               left join 
+                                encounter e on e.patient_id=menthorMotherAPSS.patient_id
+                                join obs obs_seguimento on obs_seguimento.encounter_id=e.encounter_id 
                                 and obs_seguimento.voided=0 
                                 and obs_seguimento.obs_datetime=menthorMotherAPSS.data_seguimento 
                                 and obs_seguimento.concept_id=24031 
-                                and obs_seguimento.location_id=:location  
+                                and obs_seguimento.location_id=:location 
+                                and e.encounter_type=35
+                                and e.voided=0
 
                          ) menthorMotherAPSS on  menthorMotherAPSS.patient_id= coorte12meses_final.patient_id    
 
@@ -1054,21 +1057,40 @@
 
                           left join
                           (
-                        	   select maxkp.patient_id, o.value_coded,o.obs_datetime from 
-                        	   (                                                            
-                            select p.patient_id,max(e.encounter_datetime) maxkpdate from patient p                                                                      
-                                inner join encounter e on p.patient_id=e.patient_id                                                                                     
-                                inner join obs o on e.encounter_id=o.encounter_id                                                                                       
-                            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=23703 and  e.encounter_type=6 and e.encounter_datetime<=CURDATE() and     
-                                  e.location_id=:location                                                                                                           
-                                group by p.patient_id                                                                                                               
-                            )                                                                                                                                       
-                        maxkp                                                                                                                                       
-                            inner join encounter e on e.patient_id=maxkp.patient_id and maxkp.maxkpdate=e.encounter_datetime                                            
-                            inner join obs o on o.encounter_id=e.encounter_id and maxkp.maxkpdate=o.obs_datetime                                                        
-                            inner join person pe on pe.person_id=maxkp.patient_id                                                                                       
-                        where o.concept_id=23703 and o.voided=0 and e.encounter_type=6 and e.voided=0 and e.location_id=:location and pe.voided=0                   
-                            and o.value_coded in (1377, 20454,20426,1901)
+                           select p.person_id as patient_id,keyPop.fcWithKeyPopDate,keyPop.keyPopHSH,keyPop.keyPopPID,keyPop.keyPopREC,keyPop.keyPopTS
+		                      from person p 
+		                      left join 
+		                      (                     
+		                      select * from
+		                      ( 
+		                        select final.patient_id,
+		                               final.value_coded,
+		                               IF(ISNULL(final.obs_datetime), 'N/A', DATE_FORMAT(final.obs_datetime, '%d-%m-%Y')) AS fcWithKeyPopDate,
+							           IF(ISNULL(final.value_coded) OR final.value_coded<>1377, 'N', 'S') AS keyPopHSH,
+							           IF(ISNULL(final.value_coded) OR final.value_coded<>20454, 'N', 'S') AS keyPopPID,
+							           IF(ISNULL(final.value_coded) OR final.value_coded<>20426, 'N', 'S') AS keyPopREC,
+							           IF(ISNULL(final.value_coded) OR final.value_coded<>1901, 'N', 'S') AS keyPopTS 
+		                        from
+		                        
+		                        (
+		                        select maxkp.patient_id, o.value_coded as value_coded,o.obs_datetime from 
+		                        	   (                                                            
+		                            select p.patient_id,max(e.encounter_datetime) maxkpdate from patient p                                                                      
+		                                inner join encounter e on p.patient_id=e.patient_id                                                                                     
+		                                inner join obs o on e.encounter_id=o.encounter_id                                                                                       
+		                            where p.voided=0 and e.voided=0 and o.voided=0 and concept_id=23703 and  e.encounter_type=6 and e.encounter_datetime<=CURDATE() and     
+		                                  e.location_id=:location                                                                                                          
+		                                group by p.patient_id                                                                                                               
+		                            )                                                                                                                                       
+		                        maxkp                                                                                                                                       
+		                            left join encounter e on e.patient_id=maxkp.patient_id and maxkp.maxkpdate=e.encounter_datetime                                            
+		                            left join obs o on o.encounter_id=e.encounter_id and maxkp.maxkpdate=o.obs_datetime                                                        
+		                            inner join person pe on pe.person_id=maxkp.patient_id                                                                                       
+		                        where o.concept_id=23703 and o.voided=0 and e.encounter_type=6 and e.voided=0 and e.location_id=3 and pe.voided=0                   
+		                            and o.value_coded in (1377, 20454,20426,1901)
+		                          )final
+		                          )final
+		                          )keyPop on keyPop.patient_id=p.person_id and p.voided=0
                           ) keyPop on keyPop.patient_id=coorte12meses_final.patient_id
                           left join
                           (
