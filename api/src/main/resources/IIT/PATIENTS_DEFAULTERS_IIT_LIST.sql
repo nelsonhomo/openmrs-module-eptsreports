@@ -708,7 +708,7 @@
                                                 (                                                                                                                                                                                                     
                                                                                                                                                                                                                                                                                                                                                        
                                                         select      maxFila.patient_id,                                                                                                                                                     
-                                                                          max(obsNext.value_datetime) data_clinica,                                                                                                                     
+                                                                          maxFila.last_levantamento data_clinica,                                                                                                                     
                                                                           if(datediff(max(obsNext.value_datetime),maxFila.last_levantamento)<53,1,
                                                                           if(datediff(max(obsNext.value_datetime),maxFila.last_levantamento) BETWEEN 53 and 82,2,
                                                                           if(datediff(max(obsNext.value_datetime),maxFila.last_levantamento) BETWEEN 83 and 173,3,
@@ -1113,20 +1113,13 @@
                           (
                           select abandonoNotificado.patient_id,abandonoNotificado.data_estado_abandono from 
                                                 ( 
-                                                 select maxEstado.patient_id,maxEstado.data_estado_abandono data_estado_abandono 
-                                                 from( 
-                                                     select pg.patient_id,max(ps.start_date) data_estado_abandono 
-                                                     from patient p 
-                                                         inner join patient_program pg on p.patient_id=pg.patient_id 
-                                                         inner join patient_state ps on pg.patient_program_id=ps.patient_program_id 
-                                                     where pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and ps.start_date<=CURDATE() and pg.location_id=:location 
-                                                         group by p.patient_id 
-                                                     ) 
-                                                 maxEstado 
-                                                     inner join patient_program pg2 on pg2.patient_id=maxEstado.patient_id 
-                                                     inner join patient_state ps2 on pg2.patient_program_id=ps2.patient_program_id 
-                                                 where pg2.voided=0 and ps2.voided=0 and pg2.program_id=2 
-                                                     and ps2.start_date=maxEstado.data_estado_abandono and pg2.location_id=:location and ps2.state =9 
+	                                             select pg.patient_id,max(ps.start_date) data_estado_abandono 
+	                                             from patient p 
+	                                                 inner join patient_program pg on p.patient_id=pg.patient_id 
+	                                                 inner join patient_state ps on pg.patient_program_id=ps.patient_program_id 
+	                                             where pg.voided=0 and ps.voided=0 and p.voided=0 and pg.program_id=2 and ps.start_date<=CURDATE() and pg.location_id=:location 
+	                                             and ps.state=9
+	                                             group by p.patient_id 
                                                      union 
                                                 select p.patient_id, max(o.obs_datetime) data_estado_abandono 
                                                  from patient p 
