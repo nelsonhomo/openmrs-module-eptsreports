@@ -34,6 +34,10 @@ import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ceta.Ind
 import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ceta.Indicator18DataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ceta.Indicator19DataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ceta.Indicator1DataSetDefinition;
+import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ceta.Indicator20DataSetDefinition;
+import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ceta.Indicator21DataSetDefinition;
+import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ceta.Indicator22DataSetDefinition;
+import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ceta.Indicator23DataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ceta.Indicator2DataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ceta.Indicator3DataSetDefinition;
 import org.openmrs.module.eptsreports.reporting.library.datasets.resumo.ceta.Indicator4DataSetDefinition;
@@ -77,6 +81,10 @@ public class SetupResumoMensalCETAReport extends EptsDataExportManager {
   @Autowired private Indicator17DataSetDefinition indicator17DataSetDefinition;
   @Autowired private Indicator18DataSetDefinition indicator18DataSetDefinition;
   @Autowired private Indicator19DataSetDefinition indicator19DataSetDefinition;
+  @Autowired private Indicator20DataSetDefinition indicator20DataSetDefinition;
+  @Autowired private Indicator21DataSetDefinition indicator21DataSetDefinition;
+  @Autowired private Indicator22DataSetDefinition indicator22DataSetDefinition;
+  @Autowired private Indicator23DataSetDefinition indicator23DataSetDefinition;
 
   @Override
   public String getVersion() {
@@ -155,6 +163,14 @@ public class SetupResumoMensalCETAReport extends EptsDataExportManager {
         "I18", mapStraightThrough(this.indicator18DataSetDefinition.constructDataset()));
     rd.addDataSetDefinition(
         "I19", mapStraightThrough(this.indicator19DataSetDefinition.constructDataset()));
+    rd.addDataSetDefinition(
+        "I20", mapStraightThrough(this.indicator20DataSetDefinition.constructDataset()));
+    rd.addDataSetDefinition(
+        "I21", mapStraightThrough(this.indicator21DataSetDefinition.constructDataset()));
+    rd.addDataSetDefinition(
+        "I22", mapStraightThrough(this.indicator22DataSetDefinition.constructDataset()));
+    rd.addDataSetDefinition(
+        "I23", mapStraightThrough(this.indicator23DataSetDefinition.constructDataset()));
 
     return rd;
   }

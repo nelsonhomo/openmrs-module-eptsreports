@@ -39,6 +39,29 @@ public class ResumoMensalCETAQueries {
   }
 
   /**
+   * Excluindo todos os utentes com registo da Ficha FICA-BEM entre data início de reporte -12 meses
+   * e data início de reporte para RF32, RF33, RF34, e RF35.
+   *
+   * @return String
+   */
+  public static String findPatientsWhithFicaBemInTheLast12Months() {
+
+    String query =
+        "select "
+            + "p.patient_id "
+            + "from patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "where e.voided=0 "
+            + "and p.voided=0 "
+            + "and e.encounter_type=96 "
+            + "and e.encounter_datetime >=:startDate - interval 12 month "
+            + "and e.encounter_datetime <=:startDate "
+            + "and e.location_id=:location ";
+
+    return query;
+  }
+
+  /**
    * RF28 - Outras Fontes: 2ª Consulta TARV O sistema irá identificar utentes com 2ª consulta de
    * TARV de sempre com base nos seguintes critérios
    *
@@ -365,6 +388,47 @@ public class ResumoMensalCETAQueries {
   }
 
   /**
+   * RF13 - Indicador 8- Nr de Pacientes com Ideação de Suicídio na entrada
+   *
+   * @return String
+   */
+  public static String findPatientsWithAtLeastOneSuicideIdeation() {
+
+    String query =
+        "select maxFI.patient_id from ( "
+            + "Select p.patient_id, max(e.encounter_datetime) as encounter_datetime "
+            + "From patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "where p.voided=0 and e.voided=0 and e.encounter_type = 97 and e.location_id=:location "
+            + "and e.encounter_datetime <= :endDate "
+            + "group by p.patient_id "
+            + ") maxFI "
+            + "  inner join encounter e on e.patient_id = maxFI.patient_id "
+            + "  inner join obs o on e.encounter_id = o.encounter_id "
+            + "  where e.voided = 0 and o.voided = 0 and e.encounter_type = 97 and o.concept_id=165549 and o.value_coded in (1065,165551) "
+            + "  and e.location_id =:location and e.encounter_datetime = maxFI.encounter_datetime "
+            + "  group by e.patient_id "
+            + " "
+            + "  union "
+            + " "
+            + "  select maxFI.patient_id from ( "
+            + "Select p.patient_id, max(e.encounter_datetime) as encounter_datetime "
+            + "From patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "where p.voided=0 and e.voided=0 and e.encounter_type = 96 and e.location_id=:location "
+            + "and e.encounter_datetime <= :endDate "
+            + "group by p.patient_id "
+            + ") maxFI "
+            + "  inner join encounter e on e.patient_id = maxFI.patient_id "
+            + "  inner join obs o on e.encounter_id = o.encounter_id "
+            + "  where e.voided = 0 and o.voided = 0 and e.encounter_type = 96 and o.concept_id=165459 and o.value_coded = 703 "
+            + "  and e.location_id =:location and e.encounter_datetime = maxFI.encounter_datetime "
+            + "  group by e.patient_id ";
+
+    return query;
+  }
+
+  /**
    * RF14 - Indicador 8: Utentes com pelo menos uma Tentativa de Homicídio a entrada
    *
    * @return String
@@ -390,11 +454,33 @@ public class ResumoMensalCETAQueries {
   }
 
   /**
-   * RF15 - Indicador 9: Utentes com sintomas de ansiedade/ depressão
+   * RF18 - Indicador 12 -- Nr de pacientes com sintomas de depressão
    *
    * @return String
    */
-  public static String findPatientsWithSymptomsOfDepressionAndAnxiety() {
+  public static String findPatientsWithSymptomsOfDepression() {
+
+    String query =
+        "select patient_id from ( "
+            + "select p.patient_id, max(e.encounter_datetime) encounter_datetime from patient p "
+            + "	inner join encounter e on p.patient_id=e.patient_id "
+            + "	inner join obs  o on e.encounter_id=o.encounter_id "
+            + "	inner join obs  oG on e.encounter_id=oG.encounter_id "
+            + "	where e.voided=0 and o.voided=0 and oG.voided= 0 and p.voided=0 and e.encounter_type = 97 and "
+            + "	o.concept_id = 165539 and oG.concept_id = 165541 and o.value_numeric > 0 "
+            + "and e.encounter_datetime<=:endDate and e.location_id=:location "
+            + "group by p.patient_id "
+            + ")f ";
+
+    return query;
+  }
+
+  /**
+   * Indicador 13 – Nr de pacientes com sintomas de ansiedade
+   *
+   * @return String
+   */
+  public static String findPatientsWithSymptomsOfAnxiety() {
 
     String query =
         "select patient_id from ( "
@@ -406,18 +492,48 @@ public class ResumoMensalCETAQueries {
             + "	o.concept_id = 165539 and oG.concept_id = 165542 and o.value_numeric > 0 "
             + "and e.encounter_datetime<=:endDate and e.location_id=:location "
             + "group by p.patient_id "
-            + " "
-            + "union "
-            + " "
-            + "select p.patient_id, max(e.encounter_datetime) encounter_datetime from patient p "
-            + "	inner join encounter e on p.patient_id=e.patient_id "
-            + "	inner join obs  o on e.encounter_id=o.encounter_id "
-            + "	inner join obs  oG on e.encounter_id=oG.encounter_id "
-            + "	where e.voided=0 and o.voided=0 and oG.voided= 0 and p.voided=0 and e.encounter_type = 97 and "
-            + "	o.concept_id = 165539 and oG.concept_id = 165541 and o.value_numeric > 0 "
-            + "and e.encounter_datetime<=:endDate and e.location_id=:location "
-            + "group by p.patient_id "
             + ")f ";
+
+    return query;
+  }
+
+  /**
+   * RF16 - Indicador 10 - Nr de Pacientes com Ideação de Homicídio a entrada
+   *
+   * @return String
+   */
+  public static String findPatientsWithAtLeastOneHomicideIdeation() {
+
+    String query =
+        "select maxFI.patient_id from ( "
+            + "Select p.patient_id, max(e.encounter_datetime) as encounter_datetime "
+            + "From patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "where p.voided=0 and e.voided=0 and e.encounter_type = 97 and e.location_id=:location "
+            + "and e.encounter_datetime <= :endDate "
+            + "group by p.patient_id "
+            + ") maxFI "
+            + "  inner join encounter e on e.patient_id = maxFI.patient_id "
+            + "  inner join obs o on e.encounter_id = o.encounter_id "
+            + "  where e.voided = 0 and o.voided = 0 and e.encounter_type = 97 and o.concept_id=165610 and o.value_coded in (1065,165551) "
+            + "  and e.location_id =:location and e.encounter_datetime = maxFI.encounter_datetime "
+            + "  group by e.patient_id "
+            + " "
+            + "  union "
+            + " "
+            + "  select maxFI.patient_id from ( "
+            + "Select p.patient_id, max(e.encounter_datetime) as encounter_datetime "
+            + "From patient p "
+            + "inner join encounter e on p.patient_id=e.patient_id "
+            + "where p.voided=0 and e.voided=0 and e.encounter_type = 97 and e.location_id=:location "
+            + "and e.encounter_datetime <= :endDate "
+            + "group by p.patient_id "
+            + ") maxFI "
+            + "  inner join encounter e on e.patient_id = maxFI.patient_id "
+            + "  inner join obs o on e.encounter_id = o.encounter_id "
+            + "  where e.voided = 0 and o.voided = 0 and e.encounter_type = 97 and o.concept_id=165552 and o.value_coded in (1065, 165551) "
+            + "  and e.location_id =:location and e.encounter_datetime = maxFI.encounter_datetime "
+            + "  group by e.patient_id ";
 
     return query;
   }

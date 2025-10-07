@@ -48,15 +48,22 @@ public class ResumoMensalCETACohortQueries {
                 "RF7", ResumoMensalCETAQueries.findPatientsWhoWereTrackedUsingTheFICABEMForm()),
             mappings));
 
-    definition.addSearch("RF28", EptsReportUtils.map(getPatientsRF28(), mappings));
+    definition.addSearch("RF32", EptsReportUtils.map(getPatientsRF32(), mappings));
 
-    definition.addSearch("RF29", EptsReportUtils.map(getPatientsRF29(), mappings));
+    definition.addSearch("RF33", EptsReportUtils.map(getPatientsRF33(), mappings));
 
-    definition.addSearch("RF30", EptsReportUtils.map(getPatientsRF30(), mappings));
+    definition.addSearch("RF34", EptsReportUtils.map(getPatientsRF34(), mappings));
 
-    definition.addSearch("RF31", EptsReportUtils.map(getPatientsRF31(), mappings));
+    definition.addSearch("RF35", EptsReportUtils.map(getPatientsRF35(), mappings));
 
-    definition.setCompositionString("RF7 OR RF28 OR RF29 OR RF30 OR RF31");
+    definition.addSearch(
+        "FB-12MONTHS",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "FB-12MONTHS", ResumoMensalCETAQueries.findPatientsWhithFicaBemInTheLast12Months()),
+            mappings));
+
+    definition.setCompositionString("RF7 OR ((RF32 OR RF33 OR RF34 OR RF35) NOT FB-12MONTHS)");
 
     return definition;
   }
@@ -140,11 +147,38 @@ public class ResumoMensalCETACohortQueries {
     return definition;
   }
 
+  /** RF10 - Indicador 4 – Nr de Pacientes com resultado positivo para Epilepsia */
+  public CohortDefinition getPatientsIndicator4() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWithPositiveResultForEpilepsy");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWithPositiveResultForEpilepsy");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch("I2", EptsReportUtils.map(getPatientsIndicator2(), mappings));
+
+    definition.addSearch(
+        "EPILEPSIA",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "EPILEPSIA",
+                ResumoMensalCETAQueries.findPatientsWithDMGOrDMCResultInFICABEMForm(155)),
+            mappings));
+
+    definition.setCompositionString("I2 AND EPILEPSIA");
+
+    return definition;
+  }
+
   /**
-   * RF10 - Indicador 4 – Nr de Pacientes referidos para o seguimento de Doença Mental Comum
+   * RF11 - Indicador 5 – Nr de Pacientes referidos para o seguimento de Doença Mental Comum
    * (Psicólogo)
    */
-  public CohortDefinition getPatientsIndicator4() {
+  public CohortDefinition getPatientsIndicator5() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("findPatientsReferredForFollowUpCommonMentalIllness");
@@ -169,38 +203,14 @@ public class ResumoMensalCETACohortQueries {
     return definition;
   }
 
-  /** RF11 - Indicador 5 - Nr de Pacientes que iniciaram o tratamento de SM - CETA */
-  public CohortDefinition getPatientsIndicator5() {
-
-    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("findPatientsWhoInitiatedTreatmentCETA");
-    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
-
-    definition.setName("findPatientsWhoInitiatedTreatmentCETA");
-    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
-    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
-    definition.addParameter(new Parameter("location", "location", Location.class));
-
-    definition.addSearch(
-        "I5",
-        EptsReportUtils.map(
-            this.genericCohortQueries.generalSql(
-                "I5", ResumoMensalCETAQueries.findPatientsWhoInitiatedSMTreatment()),
-            mappings));
-
-    definition.setCompositionString("I5");
-
-    return definition;
-  }
-
-  /** RF12 - Indicador 6: Nr de Pacientes em seguimento no CETA até ao final do mês */
+  /** RF12 - Indicador 6 - Nr de Pacientes que iniciaram o tratamento de SM - CETA */
   public CohortDefinition getPatientsIndicator6() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("findPatientsInFollowUpCETA");
+    definition.setName("findPatientsWhoInitiatedTreatmentCETA");
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    definition.setName("findPatientsInFollowUpCETA");
+    definition.setName("findPatientsWhoInitiatedTreatmentCETA");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
@@ -209,7 +219,7 @@ public class ResumoMensalCETACohortQueries {
         "I6",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "I6", ResumoMensalCETAQueries.findPatientsInFollowUpCETAUntilThEndOfTheMonth()),
+                "I6", ResumoMensalCETAQueries.findPatientsWhoInitiatedSMTreatment()),
             mappings));
 
     definition.setCompositionString("I6");
@@ -217,40 +227,38 @@ public class ResumoMensalCETACohortQueries {
     return definition;
   }
 
-  /** RF13 - Indicador 7 - Nr de Pacientes com, pelo menos, uma Tentativa de Suicídio a entrada */
+  /** RF13 - Indicador 7: Nr de Pacientes em seguimento no CETA até ao final do mês */
   public CohortDefinition getPatientsIndicator7() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("findPatientsWithAtLeastOneSuicideAttempt");
+    definition.setName("findPatientsInFollowUpCETA");
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    definition.setName("findPatientsWithAtLeastOneSuicideAttempt");
+    definition.setName("findPatientsInFollowUpCETA");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
-
-    definition.addSearch("I5", EptsReportUtils.map(getPatientsIndicator5(), mappings));
 
     definition.addSearch(
         "I7",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "I7", ResumoMensalCETAQueries.findPatientsWithAtLeastOneSuicideAttempt()),
+                "I7", ResumoMensalCETAQueries.findPatientsInFollowUpCETAUntilThEndOfTheMonth()),
             mappings));
 
-    definition.setCompositionString("I5 AND I7");
+    definition.setCompositionString("I7");
 
     return definition;
   }
 
-  /** RF14 - Indicador 8 – Nr de Pacientes com Tentativa de Homicídio a entrada */
+  /** RF14 - Indicador 8 - Nr de Pacientes com Ideação de Suicídio na entrada */
   public CohortDefinition getPatientsIndicator8() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("findPatientsWithAtLeastOneHomicideAttempt");
+    definition.setName("findPatientsWithAtLeastOneSuicideAttempt");
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    definition.setName("findPatientsWithAtLeastOneHomicideAttempt");
+    definition.setName("findPatientsWithAtLeastOneSuicideAttempt");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
@@ -258,25 +266,26 @@ public class ResumoMensalCETACohortQueries {
     definition.addSearch("I5", EptsReportUtils.map(getPatientsIndicator5(), mappings));
 
     definition.addSearch(
-        "I8",
+        "SUICIDE-IDEATION",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "I8", ResumoMensalCETAQueries.findPatientsWithAtLeastOneHomicideAttempt()),
+                "SUICIDE-IDEATION",
+                ResumoMensalCETAQueries.findPatientsWithAtLeastOneSuicideIdeation()),
             mappings));
 
-    definition.setCompositionString("I5 AND I8");
+    definition.setCompositionString("I5 AND SUICIDE-IDEATION");
 
     return definition;
   }
 
-  /** RF15 - Indicador 9 – Nr de pacientes com sintomas de ansiedade/ depressão */
+  /** RF15 - Indicador 9 - Nr de Pacientes com, pelo menos, uma Tentativa de Suicídio a entrada */
   public CohortDefinition getPatientsIndicator9() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("findPatientsWithSymptomsOfDepressionAndAnxiety");
+    definition.setName("findPatientsWithAtLeastOneSuicideAttempt");
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    definition.setName("findPatientsWithSymptomsOfDepressionAndAnxiety");
+    definition.setName("findPatientsWithAtLeastOneSuicideAttempt");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
@@ -287,7 +296,7 @@ public class ResumoMensalCETACohortQueries {
         "I9",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "I9", ResumoMensalCETAQueries.findPatientsWithSymptomsOfDepressionAndAnxiety()),
+                "I9", ResumoMensalCETAQueries.findPatientsWithAtLeastOneSuicideAttempt()),
             mappings));
 
     definition.setCompositionString("I5 AND I9");
@@ -295,14 +304,14 @@ public class ResumoMensalCETACohortQueries {
     return definition;
   }
 
-  /** RF16 - Indicador 10 - Nr de pacientes com trauma */
+  /** RF16 - Indicador 10 – Nr de Pacientes com Ideação de Homicídio a entrada */
   public CohortDefinition getPatientsIndicator10() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("findPatientsWithTrauma");
+    definition.setName("findPatientsWithAtLeastOneHomicideIdeation");
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    definition.setName("findPatientsWithTrauma");
+    definition.setName("findPatientsWithAtLeastOneHomicideIdeation");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
@@ -310,25 +319,26 @@ public class ResumoMensalCETACohortQueries {
     definition.addSearch("I5", EptsReportUtils.map(getPatientsIndicator5(), mappings));
 
     definition.addSearch(
-        "I10",
+        "HOMICIDE-IDEATION",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "I10", ResumoMensalCETAQueries.findPatientsWithTrauma()),
+                "HOMICIDE-IDEATION",
+                ResumoMensalCETAQueries.findPatientsWithAtLeastOneHomicideIdeation()),
             mappings));
 
-    definition.setCompositionString("I5 AND I10");
+    definition.setCompositionString("I5 AND HOMICIDE-IDEATION");
 
     return definition;
   }
 
-  /** RF17 - Indicador 11 - Nr de pacientes que consomem abusivamente bebidas alcoólicas */
+  /** RF17 - Indicador 11 – Nr de Pacientes com Tentativa de Homicídio a entrada */
   public CohortDefinition getPatientsIndicator11() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("findPatientsWhoAbuseAlcohol");
+    definition.setName("findPatientsWithAtLeastOneHomicideAttempt");
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    definition.setName("findPatientsWhoAbuseAlcohol");
+    definition.setName("findPatientsWithAtLeastOneHomicideAttempt");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
@@ -336,28 +346,30 @@ public class ResumoMensalCETACohortQueries {
     definition.addSearch("I5", EptsReportUtils.map(getPatientsIndicator5(), mappings));
 
     definition.addSearch(
-        "I11",
+        "HOMICIDE-ATTEMPT",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "I11", ResumoMensalCETAQueries.findPatientsWhoAbuseAlcohol()),
+                "HOMICIDE-ATTEMPT",
+                ResumoMensalCETAQueries.findPatientsWithAtLeastOneHomicideAttempt()),
             mappings));
 
-    definition.setCompositionString("I5 AND I11");
+    definition.setCompositionString("I5 AND HOMICIDE-ATTEMPT");
 
     return definition;
   }
 
   /**
-   * RF18 - Indicador 12 - Nr de pacientes que consomem outras substâncias psicoactivas (ex.
-   * Canabis, marijuana, etc)
+   * RF18 - Indicador 12 -- Nr de pacientes com sintomas de depressão
+   *
+   * @return
    */
   public CohortDefinition getPatientsIndicator12() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
-    definition.setName("findPatientsWhoConsumeOtherPsychoactiveSubstances");
+    definition.setName("findPatientsWithSymptomsOfDepression");
     final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
 
-    definition.setName("findPatientsWhoConsumeOtherPsychoactiveSubstances");
+    definition.setName("findPatientsWithSymptomsOfDepression");
     definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
@@ -368,7 +380,7 @@ public class ResumoMensalCETACohortQueries {
         "I12",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "I12", ResumoMensalCETAQueries.findPatientsWhoConsumeOtherPsychoactiveSubstances()),
+                "I12", ResumoMensalCETAQueries.findPatientsWithSymptomsOfDepression()),
             mappings));
 
     definition.setCompositionString("I5 AND I12");
@@ -376,8 +388,119 @@ public class ResumoMensalCETACohortQueries {
     return definition;
   }
 
-  /** RF19 - Indicador 13- Nr de pacientes que interromperam o tratamento */
+  /**
+   * RF19 - Indicador 13 – Nr de pacientes com sintomas de ansiedade
+   *
+   * @return
+   */
   public CohortDefinition getPatientsIndicator13() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWithSymptomsOfAnxiety");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWithSymptomsOfAnxiety");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch("I5", EptsReportUtils.map(getPatientsIndicator5(), mappings));
+
+    definition.addSearch(
+        "I13",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "I13", ResumoMensalCETAQueries.findPatientsWithSymptomsOfAnxiety()),
+            mappings));
+
+    definition.setCompositionString("I5 AND I13");
+
+    return definition;
+  }
+
+  /** RF20 - Indicador 14 - Nr de pacientes com trauma */
+  public CohortDefinition getPatientsIndicator14() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWithTrauma");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWithTrauma");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch("I5", EptsReportUtils.map(getPatientsIndicator5(), mappings));
+
+    definition.addSearch(
+        "I14",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "I14", ResumoMensalCETAQueries.findPatientsWithTrauma()),
+            mappings));
+
+    definition.setCompositionString("I5 AND I14");
+
+    return definition;
+  }
+
+  /** RF21 - Indicador 15 - Nr de pacientes que consomem abusivamente bebidas alcoólicas */
+  public CohortDefinition getPatientsIndicator15() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWhoAbuseAlcohol");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWhoAbuseAlcohol");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch("I5", EptsReportUtils.map(getPatientsIndicator5(), mappings));
+
+    definition.addSearch(
+        "I15",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "I15", ResumoMensalCETAQueries.findPatientsWhoAbuseAlcohol()),
+            mappings));
+
+    definition.setCompositionString("I5 AND I15");
+
+    return definition;
+  }
+
+  /**
+   * RF22 - Indicador 12 - Nr de pacientes que consomem outras substâncias psicoactivas (ex.
+   * Canabis, marijuana, etc)
+   */
+  public CohortDefinition getPatientsIndicator16() {
+
+    final CompositionCohortDefinition definition = new CompositionCohortDefinition();
+    definition.setName("findPatientsWhoConsumeOtherPsychoactiveSubstances");
+    final String mappings = "startDate=${startDate},endDate=${endDate},location=${location}";
+
+    definition.setName("findPatientsWhoConsumeOtherPsychoactiveSubstances");
+    definition.addParameter(new Parameter("startDate", "Start Date", Date.class));
+    definition.addParameter(new Parameter("endDate", "End Date", Date.class));
+    definition.addParameter(new Parameter("location", "location", Location.class));
+
+    definition.addSearch("I5", EptsReportUtils.map(getPatientsIndicator5(), mappings));
+
+    definition.addSearch(
+        "I16",
+        EptsReportUtils.map(
+            this.genericCohortQueries.generalSql(
+                "I16", ResumoMensalCETAQueries.findPatientsWhoConsumeOtherPsychoactiveSubstances()),
+            mappings));
+
+    definition.setCompositionString("I5 AND I16");
+
+    return definition;
+  }
+
+  /** RF23 - Indicador 17- Nr de pacientes que interromperam o tratamento */
+  public CohortDefinition getPatientsIndicator17() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("findPatientsWhoConsumeOtherPsychoactiveSubstances");
@@ -419,8 +542,8 @@ public class ResumoMensalCETACohortQueries {
     return definition;
   }
 
-  /** RF20 - Indicador 14 - Nr de pacientes referidos */
-  public CohortDefinition getPatientsIndicator14() {
+  /** RF24 - Indicador 18 - Nr de pacientes referidos */
+  public CohortDefinition getPatientsIndicator18() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("findPatientsWhoWereReferred");
@@ -434,19 +557,19 @@ public class ResumoMensalCETACohortQueries {
     definition.addSearch("I13", EptsReportUtils.map(getPatientsIndicator13(), mappings));
 
     definition.addSearch(
-        "I14",
+        "I18",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "I14", ResumoMensalCETAQueries.findPatientsWhoWereReferred()),
+                "I18", ResumoMensalCETAQueries.findPatientsWhoWereReferred()),
             mappings));
 
-    definition.setCompositionString("I13 AND I14");
+    definition.setCompositionString("I13 AND I18");
 
     return definition;
   }
 
-  /** RF21 - Indicador 15 - Nr de pacientes transferidos */
-  public CohortDefinition getPatientsIndicator15() {
+  /** RF25 - Indicador 15 - Nr de pacientes transferidos */
+  public CohortDefinition getPatientsIndicator19() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("findPatientsWhoHaveTransferredAsAreasonOfInterruption");
@@ -460,20 +583,20 @@ public class ResumoMensalCETACohortQueries {
     definition.addSearch("I13", EptsReportUtils.map(getPatientsIndicator13(), mappings));
 
     definition.addSearch(
-        "I15",
+        "I19",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "I15",
+                "I19",
                 ResumoMensalCETAQueries.findPatientsWhoHaveTransferredAsAreasonOfInterruption()),
             mappings));
 
-    definition.setCompositionString("I13 AND I15");
+    definition.setCompositionString("I13 AND I19");
 
     return definition;
   }
 
-  /** RF22 - Indicador 16 - Nr de pacientes reintegrados */
-  public CohortDefinition getPatientsIndicator16() {
+  /** RF26 - Indicador 20 - Nr de pacientes reintegrados */
+  public CohortDefinition getPatientsIndicator20() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("findPatientsWhoConsumeOtherPsychoactiveSubstances");
@@ -487,19 +610,19 @@ public class ResumoMensalCETACohortQueries {
     definition.addSearch("I6", EptsReportUtils.map(getPatientsIndicator6(), mappings));
 
     definition.addSearch(
-        "I16",
+        "I20",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "I16", ResumoMensalCETAQueries.findPatientsWhoWereReintegrated()),
+                "I20", ResumoMensalCETAQueries.findPatientsWhoWereReintegrated()),
             mappings));
 
-    definition.setCompositionString("I6 NOT I16");
+    definition.setCompositionString("I6 NOT I20");
 
     return definition;
   }
 
-  /** RF23 - Indicador 17 - Nr de óbitos */
-  public CohortDefinition getPatientsIndicator17() {
+  /** RF27 - Indicador 21 - Nr de óbitos */
+  public CohortDefinition getPatientsIndicator21() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("findPatientsDeaths");
@@ -513,19 +636,19 @@ public class ResumoMensalCETACohortQueries {
     definition.addSearch("I13", EptsReportUtils.map(getPatientsIndicator13(), mappings));
 
     definition.addSearch(
-        "I17",
+        "I21",
         EptsReportUtils.map(
             this.genericCohortQueries.generalSql(
-                "I17", ResumoMensalCETAQueries.findPatientsDeaths()),
+                "I21", ResumoMensalCETAQueries.findPatientsDeaths()),
             mappings));
 
-    definition.setCompositionString("I13 AND I17");
+    definition.setCompositionString("I13 AND I21");
 
     return definition;
   }
 
-  /** RF24 - Indicador 18 - Nr de abandonos */
-  public CohortDefinition getPatientsIndicator18() {
+  /** RF28 - Indicador 22 - Nr de abandonos */
+  public CohortDefinition getPatientsIndicator22() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("findPatientsWhoAbandonedTreatment");
@@ -551,8 +674,8 @@ public class ResumoMensalCETACohortQueries {
     return definition;
   }
 
-  /** RF25 - Indicador 19: Nr de Pacientes que terminaram o tratamento */
-  public CohortDefinition getPatientsIndicator19() {
+  /** RF29 - Indicador 23: Nr de Pacientes que terminaram o tratamento */
+  public CohortDefinition getPatientsIndicator23() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("findPatientsWhoFinishedTreatment");
@@ -616,7 +739,7 @@ public class ResumoMensalCETACohortQueries {
                     .findPatientsWhoHaveScreeningCriteriaSecondConsultationInFichaInicialCETA()),
             mappings));
 
-    definition.addSearch("RF28", EptsReportUtils.map(getPatientsRF28(), mappings));
+    definition.addSearch("RF28", EptsReportUtils.map(getPatientsRF32(), mappings));
 
     definition.setCompositionString("INICIAL-CETA OR RF28");
 
@@ -635,7 +758,7 @@ public class ResumoMensalCETACohortQueries {
     definition.addParameter(new Parameter("endDate", "End Date", Date.class));
     definition.addParameter(new Parameter("location", "location", Location.class));
 
-    definition.addSearch("RF29", EptsReportUtils.map(getPatientsRF29(), mappings));
+    definition.addSearch("RF29", EptsReportUtils.map(getPatientsRF33(), mappings));
 
     definition.addSearch(
         "CV-1000",
@@ -675,7 +798,7 @@ public class ResumoMensalCETACohortQueries {
                     .findPatientsWhoHaveScreeningCriteriaReintegretedInFichaInicialCETA()),
             mappings));
 
-    definition.addSearch("RF30", EptsReportUtils.map(getPatientsRF30(), mappings));
+    definition.addSearch("RF30", EptsReportUtils.map(getPatientsRF34(), mappings));
 
     definition.addSearch(
         "DISAG1", EptsReportUtils.map(getPatientsDisagregationsSecondLineTARV26_1(), mappings));
@@ -710,7 +833,7 @@ public class ResumoMensalCETACohortQueries {
                     .findPatientsWhoHaveScreeningCriteriaPsychosocialFactorsInFichaInicialCETA()),
             mappings));
 
-    definition.addSearch("RF31", EptsReportUtils.map(getPatientsRF31(), mappings));
+    definition.addSearch("RF31", EptsReportUtils.map(getPatientsRF35(), mappings));
 
     definition.addSearch(
         "DISAG1", EptsReportUtils.map(getPatientsDisagregationsSecondLineTARV26_1(), mappings));
@@ -763,7 +886,7 @@ public class ResumoMensalCETACohortQueries {
   }
 
   /** RF28: Outras Fontes: 2ª Consulta TARV */
-  public CohortDefinition getPatientsRF28() {
+  public CohortDefinition getPatientsRF32() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("getPatientsRF28");
@@ -795,7 +918,7 @@ public class ResumoMensalCETACohortQueries {
   }
 
   /** RF29 - Outras Fontes: CV > 1000 cps */
-  public CohortDefinition getPatientsRF29() {
+  public CohortDefinition getPatientsRF33() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("getPatientsRF29");
@@ -819,7 +942,7 @@ public class ResumoMensalCETACohortQueries {
   }
 
   /** RF30 - Outras Fontes: Reintegrado / Ma Adesao */
-  public CohortDefinition getPatientsRF30() {
+  public CohortDefinition getPatientsRF34() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("getPatientsRF30");
@@ -844,7 +967,7 @@ public class ResumoMensalCETACohortQueries {
   }
 
   /** RF30 - Outras Fontes: Reintegrado / Ma Adesao */
-  public CohortDefinition getPatientsRF31() {
+  public CohortDefinition getPatientsRF35() {
 
     final CompositionCohortDefinition definition = new CompositionCohortDefinition();
     definition.setName("getPatientsRF31");
